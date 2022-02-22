@@ -1,0 +1,39 @@
+Package: spatialplanr
+Title: Help files for MME Spatial Planning projects
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Jason",
+           family = "Everett",
+           role = c("aut", "cre"),
+           email = "JaseEverett@gmail.com",
+           comment = c(ORCID = "0000-0002-6681-8054"))
+Description: This package provides a range of tools for setting up, running and plotting a spatial plan using the prioritizr. It is only intended for use by the Mathematical Marine Ecology Lab at UQ, as it sets up projects using their approach and data sets.
+License: GPL (>= 3)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Suggests: 
+    knitr,
+    prioritizr,
+    rmarkdown,
+    rredlist
+VignetteBuilder: knitr
+Depends:
+    stars
+Imports: 
+    cmocean,
+    dplyr,
+    fasterize,
+    ggplot2,
+    magrittr,
+    patchwork,
+    raster,
+    readr,
+    rfishbase,
+    rnaturalearth,
+    rnaturalearthdata,
+    scales,
+    sf,
+    stringr,
+    terra
