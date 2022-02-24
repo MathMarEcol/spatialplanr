@@ -7,7 +7,7 @@
 #'
 #' Written by Jason Everett (UQ/UNSW/CSIRO)
 #' Written: 15 December 2020
-#' Updated: 10th February 2022
+#' Updated: 25th February 2022
 #'
 #' @param Bndry An sf polygon object which outlines the limits of the study area.
 #' @param InnerB An sf multipolygon object which contains all the areas (ie land) that you wish to remove from the grid.
