@@ -69,5 +69,9 @@ SpatPlan_Get_PlanningUnits <- function(Bndry,
   else{
     PUs <- PUs[logi_Ocean==TRUE, ] # Get TRUE
   }
+
+  PUs <- PUs %>%
+    dplyr::mutate(cellID = dplyr::row_number()) # Add a cell ID reference
+
   return(PUs)
 }
