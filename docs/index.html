@@ -78,16 +78,37 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>This repository is specific to the work of the <a href="https://mathmarecol.github.io" class="external-link">Mathematical Marine Ecology Lab</a> at the University of Queensland. It is not intended to be used by anyone outside the MME Lab without the permission of Professor Anthony Richardson.</p>
-<p>This code has been written to simplify the process for running a <em>prioritizr</em> analysis on a given region. It is still a work in progress so feel free to submit pull requests with new features and code improvements.</p>
-<p>The code depends on <code>sf</code>, <code>terra</code>, <code>tidyverse</code>, <code>rnaturalearth</code>, <code>prioritizr</code>, <code>stars</code>, <code>patchwork</code>.</p>
-<p>To use this code, you will need to download and expand <code>MME1DATA-Q1215/SpatialPlanning/SpatPlan_Data.zip</code>. To use the packages defaults, expand this file into your home directory (e.g. <code>/Users/jason/SpatPlan_Data</code>). You can use any location you want, but you will need to specify the loaction for some functions. Note that the download is only 2GB, but the expanded data is 35 GB in size. If you need help subsetting the data to your region due to memory or HD space constraints, contact Jason.</p>
-<p>If you run into memory problems, you can try increasing the amount of the HD space gdal is allowed to use. <code>Sys.setenv(GDAL_MAX_BAND_COUNT = 120000)</code></p>
+<p>This repository is specific to the work of the <a href="https://mathmarecol.github.io" class="external-link">Mathematical Marine Ecology Lab</a>
+at the University of Queensland. It is not intended to be used by anyone
+outside the MME Lab without the permission of Professor Anthony
+Richardson.</p>
+<p>This code has been written to simplify the process for running a
+<em>prioritizr</em> analysis on a given region use the workflows and
+data of the MME Lab. It is still a work in progress so feel free to
+submit pull requests with new features and code improvements.</p>
+<p>The code depends on <code>sf</code>, <code>terra</code>,
+<code>tidyverse</code>, <code>rnaturalearth</code>,
+<code>prioritizr</code>, <code>stars</code>, <code>patchwork</code>.</p>
+<p>To use this code, you will need to download and expand
+<code>MME1DATA-Q1215/SpatialPlanning/SpatPlan_Data.zip</code>. To use
+the <code>spatialplanr</code> package defaults, expand this file into
+your home directory (e.g. <code>/Users/jason/SpatPlan_Data</code>). You
+can use any location you want, but you will need to specify the location
+for some functions, as per the function help. <strong>Note:</strong> The
+download is only 2GB, but the expanded data is 35 GB in size. If you
+need help subsetting the data to your region due to memory or HD space
+constraints, contact Jason.</p>
+<p>If you run into memory problems, you can try increasing the amount of
+the HD space gdal is allowed to use.
+<code>Sys.setenv(GDAL_MAX_BAND_COUNT = 120000)</code></p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Be aware that this package is in the very early stages of development. Functions and documentation are not complete so installing at the moment is at your own risk. If you are still interested, you can install the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>Be aware that this package is in the very early stages of
+development. Functions and documentation are not complete so installing
+at the moment is at your own risk. If you are still interested, you can
+install the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"https://github.com/MathMarEcol/spatialplanr"</span><span class="op">)</span></code></pre></div>
@@ -137,7 +158,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

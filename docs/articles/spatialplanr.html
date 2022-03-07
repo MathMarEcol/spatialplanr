@@ -86,23 +86,46 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>This repository is specific to the work of the <a href="Mathematical%20Marine%20Ecology%20Lab">https://mathmarecol.github.io</a> at the University of Queensland. It is not intended to be used by anyone outside the MME Lab without the permission of Professor Anthony Richardson.</p>
-<p>This code has been written to simplify the process for running a <em>prioritizr</em> analysis on a given region. It is still a work in progress so feel free to submit pull requests with new features and code improvements.</p>
-<p>The code depends on <code>sf</code>, <code>terra</code>, <code>tidyverse</code>, <code>rnaturalearth</code>, <code>prioritizr</code>, <code>stars</code>, <code>patchwork</code>.</p>
-<p>To use this code, you will need to download and expand <code>MME1DATA-Q1215/SpatialPlanning/Data.zip</code> to the directory <code>GitHub/SpatialPlanning/Data/</code>. Note that the download is only 2GB, but the expanded data is 35 GB in size. If you need help subsetting the data to your region due to memory or HD space constraints, contact Jason.</p>
-<p>If you run into memory problems, you can try increasing the amount of the HD space gdal is allowed to use. <code>Sys.setenv(GDAL_MAX_BAND_COUNT = 120000)</code></p>
+<p>This repository is specific to the work of the <a href="Mathematical%20Marine%20Ecology%20Lab">https://mathmarecol.github.io</a>
+at the University of Queensland. It is not intended to be used by anyone
+outside the MME Lab without the permission of Professor Anthony
+Richardson.</p>
+<p>This code has been written to simplify the process for running a
+<em>prioritizr</em> analysis on a given region. It is still a work in
+progress so feel free to submit pull requests with new features and code
+improvements.</p>
+<p>The code depends on <code>sf</code>, <code>terra</code>,
+<code>tidyverse</code>, <code>rnaturalearth</code>,
+<code>prioritizr</code>, <code>stars</code>, <code>patchwork</code>.</p>
+<p>To use this code, you will need to download and expand
+<code>MME1DATA-Q1215/SpatialPlanning/Data.zip</code> to the directory
+<code>GitHub/SpatialPlanning/Data/</code>. Note that the download is
+only 2GB, but the expanded data is 35 GB in size. If you need help
+subsetting the data to your region due to memory or HD space
+constraints, contact Jason.</p>
+<p>If you run into memory problems, you can try increasing the amount of
+the HD space gdal is allowed to use.
+<code>Sys.setenv(GDAL_MAX_BAND_COUNT = 120000)</code></p>
 <div class="section level3">
 <h3 id="preliminaries">Preliminaries<a class="anchor" aria-label="anchor" href="#preliminaries"></a>
 </h3>
-<p>source(“SpatPlan_Process_AquaMaps.R”) # This script reprocesses AquaMaps. WARNING: Lots of time (10s hrs) and memory (10s GB) source(“SpatPlan_Process_MPAs.R”) # Only run if you need to reprocess the MPA data. You will need the WDPA files</p>
+<p>source(“SpatPlan_Process_AquaMaps.R”) # This script reprocesses
+AquaMaps. WARNING: Lots of time (10s hrs) and memory (10s GB)
+source(“SpatPlan_Process_MPAs.R”) # Only run if you need to reprocess
+the MPA data. You will need the WDPA files</p>
 </div>
 <div class="section level3">
 <h3 id="set-user-parameters">Set user parameters<a class="anchor" aria-label="anchor" href="#set-user-parameters"></a>
 </h3>
-<p>You can set a region if it is defined in <code>SpatPlan_Get_PlanningUnits</code>. THe currently defined regions are: <code>Global</code>, <code>Australia</code>, <code>WestPacific</code>. If you need a new region, please submit a PR so others can benefit.</p>
+<p>You can set a region if it is defined in
+<code>SpatPlan_Get_PlanningUnits</code>. THe currently defined regions
+are: <code>Global</code>, <code>Australia</code>,
+<code>WestPacific</code>. If you need a new region, please submit a PR
+so others can benefit.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Region</span> <span class="op">&lt;-</span> <span class="st">"Australia"</span></code></pre></div>
-<p>You can also define a region with square boundaries, which we will do here.</p>
+<p>You can also define a region with square boundaries, which we will do
+here.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Region</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">150</span>, xmax <span class="op">=</span> <span class="fl">160</span>, ymin <span class="op">=</span> <span class="op">-</span><span class="fl">40</span>, ymax <span class="op">=</span> <span class="op">-</span><span class="fl">30</span><span class="op">)</span>
 <span class="va">save_name</span> <span class="op">&lt;-</span> <span class="st">"SEAustralia"</span> <span class="co"># Name used in the saving</span></code></pre></div>
@@ -113,7 +136,8 @@
 <span class="co"># PU_size &lt;- 2620 # km2 (0.5 deg at equator)</span>
 <span class="co"># PU_size = 669.9 # km2 (0.25 deg at equator)</span>
 <span class="co"># PU_size &lt;- 1000 # km2</span></code></pre></div>
-<p>Set the depth range and probability cutoff (<code>CO</code>) for extracting AquaMaps data.</p>
+<p>Set the depth range and probability cutoff (<code>CO</code>) for
+extracting AquaMaps data.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MinDepth</span> <span class="op">&lt;-</span> <span class="fl">0</span>
 <span class="va">MaxDepth</span> <span class="op">&lt;-</span> <span class="fl">200</span>
@@ -130,15 +154,19 @@
 <div class="section level3">
 <h3 id="analysis-region">Analysis Region<a class="anchor" aria-label="anchor" href="#analysis-region"></a>
 </h3>
-<p>Start your analysis by defining your region and setting up the planning units.</p>
+<p>Start your analysis by defining your region and setting up the
+planning units.</p>
 <p>Get the boundary for your chosen region.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Bndry</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_Boundary.html">SpatPlan_Get_Boundary</a></span><span class="op">(</span><span class="va">Region</span>, <span class="va">cCRS</span><span class="op">)</span></code></pre></div>
-<p>Get the land boundaries to remove overlap. The object “world” represents the land mass that should be removed (inverse = FALSE)</p>
+<p>Get the land boundaries to remove overlap. The object “world”
+represents the land mass that should be removed (inverse = FALSE)</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">world</span> <span class="op">&lt;-</span> <span class="fu">rnaturalearth</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rnaturalearth/man/ne_countries.html" class="external-link">ne_countries</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="st">"medium"</span>, returnclass <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">cCRS</span><span class="op">)</span></code></pre></div>
-<p>If Region = WestPacific, demarcating boundary and removing land areas would be different The object “world” here represents the planning region (inverse = TRUE)</p>
+<p>If Region = WestPacific, demarcating boundary and removing land areas
+would be different The object “world” here represents the planning
+region (inverse = TRUE)</p>
 </div>
 <div class="section level3">
 <h3 id="create-planning-units">Create Planning Units<a class="anchor" aria-label="anchor" href="#create-planning-units"></a>
@@ -157,7 +185,11 @@
 <div class="section level4">
 <h4 id="aquamaps">Aquamaps<a class="anchor" aria-label="anchor" href="#aquamaps"></a>
 </h4>
-<p>Get aquamaps data for our species and region TODO Check the overlay of raw v processed species distribution If using Pacific-centered projection, define western and eastern limits west_limit = -120 # use negative numbers for western limit east_limit = 130 # use positive numbers for eastern limit</p>
+<p>Get aquamaps data for our species and region TODO Check the overlay
+of raw v processed species distribution If using Pacific-centered
+projection, define western and eastern limits west_limit = -120 # use
+negative numbers for western limit east_limit = 130 # use positive
+numbers for eastern limit</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">aqua_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_AquaMaps.html">SpatPlan_Get_AquaMaps</a></span><span class="op">(</span><span class="va">PUs</span>, <span class="va">cCRS</span>, <span class="va">MinDepth</span>, <span class="va">MaxDepth</span>, CutOff <span class="op">=</span> <span class="va">CO</span><span class="op">)</span>
 <span class="co">#&gt;       xmin       ymin       xmax       ymax </span>
@@ -186,7 +218,9 @@
 <div class="section level4">
 <h4 id="longhurst-provinces">Longhurst Provinces<a class="anchor" aria-label="anchor" href="#longhurst-provinces"></a>
 </h4>
-<p>You can also assign a Longhurst Province to each PU and set targets individually by province.Here we simply demonstrate this, but do not implement it into a spatial plan.</p>
+<p>You can also assign a Longhurst Province to each PU and set targets
+individually by province.Here we simply demonstrate this, but do not
+implement it into a spatial plan.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Longhurst</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Match_Longhurst.html">SpatPlan_Match_Longhurst</a></span><span class="op">(</span><span class="va">PUs</span>, <span class="va">cCRS</span><span class="op">)</span>
 <span class="co">#&gt; Reading layer `Longhurst_world_v4_2010' from data source </span>
@@ -291,7 +325,9 @@
 <div class="section level3">
 <h3 id="compare-2-solutions">Compare 2 solutions<a class="anchor" aria-label="anchor" href="#compare-2-solutions"></a>
 </h3>
-<p>Here we run another problem/solution combo and compare the output with our original one. With a much lower target (30%), we expect less area set aside.</p>
+<p>Here we run another problem/solution combo and compare the output
+with our original one. With a much lower target (30%), we expect less
+area set aside.</p>
 <div class="section level4">
 <h4 id="create-the-second-planning-problem">Create the second planning problem<a class="anchor" aria-label="anchor" href="#create-the-second-planning-problem"></a>
 </h4>
@@ -338,7 +374,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

@@ -21,7 +21,7 @@ SpatPlan_Get_PlanningUnits(
 
 \item{Shape}{Hexagon or Square}
 
-\item{inverse}{To inver the \code{InnerB} and keep the areas within the InnerB}
+\item{inverse}{To invert the \code{InnerB} and keep the areas within the InnerB}
 }
 \value{
 

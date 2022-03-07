@@ -83,11 +83,19 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(spatialplanr)</span></code></pre></div>
-<p>For a basic introduction to using <code>spatialplanr</code> see the main vignette. This vignette will outline how to undertake a spatial analysis using a Pacific Ocean centred analysis (ie. across the dateline). The same functions are generally used, but additional options may need to specified.</p>
+<p>For a basic introduction to using <code>spatialplanr</code> see the
+main vignette. This vignette will outline how to undertake a spatial
+analysis using a Pacific Ocean centred analysis (ie. across the
+dateline). The same functions are generally used, but additional options
+may need to specified.</p>
 <div class="section level2">
 <h2 id="set-user-parameters">Set user parameters<a class="anchor" aria-label="anchor" href="#set-user-parameters"></a>
 </h2>
-<p>You can set a region if it is defined in <code>SpatPlan_Get_PlanningUnits</code>. THe currently defined regions are: <code>Global</code>, <code>Australia</code>, <code>WestPacific</code>. If you need a new region, please submit a PR so others can benefit.</p>
+<p>You can set a region if it is defined in
+<code>SpatPlan_Get_PlanningUnits</code>. THe currently defined regions
+are: <code>Global</code>, <code>Australia</code>,
+<code>WestPacific</code>. If you need a new region, please submit a PR
+so others can benefit.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Region</span> <span class="op">&lt;-</span> <span class="st">"WestPacific"</span>
 <span class="co"># Region &lt;- "Pacific"</span></code></pre></div>
@@ -95,7 +103,8 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Shape</span> <span class="op">&lt;-</span> <span class="st">"Hexagon"</span> <span class="co"># "Shape of PUs</span>
 <span class="va">PU_size</span> <span class="op">&lt;-</span> <span class="fl">2620</span> <span class="co"># km2 (0.5 deg at equator)</span></code></pre></div>
-<p>Set the depth range and probability cutoff (<code>CO</code>) for extracting AquaMaps data.</p>
+<p>Set the depth range and probability cutoff (<code>CO</code>) for
+extracting AquaMaps data.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MinDepth</span> <span class="op">&lt;-</span> <span class="fl">0</span>
 <span class="va">MaxDepth</span> <span class="op">&lt;-</span> <span class="fl">200</span>
@@ -107,15 +116,19 @@
 <div class="section level2">
 <h2 id="analysis-region">Analysis Region<a class="anchor" aria-label="anchor" href="#analysis-region"></a>
 </h2>
-<p>Start your analysis by defining your region and setting up the planning units.</p>
+<p>Start your analysis by defining your region and setting up the
+planning units.</p>
 <p>Get the boundary for your chosen region.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Bndry</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_Boundary.html">SpatPlan_Get_Boundary</a></span><span class="op">(</span><span class="va">Region</span>, <span class="va">cCRS</span><span class="op">)</span></code></pre></div>
-<p>Get the land boundaries to remove overlap. The object “world” represents the land mass that should be removed (inverse = FALSE)</p>
+<p>Get the land boundaries to remove overlap. The object “world”
+represents the land mass that should be removed (inverse = FALSE)</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">world</span> <span class="op">&lt;-</span> <span class="fu">rnaturalearth</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rnaturalearth/man/ne_countries.html" class="external-link">ne_countries</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="st">"medium"</span>, returnclass <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">cCRS</span><span class="op">)</span></code></pre></div>
-<p>If Region = WestPacific, demarcating boundary and removing land areas would be different The object “world” here represents the planning region (inverse = TRUE)</p>
+<p>If Region = WestPacific, demarcating boundary and removing land areas
+would be different The object “world” here represents the planning
+region (inverse = TRUE)</p>
 </div>
 <div class="section level2">
 <h2 id="create-planning-units">Create Planning Units<a class="anchor" aria-label="anchor" href="#create-planning-units"></a>
@@ -132,7 +145,11 @@
 <div class="section level3">
 <h3 id="aquamaps">Aquamaps<a class="anchor" aria-label="anchor" href="#aquamaps"></a>
 </h3>
-<p>Get aquamaps data for our species and region TODO Check the overlay of raw v processed species distribution If using Pacific-centered projection, define western and eastern limits west_limit = -120 # use negative numbers for western limit east_limit = 130 # use positive numbers for eastern limit</p>
+<p>Get aquamaps data for our species and region TODO Check the overlay
+of raw v processed species distribution If using Pacific-centered
+projection, define western and eastern limits west_limit = -120 # use
+negative numbers for western limit east_limit = 130 # use positive
+numbers for eastern limit</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">aqua_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_AquaMaps.html">SpatPlan_Get_AquaMaps</a></span><span class="op">(</span><span class="va">PUs</span>, <span class="va">cCRS</span>, <span class="va">MinDepth</span>, <span class="va">MaxDepth</span>, CutOff <span class="op">=</span> <span class="va">CO</span><span class="op">)</span></code></pre></div>
 </div>
@@ -159,7 +176,9 @@
 <div class="section level3">
 <h3 id="longhurst-provinces">Longhurst Provinces<a class="anchor" aria-label="anchor" href="#longhurst-provinces"></a>
 </h3>
-<p>You can also assign a Longhurst Province to each PU and set targets individually by province.Here we simply demonstrate this, but do not implement it into a spatial plan.</p>
+<p>You can also assign a Longhurst Province to each PU and set targets
+individually by province.Here we simply demonstrate this, but do not
+implement it into a spatial plan.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Longhurst</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Match_Longhurst.html">SpatPlan_Match_Longhurst</a></span><span class="op">(</span><span class="va">PUs</span>, <span class="va">cCRS</span><span class="op">)</span>
 <span class="op">(</span><span class="va">ggLong</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_Longhurst.html">SpatPlan_Plot_Longhurst</a></span><span class="op">(</span><span class="va">Longhurst</span>, <span class="va">world</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -265,7 +284,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

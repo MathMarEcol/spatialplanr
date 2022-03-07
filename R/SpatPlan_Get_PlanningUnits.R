@@ -13,7 +13,7 @@
 #' @param InnerB An sf multipolygon object which contains all the areas (ie land) that you wish to remove from the grid.
 #' @param CellArea The area in km you wish your resultant Planning Units to be.
 #' @param Shape Hexagon or Square
-#' @param inverse To inver the `InnerB` and keep the areas within the InnerB
+#' @param inverse To invert the `InnerB` and keep the areas within the InnerB
 #'
 #' @return
 #' @export
