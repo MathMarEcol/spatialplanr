@@ -83,7 +83,7 @@ SpatPlan_Plot_Cost <- function(Cost, world){
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = Cost, ggplot2::aes(fill = Cost), colour = "grey80", size = 0.1, show.legend = TRUE) +
     ggplot2::geom_sf(data = world, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
-    ggplot2::coord_sf(xlim = st_bbox(Cost)$xlim, ylim = st_bbox(Cost)$ylim) +
+    ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
     cmocean::scale_fill_cmocean(name = "deep",
                                 aesthetics = c("colour", "fill"),
                                 limits = c(0,

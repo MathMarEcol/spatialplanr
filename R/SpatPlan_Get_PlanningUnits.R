@@ -30,6 +30,8 @@ SpatPlan_Get_PlanningUnits <- function(Bndry,
     diameter <- 2 * sqrt((CellArea*1e6)/((3*sqrt(3)/2))) * sqrt(3)/2 # Diameter in m's
   }
 
+
+
   if(Shape %in% c("square", "Square")){
     sq <- TRUE
     diameter <- sqrt(CellArea*1e6) # Diameter in m's
@@ -55,10 +57,6 @@ SpatPlan_Get_PlanningUnits <- function(Bndry,
   PUs <- PUs[logi_Reg, ] # Get TRUE
 
   # Second, get all the pu's with < 50 % area on land (approximated from the centroid)
-  # logi_Ocean <- st_centroid(PUs) %>%
-  #   st_within(st_union(InnerB)) %>%
-  #   lengths > 0 # Get logical vector instead of sparse geometry binary
-
   logi_Ocean <- sf::st_centroid(PUs) %>%
     sf::st_intersects(InnerB) %>%
     lengths > 0 # Get logical vector instead of sparse geometry binary
@@ -66,7 +64,7 @@ SpatPlan_Get_PlanningUnits <- function(Bndry,
   if(inverse == FALSE){
     PUs <- PUs[!logi_Ocean, ] # Get FALSE
   }
-  else{
+  else {
     PUs <- PUs[logi_Ocean==TRUE, ] # Get TRUE
   }
 

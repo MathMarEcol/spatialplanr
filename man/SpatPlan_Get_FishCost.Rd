@@ -6,7 +6,6 @@
 \usage{
 SpatPlan_Get_FishCost(
   PUs,
-  cCRS,
   group = "all",
   Direc = file.path("~", "SpatPlan_Data")
 )
@@ -19,4 +18,7 @@ SpatPlan_Get_FishCost(
 }
 \description{
 Get fisheries cost layer.
+}
+\examples{
+#' @importFrom rlang .data
 }

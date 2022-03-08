@@ -4,14 +4,28 @@
 \alias{SpatPlan_Get_Boundary}
 \title{Get the boundary of the planning region.}
 \usage{
-SpatPlan_Get_Boundary(Limits, cCRS, Direc = file.path("~", "SpatPlan_Data"))
+SpatPlan_Get_Boundary(
+  Limits,
+  Type,
+  cCRS,
+  Direc = file.path("~", "SpatPlan_Data")
+)
 }
 \arguments{
-\item{cCRS}{}
+\item{Limits}{The limits of the boundary. This can either be a 4 element numeric named vector (c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)), a vector of ocean/sea names, or a vector of EEZs.,}
+
+\item{Type}{The type of Limits being provided. Options are "Ocean" or "EEZ"}
+
+\item{cCRS}{The CRS the boundary is to be returned in}
+
+\item{Direc}{The directory where the MME data is being stored. If not specified, the default location is assumed.}
 }
 \value{
 
 }
 \description{
 Get the boundary of the planning region.
+}
+\examples{
+
 }

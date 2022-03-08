@@ -28,6 +28,12 @@
     <loc>/reference/SpatPlan_Convert_PacificRobinson.html</loc>
   </url>
   <url>
+    <loc>/reference/SpatPlan_Convert_Poly2PUs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpatPlan_Convert_Rast2PUs.html</loc>
+  </url>
+  <url>
     <loc>/reference/SpatPlan_Create_SinglePolygon.html</loc>
   </url>
   <url>
@@ -41,6 +47,9 @@
   </url>
   <url>
     <loc>/reference/SpatPlan_Get_FishCost.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpatPlan_Get_Geomorphic.html</loc>
   </url>
   <url>
     <loc>/reference/SpatPlan_Get_MPAs.html</loc>
@@ -79,10 +88,16 @@
     <loc>/reference/SpatPlan_Plot_Solution.html</loc>
   </url>
   <url>
+    <loc>/reference/SpatPlan_Process_Geomorphic.html</loc>
+  </url>
+  <url>
     <loc>/reference/SpatPlan_fix_FBtype.html</loc>
   </url>
   <url>
     <loc>/reference/SpatPlan_validate_FBNAs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_polygon.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>

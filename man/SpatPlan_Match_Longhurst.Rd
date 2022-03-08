@@ -4,11 +4,7 @@
 \alias{SpatPlan_Match_Longhurst}
 \title{Assign Longhurst Provinces to PUs}
 \usage{
-SpatPlan_Match_Longhurst(
-  PUs,
-  cCRS = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0",
-  Direc = file.path("~", "SpatPlan_Data")
-)
+SpatPlan_Match_Longhurst(PUs, Direc = file.path("~", "SpatPlan_Data"))
 }
 \arguments{
 \item{Direc}{}

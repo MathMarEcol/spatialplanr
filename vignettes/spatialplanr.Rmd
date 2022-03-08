@@ -12,9 +12,13 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   warning=FALSE, 
-  cache=FALSE, 
+  cache=TRUE, 
   message=FALSE
 )
+```
+
+```{r klippy, eval=TRUE, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
 ```
 
 ```{r setup}
@@ -35,26 +39,29 @@ If you run into memory problems, you can try increasing the amount of the HD spa
 `Sys.setenv(GDAL_MAX_BAND_COUNT = 120000)`
 
 ## Preliminaries 
-source("SpatPlan_Process_AquaMaps.R") # This script reprocesses AquaMaps. WARNING: Lots of time (10s hrs) and memory (10s GB)
+A general user should not need to run this. In fact most won't have access to the raw data. We include it for transparency and completeness.
+```{r, eval = FALSE}
+source("SpatPlan_Process_AquaMaps.R") # This script reprocesses AquaMaps. WARNING: Lots of time (10s hrs) and memory (10s GB).    
 source("SpatPlan_Process_MPAs.R") # Only run if you need to reprocess the MPA data. You will need the WDPA files
-
-
-## Set user parameters 
-You can set a region if it is defined in `SpatPlan_Get_PlanningUnits`. THe currently defined regions are: `Global`, `Australia`, `WestPacific`. If you need a new region, please submit a PR so others can benefit.
-```{r}
-Region <- "Australia"
 ```
 
-You can also define a region with square boundaries, which we will do here.
+## Set user parameters 
+You can set a region if it is defined in `SpatPlan_Get_PlanningUnits`. 
+```{r}
+Region <- "Australia" # "South Atlantic Ocean"
+Type <- "EEZ" # "Oceans"
+```
+
+You can also define a region with square boundaries.
 ```{r, eval=FALSE}
 Region <- c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)
-save_name <- "SEAustralia" # Name used in the saving
 ```
 
 Set the shape and area of the planning unit in square kilometres.
 ```{r}
 Shape <- "Hexagon" # "Shape of PUs
 PU_size <- 5240 # km2 (~1 deg at equator)
+
 # PU_size <- 2620 # km2 (0.5 deg at equator)
 # PU_size = 669.9 # km2 (0.25 deg at equator)
 # PU_size <- 1000 # km2
@@ -64,7 +71,7 @@ Set the depth range and probability cutoff (`CO`) for extracting AquaMaps data.
 ```{r}
 MinDepth <- 0
 MaxDepth <- 200
-CO <- 0.5 #Cutoff level for AquaMaps
+CO <- 0.5 # Cutoff level for AquaMaps
 ```
 
 Set minimum and maximum limits for inverse area targets
@@ -85,12 +92,13 @@ Start your analysis by defining your region and setting up the planning units.
 
 Get the boundary for your chosen region.
 ```{r}
-Bndry <- SpatPlan_Get_Boundary(Region, cCRS)
+Bndry <- SpatPlan_Get_Boundary(Region, Type, cCRS)
 ```
 
 Get the land boundaries to remove overlap. The object "world" represents the land mass that should be removed (inverse = FALSE)
 ```{r}
 world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>% 
+  sf::st_make_valid() %>% 
   sf::st_transform(cCRS)
 ```
 If Region = WestPacific, demarcating boundary and removing land areas would be different
@@ -131,25 +139,26 @@ TODO
 SeaFloor <- fSpatPlan_Get_SeaFloor(PUs, cCRS)
 
 ### Geomorphic features 
-TODO
-GeoMorph <- fSpatPlan_Get_GeoMorph(PUs, cCRS)
+```{r}
+PUs <- SpatPlan_Get_Geomorphic(PUs, Feature = "Seamount")
+```
 
 ### Longhurst Provinces
 You can also assign a Longhurst Province to each PU and set targets individually by province.Here we simply demonstrate this, but do not implement it into a spatial plan.
 ```{r, fig.width=7}
-Longhurst <- SpatPlan_Match_Longhurst(PUs, cCRS)
+Longhurst <- SpatPlan_Match_Longhurst(PUs)
 (ggLong <- SpatPlan_Plot_Longhurst(Longhurst, world))
 ```
 
 ### Get locked in areas 
 ```{r, fig.width=7}
-LockedIn <- SpatPlan_Get_MPAs(PUs, cCRS)
+LockedIn <- SpatPlan_Get_MPAs(PUs, Status = c("Designated", "Adopted", "Inscribed", "Established"))
 (ggMPA <- SpatPlan_Plot_MPAs(LockedIn, world)) # Plot Locked in areas
 ```
 
 ## Get Fisheries cost 
 ```{r, fig.width=7}
-Cost <- SpatPlan_Get_FishCost(PUs, cCRS)
+Cost <- SpatPlan_Get_FishCost(PUs, group = "all")
 (ggCost <- SpatPlan_Plot_Cost(Cost, world)) # Plot cost
 ```
 

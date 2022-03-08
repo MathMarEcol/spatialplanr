@@ -20,7 +20,7 @@ Suggests:
     rredlist
 VignetteBuilder: knitr
 Depends:
-    stars
+    R (>= 2.10)
 Imports: 
     cmocean,
     dplyr,
@@ -29,11 +29,13 @@ Imports:
     magrittr,
     patchwork,
     raster,
-    readr,
+    readr (>= 2.0.0),
     rfishbase,
+    rlang,
     rnaturalearth,
     rnaturalearthdata,
     scales,
     sf,
+    stars,
     stringr,
     terra
