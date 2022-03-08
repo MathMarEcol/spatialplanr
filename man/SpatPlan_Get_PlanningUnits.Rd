@@ -21,7 +21,7 @@ SpatPlan_Get_PlanningUnits(
 
 \item{Shape}{Hexagon or Square}
 
-\item{inverse}{To inver the \code{InnerB} and keep the areas within the InnerB}
+\item{inverse}{To invert the \code{InnerB} and keep the areas within the InnerB}
 }
 \value{
 
@@ -34,5 +34,5 @@ The code assumes that any Planning Unit whose centroids is over land will be rem
 \details{
 Written by Jason Everett (UQ/UNSW/CSIRO)
 Written: 15 December 2020
-Updated: 10th February 2022
+Updated: 25th February 2022
 }

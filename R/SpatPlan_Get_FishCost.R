@@ -9,8 +9,8 @@
 #' @export
 #'
 #' @examples
+#' #' @importFrom rlang .data
 SpatPlan_Get_FishCost <- function(PUs,
-                                  cCRS,
                                   group = "all",
                                   Direc = file.path("~", "SpatPlan_Data")){
 
@@ -44,13 +44,13 @@ SpatPlan_Get_FishCost <- function(PUs,
       dplyr::mutate(medium = ifelse(is.na(.data$MediumPelagics30_89Cm), small_value[1], data$MediumPelagics30_89Cm),
                     small = ifelse(is.na(data$SmallPelagics30Cm), small_value[2], data$SmallPelagics30Cm),
                     large = ifelse(is.na(data$LargePelagics90Cm), small_value[3], data$LargePelagics90Cm)) %>%
-      dplyr::select(medium, small, large, geometry) %>%
-      dplyr::mutate(layer = medium + small + large) %>% # get the sum
-      dplyr::select(layer, geometry) # only select sum and geometry
+      dplyr::select(.data$medium, .data$small, .data$large, .data$geometry) %>%
+      dplyr::mutate(layer =.data$ medium + .data$small + .data$large) %>% # get the sum
+      dplyr::select(.data$layer, .data$geometry) # only select sum and geometry
   }
 
   # If Pacific-centered:
-  if(cCRS == "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"){
+  if(sf::st_crs(PUs) == "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"){
     temp_cost <- call_cost %>%
       sf::st_make_valid() %>%
       sf::st_transform(longlat)
@@ -60,14 +60,14 @@ SpatPlan_Get_FishCost <- function(PUs,
 
     Cost <- temp_cost %>%
       sf::st_interpolate_aw(PUs, extensive = FALSE) %>%
-      dplyr::rename(Cost = layer)
+      dplyr::rename(Cost = .data$layer)
 
     return(Cost)
   }
 
   else{
     Cost <- call_cost %>%
-      sf::st_transform(cCRS) %>% # Transform to robinson
+      sf::st_transform(sf::st_crs(PUs)) %>% # Transform to CRS of PUs
       sf::st_interpolate_aw(PUs, extensive = FALSE) %>% ## intersect with PUs
       dplyr::rename(Cost = layer)
 

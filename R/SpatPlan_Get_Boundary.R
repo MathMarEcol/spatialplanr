@@ -1,13 +1,18 @@
 #' Get the boundary of the planning region.
 #'
-#' @param Limits
-#' @param cCRS
+#' @param Limits The limits of the boundary. This can either be a 4 element numeric named vector (c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)), a vector of ocean/sea names, or a vector of EEZs.,
+#' @param Type The type of Limits being provided. Options are "Ocean" or "EEZ"
+#' @param cCRS The CRS the boundary is to be returned in
+#' @param Direc The directory where the MME data is being stored. If not specified, the default location is assumed.
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#'
+#' @importFrom rlang .data
 SpatPlan_Get_Boundary <- function(Limits,
+                                  Type,
                                   cCRS,
                                   Direc = file.path("~", "SpatPlan_Data")){
 
@@ -15,15 +20,7 @@ SpatPlan_Get_Boundary <- function(Limits,
     stop(paste("The Data folder does not exist at ",Direc,". Please download from the RDM and then try again. See https://github.com/MathMarEcol/spatialplanr for details."))
   }
 
-  # Create function for creating polygon
-  polygon <- function(x){
-    x <- x %>%
-      as.matrix() %>%
-      list() %>%
-      sf::st_polygon() %>%
-      sf::st_sfc(crs = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0") %>%
-      sf::st_transform(crs = cCRS)
-  }
+
 
   # if Pacific-centered, two polygons then union them:
   if (is.numeric(Limits) && cCRS == "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"){
@@ -32,13 +29,13 @@ SpatPlan_Get_Boundary <- function(Limits,
       dplyr::bind_rows(dplyr::tibble(x = Limits["xmin"], y = seq(Limits["ymin"], Limits["ymax"], by = 1))) %>%
       dplyr::bind_rows(dplyr::tibble(x = seq(Limits["xmin"], -180, by = -1), y = Limits["ymax"])) %>%
       dplyr::bind_rows(dplyr::tibble(x = -180, y = seq(Limits["ymax"], Limits["ymin"], by = -1))) %>%
-      polygon()
+      get_polygon(cCRS)
 
     Bndry2 <- dplyr::tibble(x = seq(180, Limits["xmax"], by = -1), y = Limits["ymin"]) %>%
       dplyr::bind_rows(dplyr::tibble(x = Limits["xmax"], y = seq(Limits["ymin"], Limits["ymax"], by = 1))) %>%
       dplyr::bind_rows(dplyr::tibble(x = seq(Limits["xmax"], 180, by = 1), y = Limits["ymax"])) %>%
       dplyr::bind_rows(dplyr::tibble(x = 180, y = seq(Limits["ymax"], Limits["ymin"], by = -1))) %>%
-      polygon()
+      get_polygon(cCRS)
 
     Bndry <- sf::st_union(Bndry1, Bndry2)
 
@@ -50,7 +47,7 @@ SpatPlan_Get_Boundary <- function(Limits,
       dplyr::bind_rows(dplyr::tibble(x = Limits["xmax"], y = seq(Limits["ymin"], Limits["ymax"], by = 1))) %>%
       dplyr::bind_rows(dplyr::tibble(x = seq(Limits["xmax"], Limits["xmin"], by = -1), y = Limits["ymax"])) %>%
       dplyr::bind_rows(dplyr::tibble(x = Limits["xmin"], y = seq(Limits["ymax"], Limits["ymin"], by = -1))) %>%
-      polygon()
+      get_polygon(cCRS)
 
     return(Bndry)
   }
@@ -60,7 +57,7 @@ SpatPlan_Get_Boundary <- function(Limits,
       dplyr::bind_rows(dplyr::tibble(x = 180, y = seq(-90, 90, by = 1))) %>%
       dplyr::bind_rows(dplyr::tibble(x = seq(180, -180, by = -1), y = 90)) %>%
       dplyr::bind_rows(dplyr::tibble(x = -180, y = seq(90, -90, by = -1))) %>%
-      polygon()
+      get_polygon(cCRS)
 
     return(Bndry)
   }
@@ -174,25 +171,29 @@ SpatPlan_Get_Boundary <- function(Limits,
     #########################################################
 
     res = 0.1 # 0.1 degree raster
-    pacific_robinson <- SpatPlan_Create_SinglePolygon(ocean_sf, res) %>%
+    Bndry <- SpatPlan_Create_SinglePolygon(ocean_sf, res) %>%
       SpatPlan_Convert_PacificRobinson()
 
-    return(pacific_robinson)
+    return(Bndry)
   }
 
-  # Add Indian
 
-
-  # Add Atlantic
-
-
-  # Add EEZs
-
-  if (Limits == "Australia"){
-    # Get Australia's EEZ
+  if (Type == "EEZ"){
     Bndry <- sf::st_read(file.path(Direc, "World_EEZ_v11", "eez_v11.shp"), quiet = TRUE) %>%
-      dplyr::filter(TERRITORY1 == "Australia") %>%
+      dplyr::filter(.data$TERRITORY1 %in% Limits) %>%
       sf::st_transform(cCRS)
+    return(Bndry)
   }
+
+  if (Type == "Oceans"){
+    Bndry <- rnaturalearth::ne_download(scale = "large",
+                                        category = "physical",
+                                        type = "geography_marine_polys",
+                                        returnclass = "sf") %>%
+      dplyr::filter(name %in% Limits)
+    return(Bndry)
+  }
+
+
 
 }

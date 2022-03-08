@@ -9,7 +9,6 @@
 #'
 #' @examples
 SpatPlan_Match_Longhurst <- function(PUs,
-                                     cCRS = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0",
                                      Direc = file.path("~", "SpatPlan_Data")){
 
 
@@ -18,7 +17,7 @@ SpatPlan_Match_Longhurst <- function(PUs,
   }
 
   longh <- sf::st_read(file.path(Direc,"LonghurstProvinces","Longhurst_world_v4_2010.shp")) %>%
-    sf::st_transform(cCRS)
+    sf::st_transform(sf::st_crs(PUs))
 
   nr <- sf::st_nearest_feature(PUs, longh)
 

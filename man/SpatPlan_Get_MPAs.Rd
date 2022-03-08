@@ -6,18 +6,26 @@
 \usage{
 SpatPlan_Get_MPAs(
   PUs,
-  cCRS = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0",
   Status = "Designated",
   Desig = c("National", "Regional", "International", "Not Applicable"),
   Direc = file.path("~", "SpatPlan_Data")
 )
 }
 \arguments{
-\item{Desig}{}
+\item{PUs}{The planning units}
+
+\item{Status}{The status of the MPA. Options are: "Designated", "Adopted", "Inscribed", "Established"}
+
+\item{Desig}{The designation of the MPA. Options are "National", "Regional", "International", "Not Applicable"}
+
+\item{Direc}{The directory where the MME data is being stored. If not specified, the default location is assumed.}
 }
 \value{
 
 }
 \description{
 Get locked in areas
+}
+\examples{
+
 }

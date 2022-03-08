@@ -7,13 +7,13 @@
 #'
 #' Written by Jason Everett (UQ/UNSW/CSIRO)
 #' Written: 15 December 2020
-#' Updated: 10th February 2022
+#' Updated: 25th February 2022
 #'
 #' @param Bndry An sf polygon object which outlines the limits of the study area.
 #' @param InnerB An sf multipolygon object which contains all the areas (ie land) that you wish to remove from the grid.
 #' @param CellArea The area in km you wish your resultant Planning Units to be.
 #' @param Shape Hexagon or Square
-#' @param inverse To inver the `InnerB` and keep the areas within the InnerB
+#' @param inverse To invert the `InnerB` and keep the areas within the InnerB
 #'
 #' @return
 #' @export
@@ -29,6 +29,8 @@ SpatPlan_Get_PlanningUnits <- function(Bndry,
     sq <- FALSE
     diameter <- 2 * sqrt((CellArea*1e6)/((3*sqrt(3)/2))) * sqrt(3)/2 # Diameter in m's
   }
+
+
 
   if(Shape %in% c("square", "Square")){
     sq <- TRUE
@@ -55,10 +57,6 @@ SpatPlan_Get_PlanningUnits <- function(Bndry,
   PUs <- PUs[logi_Reg, ] # Get TRUE
 
   # Second, get all the pu's with < 50 % area on land (approximated from the centroid)
-  # logi_Ocean <- st_centroid(PUs) %>%
-  #   st_within(st_union(InnerB)) %>%
-  #   lengths > 0 # Get logical vector instead of sparse geometry binary
-
   logi_Ocean <- sf::st_centroid(PUs) %>%
     sf::st_intersects(InnerB) %>%
     lengths > 0 # Get logical vector instead of sparse geometry binary
@@ -66,8 +64,12 @@ SpatPlan_Get_PlanningUnits <- function(Bndry,
   if(inverse == FALSE){
     PUs <- PUs[!logi_Ocean, ] # Get FALSE
   }
-  else{
+  else {
     PUs <- PUs[logi_Ocean==TRUE, ] # Get TRUE
   }
+
+  PUs <- PUs %>%
+    dplyr::mutate(cellID = dplyr::row_number()) # Add a cell ID reference
+
   return(PUs)
 }
