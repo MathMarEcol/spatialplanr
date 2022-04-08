@@ -7,7 +7,7 @@
 #'
 #' Written by Jason Everett (UQ/UNSW/CSIRO)
 #' Written: 15 December 2020
-#' Updated: 25th February 2022
+#' Updated: 8th April 2022
 #'
 #' @param Bndry An sf polygon object which outlines the limits of the study area.
 #' @param InnerB An sf multipolygon object which contains all the areas (ie land) that you wish to remove from the grid.
@@ -29,8 +29,6 @@ SpatPlan_Get_PlanningUnits <- function(Bndry,
     sq <- FALSE
     diameter <- 2 * sqrt((CellArea*1e6)/((3*sqrt(3)/2))) * sqrt(3)/2 # Diameter in m's
   }
-
-
 
   if(Shape %in% c("square", "Square")){
     sq <- TRUE
