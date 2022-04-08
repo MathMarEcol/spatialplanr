@@ -1,13 +1,14 @@
 
-# Create function for creating polygon
+# Function for creating polygon
 #' Title
 #'
 #' @param x
 #'
 #' @return
+#' @export
 #'
 #' @examples
-get_polygon <- function(x, cCRS){
+SpatPlan_Create_Polygon <- function(x, cCRS){
   x <- x %>%
     as.matrix() %>%
     list() %>%
