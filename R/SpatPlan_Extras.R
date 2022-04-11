@@ -39,6 +39,7 @@
 #'
 #' @examples
 #' SpatPlan_validate_FBNAs(data.frame(Species = "Thunnus maccoyii"))
+#' @importFrom rlang .data
 SpatPlan_validate_FBNAs <- function(spp, datab = "fishbase"){
   spp <- spp %>%
     dplyr::mutate(ValidSpecies = NA, valid = FALSE)
@@ -55,7 +56,7 @@ SpatPlan_validate_FBNAs <- function(spp, datab = "fishbase"){
       # First check if any match the original name
       # Sometimes a species comes back as valid, with an alternative.
       # Here we check if the name was in fact in the output
-      out2 <- out[which(stringr::str_detect(out,spp$Species[a]))]
+      out2 <- out[which(stringr::str_detect(out, spp$Species[a]))]
       spp$valid[a] <- TRUE
       if (length(out2) == 1){ # Name existed in the original
         spp$ValidSpecies[a] <- out2
@@ -66,7 +67,7 @@ SpatPlan_validate_FBNAs <- function(spp, datab = "fishbase"){
   }
 
   spp <- spp %>%
-    dplyr::rename(OrigSpecies = Species)
+    dplyr::rename(OrigSpecies = .data$Species)
 }
 
 
@@ -79,9 +80,9 @@ SpatPlan_validate_FBNAs <- function(spp, datab = "fishbase"){
 #' @return
 #' @export
 #'
-#' @importFrom magrittr "%>%"
-#'
 #' @examples
+#' @importFrom rlang .data
+
 SpatPlan_Create_SinglePolygon <- function (df, res){
 
   # Creating a empty raster
@@ -92,13 +93,13 @@ SpatPlan_Create_SinglePolygon <- function (df, res){
   # Fasterize the land object
   df_rs <- fasterize::fasterize(df, rs)
 
-  pol <- as(df_rs,  "SpatialPolygonsDataFrame")
+  pol <- stars::as(df_rs,  "SpatialPolygonsDataFrame")
   pol$layer <- seq(1, length(pol))
 
   # Now to a sf object and create ONE BIG polygon that we can use to populate with PUs
   pol_sf <- sf::st_as_sf(pol) %>%
-    dplyr::select(layer) %>%
-    dplyr::summarise(total_layer = sum(layer, do_union = TRUE))
+    dplyr::select(.data$layer) %>%
+    dplyr::summarise(total_layer = sum(.data$layer, do_union = TRUE))
 }
 
 #' Ensure all features are in the same order.
@@ -171,6 +172,8 @@ SpatPlan_ArrangeFeatures <- function(df){
 #' Crop AquaMaps Data
 #'
 #' @param extent
+#' @param dat
+#' @param spp
 #'
 #' @return
 #' @export
@@ -182,6 +185,5 @@ SpatPlan_Crop_AQM <- function(dat, spp, extent){
     stars:::slice.stars(along = "band", index = spp$SpeciesIDNum) %>% # indexes rows based on SpeciesIDNum
     stars::st_as_stars() %>% # loads it into memory
     stars::st_set_dimensions("band", values = spp$longnames) %>%
-    sf::st_as_sf(na.rm = FALSE, as_points = FALSE, merge = FALSE) %>%
-    sf::st_transform(cCRS) # Transform to robinson
+    sf::st_as_sf(na.rm = FALSE, as_points = FALSE, merge = FALSE)
 }

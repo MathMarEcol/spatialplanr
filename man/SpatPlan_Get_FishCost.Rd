@@ -19,6 +19,3 @@ SpatPlan_Get_FishCost(
 \description{
 Get fisheries cost layer.
 }
-\examples{
-#' @importFrom rlang .data
-}

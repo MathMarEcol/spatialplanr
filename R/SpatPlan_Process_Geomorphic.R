@@ -8,6 +8,7 @@
 #'
 #' @examples
 #'
+#' @importFrom rlang .data
 SpatPlan_Process_Geomorphic <- function(Direc = file.path("~", "SpatPlan_Data")){
 
   Layers <- c("Abyss", "Abyssal_Classification", "Basins", "Bridges", "Canyons",
@@ -21,18 +22,18 @@ SpatPlan_Process_Geomorphic <- function(Direc = file.path("~", "SpatPlan_Data"))
   dat <- purrr::map_dfr(.x = fd, .f = ~sf::st_make_valid(sf::st_read(.x))) # 152079
 
   Shelf <- dat %>%
-    dplyr::filter(Geomorphic == "Shelf" & Class != "NA") %>%
-    dplyr::mutate(Geomorphic = paste(Geomorphic, Class, sep = "_"))
+    dplyr::filter(.data$Geomorphic == "Shelf" & .data$Class != "NA") %>%
+    dplyr::mutate(Geomorphic = paste(.data$Geomorphic, .data$Class, sep = "_"))
 
   Abyss <- dat %>%
-    dplyr::filter(Geomorphic == "Abyss" & Class != "NA") %>%
-    dplyr::mutate(Geomorphic = paste(Geomorphic, Class, sep = "_"))
+    dplyr::filter(.data$Geomorphic == "Abyss" & .data$Class != "NA") %>%
+    dplyr::mutate(Geomorphic = paste(.data$Geomorphic, .data$Class, sep = "_"))
 
 
   dat2 <- dat %>%
-    dplyr::filter(is.na(Class)) %>%
-    dplyr::bind_rows(Shelf) %>%
-    dplyr::bind_rows(Abyss)
+    dplyr::filter(is.na(.data$Class)) %>%
+    dplyr::bind_rows(.data$Shelf) %>%
+    dplyr::bind_rows(.data$Abyss)
 
   if (nrow(dat2) != nrow(dat)){
     stop("The number of rows in dat2 is incorrect. Check filtering")

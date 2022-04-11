@@ -7,7 +7,7 @@
 SpatPlan_Crop_AQM(dat, spp, extent)
 }
 \arguments{
-\item{extent}{}
+\item{spp}{}
 }
 \value{
 

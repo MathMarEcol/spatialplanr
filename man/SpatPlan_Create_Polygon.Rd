@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{SpatPlan_Create_Polygon}
 \alias{SpatPlan_Create_Polygon}
-\title{Title}
+\title{Function for creating polygon}
 \usage{
 SpatPlan_Create_Polygon(x, cCRS)
 }
@@ -13,5 +13,5 @@ SpatPlan_Create_Polygon(x, cCRS)
 
 }
 \description{
-Title
+Function for creating polygon
 }

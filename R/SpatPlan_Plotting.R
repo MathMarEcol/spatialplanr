@@ -10,8 +10,13 @@
 #'
 #' @examples
 SpatPlan_Plot_Solution <- function(s1, PlanUnits, world){
+
+  s1 <- s1 %>%
+    dplyr::select(.data$solution_1) %>%
+    dplyr::mutate(solution_1 = as.logical(.data$solution_1)) # Making it logical helps with the plotting
+
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = s1, ggplot2::aes(fill = solution_1), colour = NA, size = 0.1, show.legend = FALSE) +
+    ggplot2::geom_sf(data = s1, ggplot2::aes(fill = .data$solution_1), colour = NA, size = 0.1, show.legend = FALSE) +
     ggplot2::geom_sf(data = PlanUnits, colour = "lightblue", fill = NA, size = 0.1, show.legend = FALSE) +
     ggplot2::geom_sf(data = world, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
@@ -55,7 +60,7 @@ SpatPlan_Plot_PUs <- function(PlanUnits, world){
 #' @examples
 SpatPlan_Plot_MPAs <- function(LockedIn, world){
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = LockedIn, ggplot2::aes(fill = locked_in), colour = "lightblue", size = 0.1, show.legend = FALSE) +
+    ggplot2::geom_sf(data = LockedIn, ggplot2::aes(fill = .data$locked_in), colour = "lightblue", size = 0.1, show.legend = FALSE) +
     ggplot2::geom_sf(data = world, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
     ggplot2::scale_colour_manual(values = c("TRUE" = "blue",
                                             "FALSE" = "grey50")) +
@@ -87,7 +92,7 @@ SpatPlan_Plot_Cost <- function(Cost, world){
     cmocean::scale_fill_cmocean(name = "deep",
                                 aesthetics = c("colour", "fill"),
                                 limits = c(0,
-                                           as.numeric(quantile(Cost$Cost, 0.99))),
+                                           as.numeric(stats::quantile(Cost$Cost, 0.99))),
                                 oob = scales::squish) +
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = "Cost (USD)")
@@ -105,23 +110,24 @@ SpatPlan_Plot_Cost <- function(Cost, world){
 #' @export
 #'
 #' @examples
+#' @importFrom rlang .data
 SpatPlan_Plot_Comparison <- function(soln1, soln2, world){
 
   soln <- soln1 %>%
-    dplyr::select(solution_1) %>%
+    dplyr::select(.data$solution_1) %>%
     dplyr::bind_cols(soln2 %>%
                        dplyr::as_tibble() %>%
-                       dplyr::select(solution_1) %>%
-                       dplyr::rename(solution_2 = solution_1)) %>%
-    dplyr::mutate(Combined = solution_1 + solution_2) %>%
+                       dplyr::select(.data$solution_1) %>%
+                       dplyr::rename(solution_2 = .data$solution_1)) %>%
+    dplyr::mutate(Combined = .data$solution_1 + .data$solution_2) %>%
     dplyr::mutate(Compare = dplyr::case_when(Combined == 2 ~ "Same",
                                              solution_1 == 1 & solution_2 == 0 ~ "Removed (-)",
                                              solution_1 == 0 & solution_2 == 1 ~ "Added (+)"),
-                  Compare = factor(Compare, levels = c("Added (+)", "Same", "Removed (-)"))) %>%
-    dplyr::filter(!is.na(Compare))
+                  Compare = factor(.data$Compare, levels = c("Added (+)", "Same", "Removed (-)"))) %>%
+    dplyr::filter(!is.na(.data$Compare))
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = soln, ggplot2::aes(fill = Compare), colour = NA, size = 0.0001) +
+    ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$Compare), colour = NA, size = 0.0001) +
     ggplot2::geom_sf(data = world, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
     ggplot2::theme_bw() +
@@ -143,12 +149,12 @@ SpatPlan_Plot_FeatureNo <- function(df, world){
 
   df <- df %>%
     dplyr::as_tibble() %>%
-    dplyr::mutate(FeatureSum = rowSums(dplyr::across(where(is.numeric)), na.rm = TRUE)) %>%
+    dplyr::mutate(FeatureSum = rowSums(dplyr::across(tidyselect:::where(is.numeric)), na.rm = TRUE)) %>%
     sf::st_as_sf(sf_column_name = "geometry") %>%
-    dplyr::select(FeatureSum)
+    dplyr::select(.data$FeatureSum)
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = df, ggplot2::aes(fill = FeatureSum), colour = "grey80", size = 0.1, show.legend = TRUE) +
+    ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$FeatureSum), colour = "grey80", size = 0.1, show.legend = TRUE) +
     ggplot2::geom_sf(data = world, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
     cmocean::scale_fill_cmocean(name = "deep",
@@ -173,7 +179,7 @@ SpatPlan_Plot_FeatureNo <- function(df, world){
 #' @examples
 SpatPlan_Plot_Longhurst <- function(PlanUnits, world){
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = PlanUnits, colour = "lightblue", ggplot2::aes(fill = ProvDescr), size = 0.1, show.legend = TRUE) +
+    ggplot2::geom_sf(data = PlanUnits, colour = "lightblue", ggplot2::aes(fill = .data$ProvDescr), size = 0.1, show.legend = TRUE) +
     ggplot2::geom_sf(data = world, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
     ggplot2::theme_bw() +

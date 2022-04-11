@@ -10,6 +10,9 @@
 #' @export
 #'
 #' @examples
+#'
+#' @importFrom rlang :=
+#' @importFrom rlang .data
 SpatPlan_Convert_Rast2PUs <- function(file, # filename
                                       PUs, # Planning Units
                                       binary = FALSE){
@@ -35,7 +38,7 @@ SpatPlan_Convert_Rast2PUs <- function(file, # filename
 
   if (any(stringr::str_detect(colnames(out), "layer"))){
     out <- out %>%
-      dplyr::rename(!!nm := layer)
+      dplyr::rename(!!nm := .data$layer)
   }
 
   if (binary == TRUE) {
@@ -82,6 +85,7 @@ SpatPlan_Convert_Rast2PUs <- function(file, # filename
 #' @export
 #'
 #' @examples
+#' @importFrom rlang :=
 SpatPlan_Convert_Poly2PUs <- function(file, # filename
                                       PUs, # Planning Units
                                       binary = FALSE){
@@ -102,7 +106,7 @@ SpatPlan_Convert_Poly2PUs <- function(file, # filename
 
   if (binary == TRUE) {
 
-    logi_overlap <- sf::st_centroid(PUs) %>% #Second, get all the pu's with centroid inside the polygons
+    logi_overlap <- sf::st_centroid(PUs) %>% # Second, get all the pu's with centroid inside the polygons
       sf::st_within(dat, sparse = FALSE) %>%
       rowSums() %>%
       as.logical() %>%
@@ -116,7 +120,7 @@ SpatPlan_Convert_Poly2PUs <- function(file, # filename
   } else if (binary == FALSE) {
 
     out <- PUs %>%
-      dplyr::mutate(!!nm := exactextractr::exact_extract(dat, PUs, 'mean'))
+      dplyr::mutate(!!nm := exactextractr::exact_extract(dat, PUs, "mean"))
 
   }
 

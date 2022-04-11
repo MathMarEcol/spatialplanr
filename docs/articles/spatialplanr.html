@@ -45,18 +45,6 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/PacificCentred.html">Pacific-Centred Spatial Analysis</a>
-    </li>
-  </ul>
-</li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
 </div>
@@ -136,7 +124,7 @@ completeness.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Shape</span> <span class="op">&lt;-</span> <span class="st">"Hexagon"</span> <span class="co"># "Shape of PUs</span>
 <span class="va">PU_size</span> <span class="op">&lt;-</span> <span class="fl">5240</span> <span class="co"># km2 (~1 deg at equator)</span>
-
+<span class="va">PU_size</span> <span class="op">&lt;-</span> <span class="fl">10480</span> <span class="co"># km2</span>
 <span class="co"># PU_size &lt;- 2620 # km2 (0.5 deg at equator)</span>
 <span class="co"># PU_size = 669.9 # km2 (0.25 deg at equator)</span>
 <span class="co"># PU_size &lt;- 1000 # km2</span></code></pre></div>
@@ -163,25 +151,21 @@ planning units.</p>
 <p>Get the boundary for your chosen region.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Bndry</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_Boundary.html">SpatPlan_Get_Boundary</a></span><span class="op">(</span><span class="va">Region</span>, <span class="va">Type</span>, <span class="va">cCRS</span><span class="op">)</span></code></pre></div>
-<p>Get the land boundaries to remove overlap. The object “world”
+<p>Get the land boundaries to remove overlap. The object “landmass”
 represents the land mass that should be removed (inverse = FALSE)</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">world</span> <span class="op">&lt;-</span> <span class="fu">rnaturalearth</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rnaturalearth/man/ne_countries.html" class="external-link">ne_countries</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="st">"medium"</span>, returnclass <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/valid.html" class="external-link">st_make_valid</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+<code class="sourceCode R"><span class="va">landmass</span> <span class="op">&lt;-</span> <span class="fu">rnaturalearth</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rnaturalearth/man/ne_countries.html" class="external-link">ne_countries</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="st">"medium"</span>, returnclass <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">cCRS</span><span class="op">)</span></code></pre></div>
-<p>If Region = WestPacific, demarcating boundary and removing land areas
-would be different The object “world” here represents the planning
-region (inverse = TRUE)</p>
 </div>
 <div class="section level3">
 <h3 id="create-planning-units">Create Planning Units<a class="anchor" aria-label="anchor" href="#create-planning-units"></a>
 </h3>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">PUs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_PlanningUnits.html">SpatPlan_Get_PlanningUnits</a></span><span class="op">(</span><span class="va">Bndry</span>, <span class="va">world</span>, <span class="va">PU_size</span>, <span class="va">Shape</span><span class="op">)</span>
-<span class="co">#&gt; [1] "Range of cellsize are 5240 km2 to 5240 km2"</span></code></pre></div>
+<code class="sourceCode R"><span class="va">PUs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_PlanningUnits.html">SpatPlan_Get_PlanningUnits</a></span><span class="op">(</span><span class="va">Bndry</span>, <span class="va">landmass</span>, <span class="va">PU_size</span>, <span class="va">Shape</span><span class="op">)</span>
+<span class="co">#&gt; [1] "Range of cellsize are 10480 km2 to 10480 km2"</span></code></pre></div>
 <p>We can check what the PUs look like</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">ggPU</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_PUs.html">SpatPlan_Plot_PUs</a></span><span class="op">(</span><span class="va">PUs</span>, <span class="va">world</span><span class="op">)</span><span class="op">)</span> <span class="co"># Plot Planning Units</span></code></pre></div>
+<code class="sourceCode R"><span class="op">(</span><span class="va">ggPU</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_PUs.html">SpatPlan_Plot_PUs</a></span><span class="op">(</span><span class="va">PUs</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span> <span class="co"># Plot Planning Units</span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
 </div>
 <div class="section level3">
@@ -190,42 +174,22 @@ region (inverse = TRUE)</p>
 <div class="section level4">
 <h4 id="aquamaps">Aquamaps<a class="anchor" aria-label="anchor" href="#aquamaps"></a>
 </h4>
-<p>Get aquamaps data for our species and region TODO Check the overlay
-of raw v processed species distribution If using Pacific-centered
-projection, define western and eastern limits west_limit = -120 # use
-negative numbers for western limit east_limit = 130 # use positive
-numbers for eastern limit</p>
+<p>Get aquamaps data for our species and region</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">aqua_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_AquaMaps.html">SpatPlan_Get_AquaMaps</a></span><span class="op">(</span><span class="va">PUs</span>, <span class="va">cCRS</span>, <span class="va">MinDepth</span>, <span class="va">MaxDepth</span>, CutOff <span class="op">=</span> <span class="va">CO</span><span class="op">)</span>
-<span class="co">#&gt;       xmin       ymin       xmax       ymax </span>
-<span class="co">#&gt; 107.932448 -47.978833 164.404230  -7.866356</span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="iucn">IUCN<a class="anchor" aria-label="anchor" href="#iucn"></a>
-</h4>
-<p>TODO IUCN &lt;- fSpatPlan_Get_IUCN(PUs, cCRS)</p>
-</div>
-<div class="section level4">
-<h4 id="mico">MICO<a class="anchor" aria-label="anchor" href="#mico"></a>
-</h4>
-<p>TODO MICO &lt;- fSpatPlan_Get_MICO(PUs, cCRS)</p>
-</div>
-<div class="section level4">
-<h4 id="seafloor">Seafloor<a class="anchor" aria-label="anchor" href="#seafloor"></a>
-</h4>
-<p>TODO SeaFloor &lt;- fSpatPlan_Get_SeaFloor(PUs, cCRS)</p>
+<code class="sourceCode R"><span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_AquaMaps.html">SpatPlan_Get_AquaMaps</a></span><span class="op">(</span><span class="va">PUs</span>, <span class="va">MinDepth</span>, <span class="va">MaxDepth</span>, CutOff <span class="op">=</span> <span class="va">CO</span><span class="op">)</span> <span class="co">#TODO Check the overlay of raw v processed species distribution</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="geomorphic-features">Geomorphic features<a class="anchor" aria-label="anchor" href="#geomorphic-features"></a>
 </h4>
+<p>Add geomorphic features to the existing features object.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">PUs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_Geomorphic.html">SpatPlan_Get_Geomorphic</a></span><span class="op">(</span><span class="va">PUs</span>, Feature <span class="op">=</span> <span class="st">"Seamount"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_Geomorphic.html">SpatPlan_Get_Geomorphic</a></span><span class="op">(</span><span class="va">features</span>, Feature <span class="op">=</span> <span class="st">"Seamount"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="longhurst-provinces">Longhurst Provinces<a class="anchor" aria-label="anchor" href="#longhurst-provinces"></a>
 </h4>
 <p>You can also assign a Longhurst Province to each PU and set targets
-individually by province.Here we simply demonstrate this, but do not
+individually by province. Here we simply demonstrate this, but do not
 implement it into a spatial plan.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Longhurst</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Match_Longhurst.html">SpatPlan_Match_Longhurst</a></span><span class="op">(</span><span class="va">PUs</span><span class="op">)</span>
@@ -237,7 +201,7 @@ implement it into a spatial plan.</p>
 <span class="co">#&gt; Dimension:     XY</span>
 <span class="co">#&gt; Bounding box:  xmin: -180 ymin: -78.50016 xmax: 180 ymax: 90</span>
 <span class="co">#&gt; Geodetic CRS:  WGS 84</span>
-<span class="op">(</span><span class="va">ggLong</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_Longhurst.html">SpatPlan_Plot_Longhurst</a></span><span class="op">(</span><span class="va">Longhurst</span>, <span class="va">world</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="op">(</span><span class="va">ggLong</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_Longhurst.html">SpatPlan_Plot_Longhurst</a></span><span class="op">(</span><span class="va">Longhurst</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
 </div>
 <div class="section level4">
@@ -245,7 +209,7 @@ implement it into a spatial plan.</p>
 </h4>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">LockedIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_MPAs.html">SpatPlan_Get_MPAs</a></span><span class="op">(</span><span class="va">PUs</span>, Status <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Designated"</span>, <span class="st">"Adopted"</span>, <span class="st">"Inscribed"</span>, <span class="st">"Established"</span><span class="op">)</span><span class="op">)</span>
-<span class="op">(</span><span class="va">ggMPA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_MPAs.html">SpatPlan_Plot_MPAs</a></span><span class="op">(</span><span class="va">LockedIn</span>, <span class="va">world</span><span class="op">)</span><span class="op">)</span> <span class="co"># Plot Locked in areas</span></code></pre></div>
+<span class="op">(</span><span class="va">ggMPA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_MPAs.html">SpatPlan_Plot_MPAs</a></span><span class="op">(</span><span class="va">LockedIn</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span> <span class="co"># Plot Locked in areas</span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
 </div>
 </div>
@@ -254,7 +218,7 @@ implement it into a spatial plan.</p>
 </h3>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Cost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_FishCost.html">SpatPlan_Get_FishCost</a></span><span class="op">(</span><span class="va">PUs</span>, group <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span>
-<span class="op">(</span><span class="va">ggCost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_Cost.html">SpatPlan_Plot_Cost</a></span><span class="op">(</span><span class="va">Cost</span>, <span class="va">world</span><span class="op">)</span><span class="op">)</span> <span class="co"># Plot cost</span></code></pre></div>
+<span class="op">(</span><span class="va">ggCost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_Cost.html">SpatPlan_Plot_Cost</a></span><span class="op">(</span><span class="va">Cost</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span> <span class="co"># Plot cost</span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-17-1.png" width="672"></p>
 </div>
 <div class="section level3">
@@ -270,11 +234,13 @@ implement it into a spatial plan.</p>
 <h4 id="inverse-area-targets">Inverse area targets<a class="anchor" aria-label="anchor" href="#inverse-area-targets"></a>
 </h4>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Targets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_TargetsIA.html">SpatPlan_Get_TargetsIA</a></span><span class="op">(</span><span class="va">aqua_sf</span>, <span class="va">minTarget</span>, <span class="va">maxTarget</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">Targets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_TargetsIA.html">SpatPlan_Get_TargetsIA</a></span><span class="op">(</span><span class="va">features</span>, <span class="va">minTarget</span>, <span class="va">maxTarget</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="add-different-targets-for-iucn-redlist-categories">Add different targets for IUCN RedList categories<a class="anchor" aria-label="anchor" href="#add-different-targets-for-iucn-redlist-categories"></a>
 </h4>
+<p>To run this code you will need to sign up for your own IUCN RedList
+token. Start by running <code>rl_use_iucn()</code>.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">speciesCol</span> <span class="op">&lt;-</span> <span class="st">"Species"</span>
 <span class="va">Targets</span> <span class="op">&lt;-</span> <span class="va">Targets</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
@@ -290,14 +256,15 @@ implement it into a spatial plan.</p>
 <h4 id="get-the-list-of-features">Get the list of features<a class="anchor" aria-label="anchor" href="#get-the-list-of-features"></a>
 </h4>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">features</span> <span class="op">&lt;-</span> <span class="va">aqua_sf</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">geometry</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+<code class="sourceCode R"><span class="va">feature_names</span> <span class="op">&lt;-</span> <span class="va">features</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="va">out_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">Cost</span>, <span class="va">LockedIn</span>, <span class="va">aqua_sf</span><span class="op">)</span>
+<span class="va">out_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">Cost</span>, 
+                <span class="va">LockedIn</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span>, 
+                <span class="va">features</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
-<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">out_sf</span>, <span class="va">features</span>, <span class="st">"Cost"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+<span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">out_sf</span>, <span class="va">feature_names</span>, <span class="st">"Cost"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">Targets</span><span class="op">$</span><span class="va">Target</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_locked_in_constraints.html" class="external-link">add_locked_in_constraints</a></span><span class="op">(</span><span class="st">"locked_in"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
@@ -309,18 +276,17 @@ implement it into a spatial plan.</p>
 <h3 id="solve-the-planning-problem">Solve the planning problem<a class="anchor" aria-label="anchor" href="#solve-the-planning-problem"></a>
 </h3>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">s1</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">p1</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>solution_1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/logical.html" class="external-link">as.logical</a></span><span class="op">(</span><span class="va">solution_1</span><span class="op">)</span><span class="op">)</span> <span class="co"># Making it logical helps with the plotting #TODO move this to the plotting section?</span></code></pre></div>
+<code class="sourceCode R"><span class="va">s1</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">p1</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h3>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">ggSol</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_Solution.html">SpatPlan_Plot_Solution</a></span><span class="op">(</span><span class="va">s1</span>, <span class="va">PUs</span>, <span class="va">world</span><span class="op">)</span><span class="op">)</span> <span class="co"># Plot Solution</span></code></pre></div>
+<code class="sourceCode R"><span class="op">(</span><span class="va">ggSol</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_Solution.html">SpatPlan_Plot_Solution</a></span><span class="op">(</span><span class="va">s1</span>, <span class="va">PUs</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span> <span class="co"># Plot Solution</span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-23-1.png" width="672"></p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
-<span class="va">ggFeatureNo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_FeatureNo.html">SpatPlan_Plot_FeatureNo</a></span><span class="op">(</span><span class="va">aqua_sf</span>, <span class="va">world</span><span class="op">)</span> <span class="co"># Plot Number of features</span>
+<span class="va">ggFeatureNo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_FeatureNo.html">SpatPlan_Plot_FeatureNo</a></span><span class="op">(</span><span class="va">features</span>, <span class="va">landmass</span><span class="op">)</span> <span class="co"># Plot Number of features</span>
 
 <span class="co">#+ echo=FALSE, fig.width=12</span>
 <span class="op">(</span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">ggPU</span>, <span class="va">ggMPA</span>, <span class="va">ggCost</span>, <span class="va">ggFeatureNo</span>, <span class="va">ggSol</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -338,7 +304,7 @@ area set aside.</p>
 <h4 id="create-the-second-planning-problem">Create the second planning problem<a class="anchor" aria-label="anchor" href="#create-the-second-planning-problem"></a>
 </h4>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">out_sf</span>, <span class="va">features</span>, <span class="st">"Cost"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+<code class="sourceCode R"><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">out_sf</span>, <span class="va">feature_names</span>, <span class="st">"Cost"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="fl">0.3</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_locked_in_constraints.html" class="external-link">add_locked_in_constraints</a></span><span class="op">(</span><span class="st">"locked_in"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
@@ -349,14 +315,13 @@ area set aside.</p>
 <h4 id="solve-the-planning-problem-1">Solve the planning problem<a class="anchor" aria-label="anchor" href="#solve-the-planning-problem-1"></a>
 </h4>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">s2</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">p2</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>solution_1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/logical.html" class="external-link">as.logical</a></span><span class="op">(</span><span class="va">solution_1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">s2</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="va">p2</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="plot-comparison">Plot comparison<a class="anchor" aria-label="anchor" href="#plot-comparison"></a>
 </h4>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="op">(</span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_Comparison.html">SpatPlan_Plot_Comparison</a></span><span class="op">(</span><span class="va">s1</span>, <span class="va">s2</span>, <span class="va">world</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="op">(</span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_Comparison.html">SpatPlan_Plot_Comparison</a></span><span class="op">(</span><span class="va">s1</span>, <span class="va">s2</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-26-1.png" width="672"></p>
 </div>
 </div>

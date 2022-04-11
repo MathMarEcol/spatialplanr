@@ -1,6 +1,5 @@
 
-# Function for creating polygon
-#' Title
+#' Function for creating polygon
 #'
 #' @param x
 #'

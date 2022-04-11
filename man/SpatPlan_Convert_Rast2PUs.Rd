@@ -15,3 +15,6 @@ SpatPlan_Convert_Rast2PUs(file, PUs, binary = FALSE)
 \description{
 Cross raw features (as prast) with Planning Units
 }
+\examples{
+
+}

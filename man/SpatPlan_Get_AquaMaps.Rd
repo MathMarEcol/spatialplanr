@@ -6,7 +6,6 @@
 \usage{
 SpatPlan_Get_AquaMaps(
   PlanUnits,
-  cCRS = "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs",
   MinD = 0,
   MaxD = 200,
   CutOff = 0.5,

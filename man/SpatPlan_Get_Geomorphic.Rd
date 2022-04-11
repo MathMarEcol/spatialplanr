@@ -25,7 +25,20 @@ SpatPlan_Get_Geomorphic(
 
 }
 \description{
+Options for \code{Feature} are:
+"Abyss", "Abyss_Hills", "Abyss_Mountains", "Abyss_Plains", "Basin",
+"Bridge", "Canyon", "Escarpment", "Fan", "Glacial Trough", "Guyot",
+"Hadal", "Plateau", "Ridge", "Rift Valley", "Rise", "Seamount",
+"Shelf", "Shelf Valley", "Shelf_medium", "Shelf_high", "Shelf_low",
+"Sill", "Slope", "Spreading Ridge", "Terrace", "Trench", "Trough".
+}
+\details{
+For more information look at: https://www.bluehabitats.org
+
 Seafloor Geomorphic Features Map by Harris, P.T., Macmillan-Lawler, M., Rupp, J. and Baker, E.K. 2014.
 Geomorphology of the oceans. Marine Geology, 352: 4-24.
 Licensed under a Creative Commons Attribution 4.0 International License
+}
+\examples{
+\dontrun{features <- SpatPlan_Get_Geomorphic(PUs, Feature = "Seamount")}
 }

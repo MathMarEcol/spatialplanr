@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @examples
-#' #' @importFrom rlang .data
+#' @importFrom rlang .data
 SpatPlan_Get_FishCost <- function(PUs,
                                   group = "all",
                                   Direc = file.path("~", "SpatPlan_Data")){
@@ -23,7 +23,7 @@ SpatPlan_Get_FishCost <- function(PUs,
 
   if(group == "all"){
     call_cost <- terra::rast(file.path(Direc, "Cost","Cost_Raster_Sum.grd")) %>%
-    terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm=FALSE) %>% # Convert to polygon data
+      terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm=FALSE) %>% # Convert to polygon data
       sf::st_as_sf() # Convert to sf
   }
 
@@ -41,36 +41,37 @@ SpatPlan_Get_FishCost <- function(PUs,
     small_value <- unlist(small_value)
 
     call_cost <- call_cost %>%
-      dplyr::mutate(medium = ifelse(is.na(.data$MediumPelagics30_89Cm), small_value[1], data$MediumPelagics30_89Cm),
-                    small = ifelse(is.na(data$SmallPelagics30Cm), small_value[2], data$SmallPelagics30Cm),
-                    large = ifelse(is.na(data$LargePelagics90Cm), small_value[3], data$LargePelagics90Cm)) %>%
+      dplyr::mutate(medium = ifelse(is.na(.data$MediumPelagics30_89Cm), small_value[1], .data$MediumPelagics30_89Cm),
+                    small = ifelse(is.na(.data$SmallPelagics30Cm), small_value[2], .data$SmallPelagics30Cm),
+                    large = ifelse(is.na(.data$LargePelagics90Cm), small_value[3], .data$LargePelagics90Cm)) %>%
       dplyr::select(.data$medium, .data$small, .data$large, .data$geometry) %>%
       dplyr::mutate(layer =.data$ medium + .data$small + .data$large) %>% # get the sum
       dplyr::select(.data$layer, .data$geometry) # only select sum and geometry
   }
 
-  # If Pacific-centered:
-  if(sf::st_crs(PUs) == "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"){
-    temp_cost <- call_cost %>%
-      sf::st_make_valid() %>%
-      sf::st_transform(longlat)
 
-    temp_cost <- temp_cost %>%
-      SpatPlan_Convert2PacificRobinson()
+  Cost <- call_cost %>%
+    sf::st_transform(sf::st_crs(PUs)) %>% # Transform to CRS of PUs
+    sf::st_interpolate_aw(PUs, extensive = FALSE) %>% ## intersect with PUs
+    dplyr::rename(Cost = .data$layer)
 
-    Cost <- temp_cost %>%
-      sf::st_interpolate_aw(PUs, extensive = FALSE) %>%
-      dplyr::rename(Cost = .data$layer)
 
-    return(Cost)
-  }
-
-  else{
-    Cost <- call_cost %>%
-      sf::st_transform(sf::st_crs(PUs)) %>% # Transform to CRS of PUs
-      sf::st_interpolate_aw(PUs, extensive = FALSE) %>% ## intersect with PUs
-      dplyr::rename(Cost = layer)
-
-    return(Cost)
-  }
 }
+
+#
+# # If Pacific-centered:
+# if(sf::st_crs(PUs) == "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"){
+#   temp_cost <- call_cost %>%
+#     sf::st_make_valid() %>%
+#     sf::st_transform(longlat)
+#
+#   temp_cost <- temp_cost %>%
+#     SpatPlan_Convert2PacificRobinson()
+#
+#   Cost <- temp_cost %>%
+#     sf::st_interpolate_aw(PUs, extensive = FALSE) %>%
+#     dplyr::rename(Cost = .data$layer)
+#
+#   return(Cost)
+# }
+#
