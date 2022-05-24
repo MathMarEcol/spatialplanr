@@ -1,16 +1,15 @@
 #' Get fisheries cost layer.
 #'
-#' @param PUs
-#' @param cCRS
-#' @param group
-#' @param Direc
+#' @param PlanUnits Planning Units as an `sf` object
+#' @param group The group of fish for the analysis. At the moment the only options are to split by "pelagic" or "all"
+#' @param Direc The directory where the MME data is being stored. If not specified, the default location is assumed.
 #'
-#' @return
+#' @return A `sf` dataframe of fisheries cost for each planning unit.
 #' @export
 #'
 #' @examples
 #' @importFrom rlang .data
-SpatPlan_Get_FishCost <- function(PUs,
+SpatPlan_Get_FishCost <- function(PlanUnits,
                                   group = "all",
                                   Direc = file.path("~", "SpatPlan_Data")){
 
@@ -23,14 +22,14 @@ SpatPlan_Get_FishCost <- function(PUs,
 
   if(group == "all"){
     call_cost <- terra::rast(file.path(Direc, "Cost","Cost_Raster_Sum.grd")) %>%
-      terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm=FALSE) %>% # Convert to polygon data
+      terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm = FALSE) %>% # Convert to polygon data
       sf::st_as_sf() # Convert to sf
   }
 
   else if(group == "pelagic"){
     call_cost <- terra::rast(file.path(Direc, "Cost", "Cost_RasterStack_byFunctionalGroup.grd")) %>% # data by functional group
-      terra::subset(., c(14, 16, 19)) %>% # small, medium, and large pelagics
-      terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm=FALSE) %>% # Convert to polygon data
+      terra::subset(c(14, 16, 19)) %>% # small, medium, and large pelagics
+      terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm = FALSE) %>% # Convert to polygon data
       sf::st_as_sf() # Convert to sf
 
     # Replace all NAs with the smallest value
@@ -51,27 +50,8 @@ SpatPlan_Get_FishCost <- function(PUs,
 
 
   Cost <- call_cost %>%
-    sf::st_transform(sf::st_crs(PUs)) %>% # Transform to CRS of PUs
-    sf::st_interpolate_aw(PUs, extensive = FALSE) %>% ## intersect with PUs
+    sf::st_transform(sf::st_crs(PlanUnits)) %>% # Transform to CRS of PlanUnits
+    sf::st_interpolate_aw(PlanUnits, extensive = FALSE) %>% ## intersect with PlanUnits
     dplyr::rename(Cost = .data$layer)
-
-
 }
 
-#
-# # If Pacific-centered:
-# if(sf::st_crs(PUs) == "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"){
-#   temp_cost <- call_cost %>%
-#     sf::st_make_valid() %>%
-#     sf::st_transform(longlat)
-#
-#   temp_cost <- temp_cost %>%
-#     SpatPlan_Convert2PacificRobinson()
-#
-#   Cost <- temp_cost %>%
-#     sf::st_interpolate_aw(PUs, extensive = FALSE) %>%
-#     dplyr::rename(Cost = .data$layer)
-#
-#   return(Cost)
-# }
-#

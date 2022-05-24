@@ -1,11 +1,10 @@
 
 #' Convert a region to Pacific-Centred Robinson Projection.
 #'
-#' @param df
-#' @param buff
+#' @param df An 'sf' object in longlat space
+#' @param buff The buffer to use for
 #'
-#' @return
-#' @export
+#' @return An `sf` object coverted to Pacific-Robinson projection
 #'
 #' @examples
 SpatPlan_Convert_PacificRobinson <- function(df, buff = 0){

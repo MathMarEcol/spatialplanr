@@ -1,14 +1,15 @@
 #' Assign Longhurst Provinces to PUs
 #'
-#' @param PUs
-#' @param cCRS
-#' @param Direc
+#' A function that assigns the Longhurst province and description to each planning unit.
 #'
-#' @return
+#' @param PlanUnits Planning Units as an `sf` object
+#' @param Direc The directory where the MME data is being stored. If not specified, the default location is assumed.
+#'
+#' @return An `sf` dataframe with additional longhurst columns (`ProvCode`, `ProvDescr`)
 #' @export
 #'
 #' @examples
-SpatPlan_Match_Longhurst <- function(PUs,
+SpatPlan_Match_Longhurst <- function(PlanUnits,
                                      Direc = file.path("~", "SpatPlan_Data")){
 
 
@@ -17,11 +18,11 @@ SpatPlan_Match_Longhurst <- function(PUs,
   }
 
   longh <- sf::st_read(file.path(Direc,"LonghurstProvinces","Longhurst_world_v4_2010.shp")) %>%
-    sf::st_transform(sf::st_crs(PUs))
+    sf::st_transform(sf::st_crs(PlanUnits))
 
-  nr <- sf::st_nearest_feature(PUs, longh)
+  nr <- sf::st_nearest_feature(PlanUnits, longh)
 
-  LPs <- PUs %>%
+  LPs <- PlanUnits %>%
     dplyr::mutate(ProvCode = longh$ProvCode[nr],
                   ProvDescr = longh$ProvDescr[nr])
 

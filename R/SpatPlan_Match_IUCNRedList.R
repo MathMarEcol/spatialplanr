@@ -27,10 +27,10 @@
 
 #' Categories we care about
 #' cate <- c("EX","EW","CR","EN","VU")
-#' @param df
-#' @param species_col
+#' @param df The dataframe containing the species to be matched with the IUCN redlist
+#' @param species_col A string name for the column containting the species name
 #'
-#' @return
+#' @return A dataframe with an additional column `IUCN_Category`
 #' @export
 #'
 #' @examples

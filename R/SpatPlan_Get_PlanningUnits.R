@@ -5,6 +5,11 @@
 #' The output inherits the crs from this sf object so ensure it is in the correct projection for your needs
 #' The code assumes that any Planning Unit whose centroids is over land will be removed. This approximates > 50% of the PU is landward.
 #'
+#' Some example options for hexagonal `PU_size`
+#' PU_size <- 5240 # km2 (~1 deg at equator)
+#' PU_size <- 2620 # km2 (~0.5 deg at equator)
+#' PU_size <- 669.9 # km2 (~0.25 deg at equator)
+#'
 #' Written by Jason Everett (UQ/UNSW/CSIRO)
 #' Written: 15 December 2020
 #' Updated: 8th April 2022
@@ -15,13 +20,13 @@
 #' @param Shape Hexagon or Square
 #' @param inverse To invert the `InnerB` and keep the areas within the InnerB
 #'
-#' @return
+#' @return An `sf` object of planning units
 #' @export
 #'
 #' @examples
 SpatPlan_Get_PlanningUnits <- function(Bndry,
                                        InnerB,
-                                       CellArea,
+                                       CellArea = 1000,
                                        Shape = "hexagon",
                                        inverse = FALSE){
 
@@ -41,11 +46,6 @@ SpatPlan_Get_PlanningUnits <- function(Bndry,
                       cellsize = c(diameter, diameter),
                       what = "polygons") %>%
     sf::st_sf()
-
-  # Check cell size worked ok.
-  print(paste0("Range of cellsize are ",
-               round(as.numeric(range(units::set_units(sf::st_area(PUs), "km^2")))[1])," km2 to ",
-               round(as.numeric(range(units::set_units(sf::st_area(PUs), "km^2")))[2])," km2")) # Check area
 
   # First get all the PUs partially/wholly within the planning region
   logi_Reg <- sf::st_centroid(PUs) %>%
