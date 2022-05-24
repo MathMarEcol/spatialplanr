@@ -1,44 +1,39 @@
 
-# Status <- c("Designated", "Adopted", "Inscribed", "Established")
-# Parent <-
-# Desig <- c("National", "Regional", "International", "Not Applicable")
-
-#
-#' Get locked in areas
+#' Get marine parks from the WDPA.
 #'
-#' @param PUs The planning units
-#' @param Status The status of the MPA. Options are: "Designated", "Adopted", "Inscribed", "Established"
-#' @param Desig The designation of the MPA. Options are "National", "Regional", "International", "Not Applicable"
-#' @param Direc The directory where the MME data is being stored. If not specified, the default location is assumed.
+#' This code is a wrapper for the wonderful `wdpar` package written by Jeffrey O. Hanson. This data is then interfaced with the planning units.
+#' An `sf` object is returned with the PU area covered by the selected marine protected areas.
 #'
-#' @return
+#' @param PlanUnits Planning Units as an `sf` object
+#' @param Countries A character vector of the countries for which to extract MPAs
+#' @param Status The status field in the WDPA provides information on whether a protected area has been established, designated, or proposed at the time the data was submitted.
+#' @param Desig The designation type is the category or type of protected area as legally/officially designated or proposed.
+#' @param Category Stores the IUCN Protected Area Management Categories (recorded in field IUCN_CAT) for each of the protected areas where these categories are reported
+#'
+#' @return A `sf` object with the MPAs intersected with the planning units
 #' @export
 #'
 #' @examples
-#'
-#' @importFrom rlang .data
-SpatPlan_Get_MPAs <- function(PUs,
-                              Status = "Designated",
+SpatPlan_Get_MPAs <- function(PlanUnits,
+                              Countries,
+                              Status = c("Designated", "Established", "Inscribed"),
                               Desig = c("National", "Regional", "International", "Not Applicable"),
-                              Direc = file.path("~", "SpatPlan_Data")){
+                              Category = c("Ia", "Ib", "II", "III", "IV")){
 
-  if (!file.exists(Direc)) {
-    stop(paste("The Data folder does not exist at ",Direc,". Please download from the RDM and then try again. See https://github.com/MathMarEcol/spatialplanr for details."))
-  }
+  wdpa_data <- Countries %>%
+    lapply(wdpar::wdpa_fetch, wait = TRUE,
+           download_dir = rappdirs::user_data_dir("wdpar")) %>%
+    dplyr::bind_rows() %>%
+    dplyr::filter(.data$MARINE > 0) %>%
+    dplyr::filter(.data$IUCN_CAT %in% Category) %>% # filter category
+    dplyr::filter(.data$DESIG_TYPE %in% Desig) %>% # filter designation
+    dplyr::filter(.data$STATUS %in% Status) %>% # filter status
+    wdpar::wdpa_clean(retain_status = NULL, erase_overlaps = FALSE) %>% # clean protected area data
+    wdpar::wdpa_dissolve() %>% # Dissolve data to remove overlapping areas.
+    dplyr::select(.data$geometry) %>%
+    dplyr::mutate(wdpa = 1) %>%
+    SpatPlan_Convert_2PUs(PlanUnits)
 
-  MPAs <- readr::read_rds(file.path(Direc, "MPAs.rds")) %>%
-    sf::st_transform(sf::st_crs(PUs)) %>% # Transform if need to
-    dplyr::filter(.data$STATUS %in% Status & .data$DESIG_TYPE %in% Desig)
-
-  LockedIn_vec <- PUs %>%
-    sf::st_centroid() %>% #Second, get all the pu's with < 50 % area on land (approximated from the centroid)
-    sf::st_within(MPAs, sparse = FALSE) %>%
-    rowSums() %>%
-    as.logical()
-
-  LockedIn <- PUs %>%
-    dplyr::mutate(locked_in = LockedIn_vec)
-
-  return(LockedIn)
-
+  return(wdpa_data)
 }
+
