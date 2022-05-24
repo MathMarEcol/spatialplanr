@@ -5,24 +5,24 @@
 \title{Assign geomorphic features to each planning unit.}
 \usage{
 SpatPlan_Get_Geomorphic(
-  PUs,
+  PlanUnits,
   Feature = c("Abyss", "Abyss_Hills", "Abyss_Mountains", "Abyss_Plains", "Basin",
     "Bridge", "Canyon", "Escarpment", "Fan", "Glacial Trough", "Guyot", "Hadal",
     "Plateau", "Ridge", "Rift Valley", "Rise", "Seamount", "Shelf", "Shelf Valley",
-    "Shelf_medium", "Shelf_high", "Shelf_low", "Sill", "Slope", "Spreading Ridge",
+    "Shelf_high", "Shelf_medium", "Shelf_low", "Sill", "Slope", "Spreading Ridge",
     "Terrace", "Trench", "Trough"),
   Direc = file.path("~", "SpatPlan_Data")
 )
 }
 \arguments{
-\item{PUs}{Planning units sf object}
+\item{PlanUnits}{Planning Units as an \code{sf} object}
 
 \item{Feature}{A vector of the geomprphic features you wish to retain. Defaults to all.}
 
 \item{Direc}{The directory where the MME data is being stored. If not specified, the default location is assumed.}
 }
 \value{
-
+An \code{sf} object of Geomorphic features by planning unit.
 }
 \description{
 Options for \code{Feature} are:
@@ -40,5 +40,5 @@ Geomorphology of the oceans. Marine Geology, 352: 4-24.
 Licensed under a Creative Commons Attribution 4.0 International License
 }
 \examples{
-\dontrun{features <- SpatPlan_Get_Geomorphic(PUs, Feature = "Seamount")}
+\dontrun{features <- SpatPlan_Get_Geomorphic(PlanUnits, Feature = "Seamount")}
 }

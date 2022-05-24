@@ -1,6 +1,6 @@
 Package: spatialplanr
 Title: Help files for MME Spatial Planning projects
-Version: 0.0.0.9000
+Version: 0.0.1.0001
 Authors@R: 
     person(given = "Jason",
            family = "Everett",
@@ -14,29 +14,34 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Suggests: 
+    klippy,
     knitr,
     prioritizr,
+    rfishbase,
     rmarkdown,
     rredlist
 VignetteBuilder: knitr
 Depends:
-    R (>= 2.10)
+    R (>= 3.5.0)
 Imports: 
     cmocean,
     dplyr,
-    fasterize,
+    exactextractr,
+    fs,
     ggplot2,
-    klippy,
     magrittr,
+    nngeo,
     patchwork,
-    raster,
+    purrr,
+    rappdirs,
     readr (>= 2.0.0),
-    rfishbase,
     rlang,
     rnaturalearth,
-    rnaturalearthdata,
     scales,
     sf,
     stars,
     stringr,
-    terra
+    terra,
+    tidyr,
+    tidyselect,
+    wdpar

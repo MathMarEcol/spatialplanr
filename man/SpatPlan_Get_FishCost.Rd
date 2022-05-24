@@ -5,16 +5,20 @@
 \title{Get fisheries cost layer.}
 \usage{
 SpatPlan_Get_FishCost(
-  PUs,
+  PlanUnits,
   group = "all",
   Direc = file.path("~", "SpatPlan_Data")
 )
 }
 \arguments{
-\item{Direc}{}
+\item{PlanUnits}{Planning Units as an \code{sf} object}
+
+\item{group}{The group of fish for the analysis. At the moment the only options are to split by "pelagic" or "all"}
+
+\item{Direc}{The directory where the MME data is being stored. If not specified, the default location is assumed.}
 }
 \value{
-
+A \code{sf} dataframe of fisheries cost for each planning unit.
 }
 \description{
 Get fisheries cost layer.

@@ -4,13 +4,17 @@
 \alias{SpatPlan_Plot_Comparison}
 \title{Plot solution comparison}
 \usage{
-SpatPlan_Plot_Comparison(soln1, soln2, world)
+SpatPlan_Plot_Comparison(soln1, soln2, landmass)
 }
 \arguments{
-\item{world}{}
+\item{soln1}{The first \code{prioritizr} solution}
+
+\item{soln2}{The second \code{prioritizr} solution}
+
+\item{landmass}{An \code{sf} object of land polygon}
 }
 \value{
-
+A ggplot object of the plot
 }
 \description{
 Plot solution comparison

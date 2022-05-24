@@ -7,10 +7,12 @@
 SpatPlan_Match_IUCNRedList(df, species_col = "Species")
 }
 \arguments{
-\item{species_col}{}
+\item{df}{The dataframe containing the species to be matched with the IUCN redlist}
+
+\item{species_col}{A string name for the column containting the species name}
 }
 \value{
-
+A dataframe with an additional column \code{IUCN_Category}
 }
 \description{
 First of all you will need your own API key, an alphanumeric string provided by IUCN that you need to send in every request;

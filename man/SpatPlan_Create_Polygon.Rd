@@ -7,10 +7,12 @@
 SpatPlan_Create_Polygon(x, cCRS)
 }
 \arguments{
-\item{x}{}
+\item{x}{A named vector of lon/lat coordinates from which to make an \code{sf} polygon}
+
+\item{cCRS}{The CRS to use for the polygon}
 }
 \value{
-
+An \code{sf} object for the polygon
 }
 \description{
 Function for creating polygon

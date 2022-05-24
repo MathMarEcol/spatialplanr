@@ -4,13 +4,15 @@
 \alias{SpatPlan_Plot_Longhurst}
 \title{Plot Longhurst Provinces}
 \usage{
-SpatPlan_Plot_Longhurst(PlanUnits, world)
+SpatPlan_Plot_Longhurst(PlanUnits, landmass)
 }
 \arguments{
-\item{world}{}
+\item{PlanUnits}{Planning Units as an \code{sf} object}
+
+\item{landmass}{An \code{sf} object of land polygon}
 }
 \value{
-
+A ggplot object of the plot
 }
 \description{
 Plot Longhurst Provinces

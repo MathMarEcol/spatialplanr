@@ -7,11 +7,15 @@
 SpatPlan_Get_TargetsIA(df, target_min, target_max)
 }
 \arguments{
-\item{target_max}{}
+\item{df}{An \code{sf} dataframe with features to calculate}
+
+\item{target_min}{The minimum target for inverse area}
+
+\item{target_max}{The maximum target for inverse area}
 }
 \value{
-
+An \code{sf} dataframe with Inverse Area Targets added in \code{Target}
 }
 \description{
-Calculate Inverse Area Targets
+This function takes a min (\code{target_min}) and max (\code{target_max}) target range and calculates an inverse area target for each feature based on areal coverage.
 }
