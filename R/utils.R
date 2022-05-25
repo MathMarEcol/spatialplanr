@@ -157,7 +157,8 @@ SpatPlan_Replace_NAs <- function(df, vari){
       dplyr::mutate(!!rlang::sym(vari) := dplyr::pull(gp$`FALSE`, !!rlang::sym(vari))[d])
 
     df <- rbind(gp$`FALSE`, gp$`TRUE`) %>%
-      dplyr::select(-.data$isna)
+      dplyr::select(-.data$isna) %>%
+      dplyr::arrange(.data$cellID)
 
   }
   return(df)
