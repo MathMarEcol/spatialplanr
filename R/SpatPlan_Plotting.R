@@ -91,14 +91,17 @@ SpatPlan_Plot_MPAs <- function(df, landmass){
 #'
 #' @examples
 SpatPlan_Plot_Cost <- function(Cost, landmass){
+
+  col_name = stringr::str_subset(colnames(Cost), "geometry", negate = TRUE)
+
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = Cost, ggplot2::aes(fill = Cost), colour = "grey80", size = 0.1, show.legend = TRUE) +
+    ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = col_name), colour = "grey80", size = 0.1, show.legend = TRUE) +
     ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
     cmocean::scale_fill_cmocean(name = "deep",
                                 aesthetics = c("colour", "fill"),
                                 limits = c(0,
-                                           as.numeric(stats::quantile(Cost$Cost, 0.99))),
+                                           as.numeric(stats::quantile(pull(Cost,col_name), 0.99))),
                                 oob = scales::squish) +
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = "Cost (USD)")
