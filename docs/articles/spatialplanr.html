@@ -222,7 +222,7 @@ implement it into a spatial plan.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Cost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Get_FishCost.html">SpatPlan_Get_FishCost</a></span><span class="op">(</span><span class="va">PUs</span>, group <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span>
 <span class="op">(</span><span class="va">ggCost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_Cost.html">SpatPlan_Plot_Cost</a></span><span class="op">(</span><span class="va">Cost</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span> <span class="co"># Plot cost</span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
+<p><img src="../docs/articles/spatialplanr_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="set-up-targets">Set up targets<a class="anchor" aria-label="anchor" href="#set-up-targets"></a>
@@ -291,7 +291,7 @@ token. Start by running <code><a href="https://docs.ropensci.org/rredlist/refere
 <code class="sourceCode R">
 <span class="co">#+ echo=FALSE, fig.width=12</span>
 <span class="op">(</span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">ggPU</span>, <span class="va">ggMPA</span>, <span class="va">ggCost</span>, <span class="va">ggFeatureNo</span>, <span class="va">ggSol</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-24-2.png" width="672"></p>
+<p><img src="../docs/articles/spatialplanr_files/figure-html/unnamed-chunk-24-2.png" width="672"></p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># ggsave(file.path("Figures", "Final_Solution.pdf"), plot = gg, height = 20, width = 40, units = "cm")</span></code></pre></div>
 </div>
@@ -323,7 +323,7 @@ area set aside.</p>
 </h4>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="op">(</span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SpatPlan_Plot_Comparison.html">SpatPlan_Plot_Comparison</a></span><span class="op">(</span><span class="va">s1</span>, <span class="va">s2</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-27-1.png" width="672"></p>
+<p><img src="../docs/articles/spatialplanr_files/figure-html/unnamed-chunk-27-1.png" width="672"></p>
 </div>
 </div>
 </div>
