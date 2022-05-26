@@ -4,13 +4,15 @@
 \alias{SpatPlan_Plot_MPAs}
 \title{Plot MPAs}
 \usage{
-SpatPlan_Plot_MPAs(LockedIn, world)
+SpatPlan_Plot_MPAs(df, landmass)
 }
 \arguments{
-\item{world}{}
+\item{df}{An \code{sf} object of marine protected areas}
+
+\item{landmass}{An \code{sf} object of land polygon}
 }
 \value{
-
+A ggplot object of the plot
 }
 \description{
 Plot MPAs

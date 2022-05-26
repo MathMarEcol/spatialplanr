@@ -38,13 +38,6 @@ To use this code, you will need to download and expand `MME1DATA-Q1215/SpatialPl
 If you run into memory problems, you can try increasing the amount of the HD space gdal is allowed to use. 
 `Sys.setenv(GDAL_MAX_BAND_COUNT = 120000)`
 
-## Preliminaries 
-A general user should not need to run this. In fact most won't have access to the raw data. We include it for transparency and completeness.
-```{r, eval = FALSE}
-source("SpatPlan_Process_AquaMaps.R") # This script reprocesses AquaMaps. WARNING: Lots of time (10s hrs) and memory (10s GB).    
-source("SpatPlan_Process_MPAs.R") # Only run if you need to reprocess the MPA data. You will need the WDPA files
-```
-
 ## Set user parameters 
 You can set a region if it is defined in `SpatPlan_Get_PlanningUnits`. 
 ```{r}
@@ -60,18 +53,13 @@ Region <- c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)
 Set the shape and area of the planning unit in square kilometres.
 ```{r}
 Shape <- "Hexagon" # "Shape of PUs
-PU_size <- 5240 # km2 (~1 deg at equator)
-
-# PU_size <- 2620 # km2 (0.5 deg at equator)
-# PU_size = 669.9 # km2 (0.25 deg at equator)
-# PU_size <- 1000 # km2
+PU_size <- 20000 # km2
 ```
 
 Set the depth range and probability cutoff (`CO`) for extracting AquaMaps data.
 ```{r}
 MinDepth <- 0
 MaxDepth <- 200
-CO <- 0.5 # Cutoff level for AquaMaps
 ```
 
 Set minimum and maximum limits for inverse area targets
@@ -82,8 +70,7 @@ maxTarget = 0.5
 
 Choose CRS for analysis
 ```{r}
-cCRS <- "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs" # Robinson
-# cCRS <- "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs" # Robinson: Pacific-centred
+cCRS <- "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs" # Mollweide
 ```
 
 ## Analysis Region
@@ -95,86 +82,96 @@ Get the boundary for your chosen region.
 Bndry <- SpatPlan_Get_Boundary(Region, Type, cCRS)
 ```
 
-Get the land boundaries to remove overlap. The object "world" represents the land mass that should be removed (inverse = FALSE)
+Get the land boundaries to remove overlap. The object "landmass" represents the land mass that should be removed (inverse = FALSE)
 ```{r}
-world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>% 
-  sf::st_make_valid() %>% 
+landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>% 
   sf::st_transform(cCRS)
 ```
-If Region = WestPacific, demarcating boundary and removing land areas would be different
-The object "world" here represents the planning region (inverse = TRUE)
 
 ## Create Planning Units 
 ```{r}
-PUs <- SpatPlan_Get_PlanningUnits(Bndry, world, PU_size, Shape)
+PUs <- SpatPlan_Get_PlanningUnits(Bndry, landmass, PU_size, Shape)
 ```
+
 We can check what the PUs look like
 ```{r, fig.width=7}
-(ggPU <- SpatPlan_Plot_PUs(PUs, world)) # Plot Planning Units
+(ggPU <- SpatPlan_Plot_PUs(PUs, landmass)) # Plot Planning Units
 ```
 
 ## Get the features 
 
 ### Aquamaps 
 Get aquamaps data for our species and region 
-TODO Check the overlay of raw v processed species distribution
-If using Pacific-centered projection, define western and eastern limits
-west_limit = -120 # use negative numbers for western limit
-east_limit = 130 # use positive numbers for eastern limit
 
 ```{r}
-aqua_sf <- SpatPlan_Get_AquaMaps(PUs, cCRS, MinDepth, MaxDepth, CutOff = CO)
+AQM <- SpatPlan_Get_AquaMaps(PUs, MinDepth, MaxDepth)
 ```
 
-### IUCN 
-TODO
-IUCN <- fSpatPlan_Get_IUCN(PUs, cCRS)
-
-### MICO 
-TODO
-MICO <- fSpatPlan_Get_MICO(PUs, cCRS)
-
-### Seafloor 
-TODO
-SeaFloor <- fSpatPlan_Get_SeaFloor(PUs, cCRS)
 
 ### Geomorphic features 
+Add geomorphic features to the existing features object.
 ```{r}
-PUs <- SpatPlan_Get_Geomorphic(PUs, Feature = "Seamount")
+GeoMorph <- SpatPlan_Get_Geomorphic(PUs, Feature = c("Shelf", "Ridge", "Plateau", "Seamount"))
 ```
 
+
+### Apply cutoffs
+Add geomorphic features to the existing features object.
+```{r}
+
+Cutoffs <- 0.5
+Cutoffs <- c(Shelf = 0.01, Ridge = 0.2, Plateau = 0.1, Seamount = 0.3)
+GeoMorph_bin <- SpatPlan_Apply_Cutoffs(GeoMorph, Cutoffs)
+
+```
+
+
+
+### Join all features together.
+```{r}
+features <- PUs %>% 
+  dplyr::left_join(GeoMorph %>% sf::st_drop_geometry(), by = "cellID") %>% 
+  dplyr::left_join(AQM %>% sf::st_drop_geometry(), by = "cellID")
+
+
+ggFeatureNo <- SpatPlan_Plot_FeatureNo(features, landmass) # Plot Number of features
+
+```
 ### Longhurst Provinces
-You can also assign a Longhurst Province to each PU and set targets individually by province.Here we simply demonstrate this, but do not implement it into a spatial plan.
+You can also assign a Longhurst Province to each PU and set targets individually by province. Here we simply demonstrate this, but do not implement it into a spatial plan.
 ```{r, fig.width=7}
 Longhurst <- SpatPlan_Match_Longhurst(PUs)
-(ggLong <- SpatPlan_Plot_Longhurst(Longhurst, world))
+(ggLong <- SpatPlan_Plot_Longhurst(Longhurst, landmass))
 ```
 
 ### Get locked in areas 
 ```{r, fig.width=7}
-LockedIn <- SpatPlan_Get_MPAs(PUs, Status = c("Designated", "Adopted", "Inscribed", "Established"))
-(ggMPA <- SpatPlan_Plot_MPAs(LockedIn, world)) # Plot Locked in areas
+LockedIn <- SpatPlan_Get_MPAs(PUs, "Australia") %>% 
+  SpatPlan_Apply_Cutoffs(0.5) %>% 
+  dplyr::mutate(wdpa = as.logical(wdpa))
+(ggMPA <- SpatPlan_Plot_MPAs(LockedIn, landmass)) # Plot Locked in areas
 ```
 
 ## Get Fisheries cost 
 ```{r, fig.width=7}
 Cost <- SpatPlan_Get_FishCost(PUs, group = "all")
-(ggCost <- SpatPlan_Plot_Cost(Cost, world)) # Plot cost
+(ggCost <- SpatPlan_Plot_Cost(Cost, landmass)) # Plot cost
 ```
 
 ## Set up targets 
 
 ### Identical fixed targets 
 ```{r}
-Targets <- 0.2
+Targets <- data.frame(Target = 0.2)
 ```
 
 ### Inverse area targets 
 ```{r}
-Targets <- SpatPlan_Get_TargetsIA(aqua_sf, minTarget, maxTarget)
+# Targets <- SpatPlan_Get_TargetsIA(features, minTarget, maxTarget)
 ```
 
 ### Add different targets for IUCN RedList categories 
+To run this code you will need to sign up for your own IUCN RedList token. Start by running `rredlist::rl_use_iucn()`. 
 ```{r, eval=FALSE}
 speciesCol <- "Species"
 Targets <- Targets %>% 
@@ -187,32 +184,30 @@ Targets <- Targets %>%
 
 ### Get the list of features
 ```{r}
-features <- aqua_sf %>% 
-  dplyr::as_tibble() %>% 
-  dplyr::select(-geometry) %>% 
+feature_names <- features %>% 
+  sf::st_drop_geometry() %>% 
   names()
 
-out_sf <- cbind(Cost, LockedIn, aqua_sf)
+out_sf <- cbind(Cost, 
+                LockedIn %>% sf::st_drop_geometry(), 
+                features %>% sf::st_drop_geometry())
 
-p1 <- prioritizr::problem(out_sf, features, "Cost") %>%
+p1 <- prioritizr::problem(out_sf, feature_names, "Cost") %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_relative_targets(Targets$Target) %>%
-  prioritizr::add_locked_in_constraints("locked_in") %>%
+  prioritizr::add_locked_in_constraints("wdpa") %>%
   prioritizr::add_binary_decisions() %>%
   prioritizr::add_default_solver(verbose = FALSE)
 ```
 
 ## Solve the planning problem 
 ```{r}
-s1 <- prioritizr::solve(p1) %>% 
-  dplyr::mutate(solution_1 = as.logical(solution_1)) # Making it logical helps with the plotting #TODO move this to the plotting section?
+s1 <- prioritizr::solve(p1)
 ```
 
 ## Plotting 
 ```{r, fig.width=7}
-(ggSol <- SpatPlan_Plot_Solution(s1, PUs, world)) # Plot Solution
-
-ggFeatureNo <- SpatPlan_Plot_FeatureNo(aqua_sf, world) # Plot Number of features
+(ggSol <- SpatPlan_Plot_Solution(s1, PUs, landmass)) # Plot Solution
 
 #+ echo=FALSE, fig.width=12
 (gg <- patchwork::wrap_plots(list(ggPU, ggMPA, ggCost, ggFeatureNo, ggSol), ncol = 3))
@@ -224,21 +219,20 @@ Here we run another problem/solution combo and compare the output with our origi
 
 ### Create the second planning problem 
 ```{r}
-p2 <- prioritizr::problem(out_sf, features, "Cost") %>%
+p2 <- prioritizr::problem(out_sf, feature_names, "Cost") %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_relative_targets(0.3) %>%
-  prioritizr::add_locked_in_constraints("locked_in") %>%
+  prioritizr::add_locked_in_constraints("wdpa") %>%
   prioritizr::add_binary_decisions() %>%
   prioritizr::add_default_solver(verbose = FALSE)
 ```
 
 ### Solve the planning problem 
 ```{r}
-s2 <- prioritizr::solve(p2) %>% 
-  dplyr::mutate(solution_1 = as.logical(solution_1))
+s2 <- prioritizr::solve(p2)
 ```
 
 ### Plot comparison
 ```{r, fig.width=7}
-(gg <- SpatPlan_Plot_Comparison(s1, s2, world))
+(gg <- SpatPlan_Plot_Comparison(s1, s2, landmass))
 ```

@@ -7,10 +7,12 @@
 SpatPlan_Convert_PacificRobinson(df, buff = 0)
 }
 \arguments{
-\item{buff}{}
+\item{df}{An 'sf' object in longlat space}
+
+\item{buff}{The buffer to use for}
 }
 \value{
-
+An \code{sf} object coverted to Pacific-Robinson projection
 }
 \description{
 Convert a region to Pacific-Centred Robinson Projection.

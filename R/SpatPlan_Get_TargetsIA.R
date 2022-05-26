@@ -1,13 +1,16 @@
 #' Calculate Inverse Area Targets
 #'
-#' @param df
-#' @param target_min
-#' @param target_max
+#' This function takes a min (`target_min`) and max (`target_max`) target range and calculates an inverse area target for each feature based on areal coverage.
 #'
-#' @return
+#' @param df An `sf` dataframe with features to calculate
+#' @param target_min The minimum target for inverse area
+#' @param target_max The maximum target for inverse area
+#'
+#' @return An `sf` dataframe with Inverse Area Targets added in `Target`
 #' @export
 #'
 #' @examples
+#' @importFrom rlang .data
 SpatPlan_Get_TargetsIA <- function(df, target_min, target_max){
 
   PU_area_km2 <- as.numeric(sf::st_area(df[1,1])/1e+06) # Area of each planning unit
@@ -17,11 +20,12 @@ SpatPlan_Get_TargetsIA <- function(df, target_min, target_max){
   feature_area <- df %>%
     dplyr::as_tibble() %>%
     dplyr::select(-.data$geometry) %>%
-    dplyr::summarise(dplyr::across(dplyr::everything(), ~ sum(., is.na(.), 0))) %>%
-    tidyr::pivot_longer(dplyr::everything(.), names_to = "Species", values_to = "Area_km2") %>%
-    dplyr::mutate(Species = stringr::str_replace_all(Species, pattern = "_", replacement = " "),
-           Area_km2 = Area_km2 * PU_area_km2,
-           Target = target_max-((Area_km2/total_PU_area)*(target_max-target_min)))
+    dplyr::summarise(dplyr::across(dplyr::everything(), ~ sum(.data, is.na(.data), 0))) %>%
+    tidyr::pivot_longer(dplyr::everything(.data), names_to = "Species", values_to = "Area_km2") %>%
+    dplyr::mutate(Species = stringr::str_replace_all(.data$Species, pattern = "_", replacement = " "),
+           Area_km2 = .data$Area_km2 * PU_area_km2,
+           Target = target_max-((.data$Area_km2/total_PU_area)*(target_max-target_min)))
 
+  return(feature_area)
 }
 

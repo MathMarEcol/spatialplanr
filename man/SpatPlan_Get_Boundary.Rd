@@ -7,7 +7,7 @@
 SpatPlan_Get_Boundary(
   Limits,
   Type,
-  cCRS,
+  cCRS = "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs",
   Direc = file.path("~", "SpatPlan_Data")
 )
 }
@@ -21,11 +21,12 @@ SpatPlan_Get_Boundary(
 \item{Direc}{The directory where the MME data is being stored. If not specified, the default location is assumed.}
 }
 \value{
-
+The boundary of the planning region
 }
 \description{
 Get the boundary of the planning region.
 }
 \examples{
+Bndry <- SpatPlan_Get_Boundary("Australia", "EEZ")
 
 }

@@ -2,30 +2,31 @@
 % Please edit documentation in R/SpatPlan_Get_MPAs.R
 \name{SpatPlan_Get_MPAs}
 \alias{SpatPlan_Get_MPAs}
-\title{Get locked in areas}
+\title{Get marine parks from the WDPA.}
 \usage{
 SpatPlan_Get_MPAs(
-  PUs,
-  Status = "Designated",
+  PlanUnits,
+  Countries,
+  Status = c("Designated", "Established", "Inscribed"),
   Desig = c("National", "Regional", "International", "Not Applicable"),
-  Direc = file.path("~", "SpatPlan_Data")
+  Category = c("Ia", "Ib", "II", "III", "IV")
 )
 }
 \arguments{
-\item{PUs}{The planning units}
+\item{PlanUnits}{Planning Units as an \code{sf} object}
 
-\item{Status}{The status of the MPA. Options are: "Designated", "Adopted", "Inscribed", "Established"}
+\item{Countries}{A character vector of the countries for which to extract MPAs}
 
-\item{Desig}{The designation of the MPA. Options are "National", "Regional", "International", "Not Applicable"}
+\item{Status}{The status field in the WDPA provides information on whether a protected area has been established, designated, or proposed at the time the data was submitted.}
 
-\item{Direc}{The directory where the MME data is being stored. If not specified, the default location is assumed.}
+\item{Desig}{The designation type is the category or type of protected area as legally/officially designated or proposed.}
+
+\item{Category}{Stores the IUCN Protected Area Management Categories (recorded in field IUCN_CAT) for each of the protected areas where these categories are reported}
 }
 \value{
-
+A \code{sf} object with the MPAs intersected with the planning units
 }
 \description{
-Get locked in areas
-}
-\examples{
-
+This code is a wrapper for the wonderful \code{wdpar} package written by Jeffrey O. Hanson. This data is then interfaced with the planning units.
+An \code{sf} object is returned with the PU area covered by the selected marine protected areas.
 }

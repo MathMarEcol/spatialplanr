@@ -4,13 +4,15 @@
 \alias{SpatPlan_Plot_PUs}
 \title{Plot Planning Units}
 \usage{
-SpatPlan_Plot_PUs(PlanUnits, world)
+SpatPlan_Plot_PUs(PlanUnits, landmass)
 }
 \arguments{
-\item{world}{}
+\item{PlanUnits}{Planning Units as an \code{sf} object}
+
+\item{landmass}{An \code{sf} object of land polygon}
 }
 \value{
-
+A ggplot object of the plot
 }
 \description{
 Plot Planning Units

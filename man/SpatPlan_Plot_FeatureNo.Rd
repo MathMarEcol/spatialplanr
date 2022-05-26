@@ -4,13 +4,15 @@
 \alias{SpatPlan_Plot_FeatureNo}
 \title{Plot number of features}
 \usage{
-SpatPlan_Plot_FeatureNo(df, world)
+SpatPlan_Plot_FeatureNo(df, landmass)
 }
 \arguments{
-\item{world}{}
+\item{df}{An \code{sf} object of features}
+
+\item{landmass}{An \code{sf} object of land polygon}
 }
 \value{
-
+A ggplot object of the plot
 }
 \description{
 Plot number of features

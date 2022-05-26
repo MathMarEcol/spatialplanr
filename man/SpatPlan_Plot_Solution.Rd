@@ -4,13 +4,17 @@
 \alias{SpatPlan_Plot_Solution}
 \title{Plot prioritizr solution}
 \usage{
-SpatPlan_Plot_Solution(s1, PlanUnits, world)
+SpatPlan_Plot_Solution(soln, PlanUnits, landmass)
 }
 \arguments{
-\item{world}{}
+\item{soln}{The \code{prioritizr} solution}
+
+\item{PlanUnits}{Planning Units as an \code{sf} object}
+
+\item{landmass}{An \code{sf} object of land polygon}
 }
 \value{
-
+A ggplot object of the plot
 }
 \description{
 Plot prioritizr solution

@@ -6,19 +6,22 @@
 \usage{
 SpatPlan_Get_AquaMaps(
   PlanUnits,
-  cCRS = "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs",
   MinD = 0,
   MaxD = 200,
-  CutOff = 0.5,
-  limits = NA,
   Direc = file.path("~", "SpatPlan_Data")
 )
 }
 \arguments{
-\item{limits}{}
+\item{PlanUnits}{Planning Units as an \code{sf} object}
+
+\item{MinD}{The minimum depth for AquaMaps data}
+
+\item{MaxD}{The maximum depth for AquaMaps data}
+
+\item{Direc}{The directory where the MME data is being stored. If not specified, the default location is assumed.}
 }
 \value{
-
+An \code{sf} object of AquaMaps data
 }
 \description{
 Code to reduce AquaMaps to our requested species and area.

@@ -22,7 +22,13 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/SpatPlan_Apply_Cutoffs.html</loc>
+  </url>
+  <url>
     <loc>/reference/SpatPlan_ArrangeFeatures.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpatPlan_Convert_2PUs.html</loc>
   </url>
   <url>
     <loc>/reference/SpatPlan_Convert_PacificRobinson.html</loc>
@@ -32,6 +38,12 @@
   </url>
   <url>
     <loc>/reference/SpatPlan_Convert_Rast2PUs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpatPlan_Convert_Regionalisation.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpatPlan_Create_Polygon.html</loc>
   </url>
   <url>
     <loc>/reference/SpatPlan_Create_SinglePolygon.html</loc>
@@ -67,6 +79,9 @@
     <loc>/reference/SpatPlan_Match_Longhurst.html</loc>
   </url>
   <url>
+    <loc>/reference/SpatPlan_Match_Names.html</loc>
+  </url>
+  <url>
     <loc>/reference/SpatPlan_Plot_Comparison.html</loc>
   </url>
   <url>
@@ -89,6 +104,12 @@
   </url>
   <url>
     <loc>/reference/SpatPlan_Process_Geomorphic.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpatPlan_Replace_NAs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/SpatPlan_Scale_01.html</loc>
   </url>
   <url>
     <loc>/reference/SpatPlan_fix_FBtype.html</loc>

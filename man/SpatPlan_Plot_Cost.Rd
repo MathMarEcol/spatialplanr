@@ -4,13 +4,15 @@
 \alias{SpatPlan_Plot_Cost}
 \title{Plot cost}
 \usage{
-SpatPlan_Plot_Cost(Cost, world)
+SpatPlan_Plot_Cost(Cost, landmass)
 }
 \arguments{
-\item{world}{}
+\item{Cost}{An \code{sf} object of cost for \code{prioritizr}}
+
+\item{landmass}{An \code{sf} object of land polygon}
 }
 \value{
-
+A ggplot object of the plot
 }
 \description{
 Plot cost

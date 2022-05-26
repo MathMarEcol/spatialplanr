@@ -7,7 +7,7 @@
 SpatPlan_Get_PlanningUnits(
   Bndry,
   InnerB,
-  CellArea,
+  CellArea = 1000,
   Shape = "hexagon",
   inverse = FALSE
 )
@@ -24,7 +24,7 @@ SpatPlan_Get_PlanningUnits(
 \item{inverse}{To invert the \code{InnerB} and keep the areas within the InnerB}
 }
 \value{
-
+An \code{sf} object of planning units
 }
 \description{
 The code takes the bbox so the limits are the most important.
@@ -32,7 +32,12 @@ The output inherits the crs from this sf object so ensure it is in the correct p
 The code assumes that any Planning Unit whose centroids is over land will be removed. This approximates > 50\% of the PU is landward.
 }
 \details{
+Some example options for hexagonal \code{PU_size}
+PU_size <- 5240 # km2 (~1 deg at equator)
+PU_size <- 2620 # km2 (~0.5 deg at equator)
+PU_size <- 669.9 # km2 (~0.25 deg at equator)
+
 Written by Jason Everett (UQ/UNSW/CSIRO)
 Written: 15 December 2020
-Updated: 25th February 2022
+Updated: 8th April 2022
 }

@@ -27,13 +27,15 @@
 
 #' Categories we care about
 #' cate <- c("EX","EW","CR","EN","VU")
-#' @param df
-#' @param species_col
+#' @param df The dataframe containing the species to be matched with the IUCN redlist
+#' @param species_col A string name for the column containting the species name
 #'
-#' @return
+#' @return A dataframe with an additional column `IUCN_Category`
 #' @export
 #'
 #' @examples
+#' @importFrom rlang :=
+#' @importFrom rlang .data
 SpatPlan_Match_IUCNRedList <- function(df, species_col = "Species"){
 
   # Get all IUCN categories
@@ -41,9 +43,9 @@ SpatPlan_Match_IUCNRedList <- function(df, species_col = "Species"){
 
   # Download all the data for those categories
   RL <- purrr::map_df(cate, function(x) data.frame(rredlist::rl_sp_category(x))) %>%
-    dplyr::select(category, result.scientific_name) %>%
-    dplyr::rename(!!species_col := result.scientific_name,
-           IUCN_Category = category)
+    dplyr::select(.data$category, .data$result.scientific_name) %>%
+    dplyr::rename(!!species_col := .data$result.scientific_name,
+           IUCN_Category = .data$category)
 
   # Now try and link the species to the categories - only links 2 %
   df <- df %>%

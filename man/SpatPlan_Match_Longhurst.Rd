@@ -4,14 +4,16 @@
 \alias{SpatPlan_Match_Longhurst}
 \title{Assign Longhurst Provinces to PUs}
 \usage{
-SpatPlan_Match_Longhurst(PUs, Direc = file.path("~", "SpatPlan_Data"))
+SpatPlan_Match_Longhurst(PlanUnits, Direc = file.path("~", "SpatPlan_Data"))
 }
 \arguments{
-\item{Direc}{}
+\item{PlanUnits}{Planning Units as an \code{sf} object}
+
+\item{Direc}{The directory where the MME data is being stored. If not specified, the default location is assumed.}
 }
 \value{
-
+An \code{sf} dataframe with additional longhurst columns (\code{ProvCode}, \code{ProvDescr})
 }
 \description{
-Assign Longhurst Provinces to PUs
+A function that assigns the Longhurst province and description to each planning unit.
 }
