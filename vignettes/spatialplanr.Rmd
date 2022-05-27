@@ -45,7 +45,7 @@ Region <- "Australia" # "South Atlantic Ocean"
 Type <- "EEZ" # "Oceans"
 ```
 
-You can also define a region with square boundaries.
+You can also define a region with square boundaries if you need.
 ```{r, eval=FALSE}
 Region <- c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)
 ```
@@ -54,18 +54,6 @@ Set the shape and area of the planning unit in square kilometres.
 ```{r}
 Shape <- "Hexagon" # "Shape of PUs
 PU_size <- 20000 # km2
-```
-
-Set the depth range and probability cutoff (`CO`) for extracting AquaMaps data.
-```{r}
-MinDepth <- 0
-MaxDepth <- 200
-```
-
-Set minimum and maximum limits for inverse area targets
-```{r}
-minTarget = 0.2
-maxTarget = 0.5
 ```
 
 Choose CRS for analysis
@@ -103,10 +91,13 @@ We can check what the PUs look like
 ### Aquamaps 
 Get aquamaps data for our species and region 
 
+Set the depth range and probability cutoff (`CO`) for extracting AquaMaps data.
 ```{r}
+MinDepth <- 0
+MaxDepth <- 200
+
 AQM <- SpatPlan_Get_AquaMaps(PUs, MinDepth, MaxDepth)
 ```
-
 
 ### Geomorphic features 
 Add geomorphic features to the existing features object.
@@ -118,25 +109,23 @@ GeoMorph <- SpatPlan_Get_Geomorphic(PUs, Feature = c("Shelf", "Ridge", "Plateau"
 ### Apply cutoffs
 Add geomorphic features to the existing features object.
 ```{r}
-
 Cutoffs <- 0.5
+AQM_bin <- SpatPlan_Apply_Cutoffs(AQM, Cutoffs)
+
 Cutoffs <- c(Shelf = 0.01, Ridge = 0.2, Plateau = 0.1, Seamount = 0.3)
 GeoMorph_bin <- SpatPlan_Apply_Cutoffs(GeoMorph, Cutoffs)
-
 ```
 
 
 
 ### Join all features together.
 ```{r}
-features <- PUs %>% 
-  dplyr::left_join(GeoMorph %>% sf::st_drop_geometry(), by = "cellID") %>% 
+features <- GeoMorph %>% 
   dplyr::left_join(AQM %>% sf::st_drop_geometry(), by = "cellID")
 
-
-ggFeatureNo <- SpatPlan_Plot_FeatureNo(features, landmass) # Plot Number of features
-
+(ggFeatureNo <- SpatPlan_Plot_FeatureNo(features, landmass)) # Plot Number of features
 ```
+
 ### Longhurst Provinces
 You can also assign a Longhurst Province to each PU and set targets individually by province. Here we simply demonstrate this, but do not implement it into a spatial plan.
 ```{r, fig.width=7}
@@ -166,8 +155,12 @@ Targets <- data.frame(Target = 0.2)
 ```
 
 ### Inverse area targets 
-```{r}
-# Targets <- SpatPlan_Get_TargetsIA(features, minTarget, maxTarget)
+Set minimum and maximum limits for inverse area targets
+```{r, eval = FALSE}
+minTarget = 0.2
+maxTarget = 0.5
+
+Targets <- SpatPlan_Get_TargetsIA(features, minTarget, maxTarget)
 ```
 
 ### Add different targets for IUCN RedList categories 
@@ -209,9 +202,7 @@ s1 <- prioritizr::solve(p1)
 ```{r, fig.width=7}
 (ggSol <- SpatPlan_Plot_Solution(s1, PUs, landmass)) # Plot Solution
 
-#+ echo=FALSE, fig.width=12
-(gg <- patchwork::wrap_plots(list(ggPU, ggMPA, ggCost, ggFeatureNo, ggSol), ncol = 3))
-# ggsave(file.path("Figures", "Final_Solution.pdf"), plot = gg, height = 20, width = 40, units = "cm")
+gg <- patchwork::wrap_plots(list(ggPU, ggMPA, ggCost, ggFeatureNo, ggSol), ncol = 3)
 ```
 
 ## Compare 2 solutions
@@ -221,7 +212,7 @@ Here we run another problem/solution combo and compare the output with our origi
 ```{r}
 p2 <- prioritizr::problem(out_sf, feature_names, "Cost") %>%
   prioritizr::add_min_set_objective() %>%
-  prioritizr::add_relative_targets(0.3) %>%
+  prioritizr::add_relative_targets(0.5) %>%
   prioritizr::add_locked_in_constraints("wdpa") %>%
   prioritizr::add_binary_decisions() %>%
   prioritizr::add_default_solver(verbose = FALSE)
@@ -234,5 +225,5 @@ s2 <- prioritizr::solve(p2)
 
 ### Plot comparison
 ```{r, fig.width=7}
-(gg <- SpatPlan_Plot_Comparison(s1, s2, landmass))
+gg <- SpatPlan_Plot_Comparison(s1, s2, landmass)
 ```
