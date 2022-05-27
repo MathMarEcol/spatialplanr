@@ -7,8 +7,7 @@
 SpatPlan_Get_Boundary(
   Limits,
   Type,
-  cCRS = "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs",
-  Direc = file.path("~", "SpatPlan_Data")
+  cCRS = "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"
 )
 }
 \arguments{
@@ -17,8 +16,6 @@ SpatPlan_Get_Boundary(
 \item{Type}{The type of Limits being provided. Options are "Ocean" or "EEZ"}
 
 \item{cCRS}{The CRS the boundary is to be returned in}
-
-\item{Direc}{The directory where the MME data is being stored. If not specified, the default location is assumed.}
 }
 \value{
 The boundary of the planning region

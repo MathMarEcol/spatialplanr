@@ -30,6 +30,7 @@ Imports:
     fs,
     ggplot2,
     magrittr,
+    mregions,
     nngeo,
     patchwork,
     purrr,

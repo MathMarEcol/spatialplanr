@@ -101,7 +101,7 @@ SpatPlan_Plot_Cost <- function(Cost, landmass){
     cmocean::scale_fill_cmocean(name = "deep",
                                 aesthetics = c("colour", "fill"),
                                 limits = c(0,
-                                           as.numeric(stats::quantile(pull(Cost,col_name), 0.99))),
+                                           as.numeric(stats::quantile(dplyr::pull(Cost,col_name), 0.99))),
                                 oob = scales::squish) +
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = "Cost (USD)")
