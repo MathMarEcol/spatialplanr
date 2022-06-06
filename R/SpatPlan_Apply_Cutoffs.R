@@ -8,9 +8,10 @@
 #'
 #' @examples
 #' @importFrom rlang .data
-SpatPlan_Apply_Cutoffs <- function(features, Cutoffs){
+SpatPlan_Apply_Cutoffs <- function(features, Cutoffs, inverse = FALSE){
 
-  if (length(Cutoffs) == 1){ # Single cutoff for all data
+
+  if (length(Cutoffs) == 1 & length(names(Cutoffs)) == 0){ # Single cutoff for all data if unnamed vector
 
     features <- features %>%
       dplyr::as_tibble() %>%
@@ -20,18 +21,32 @@ SpatPlan_Apply_Cutoffs <- function(features, Cutoffs){
                                                      is.na(.data) ~ 0))) %>%
       sf::st_as_sf()
 
-  } else if (length(Cutoffs) > 1) { # Named vector with values for each column
+    if (inverse == TRUE){ # Need to flip the ones/zeros
+      features <- features %>%
+        dplyr::mutate(dplyr::across(-dplyr::any_of(c("cellID", "geometry")), ~ 1 - .))
+    }
 
-    nm <- features %>%
-      dplyr::as_tibble() %>%
-      dplyr::select(-c(.data$cellID, .data$geometry)) %>%
-      names()
+  } else if (length(Cutoffs) == length(names(Cutoffs))) { # Named vector with values for each column
+
+    # nm <- features %>%
+    #   dplyr::as_tibble() %>%
+    #   dplyr::select(-c(.data$cellID, .data$geometry)) %>%
+    #   names()
+
+    nm <- names(Cutoffs) # Testing - We should only be operating on the columns in the Cutoffs vector
 
     for (f in 1:length(nm)){
       features <- features %>%
         dplyr::mutate(!!nm[f] := dplyr::case_when(!!rlang::sym(nm[f]) >= Cutoffs[nm[f]] ~ 1,
                                                   !!rlang::sym(nm[f]) < Cutoffs[nm[f]] ~ 0,
                                                   is.na(!!rlang::sym(nm[f])) ~ 0))
+
+      if (inverse == TRUE){ # Need to flip the ones/zeros
+        features <- features %>%
+          dplyr::mutate(!!nm[f] := 1 - !!rlang::sym(nm[f]))
+      }
+
     }
   }
+  return(features)
 }

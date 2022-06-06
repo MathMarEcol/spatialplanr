@@ -4,7 +4,7 @@
 \alias{SpatPlan_Apply_Cutoffs}
 \title{Function to apply cutoffs to feature data}
 \usage{
-SpatPlan_Apply_Cutoffs(features, Cutoffs)
+SpatPlan_Apply_Cutoffs(features, Cutoffs, inverse = FALSE)
 }
 \arguments{
 \item{features}{A sf dataframe with all the feature information}
