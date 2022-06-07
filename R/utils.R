@@ -135,7 +135,7 @@ SpatPlan_Crop_AQM <- function(df, spp, extent){
 #' Remove NAs from spatial data using nearest neighbour
 #'
 #' @param df An `sf` dataframe
-#' @param vari Variable to
+#' @param vari Variable to remove NAs from
 #'
 #' @return An `sf` object with NAs replaced with the nearest neighbour
 #' @export
@@ -150,8 +150,11 @@ SpatPlan_Replace_NAs <- function(df, vari){
       dplyr::mutate(isna = is.na(!!rlang::sym(vari)))
     gp <- split(gp, f = as.factor(gp$isna))
 
-    d <- nngeo::st_nn(gp$`TRUE`, gp$`FALSE`) %>% # Get nearest neighbour
-      unlist()
+    # Switch to sf. Much faster 7/6/22
+    # d <- nngeo::st_nn(gp$`TRUE`, gp$`FALSE`) %>% # Get nearest neighbour
+    #   unlist()
+
+    d <- sf::st_nearest_feature(gp$`TRUE`, gp$`FALSE`)
 
     gp$`TRUE` <- gp$`TRUE` %>%
       dplyr::mutate(!!rlang::sym(vari) := dplyr::pull(gp$`FALSE`, !!rlang::sym(vari))[d])

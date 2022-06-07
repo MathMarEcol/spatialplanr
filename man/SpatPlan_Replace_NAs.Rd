@@ -9,7 +9,7 @@ SpatPlan_Replace_NAs(df, vari)
 \arguments{
 \item{df}{An \code{sf} dataframe}
 
-\item{vari}{Variable to}
+\item{vari}{Variable to remove NAs from}
 }
 \value{
 An \code{sf} object with NAs replaced with the nearest neighbour
