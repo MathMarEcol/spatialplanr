@@ -98,11 +98,11 @@ SpatPlan_Plot_Cost <- function(Cost, landmass){
     ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = col_name), colour = "grey80", size = 0.1, show.legend = TRUE) +
     ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
-    cmocean::scale_fill_cmocean(name = "deep",
-                                aesthetics = c("colour", "fill"),
-                                limits = c(0,
-                                           as.numeric(stats::quantile(dplyr::pull(Cost,col_name), 0.99))),
-                                oob = scales::squish) +
+    ggplot2::scale_fill_distiller(palette = "YlGnBu",
+                                  aesthetics = c("colour", "fill"),
+                                  limits = c(0,
+                                             as.numeric(stats::quantile(dplyr::pull(Cost,col_name), 0.99))),
+                                  oob = scales::squish) +
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = "Cost (USD)")
 
@@ -166,12 +166,12 @@ SpatPlan_Plot_FeatureNo <- function(df, landmass){
     ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$FeatureSum), colour = "grey80", size = 0.1, show.legend = TRUE) +
     # ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
-    cmocean::scale_fill_cmocean(name = "deep",
-                                aesthetics = c("fill"),
-                                # limits = c(0,
-                                # as.numeric(quantile(Cost$Cost, 0.99))),
-                                oob = scales::squish,
-                                trans = "log10") +
+    ggplot2::scale_fill_distiller(palette = "YlGnBu",
+                                  aesthetics = c("fill"),
+                                  # limits = c(0,
+                                  #            as.numeric(quantile(Cost$Cost, 0.99))),
+                                  oob = scales::squish,
+                                  trans = "log10") +
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = "Number of Features")
 
