@@ -120,8 +120,8 @@ GeoMorph_bin <- SpatPlan_Apply_Cutoffs(GeoMorph, Cutoffs)
 
 ### Join all features together.
 ```{r}
-features <- GeoMorph %>% 
-  dplyr::left_join(AQM %>% sf::st_drop_geometry(), by = "cellID")
+features <- GeoMorph_bin %>% 
+  dplyr::left_join(AQM_bin %>% sf::st_drop_geometry(), by = "cellID")
 
 (ggFeatureNo <- SpatPlan_Plot_FeatureNo(features, landmass)) # Plot Number of features
 ```

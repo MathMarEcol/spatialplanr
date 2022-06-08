@@ -10,6 +10,8 @@ SpatPlan_Apply_Cutoffs(features, Cutoffs, inverse = FALSE)
 \item{features}{A sf dataframe with all the feature information}
 
 \item{Cutoffs}{A single value or a named vector of cutoffs.}
+
+\item{inverse}{If TRUE, values below the \code{Cutoffs} are used.}
 }
 \value{
 A new sf dataframe that has cutoffs applied.

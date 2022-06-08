@@ -24,7 +24,6 @@ VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
 Imports: 
-    cmocean,
     dplyr,
     exactextractr,
     fs,

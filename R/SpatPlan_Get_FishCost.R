@@ -24,9 +24,7 @@ SpatPlan_Get_FishCost <- function(PlanUnits,
     call_cost <- terra::rast(file.path(Direc, "Cost","Cost_Raster_Sum.grd")) %>%
       terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm = FALSE) %>% # Convert to polygon data
       sf::st_as_sf() # Convert to sf
-  }
-
-  else if(group == "pelagic"){
+  } else if(group == "pelagic"){
     call_cost <- terra::rast(file.path(Direc, "Cost", "Cost_RasterStack_byFunctionalGroup.grd")) %>% # data by functional group
       terra::subset(c(14, 16, 19)) %>% # small, medium, and large pelagics
       terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm = FALSE) %>% # Convert to polygon data

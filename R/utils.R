@@ -89,7 +89,6 @@ SpatPlan_validate_FBNAs <- function(spp, datab = "fishbase"){
 
 #' Crop AquaMaps Data
 #'
-
 #' @param df The AquaMaps `stars` object from `SpatPlan_Get_AquaMaps`
 #' @param spp A character vector of species
 #' @param extent An `sf` object from which to extract the extent
