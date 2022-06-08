@@ -53,9 +53,10 @@ SpatPlan_Get_AquaMaps <- function(PlanUnits,
     dplyr::relocate(.data$cellID, tidyselect::everything()) # Move to the start
 
   # Get names of columns with data in them
-  nm <- AquaMaps_sf %>%
-    sf::st_drop_geometry() %>%
-    dplyr::select(which(!colSums(., na.rm = TRUE) %in% 0)) %>%
+  nm_temp <- AquaMaps_sf %>%
+    sf::st_drop_geometry()
+
+  nm <- dplyr::select(nm_temp, which(!colSums(nm_temp, na.rm = TRUE) %in% 0)) %>%
     names()
 
   # Remove zero columns now the cutoff has been applied
