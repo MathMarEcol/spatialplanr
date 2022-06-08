@@ -2,6 +2,7 @@
 #'
 #' @param features A sf dataframe with all the feature information
 #' @param Cutoffs A single value or a named vector of cutoffs.
+#' @param inverse If TRUE, values below the `Cutoffs` are used.
 #'
 #' @return A new sf dataframe that has cutoffs applied.
 #' @export

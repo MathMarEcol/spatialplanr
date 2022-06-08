@@ -66,8 +66,7 @@ SpatPlan_Convert_2PUs <- function(dat, PlanUnits){
       meth <- "mean"
     }
 
-    out <- PlanUnits %>%
-      dplyr::mutate(!!nm := exactextractr::exact_extract(dat, ., meth, progress = FALSE)) # Use mean for continuous. Use mode for categorical
+    out <- dplyr::mutate(!!nm := exactextractr::exact_extract(dat, PlanUnits, meth, progress = FALSE)) # Use mean for continuous. Use mode for categorical
 
     return(out)
 
@@ -83,7 +82,8 @@ SpatPlan_Convert_2PUs <- function(dat, PlanUnits){
     }
 
     inter <- sf::st_intersection(PlanUnits, dat) %>%
-      dplyr::mutate(!!nm := as.numeric(sf::st_area(.))) %>% # Return area in km2
+      dplyr::mutate(!!nm := as.numeric(sf::st_area(.data$geometry))) %>% # Return area in km2
+      # dplyr::mutate(!!nm := as.numeric(sf::st_area(.))) %>% # Return area in km2
       dplyr::select(tidyselect::all_of(nm), .data$cellID) %>%
       sf::st_drop_geometry() %>%
       dplyr::group_by(.data$cellID) %>%
