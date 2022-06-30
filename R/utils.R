@@ -149,10 +149,6 @@ SpatPlan_Replace_NAs <- function(df, vari){
       dplyr::mutate(isna = is.na(!!rlang::sym(vari)))
     gp <- split(gp, f = as.factor(gp$isna))
 
-    # Switch to sf. Much faster 7/6/22
-    # d <- nngeo::st_nn(gp$`TRUE`, gp$`FALSE`) %>% # Get nearest neighbour
-    #   unlist()
-
     d <- sf::st_nearest_feature(gp$`TRUE`, gp$`FALSE`)
 
     gp$`TRUE` <- gp$`TRUE` %>%
