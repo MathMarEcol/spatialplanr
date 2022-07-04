@@ -66,7 +66,8 @@ SpatPlan_Convert_2PUs <- function(dat, PlanUnits){
       meth <- "mean"
     }
 
-    out <- dplyr::mutate(!!nm := exactextractr::exact_extract(dat, PlanUnits, meth, progress = FALSE)) # Use mean for continuous. Use mode for categorical
+    out <- PlanUnits %>%
+      dplyr::mutate(!!nm := exactextractr::exact_extract(dat, PlanUnits, meth, progress = FALSE)) # Use mean for continuous. Use mode for categorical
 
     return(out)
 

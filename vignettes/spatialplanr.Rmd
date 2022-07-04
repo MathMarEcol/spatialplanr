@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r klippy, eval=TRUE, echo=FALSE, include=TRUE}
-klippy::klippy(position = c('top', 'right'))
+# klippy::klippy(position = c('top', 'right'))
 ```
 
 ```{r setup}
