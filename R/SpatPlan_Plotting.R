@@ -60,7 +60,7 @@ SpatPlan_Plot_PUs <- function(PlanUnits, landmass){
 #' @examples
 SpatPlan_Plot_MPAs <- function(df, landmass){
 
-  if (class(df$wdpa) != "logical"){
+  if (isa(df$wdpa, "logical") == FALSE){
     df <- df %>%
       dplyr::mutate(wdpa = as.logical(.data$wdpa))
   }
@@ -158,7 +158,7 @@ SpatPlan_Plot_FeatureNo <- function(df, landmass){
 
   df <- df %>%
     dplyr::as_tibble() %>%
-    dplyr::mutate(FeatureSum = rowSums(dplyr::across(tidyselect::where(is.numeric)), na.rm = TRUE)) %>%
+    dplyr::mutate(FeatureSum = rowSums(dplyr::across(tidyselect:::where(is.numeric)), na.rm = TRUE)) %>%
     sf::st_as_sf(sf_column_name = "geometry") %>%
     dplyr::select(.data$FeatureSum)
 

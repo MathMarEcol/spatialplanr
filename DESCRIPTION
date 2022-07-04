@@ -16,6 +16,7 @@ RoxygenNote: 7.2.0
 Suggests: 
     klippy,
     knitr,
+    patchwork,
     prioritizr,
     rfishbase,
     rmarkdown,
@@ -30,7 +31,6 @@ Imports:
     ggplot2,
     magrittr,
     mregions,
-    patchwork,
     purrr,
     rappdirs,
     readr (>= 2.0.0),
