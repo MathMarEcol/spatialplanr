@@ -90,7 +90,7 @@ splnr_plot_MPAs <- function(df, landmass){
 #' @export
 #'
 #' @examples
-splnr_plot_Cost <- function(Cost, landmass){
+splnr_plot_cost <- function(Cost, landmass){
 
   col_name = stringr::str_subset(colnames(Cost), "geometry", negate = TRUE)
 
@@ -120,7 +120,7 @@ splnr_plot_Cost <- function(Cost, landmass){
 #'
 #' @examples
 #' @importFrom rlang .data
-splnr_plot_Comparison <- function(soln1, soln2, landmass){
+splnr_plot_comparison <- function(soln1, soln2, landmass){
 
   soln <- soln1 %>%
     dplyr::select(.data$solution_1) %>%
@@ -154,7 +154,7 @@ splnr_plot_Comparison <- function(soln1, soln2, landmass){
 #' @export
 #'
 #' @examples
-splnr_plot_FeatureNo <- function(df, landmass){
+splnr_plot_featureNo <- function(df, landmass){
 
   df <- df %>%
     dplyr::as_tibble() %>%
@@ -187,7 +187,7 @@ splnr_plot_FeatureNo <- function(df, landmass){
 #' @export
 #'
 #' @examples
-splnr_plot_Longhurst <- function(PlanUnits, landmass){
+splnr_plot_longhurst <- function(PlanUnits, landmass){
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = PlanUnits, colour = "lightblue", ggplot2::aes(fill = .data$ProvDescr), size = 0.1, show.legend = TRUE) +
     ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
