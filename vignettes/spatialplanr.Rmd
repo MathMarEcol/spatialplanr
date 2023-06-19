@@ -13,7 +13,8 @@ knitr::opts_chunk$set(
   comment = "#>",
   warning=FALSE, 
   cache=FALSE, 
-  message=FALSE
+  message=FALSE,
+  eval=FALSE
 )
 ```
 
@@ -39,7 +40,7 @@ If you run into memory problems, you can try increasing the amount of the HD spa
 `Sys.setenv(GDAL_MAX_BAND_COUNT = 120000)`
 
 ## Set user parameters 
-You can set a region if it is defined in `SpatPlan_Get_PlanningUnits`. 
+You can set a region if it is defined in `splnr_get_PlanningUnits`. 
 ```{r}
 Region <- "Australia" # "South Atlantic Ocean"
 Type <- "EEZ" # "Oceans"
@@ -67,7 +68,7 @@ Start your analysis by defining your region and setting up the planning units.
 
 Get the boundary for your chosen region.
 ```{r}
-Bndry <- SpatPlan_Get_Boundary(Region, Type, cCRS)
+Bndry <- splnr_get_Boundary(Region, Type, cCRS)
 ```
 
 Get the land boundaries to remove overlap. The object "landmass" represents the land mass that should be removed (inverse = FALSE)
@@ -78,12 +79,12 @@ landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>
 
 ## Create Planning Units 
 ```{r}
-PUs <- SpatPlan_Get_PlanningUnits(Bndry, landmass, PU_size, Shape)
+PUs <- splnr_get_PlanningUnits(Bndry, landmass, PU_size, Shape)
 ```
 
 We can check what the PUs look like
 ```{r, fig.width=7}
-(ggPU <- SpatPlan_Plot_PUs(PUs, landmass)) # Plot Planning Units
+(ggPU <- splnr_plot_PUs(PUs, landmass)) # Plot Planning Units
 ```
 
 ## Get the features 
@@ -96,13 +97,13 @@ Set the depth range and probability cutoff (`CO`) for extracting AquaMaps data.
 MinDepth <- 0
 MaxDepth <- 200
 
-AQM <- SpatPlan_Get_AquaMaps(PUs, MinDepth, MaxDepth)
+AQM <- splnr_get_AquaMaps(PUs, MinDepth, MaxDepth)
 ```
 
 ### Geomorphic features 
 Add geomorphic features to the existing features object.
 ```{r}
-GeoMorph <- SpatPlan_Get_Geomorphic(PUs, Feature = c("Shelf", "Ridge", "Plateau", "Seamount"))
+GeoMorph <- splnr_get_Geomorphic(PUs, Feature = c("Shelf", "Ridge", "Plateau", "Seamount"))
 ```
 
 
@@ -110,10 +111,10 @@ GeoMorph <- SpatPlan_Get_Geomorphic(PUs, Feature = c("Shelf", "Ridge", "Plateau"
 Add geomorphic features to the existing features object.
 ```{r}
 Cutoffs <- 0.5
-AQM_bin <- SpatPlan_Apply_Cutoffs(AQM, Cutoffs)
+AQM_bin <- splnr_Apply_Cutoffs(AQM, Cutoffs)
 
 Cutoffs <- c(Shelf = 0.01, Ridge = 0.2, Plateau = 0.1, Seamount = 0.3)
-GeoMorph_bin <- SpatPlan_Apply_Cutoffs(GeoMorph, Cutoffs)
+GeoMorph_bin <- splnr_Apply_Cutoffs(GeoMorph, Cutoffs)
 ```
 
 
@@ -123,28 +124,28 @@ GeoMorph_bin <- SpatPlan_Apply_Cutoffs(GeoMorph, Cutoffs)
 features <- GeoMorph_bin %>% 
   dplyr::left_join(AQM_bin %>% sf::st_drop_geometry(), by = "cellID")
 
-(ggFeatureNo <- SpatPlan_Plot_FeatureNo(features, landmass)) # Plot Number of features
+(ggFeatureNo <- splnr_plot_FeatureNo(features, landmass)) # Plot Number of features
 ```
 
 ### Longhurst Provinces
 You can also assign a Longhurst Province to each PU and set targets individually by province. Here we simply demonstrate this, but do not implement it into a spatial plan.
 ```{r, fig.width=7}
-Longhurst <- SpatPlan_Match_Longhurst(PUs)
-(ggLong <- SpatPlan_Plot_Longhurst(Longhurst, landmass))
+Longhurst <- splnr_Match_Longhurst(PUs)
+(ggLong <- splnr_plot_Longhurst(Longhurst, landmass))
 ```
 
 ### Get locked in areas 
 ```{r, fig.width=7}
-LockedIn <- SpatPlan_Get_MPAs(PUs, "Australia") %>% 
-  SpatPlan_Apply_Cutoffs(0.5) %>% 
+LockedIn <- splnr_get_MPAs(PUs, "Australia") %>% 
+  splnr_Apply_Cutoffs(0.5) %>% 
   dplyr::mutate(wdpa = as.logical(wdpa))
-(ggMPA <- SpatPlan_Plot_MPAs(LockedIn, landmass)) # Plot Locked in areas
+(ggMPA <- splnr_plot_MPAs(LockedIn, landmass)) # Plot Locked in areas
 ```
 
 ## Get Fisheries cost 
 ```{r, fig.width=7}
-Cost <- SpatPlan_Get_FishCost(PUs, group = "all")
-(ggCost <- SpatPlan_Plot_Cost(Cost, landmass)) # Plot cost
+Cost <- splnr_get_FishCost(PUs, group = "all")
+(ggCost <- splnr_plot_Cost(Cost, landmass)) # Plot cost
 ```
 
 ## Set up targets 
@@ -160,7 +161,7 @@ Set minimum and maximum limits for inverse area targets
 minTarget = 0.2
 maxTarget = 0.5
 
-Targets <- SpatPlan_Get_TargetsIA(features, minTarget, maxTarget)
+Targets <- splnr_get_TargetsIA(features, minTarget, maxTarget)
 ```
 
 ### Add different targets for IUCN RedList categories 
@@ -168,7 +169,7 @@ To run this code you will need to sign up for your own IUCN RedList token. Start
 ```{r, eval=FALSE}
 speciesCol <- "Species"
 Targets <- Targets %>% 
-  SpatPlan_Match_IUCNRedList(speciesCol) %>% # Add RL data to the df
+  splnr_Match_IUCNRedList(speciesCol) %>% # Add RL data to the df
   dplyr::mutate(Target = dplyr::case_when(IUCN_Category %in% c("EX","EW","CR","EN","VU") ~ 1,
                                           TRUE ~ Targets$Target))
 ```
@@ -200,7 +201,7 @@ s1 <- prioritizr::solve(p1)
 
 ## Plotting 
 ```{r, fig.width=7}
-(ggSol <- SpatPlan_Plot_Solution(s1, PUs, landmass)) # Plot Solution
+(ggSol <- splnr_plot_Solution(s1, PUs, landmass)) # Plot Solution
 
 gg <- patchwork::wrap_plots(list(ggPU, ggMPA, ggCost, ggFeatureNo, ggSol), ncol = 3)
 ```
@@ -225,5 +226,5 @@ s2 <- prioritizr::solve(p2)
 
 ### Plot comparison
 ```{r, fig.width=7}
-gg <- SpatPlan_Plot_Comparison(s1, s2, landmass)
+gg <- splnr_plot_Comparison(s1, s2, landmass)
 ```

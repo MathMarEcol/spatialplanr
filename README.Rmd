@@ -27,7 +27,7 @@ This code has been written to simplify the process for running a _prioritizr_ an
 
 The code depends on `sf`, `terra`, `tidyverse`, `rnaturalearth`, `prioritizr`, `stars`, `patchwork`.    
 
-To use this code, you will need to download and expand `MME1DATA-Q1215/SpatialPlanning/SpatPlan_Data.zip`. To use the `spatialplanr` package defaults, expand this file into your home directory (e.g. `/Users/jason/SpatPlan_Data`). You can use any location you want, but you will need to specify the location for some functions, as per the function help. **Note:** The download is only 2GB, but the expanded data is 35 GB in size. If you need help subsetting the data to your region due to memory or HD space constraints, contact Jason.
+To use this code, you will need to download and expand `MME1DATA-Q1215/SpatialPlanning/splnr_Data.zip`. To use the `spatialplanr` package defaults, expand this file into your home directory (e.g. `/Users/jason/splnr_Data`). You can use any location you want, but you will need to specify the location for some functions, as per the function help. **Note:** The download is only 2GB, but the expanded data is 35 GB in size. If you need help subsetting the data to your region due to memory or HD space constraints, contact Jason.
 
 If you run into memory problems, you can try increasing the amount of the HD space gdal is allowed to use. 
 `Sys.setenv(GDAL_MAX_BAND_COUNT = 120000)`
