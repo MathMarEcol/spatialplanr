@@ -1,6 +1,6 @@
 ## code to prepare `DATASET` dataset goes here
 
-
+library(magrittr)
 set.seed(1222)
 
 # I need a dataset I can use in the examples to demonstrate
@@ -8,17 +8,21 @@ set.seed(1222)
 # dataset from AquaMaps for the east coast of Australia.
 
 # Create a dataset boundary
-dat_bndry <- dplyr::tibble(x = seq(-50, 0, by = 1), y = 120) %>%
-  dplyr::bind_rows(dplyr::tibble(x = 0, y = seq(120, 160, by = 1))) %>%
-  dplyr::bind_rows(dplyr::tibble(x = seq(0, -50, by = -1), y = 160)) %>%
-  dplyr::bind_rows(dplyr::tibble(x = -50, y = seq(160, 120, by = -1))) %>%
+dat_bndry <- dplyr::tibble(x = 100, y = seq(-50, 0, by = 1)) %>%
+  dplyr::bind_rows(dplyr::tibble(x = seq(100, 160, by = 1), y = 0)) %>%
+  dplyr::bind_rows(dplyr::tibble(x = 160, y = seq(0, -50, by = -1))) %>%
+  dplyr::bind_rows(dplyr::tibble(x = seq(160, 100, by = -1), y = -50)) %>%
   as.matrix() %>%
   list() %>%
   sf::st_polygon() %>%
-  sf::st_sfc(crs = "EPSG:4326")
+  sf::st_sfc(crs = "EPSG:4326") %>%
+  sf::st_sf() %>%
+  sf::st_make_valid()
 
 # Use boundary to create grid
-dat_PUs <- sf::st_make_grid(dat_bndry, cellsize = 5)
+dat_PUs <- sf::st_make_grid(dat_bndry, cellsize = 2) %>%
+  sf::st_sf() %>%
+  dplyr::mutate(cellID = dplyr::row_number()) # Add a cell ID reference
 
 # Create some regionalisations
 dat_region <- dat_PUs %>%
