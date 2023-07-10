@@ -4,11 +4,7 @@
 \alias{splnr_get_Boundary}
 \title{Get the boundary of the planning region.}
 \usage{
-splnr_get_Boundary(
-  Limits,
-  Type,
-  cCRS = "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"
-)
+splnr_get_Boundary(Limits, Type, cCRS = "ESRI:54009")
 }
 \arguments{
 \item{Limits}{The limits of the boundary. This can either be a 4 element numeric named vector (c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)), a vector of ocean/sea names, or a vector of EEZs.,}

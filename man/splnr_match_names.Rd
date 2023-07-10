@@ -15,5 +15,7 @@ splnr_match_names(dat, nam)
 An \code{sf} dataframe with numeric regionalisations substituted for category names
 }
 \description{
-Substitute numbers for all_names in regionalisations
+Many regionalisations have numeric values in teh shape files that correpond
+to a vector of names. Here we provide a function to quickly replace the
+numbers with names.
 }

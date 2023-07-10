@@ -19,3 +19,6 @@ A new sf dataframe that has cutoffs applied.
 \description{
 Function to apply cutoffs to feature data
 }
+\examples{
+df <- splnr_apply_cutoffs(dat_species_prob, Cutoffs = 0.5)
+}

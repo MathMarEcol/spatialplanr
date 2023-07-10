@@ -19,3 +19,7 @@ An \code{sf} dataframe with Inverse Area Targets added in \code{Target}
 \description{
 This function takes a min (\code{target_min}) and max (\code{target_max}) target range and calculates an inverse area target for each feature based on areal coverage.
 }
+\examples{
+targets <- dat_species_prob \%>\%
+   splnr_get_TargetsIA(target_min = 0.3, target_max = 0.8)
+}

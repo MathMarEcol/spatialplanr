@@ -4,7 +4,7 @@
 \alias{splnr_plot_Solution}
 \title{Plot prioritizr solution}
 \usage{
-splnr_plot_Solution(soln, PlanUnits, landmass)
+splnr_plot_Solution(soln, PlanUnits, landmass = NA)
 }
 \arguments{
 \item{soln}{The \code{prioritizr} solution}
@@ -18,4 +18,8 @@ A ggplot object of the plot
 }
 \description{
 Plot prioritizr solution
+}
+\examples{
+dat_soln \%>\%
+    splnr_plot_Solution(dat_soln)
 }

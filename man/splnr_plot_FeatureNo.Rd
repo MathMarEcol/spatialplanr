@@ -4,7 +4,7 @@
 \alias{splnr_plot_featureNo}
 \title{Plot number of features}
 \usage{
-splnr_plot_featureNo(df, landmass)
+splnr_plot_featureNo(df, landmass = NA)
 }
 \arguments{
 \item{df}{An \code{sf} object of features}
@@ -16,4 +16,7 @@ A ggplot object of the plot
 }
 \description{
 Plot number of features
+}
+\examples{
+splnr_plot_featureNo(dat_species_bin)
 }

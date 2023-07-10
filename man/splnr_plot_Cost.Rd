@@ -4,10 +4,12 @@
 \alias{splnr_plot_cost}
 \title{Plot cost}
 \usage{
-splnr_plot_cost(Cost, landmass)
+splnr_plot_cost(Cost, Cost_name = "Cost", landmass = NA)
 }
 \arguments{
 \item{Cost}{An \code{sf} object of cost for \code{prioritizr}}
+
+\item{Cost_name}{Name of the cost column}
 
 \item{landmass}{An \code{sf} object of land polygon}
 }
@@ -16,4 +18,9 @@ A ggplot object of the plot
 }
 \description{
 Plot cost
+}
+\examples{
+dat_soln \%>\%
+  dplyr::mutate(Cost = runif(n = dim(.)[[1]])) \%>\%
+  splnr_plot_cost()
 }

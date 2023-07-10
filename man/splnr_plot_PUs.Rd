@@ -4,7 +4,7 @@
 \alias{splnr_plot_PUs}
 \title{Plot Planning Units}
 \usage{
-splnr_plot_PUs(PlanUnits, landmass)
+splnr_plot_PUs(PlanUnits, landmass = NA)
 }
 \arguments{
 \item{PlanUnits}{Planning Units as an \code{sf} object}

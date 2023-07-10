@@ -17,3 +17,7 @@ An \code{sf} object with NAs replaced with the nearest neighbour
 \description{
 Remove NAs from spatial data using nearest neighbour
 }
+\examples{
+df <- dat_species_prob \%>\%
+    splnr_replace_NAs("Spp2")
+}

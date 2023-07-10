@@ -4,7 +4,7 @@
 \alias{splnr_plot_comparison}
 \title{Plot solution comparison}
 \usage{
-splnr_plot_comparison(soln1, soln2, landmass)
+splnr_plot_comparison(soln1, soln2, landmass = NA)
 }
 \arguments{
 \item{soln1}{The first \code{prioritizr} solution}
@@ -18,4 +18,7 @@ A ggplot object of the plot
 }
 \description{
 Plot solution comparison
+}
+\examples{
+splnr_plot_comparison(dat_soln, dat_soln2)
 }
