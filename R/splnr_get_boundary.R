@@ -12,8 +12,9 @@
 #'
 #' @importFrom rlang .data
 splnr_get_Boundary <- function(Limits,
-                                  Type,
-                                  cCRS = "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"){
+                               Type,
+                               cCRS = "ESRI:54009" # Mollweide
+){
 
   if (is.numeric(Limits)){
     Bndry <- dplyr::tibble(x = seq(Limits["xmin"], Limits["xmax"], by = 1), y = Limits["ymin"]) %>%
@@ -35,17 +36,17 @@ splnr_get_Boundary <- function(Limits,
     return(Bndry)
   }
 
-  # TODO Can't use mregions because it seems to depend on rgdal and rgeos which are being deprecated
-  #
-  # if (Type == "EEZ"){
-  #   Bndry <- mregions::mr_shp(key = "MarineRegions:eez") %>%
-  #     dplyr::filter(.data$territory1 %in% Limits) %>%
-  #     sf::st_union() %>%
-  #     sf::st_transform(cCRS)
-  #   return(Bndry)
-  # }
 
-  if (Type == "Oceans"){
+
+  if (Type == "EEZ"){
+    Bndry <- offshoredatr::get_area(area_name = Limits) %>%
+      dplyr::filter(.data$territory1 %in% Limits) %>%
+      sf::st_union() %>%
+      sf::st_transform(cCRS)
+    return(Bndry)
+  }
+
+  if (Type == "Oceans" | Type == "Ocean"){
     Bndry <- rnaturalearth::ne_download(scale = "large",
                                         category = "physical",
                                         type = "geography_marine_polys",

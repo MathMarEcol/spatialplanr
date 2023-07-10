@@ -11,12 +11,16 @@ utils::globalVariables("where")
 #' @export
 #'
 #' @examples
-splnr_create_polygon <- function(x, cCRS){
+#'splnr_create_polygon(x = dplyr::tibble(x = seq(-50, 50, by = 1), y = 120) %>%
+#'                       dplyr::bind_rows(dplyr::tibble(x = 50, y = seq(120, 180, by = 1))) %>%
+#'                       dplyr::bind_rows(dplyr::tibble(x = seq(50, -50, by = -1), y = 180)) %>%
+#'                       dplyr::bind_rows(dplyr::tibble(x = -50, y = seq(150, 120, by = -1))))
+splnr_create_polygon <- function(x, cCRS = "EPSG:4326"){
   x <- x %>%
     as.matrix() %>%
     list() %>%
     sf::st_polygon() %>%
-    sf::st_sfc(crs = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0") %>%
+    sf::st_sfc(crs = "EPSG:4326") %>%
     sf::st_transform(crs = cCRS)
 }
 
@@ -30,9 +34,11 @@ splnr_create_polygon <- function(x, cCRS){
 #' @return An `sf` object with NAs replaced with the nearest neighbour
 #' @export
 #'
-#' @examples
 #' @importFrom rlang .data
 #' @importFrom rlang :=
+#' @examples
+#' df <- dat_species_prob %>%
+#'     splnr_replace_NAs("Spp2")
 splnr_replace_NAs <- function(df, vari){
   if (sum(is.na(dplyr::pull(df, !!rlang::sym(vari)))) > 0){ # Check if there are NAs
 
@@ -57,16 +63,20 @@ splnr_replace_NAs <- function(df, vari){
 
 #' Substitute numbers for all_names in regionalisations
 #'
+#' Many regionalisations have numeric values in teh shape files that correpond
+#' to a vector of names. Here we provide a function to quickly replace the
+#' numbers with names.
+#'
 #' @param dat `sf` data frame with one column of numeric/integer corresponding to `nam`
 #' @param nam character vector of names corresponding to numeric column of dat
 #'
 #' @return An `sf` dataframe with numeric regionalisations substituted for category names
 #' @export
 #'
-#' @examples
 #' @importFrom rlang :=
+#' @examples
 splnr_match_names <- function(dat, nam){
-  col_name = stringr::str_subset(colnames(dat), "geometry", negate = TRUE)
+  col_name = stringr::str_subset(colnames(dat), "geometry", negate = TRUE)[[1]]
 
   out <- dat %>%
     dplyr::mutate(!!col_name := nam[!!rlang::sym(col_name)]) # Apply categories to data
@@ -82,8 +92,12 @@ splnr_match_names <- function(dat, nam){
 #' @return `sf` dataframe
 #' @export
 #'
-#' @examples
 #' @importFrom rlang :=
+#'
+#' @examples
+#' df <- dat_species_prob %>%
+#'     dplyr::mutate(Spp1 = Spp1 * 100) %>%
+#'     splnr_scale_01(col_name = "Spp1")
 splnr_scale_01 <- function(dat, col_name){
 
   mx  <- max(dplyr::pull(dat, !!rlang::sym(col_name)), na.rm = TRUE) # Get max probability
@@ -105,9 +119,9 @@ splnr_scale_01 <- function(dat, col_name){
 
 
 
-#
-#
-#' Convert a world Robinson sf object to a Pacific-centred one
+
+#' Convert a world sf object to a Pacific-centred one
+#' Defaults to assuming Robinson projection
 #'
 #' Written by Jason D. Everett
 #' UQ/CSIRO/UNSW
@@ -115,51 +129,60 @@ splnr_scale_01 <- function(dat, col_name){
 #'
 #' @param df An sf dataframe
 #' @param buff The buffer too apply to features that cross after merge
+#' @param cCRS The crs to use for the output.
 #'
 #' @return An sf object in the Robinson projection
 #' @export
 #'
 #' @examples
-splnr_convert2PacificRobinson <- function(df, buff = 0){
+#' df_rob <- rnaturalearth::ne_coastline(returnclass = "sf") %>%
+#'   splnr_convert2Pacific()
+splnr_convert2Pacific <- function(df,
+                                  buff = 0,
+                                  cCRS = "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"){
+
+  #TODO add a warning if df doesn't cross the pacific dateline
+
+  longlat <- "EPSG:4326"
+
   # Define a long & slim polygon that overlaps the meridian line & set its CRS to match
-  # that of world
-  # Adapted from here:
+  # that of world Adapted from here:
   # https://stackoverflow.com/questions/56146735/visual-bug-when-changing-robinson-projections-central-meridian-with-ggplot2
 
-  rob_pacific <- "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
-  longlat <- "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"
-
   polygon <- sf::st_polygon(x = list(rbind(c(-0.0001, 90),
-                                       c(0, 90),
-                                       c(0, -90),
-                                       c(-0.0001, -90),
-                                       c(-0.0001, 90)))) %>%
+                                           c(0, 90),
+                                           c(0, -90),
+                                           c(-0.0001, -90),
+                                           c(-0.0001, 90)))) %>%
     sf::st_sfc() %>%
     sf::st_set_crs(longlat)
 
   # Modify world dataset to remove overlapping portions with world's polygons
-  df_robinson <- df %>%
+  #TODO add a warning if the input df is not unprojected
+  df_proj <- df %>%
+    sf::st_transform(longlat) %>% # The input needs to be unprojected.
     sf::st_make_valid() %>% # Just in case....
     sf::st_difference(polygon) %>%
-    sf::st_transform(crs = rob_pacific) # Perform transformation on modified version of world dataset
+    sf::st_transform(crs = cCRS) # Perform transformation on modified version of polygons
   rm(polygon)
 
   # # notice that there is a line in the middle of Antarctica. This is because we have
   # # split the map after reprojection. We need to fix this:
-  bbox <-  sf::st_bbox(df_robinson)
+  bbox <-  sf::st_bbox(df_proj)
   bbox[c(1,3)] <- c(-1e-5, 1e-5)
-  polygon_rob <- sf::st_as_sfc(bbox)
+  polygon_proj <- sf::st_as_sfc(bbox)
 
-  crosses <- df_robinson %>%
-    sf::st_intersects(polygon_rob) %>%
+  crosses <- df_proj %>%
+    sf::st_intersects(polygon_proj) %>%
     sapply(length) %>%
     as.logical %>%
     which
 
-  # # Adding buffer 0
-  df_robinson <- df_robinson[crosses,] %>%
+  # # Adding buffer (usually 0)
+  df_proj <- df_proj[crosses,] %>%
     sf::st_buffer(buff)
 
+  return(df_proj)
 }
 
 
@@ -196,6 +219,8 @@ splnr_convert2PacificRobinson <- function(df, buff = 0){
 #' @export
 #'
 #' @examples
+#' df <- dat_species_prob %>%
+#'       splnr_arrangeFeatures()
 splnr_arrangeFeatures <- function(df){
 
   # Sort rows to ensure all features are in the same order.

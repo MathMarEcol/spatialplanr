@@ -9,7 +9,9 @@
 #' @export
 #'
 #' @examples
-splnr_plot_Solution <- function(soln, PlanUnits, landmass){
+#' dat_soln %>%
+#'     splnr_plot_Solution(dat_soln)
+splnr_plot_Solution <- function(soln, PlanUnits, landmass = NA){
 
   soln <- soln %>%
     dplyr::select(.data$solution_1) %>%
@@ -17,8 +19,13 @@ splnr_plot_Solution <- function(soln, PlanUnits, landmass){
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$solution_1), colour = NA, size = 0.1, show.legend = FALSE) +
-    ggplot2::geom_sf(data = PlanUnits, colour = "lightblue", fill = NA, size = 0.1, show.legend = FALSE) +
-    ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
+    ggplot2::geom_sf(data = PlanUnits, colour = "lightblue", fill = NA, size = 0.1, show.legend = FALSE)
+
+  if (!is.na(landmass)){
+    gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
+  }
+
+  gg <- gg +
     ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
     ggplot2::scale_colour_manual(values = c("TRUE" = "blue",
                                             "FALSE" = "white"),
@@ -38,10 +45,16 @@ splnr_plot_Solution <- function(soln, PlanUnits, landmass){
 #' @export
 #'
 #' @examples
-splnr_plot_PUs <- function(PlanUnits, landmass){
+# gg <- splnr_plot_PUs(dat_soln)
+splnr_plot_PUs <- function(PlanUnits, landmass = NA){
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = PlanUnits, colour = "lightblue", fill = NA, size = 0.1, show.legend = FALSE) +
-    ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
+    ggplot2::geom_sf(data = PlanUnits, colour = "lightblue", fill = NA, size = 0.1, show.legend = FALSE)
+
+  if (class(landmass)[[1]] == "sf"){
+    gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
+  }
+
+  gg <- gg +
     ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = "Planning Units")
@@ -84,24 +97,34 @@ splnr_plot_MPAs <- function(df, landmass){
 #' Plot cost
 #'
 #' @param Cost An `sf` object of cost for `prioritizr`
+#' @param Cost_name Name of the cost column
 #' @param landmass An `sf` object of land polygon
 #'
 #' @return A ggplot object of the plot
 #' @export
 #'
 #' @examples
-splnr_plot_cost <- function(Cost, landmass){
+#' dat_soln %>%
+#'   dplyr::mutate(Cost = runif(n = dim(.)[[1]])) %>%
+#'   splnr_plot_cost()
+splnr_plot_cost <- function(Cost, Cost_name = "Cost", landmass = NA){
 
-  col_name = stringr::str_subset(colnames(Cost), "geometry", negate = TRUE)
+  # col_name = stringr::str_subset(colnames(Cost), "geometry", negate = TRUE)
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = col_name), colour = "grey80", size = 0.1, show.legend = TRUE) +
-    ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
+    ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), colour = "grey80", size = 0.1, show.legend = TRUE)
+
+  if (!is.na(landmass)){
+    gg <- gg +
+      ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
+  }
+
+  gg <- gg +
     ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
     ggplot2::scale_fill_distiller(palette = "YlGnBu",
                                   aesthetics = c("colour", "fill"),
                                   limits = c(0,
-                                             as.numeric(stats::quantile(dplyr::pull(Cost,col_name), 0.99))),
+                                             as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))),
                                   oob = scales::squish) +
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = "Cost (USD)")
@@ -118,9 +141,10 @@ splnr_plot_cost <- function(Cost, landmass){
 #' @return A ggplot object of the plot
 #' @export
 #'
-#' @examples
 #' @importFrom rlang .data
-splnr_plot_comparison <- function(soln1, soln2, landmass){
+#' @examples
+#' splnr_plot_comparison(dat_soln, dat_soln2)
+splnr_plot_comparison <- function(soln1, soln2, landmass = NA){
 
   soln <- soln1 %>%
     dplyr::select(.data$solution_1) %>%
@@ -136,8 +160,14 @@ splnr_plot_comparison <- function(soln1, soln2, landmass){
     dplyr::filter(!is.na(.data$Compare))
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$Compare), colour = NA, size = 0.0001) +
-    ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
+    ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$Compare), colour = NA, size = 0.0001)
+
+  if (!is.na(landmass)){
+    gg <- gg +
+      ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
+  }
+
+  gg <- gg +
     ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
     ggplot2::theme_bw() +
     ggplot2::scale_fill_manual(values = c("Added (+)" = "Red", "Same" = "ivory3", "Removed (-)" = "Blue"), drop = FALSE)
@@ -154,7 +184,8 @@ splnr_plot_comparison <- function(soln1, soln2, landmass){
 #' @export
 #'
 #' @examples
-splnr_plot_featureNo <- function(df, landmass){
+#' splnr_plot_featureNo(dat_species_bin)
+splnr_plot_featureNo <- function(df, landmass = NA){
 
   df <- df %>%
     dplyr::as_tibble() %>%
@@ -164,8 +195,14 @@ splnr_plot_featureNo <- function(df, landmass){
     dplyr::select(.data$FeatureSum)
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$FeatureSum), colour = "grey80", size = 0.1, show.legend = TRUE) +
-    # ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
+    ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$FeatureSum), colour = "grey80", size = 0.1, show.legend = TRUE)
+
+  if (!is.na(landmass)){
+    gg <- gg +
+      ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
+  }
+
+  gg <- gg +
     ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
     ggplot2::scale_fill_distiller(palette = "YlGnBu",
                                   aesthetics = c("fill"),

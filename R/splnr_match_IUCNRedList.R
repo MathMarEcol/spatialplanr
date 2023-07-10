@@ -33,9 +33,12 @@
 #' @return A dataframe with an additional column `IUCN_Category`
 #' @export
 #'
-#' @examples
 #' @importFrom rlang :=
 #' @importFrom rlang .data
+#'
+#' @examples
+#' df <- data.frame(Species = c("Diomedea exulans", "Hippocampus kuda", "Squatina squatina")) %>%
+#' splnr_match_IUCNRedList()
 splnr_match_IUCNRedList <- function(df, species_col = "Species"){
 
   # Get all IUCN categories

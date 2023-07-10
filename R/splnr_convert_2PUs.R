@@ -24,9 +24,11 @@
 #' @return `sf` object containing the Planning Units and the feature.
 #' @export
 #'
-#' @examples
 #' @importFrom rlang .data
 #' @importFrom rlang :=
+#'
+#' @examples
+#'
 splnr_convert_2PUs <- function(dat, PlanUnits){
 
   ## First deal with whether the input is a file or a dataset
@@ -85,7 +87,7 @@ splnr_convert_2PUs <- function(dat, PlanUnits){
     inter <- sf::st_intersection(PlanUnits, dat) %>%
       dplyr::mutate(!!nm := as.numeric(sf::st_area(.data$geometry))) %>% # Return area in km2
       # dplyr::mutate(!!nm := as.numeric(sf::st_area(.))) %>% # Return area in km2
-      dplyr::select(tidyselect::all_of(nm), .data$cellID) %>%
+      dplyr::select(tidyselect::all_of(nm), "cellID") %>%
       sf::st_drop_geometry() %>%
       dplyr::group_by(.data$cellID) %>%
       dplyr::summarise(!!nm := sum(!!rlang::sym(nm), na.rm = TRUE))
