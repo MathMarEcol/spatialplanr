@@ -3,7 +3,7 @@
 export("%>%")
 export(splnr_apply_cutoffs)
 export(splnr_arrangeFeatures)
-export(splnr_convert2PacificRobinson)
+export(splnr_convert2Pacific)
 export(splnr_convert_2PUs)
 export(splnr_convert_regionalisation)
 export(splnr_create_polygon)

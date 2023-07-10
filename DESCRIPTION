@@ -1,6 +1,6 @@
 Package: spatialplanr
-Title: Help files for MME Spatial Planning projects
-Version: 0.0.1.0005
+Title: Help files for prioritzr Spatial Planning projects
+Version: 0.0.2
 Authors@R: 
     person(given = "Jason",
            family = "Everett",
@@ -27,6 +27,7 @@ Imports:
     fs,
     ggplot2,
     magrittr,
+    offshoredatr,
     purrr,
     rappdirs,
     rlang,
@@ -39,3 +40,5 @@ Imports:
     tidyr,
     tidyselect,
     wdpar
+Remotes:
+    emlab-ucsb/offshoredatr
