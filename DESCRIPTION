@@ -1,6 +1,6 @@
 Package: spatialplanr
-Title: Help files for MME Spatial Planning projects
-Version: 0.0.1.0005
+Title: Help files for prioritzr Spatial Planning projects
+Version: 0.0.2
 Authors@R: 
     person(given = "Jason",
            family = "Everett",
@@ -12,14 +12,12 @@ License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 Suggests: 
     knitr,
     patchwork,
     prioritizr,
-    rfishbase,
-    rmarkdown,
-    rredlist
+    rmarkdown
 VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
@@ -29,17 +27,18 @@ Imports:
     fs,
     ggplot2,
     magrittr,
-    mregions,
+    offshoredatr,
     purrr,
     rappdirs,
-    readr (>= 2.0.0),
     rlang,
     rnaturalearth,
+    rredlist,
     scales,
     sf,
-    stars,
     stringr,
     terra,
     tidyr,
     tidyselect,
     wdpar
+Remotes:
+    emlab-ucsb/offshoredatr
