@@ -37,14 +37,14 @@ splnr_get_Boundary <- function(Limits,
   }
 
 
-
-  if (Type == "EEZ"){
-    Bndry <- offshoredatr::get_area(area_name = Limits) %>%
-      dplyr::filter(.data$territory1 %in% Limits) %>%
-      sf::st_union() %>%
-      sf::st_transform(cCRS)
-    return(Bndry)
-  }
+## TODO Disable EEZ until offshoredatr publicly online.
+  # if (Type == "EEZ"){
+  #   Bndry <- offshoredatr::get_area(area_name = Limits) %>%
+  #     dplyr::filter(.data$territory1 %in% Limits) %>%
+  #     sf::st_union() %>%
+  #     sf::st_transform(cCRS)
+  #   return(Bndry)
+  # }
 
   if (Type == "Oceans" | Type == "Ocean"){
     Bndry <- rnaturalearth::ne_download(scale = "large",
