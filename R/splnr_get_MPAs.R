@@ -14,7 +14,6 @@
 #' @export
 #'
 #' @examples
-#' \donttest{dat <- splnr_get_MPAs(dat_PUs, "Australia")}
 splnr_get_MPAs <- function(PlanUnits,
                               Countries,
                               Status = c("Designated", "Established", "Inscribed"),
@@ -22,6 +21,7 @@ splnr_get_MPAs <- function(PlanUnits,
                               Category = c("Ia", "Ib", "II", "III", "IV")){
 
   #TEMPORARILY MOVING THE REST OF THE EXAMPLE HERE TIL I CAN SOLVE GITHUB ERRORS
+  # dat <- splnr_get_MPAs(dat_PUs, "Australia")
   # aust <- rnaturalearth::ne_countries(country = "Australia", returnclass = "sf")
   # gg <- ggplot2::ggplot() +
   #   ggplot2::geom_sf(data = dat, ggplot2::aes(fill = wdpa)) +
