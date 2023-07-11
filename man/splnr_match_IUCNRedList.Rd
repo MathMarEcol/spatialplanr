@@ -38,6 +38,8 @@ Categories we care about
 cate <- c("EX","EW","CR","EN","VU")
 }
 \examples{
+\dontrun{
 df <- data.frame(Species = c("Diomedea exulans", "Hippocampus kuda", "Squatina squatina")) \%>\%
 splnr_match_IUCNRedList()
+}
 }
