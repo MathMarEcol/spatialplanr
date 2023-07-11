@@ -9,7 +9,7 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/MathMarEcol/spatialplanr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MathMarEcol/spatialplanr/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/MathMarEcol/spatialplanr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/MathMarEcol/spatialplanr?branch=master)
+coverage](https://codecov.io/gh/MathMarEcol/spatialplanr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/MathMarEcol/spatialplanr?branch=main)
 [![issues -
 planktonr](https://img.shields.io/github/issues/MathMarEcol/spatialplanr)](https://github.com/MathMarEcol/spatialplanr/issues)
 <!-- badges: end -->
