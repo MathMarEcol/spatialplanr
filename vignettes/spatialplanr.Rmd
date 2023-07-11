@@ -28,16 +28,7 @@ library(spatialplanr)
 
 # Overview
 
-This repository is specific to the work of the [https://mathmarecol.github.io](Mathematical Marine Ecology Lab) at the University of Queensland. It is not intended to be used by anyone outside the MME Lab without the permission of Professor Anthony Richardson. 
-
 This code has been written to simplify the process for running a _prioritizr_ analysis on a given region. It is still a work in progress so feel free to submit pull requests with new features and code improvements.
-
-The code depends on `sf`, `terra`, `tidyverse`, `rnaturalearth`, `prioritizr`, `stars`, `patchwork`.    
-
-To use this code, you will need to download and expand `MME1DATA-Q1215/SpatialPlanning/Data.zip` to the directory `GitHub/SpatialPlanning/Data/`. Note that the download is only 2GB, but the expanded data is 35 GB in size. If you need help subsetting the data to your region due to memory or HD space constraints, contact Jason.
-
-If you run into memory problems, you can try increasing the amount of the HD space gdal is allowed to use. 
-`Sys.setenv(GDAL_MAX_BAND_COUNT = 120000)`
 
 ## Set user parameters 
 You can set a region if it is defined in `splnr_get_PlanningUnits`. 
