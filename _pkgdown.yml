@@ -1,4 +1,34 @@
 url: ~
 template:
   bootstrap: 5
+articles:
+development:
+  destination:
+  version_label: info
+  version_tooltip: "The package is in the early stages of development. Use with caution."
+reference:
 
+- title: Load Data
+  desc:  Functions to get data organised
+- contents:
+  - starts_with("splnr_get_")
+
+- title: Match data
+  desc: Retrieve data from external sources
+- contents:
+  - starts_with("splnr_match_")
+
+- title: Plotting
+  desc: Functions for plotting.
+- contents:
+  - starts_with("splnr_plot_")
+
+- title: Utilities
+  desc: Helper functions.
+- contents:
+  - starts_with("splnr_apply_cutoffs")
+  - starts_with("splnr_arrangeFeatures")
+  - starts_with("splnr_convert")
+  - starts_with("splnr_create_polygon")
+  - starts_with("splnr_replace_NAs")
+  - starts_with("splnr_scale_01")

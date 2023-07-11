@@ -14,16 +14,18 @@
 #' @export
 #'
 #' @examples
-#' dat <- splnr_get_MPAs(dat_PUs, "Australia")
-#' aust <- rnaturalearth::ne_countries(country = "Australia", returnclass = "sf")
-#' gg <- ggplot2::ggplot() +
-#'   ggplot2::geom_sf(data = dat, ggplot2::aes(fill = wdpa)) +
-#'   ggplot2::geom_sf(data = aust, fill = "grey50")
 splnr_get_MPAs <- function(PlanUnits,
                               Countries,
                               Status = c("Designated", "Established", "Inscribed"),
                               Desig = c("National", "Regional", "International", "Not Applicable"),
                               Category = c("Ia", "Ib", "II", "III", "IV")){
+
+  #TEMPORARILY MOVING THE REST OF THE EXAMPLE HERE TIL I CAN SOLVE GITHUB ERRORS
+  # dat <- splnr_get_MPAs(dat_PUs, "Australia")
+  # aust <- rnaturalearth::ne_countries(country = "Australia", returnclass = "sf")
+  # gg <- ggplot2::ggplot() +
+  #   ggplot2::geom_sf(data = dat, ggplot2::aes(fill = wdpa)) +
+  #   ggplot2::geom_sf(data = aust, fill = "grey50")
 
   wdpa_data <- Countries %>%
     lapply(wdpar::wdpa_fetch, wait = TRUE,

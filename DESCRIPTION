@@ -1,6 +1,6 @@
 Package: spatialplanr
 Title: Help files for prioritzr Spatial Planning projects
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: 
     person(given = "Jason",
            family = "Everett",
@@ -27,11 +27,11 @@ Imports:
     fs,
     ggplot2,
     magrittr,
-    offshoredatr,
     purrr,
     rappdirs,
     rlang,
     rnaturalearth,
+    rnaturalearthdata,
     rredlist,
     scales,
     sf,
@@ -40,5 +40,3 @@ Imports:
     tidyr,
     tidyselect,
     wdpar
-Remotes:
-    emlab-ucsb/offshoredatr
