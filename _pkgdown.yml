@@ -7,21 +7,21 @@ development:
   version_label: info
   version_tooltip: "The package is in the early stages of development. Use with caution."
 reference:
+
 - title: Load Data
   desc:  Functions to get data organised
 - contents:
   - starts_with("splnr_get_")
+
 - title: Match data
   desc: Retrieve data from external sources
 - contents:
   - starts_with("splnr_match_")
 
-
 - title: Plotting
   desc: Functions for plotting.
 - contents:
   - starts_with("splnr_plot_")
-
 
 - title: Utilities
   desc: Helper functions.

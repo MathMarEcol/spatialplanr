@@ -2,7 +2,7 @@
 title: "A Basic Spatial Planning Workflow"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{spatialplanr}
+  %\VignetteIndexEntry{A Basic Spatial Planning Workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   warning=FALSE, 
   cache=FALSE, 
   message=FALSE,
-  eval=FALSE
+  eval=TRUE
 )
 ```
 
@@ -33,8 +33,8 @@ This code has been written to simplify the process for running a _prioritizr_ an
 ## Set user parameters 
 You can set a region if it is defined in `splnr_get_PlanningUnits`. 
 ```{r}
-Region <- "Australia" # "South Atlantic Ocean"
-Type <- "EEZ" # "Oceans"
+Region <- "South Atlantic Ocean" # "Australia"
+Type <- "Oceans" # "EEZ"
 ```
 
 You can also define a region with square boundaries if you need.
@@ -85,116 +85,116 @@ Get aquamaps data for our species and region
 
 Set the depth range and probability cutoff (`CO`) for extracting AquaMaps data.
 ```{r}
-MinDepth <- 0
-MaxDepth <- 200
-
-AQM <- splnr_get_AquaMaps(PUs, MinDepth, MaxDepth)
+# MinDepth <- 0
+# MaxDepth <- 200
+# 
+# AQM <- splnr_get_AquaMaps(PUs, MinDepth, MaxDepth)
 ```
 
 ### Geomorphic features 
 Add geomorphic features to the existing features object.
 ```{r}
-GeoMorph <- splnr_get_Geomorphic(PUs, Feature = c("Shelf", "Ridge", "Plateau", "Seamount"))
+# GeoMorph <- splnr_get_Geomorphic(PUs, Feature = c("Shelf", "Ridge", "Plateau", "Seamount"))
 ```
 
 
 ### Apply cutoffs
 Add geomorphic features to the existing features object.
 ```{r}
-Cutoffs <- 0.5
-AQM_bin <- splnr_Apply_Cutoffs(AQM, Cutoffs)
-
-Cutoffs <- c(Shelf = 0.01, Ridge = 0.2, Plateau = 0.1, Seamount = 0.3)
-GeoMorph_bin <- splnr_Apply_Cutoffs(GeoMorph, Cutoffs)
+# Cutoffs <- 0.5
+# AQM_bin <- splnr_Apply_Cutoffs(AQM, Cutoffs)
+# 
+# Cutoffs <- c(Shelf = 0.01, Ridge = 0.2, Plateau = 0.1, Seamount = 0.3)
+# GeoMorph_bin <- splnr_Apply_Cutoffs(GeoMorph, Cutoffs)
 ```
 
 
 
 ### Join all features together.
 ```{r}
-features <- GeoMorph_bin %>% 
-  dplyr::left_join(AQM_bin %>% sf::st_drop_geometry(), by = "cellID")
-
-(ggFeatureNo <- splnr_plot_FeatureNo(features, landmass)) # Plot Number of features
+# features <- GeoMorph_bin %>% 
+#   dplyr::left_join(AQM_bin %>% sf::st_drop_geometry(), by = "cellID")
+# 
+# (ggFeatureNo <- splnr_plot_FeatureNo(features, landmass)) # Plot Number of features
 ```
 
 ### Longhurst Provinces
 You can also assign a Longhurst Province to each PU and set targets individually by province. Here we simply demonstrate this, but do not implement it into a spatial plan.
 ```{r, fig.width=7}
-Longhurst <- splnr_Match_Longhurst(PUs)
-(ggLong <- splnr_plot_Longhurst(Longhurst, landmass))
+# Longhurst <- splnr_Match_Longhurst(PUs)
+# (ggLong <- splnr_plot_Longhurst(Longhurst, landmass))
 ```
 
 ### Get locked in areas 
 ```{r, fig.width=7}
-LockedIn <- splnr_get_MPAs(PUs, "Australia") %>% 
-  splnr_Apply_Cutoffs(0.5) %>% 
-  dplyr::mutate(wdpa = as.logical(wdpa))
-(ggMPA <- splnr_plot_MPAs(LockedIn, landmass)) # Plot Locked in areas
+# LockedIn <- splnr_get_MPAs(PUs, "Australia") %>% 
+#   splnr_Apply_Cutoffs(0.5) %>% 
+#   dplyr::mutate(wdpa = as.logical(wdpa))
+# (ggMPA <- splnr_plot_MPAs(LockedIn, landmass)) # Plot Locked in areas
 ```
 
 ## Get Fisheries cost 
 ```{r, fig.width=7}
-Cost <- splnr_get_FishCost(PUs, group = "all")
-(ggCost <- splnr_plot_Cost(Cost, landmass)) # Plot cost
+# Cost <- splnr_get_FishCost(PUs, group = "all")
+# (ggCost <- splnr_plot_Cost(Cost, landmass)) # Plot cost
 ```
 
 ## Set up targets 
 
 ### Identical fixed targets 
 ```{r}
-Targets <- data.frame(Target = 0.2)
+# Targets <- data.frame(Target = 0.2)
 ```
 
 ### Inverse area targets 
 Set minimum and maximum limits for inverse area targets
 ```{r, eval = FALSE}
-minTarget = 0.2
-maxTarget = 0.5
-
-Targets <- splnr_get_TargetsIA(features, minTarget, maxTarget)
+# minTarget = 0.2
+# maxTarget = 0.5
+# 
+# Targets <- splnr_get_TargetsIA(features, minTarget, maxTarget)
 ```
 
 ### Add different targets for IUCN RedList categories 
 To run this code you will need to sign up for your own IUCN RedList token. Start by running `rredlist::rl_use_iucn()`. 
 ```{r, eval=FALSE}
-speciesCol <- "Species"
-Targets <- Targets %>% 
-  splnr_Match_IUCNRedList(speciesCol) %>% # Add RL data to the df
-  dplyr::mutate(Target = dplyr::case_when(IUCN_Category %in% c("EX","EW","CR","EN","VU") ~ 1,
-                                          TRUE ~ Targets$Target))
+# speciesCol <- "Species"
+# Targets <- Targets %>% 
+#   splnr_Match_IUCNRedList(speciesCol) %>% # Add RL data to the df
+#   dplyr::mutate(Target = dplyr::case_when(IUCN_Category %in% c("EX","EW","CR","EN","VU") ~ 1,
+                                          # TRUE ~ Targets$Target))
 ```
 
 ## Set up the planning problem 
 
 ### Get the list of features
 ```{r}
-feature_names <- features %>% 
-  sf::st_drop_geometry() %>% 
-  names()
-
-out_sf <- cbind(Cost, 
-                LockedIn %>% sf::st_drop_geometry(), 
-                features %>% sf::st_drop_geometry())
-
-p1 <- prioritizr::problem(out_sf, feature_names, "Cost") %>%
-  prioritizr::add_min_set_objective() %>%
-  prioritizr::add_relative_targets(Targets$Target) %>%
-  prioritizr::add_locked_in_constraints("wdpa") %>%
-  prioritizr::add_binary_decisions() %>%
-  prioritizr::add_default_solver(verbose = FALSE)
+# feature_names <- features %>% 
+#   sf::st_drop_geometry() %>% 
+#   names()
+# 
+# out_sf <- cbind(Cost, 
+#                 LockedIn %>% sf::st_drop_geometry(), 
+#                 features %>% sf::st_drop_geometry())
+# 
+# p1 <- prioritizr::problem(out_sf, feature_names, "Cost") %>%
+#   prioritizr::add_min_set_objective() %>%
+#   prioritizr::add_relative_targets(Targets$Target) %>%
+#   prioritizr::add_locked_in_constraints("wdpa") %>%
+#   prioritizr::add_binary_decisions() %>%
+#   prioritizr::add_default_solver(verbose = FALSE)
 ```
 
 ## Solve the planning problem 
 ```{r}
-s1 <- prioritizr::solve(p1)
+# s1 <- prioritizr::solve(p1)
 ```
 
 ## Plotting 
 ```{r, fig.width=7}
-(ggSol <- splnr_plot_Solution(s1, PUs, landmass)) # Plot Solution
+# (ggSol <- splnr_plot_Solution(s1, PUs, landmass)) # Plot Solution
 
-gg <- patchwork::wrap_plots(list(ggPU, ggMPA, ggCost, ggFeatureNo, ggSol), ncol = 3)
+# gg <- patchwork::wrap_plots(list(ggPU, ggMPA, ggCost, ggFeatureNo, ggSol), ncol = 3)
 ```
 
 ## Compare 2 solutions
@@ -202,20 +202,20 @@ Here we run another problem/solution combo and compare the output with our origi
 
 ### Create the second planning problem 
 ```{r}
-p2 <- prioritizr::problem(out_sf, feature_names, "Cost") %>%
-  prioritizr::add_min_set_objective() %>%
-  prioritizr::add_relative_targets(0.5) %>%
-  prioritizr::add_locked_in_constraints("wdpa") %>%
-  prioritizr::add_binary_decisions() %>%
-  prioritizr::add_default_solver(verbose = FALSE)
+# p2 <- prioritizr::problem(out_sf, feature_names, "Cost") %>%
+#   prioritizr::add_min_set_objective() %>%
+#   prioritizr::add_relative_targets(0.5) %>%
+#   prioritizr::add_locked_in_constraints("wdpa") %>%
+#   prioritizr::add_binary_decisions() %>%
+#   prioritizr::add_default_solver(verbose = FALSE)
 ```
 
 ### Solve the planning problem 
 ```{r}
-s2 <- prioritizr::solve(p2)
+# s2 <- prioritizr::solve(p2)
 ```
 
 ### Plot comparison
 ```{r, fig.width=7}
-gg <- splnr_plot_Comparison(s1, s2, landmass)
+# gg <- splnr_plot_Comparison(s1, s2, landmass)
 ```
