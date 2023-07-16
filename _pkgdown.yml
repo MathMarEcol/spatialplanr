@@ -1,6 +1,6 @@
 url: ~
-template:
-  bootstrap: 5
+# template:
+#   bootstrap: 5
 articles:
 development:
   destination:
@@ -32,3 +32,13 @@ reference:
   - starts_with("splnr_create_polygon")
   - starts_with("splnr_replace_NAs")
   - starts_with("splnr_scale_01")
+
+- title: Built in datasets
+  contents:
+  - dat_PUs
+  - dat_bndry
+  - dat_region
+  - dat_soln
+  - dat_soln2
+  - dat_species_bin
+  - dat_species_prob
