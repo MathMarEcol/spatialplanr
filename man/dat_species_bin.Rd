@@ -3,7 +3,7 @@
 \docType{data}
 \name{dat_species_bin}
 \alias{dat_species_bin}
-\title{Planning Units}
+\title{Binary Species Data}
 \format{
 \subsection{\code{dat_species_bin}}{
 

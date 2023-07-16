@@ -3,7 +3,7 @@
 \docType{data}
 \name{dat_bndry}
 \alias{dat_bndry}
-\title{Planning Units}
+\title{Boundary of planning units}
 \format{
 \subsection{\code{dat_bndry}}{
 

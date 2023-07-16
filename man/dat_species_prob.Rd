@@ -3,7 +3,7 @@
 \docType{data}
 \name{dat_species_prob}
 \alias{dat_species_prob}
-\title{Planning Units}
+\title{Probability Species Data}
 \format{
 \subsection{\code{dat_species_prob}}{
 
