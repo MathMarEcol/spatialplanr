@@ -3,7 +3,7 @@
 \docType{data}
 \name{dat_region}
 \alias{dat_region}
-\title{Planning Units}
+\title{Regionalisation}
 \format{
 \subsection{\code{dat_region}}{
 

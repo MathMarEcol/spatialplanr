@@ -3,7 +3,7 @@
 \docType{data}
 \name{dat_soln}
 \alias{dat_soln}
-\title{Planning Units}
+\title{prioritizr Solution}
 \format{
 \subsection{\code{dat_soln}}{
 
