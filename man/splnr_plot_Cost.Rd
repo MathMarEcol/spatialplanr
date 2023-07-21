@@ -4,7 +4,13 @@
 \alias{splnr_plot_cost}
 \title{Plot cost}
 \usage{
-splnr_plot_cost(Cost, Cost_name = "Cost", landmass = NA)
+splnr_plot_cost(
+  Cost,
+  Cost_name = "Cost",
+  landmass = NA,
+  paletteName = "YlGnBu",
+  plotTitle = "Cost (USD)"
+)
 }
 \arguments{
 \item{Cost}{An \code{sf} object of cost for \code{prioritizr}}
@@ -12,6 +18,10 @@ splnr_plot_cost(Cost, Cost_name = "Cost", landmass = NA)
 \item{Cost_name}{Name of the cost column}
 
 \item{landmass}{An \code{sf} object of land polygon}
+
+\item{paletteName}{A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.}
+
+\item{plotTitle}{A character value for the title of the plot. Can be empty ("").}
 }
 \value{
 A ggplot object of the plot
@@ -20,7 +30,7 @@ A ggplot object of the plot
 Plot cost
 }
 \examples{
-dat_soln \%>\%
-  dplyr::mutate(Cost = runif(n = dim(.)[[1]])) \%>\%
-  splnr_plot_cost()
+dat_cost <- dat_soln \%>\%
+              dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
+(splnr_plot_cost(dat_cost))
 }

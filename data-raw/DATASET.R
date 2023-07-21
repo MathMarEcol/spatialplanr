@@ -55,6 +55,14 @@ dat_species_bin <- dat_species_prob %>%
                                                  is.na(.data) ~ 0))) %>%
   sf::st_as_sf()
 
+# Add MPAs
+# Add a random MPA
+dat_mpas <- dat_PUs %>%
+  sf::st_sf() %>%
+  dplyr::mutate(wdpa = ifelse((cellID > 33 & cellID < 38) |
+                    (cellID > 63 & cellID < 68)|
+                    (cellID > 93 & cellID < 98), 1,  0))
+
 # Add a solution object
 dat_soln <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
                                 features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
@@ -63,7 +71,7 @@ dat_soln <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n
   prioritizr::add_relative_targets(0.3) %>%
   prioritizr::add_binary_decisions() %>%
   prioritizr::add_default_solver(verbose = FALSE) %>%
-  prioritizr::solve.ConservationProblem()
+  prioritizr:::solve.ConservationProblem()
 
 
 # Add a 2nd solution object
@@ -74,9 +82,8 @@ dat_soln2 <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(
   prioritizr::add_relative_targets(0.5) %>%
   prioritizr::add_binary_decisions() %>%
   prioritizr::add_default_solver(verbose = FALSE) %>%
-  prioritizr::solve.ConservationProblem()
-
+  prioritizr:::solve.ConservationProblem()
 
 
 # Save the data
-usethis::use_data(dat_bndry, dat_PUs, dat_region, dat_species_prob, dat_species_bin, dat_soln, dat_soln2, overwrite = TRUE)
+usethis::use_data(dat_bndry, dat_PUs, dat_region, dat_species_prob, dat_species_bin, dat_mpas, dat_soln, dat_soln2, overwrite = TRUE)

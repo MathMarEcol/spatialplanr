@@ -115,3 +115,21 @@
 #' }
 #' @source "Made up data"
 "dat_species_prob"
+
+
+# -------------------------------------------------------------------------
+
+#' MPA Data
+#'
+#' An sf dataframe of planning units for spatial prioritisation
+#'
+#' @format ## `dat_mpas`
+#' A data frame with XXXX rows and XXX columns:
+#' \describe{
+#'   \item{cellID}{ID number for each row (or cell) of the dataset}
+#'   \item{geometry}{sf geometry column}
+#'   \item{wdpa}{binary MPA information (1: MPA)}
+#'   ...
+#' }
+#' @source "Made up data"
+"dat_mpas"
