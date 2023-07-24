@@ -232,3 +232,150 @@ splnr_arrangeFeatures <- function(df){
 
 }
 
+
+
+#' Prepare data to plot how well targets are met
+#'
+#' @param soln The `prioritizr` solution
+#' @param pDat The `prioritizr` problem
+#' @param allDat `sf` dataframe containing all features
+#' @param Category `tibble` with information what category the features belong to (if NA, each feature has its own category)
+#' @param climsmart logical denoting whether spatial planning was done climate-smart (and targets have to be calculated differently)
+#' @param solnCol Name of the column with the sollution
+#'
+#' @return `tbl_df` dataframe
+#' @export
+#'
+#'
+#' @examples
+#' #not including incidental species coverage
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' soln <- prioritizr:::solve.ConservationProblem(dat_problem)
+#'
+#' Category_vec <- tibble::tibble(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                category = c("Group1", "Group1", "Group1", "Group2", "Group2"))
+#'
+#'
+#' dfNInc <- splnr_prepTargetData(soln = soln, pDat = dat_problem, allDat = dat_species_bin,
+#'                           Category = Category_vec, solnCol = "solution_1")
+#'
+#' #including incidental species coverage
+#' dat_species_bin2 <- dat_species_bin %>%
+#'   dplyr::mutate(Spp6 = 1)
+#'
+#' dat_problem <- prioritizr::problem(dat_species_bin2 %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' soln <- prioritizr:::solve.ConservationProblem(dat_problem)
+#'
+#' Category_vec <- tibble::tibble(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5", "Spp6"),
+#'                                category = c("Group1", "Group1", "Group1", "Group2", "Group2", "Group3"))
+#'
+#' dfInc <- splnr_prepTargetData(soln = soln, pDat = dat_problem, allDat = dat_species_bin2,
+#'                          Category = Category_vec, solnCol = "solution_1")
+
+splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA,
+                                 climsmart = FALSE, solnCol = "solution_1"){
+
+  # ## Calculate the incidental protection for features not chosen
+  not_selected <- allDat %>%
+    dplyr::select(-tidyselect::starts_with("Cost"), -tidyselect::any_of(c("metric", "cellID", "FishResBlock"))) %>%
+    sf::st_drop_geometry()
+
+  selected <- dat_problem$data$features[[1]]#soln %>%
+  #dplyr::select(-tidyselect::starts_with("Cost"), -tidyselect::any_of(c("metric", "FishResBlock")))
+
+  ns_cols <- setdiff(not_selected %>% colnames(), selected)# %>% colnames())
+
+  if (length(ns_cols) > 0){
+    ns1 <- not_selected %>%
+      dplyr::select(c(tidyselect::all_of(ns_cols))) %>% #, "geometry"
+      dplyr::mutate(solution = dplyr::pull(soln, !!rlang::sym(solnCol)))
+
+    area_feature <- ns1 %>%
+      dplyr::select(-c("solution")) %>%
+      #sf::st_drop_geometry() %>%
+      tidyr::pivot_longer(cols = tidyselect::everything(), names_to = "feature", values_to = "total_amount") %>%
+      dplyr::group_by(.data$feature) %>%
+      dplyr::summarise(total_amount = sum(.data$total_amount))
+
+    held_feature <- ns1 %>%
+      dplyr::filter(.data$solution == 1) %>%
+      dplyr::select(-c("solution")) %>%
+      #sf::st_drop_geometry() %>%
+      tidyr::pivot_longer(cols = tidyselect::everything(), names_to = "feature", values_to = "absolute_held") %>%
+      dplyr::group_by(.data$feature) %>%
+      dplyr::summarise(absolute_held = sum(.data$absolute_held))
+
+    ns1 <- dplyr::left_join(area_feature, held_feature, by = "feature") %>%
+      dplyr::mutate(incidental_held = (.data$absolute_held / .data$total_amount) * 100)
+  } else {
+    ns1 <- tibble::tibble(feature = "DummyVar",
+                          total_amount = 0,
+                          absolute_held = 0,
+                          incidental_held = 0)
+  }
+
+  ## Now do the selected features
+
+  s1 <- soln %>%
+    dplyr::rename(solution = solution_1) %>%
+    tibble::as_tibble()
+
+  df_rep_imp <- prioritizr::eval_feature_representation_summary(pDat, s1[, 'solution'])
+
+  if (climsmart == TRUE){
+
+    df_rep_imp <- df_rep_imp %>%
+      dplyr::select(-.data$relative_held) %>%
+      dplyr::mutate(feature = stringr::str_remove_all(.data$feature, "_CS"),
+                    feature = stringr::str_remove_all(.data$feature, "_NCS")) %>% # Ensure all features have the same name.
+      dplyr::group_by(.data$feature) %>%
+      dplyr::summarise(total_amount = sum(.data$total_amount), # Sum the features together
+                       absolute_held = sum(.data$absolute_held)) %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(relative_held = .data$absolute_held/.data$total_amount) %>% # Calculate proportion
+      dplyr::select(-.data$total_amount, -.data$absolute_held) # Remove extra columns
+
+  }
+
+  # Create named vector to do the replacement
+  # rpl <- Dict[ order(match(Dict$Abbrev, df_rep_imp$feature)), ] %>%
+  #   dplyr::select(.data$Abbrev, .data$Common) %>%
+  #   tibble::deframe()
+
+  df <- df_rep_imp %>%
+    dplyr::mutate(relative_held = .data$relative_held * 100) %>%
+    #dplyr::mutate(group = dplyr::if_else(.data$feature %in% imp_layers, "important", "representative")) %>%
+    stats::na.omit() %>%
+    dplyr::rename(value = .data$relative_held)# %>%
+  #dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl))
+
+  df<- dplyr::full_join(df, ns1 %>% # Now join the non-selected values
+                          dplyr::select(c(.data$feature, .data$incidental_held)),
+                        by = "feature")
+
+  if (is.data.frame(Category)){
+    df <- dplyr::left_join(df, Category_vec, by = "feature")
+  } else if (is.na(Category)) {
+    df <- df %>%
+      dplyr::mutate(category = feature)
+  } else {
+    print("Check that your Category input is in the right format.")
+  }
+
+
+  return(df)
+}
