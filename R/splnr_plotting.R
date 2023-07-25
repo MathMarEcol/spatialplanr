@@ -303,8 +303,8 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
 #' @param repTarget target of the representative features (in %)
 #' @param colTarget string with a colour value for the indicator line
 #'
-#' @return
-#' @noRd
+#' @return A ggplot object of the plot
+#' @export
 #'
 #' @examples
 #' s1 <- dat_soln %>% #DISCLAIMER: THIS SOLUTION IS NOT ACTUALLY RUN WITH THESE TARGETS YET
@@ -332,7 +332,7 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
 #'             'representative' = 'darkred')
 #' legends <- c('Important', 'Representative')
 #'
-#' (splnr_plot_circBplot(df, legend_list = legends, legend_color = colors))
+#' (splnr_plot_circBplot(df, legend_list = legends, legend_color = colors, impTarget = 50, repTarget = 30))
 splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets = TRUE,
                               impTarget = NA, repTarget = NA, colTarget = "red") {
 
@@ -375,7 +375,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets 
     dplyr::group_by(.data$group) %>%
     dplyr::summarize(start = min(.data$id), end = max(.data$id) - empty_bar) %>%
     dplyr::rowwise() %>%
-    dplyr::mutate(title = mean(c(start, end)))
+    dplyr::mutate(title = mean(c(.data$start, .data$end)))
   grid_data$end <- grid_data$end[ c( nrow(grid_data), 1:nrow(grid_data)-1)] + 1.5
   grid_data$start <- grid_data$end - 1
   grid_data <- grid_data[-1,]
@@ -561,6 +561,58 @@ splnr_plot_featureNo <- function(df, landmass = NA,
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = plotTitle)
 
+}
+
+#' Plot Ferrier importance score (ONLY WORKS FOR MINIMUM SET OBJECTIVE FUNCTION)
+#' @param soln The `prioritizr` solution
+#' @param pDat The `prioritizr` problem
+#' @param colorMap A character string indicating the color map to use (see https://ggplot2.tidyverse.org/reference/scale_viridis.html for all options)
+#' @param plotTitle A character value for the title of the plot. Can be empty ("").
+#' @param legendTitle A character value for the title of the legend. Can be empty ("").
+#'
+#' @return A ggplot object of the plot
+#' @export
+#'
+#' @importFrom rlang .data
+#' @examples
+#' (splnr_plot_impScoreFerrierPlot(dat_soln, dat_problem))
+splnr_plot_impScoreFerrierPlot <- function(soln, pDat, plotTitle = "", colorMap = "A",
+                                           legendTitle = "Importance Score \n(Ferrier Score)"
+){
+  soln <- soln %>% tibble::as_tibble()
+  fsoln <- prioritizr::eval_ferrier_importance(pDat, soln[, "solution_1"])
+
+  fsoln <- fsoln%>%
+    dplyr::select(total) %>%
+    dplyr::mutate(geometry = soln$geometry) %>%
+    sf::st_as_sf()
+
+  selectedfs <- fsoln %>%
+    dplyr::filter(total != 0)
+
+  quant95fs <- round(quantile(selectedfs$total, 0.95), 4)
+  seq95fs <- seq(0,quant95fs, length.out = 5)
+  lab <- c(seq95fs[1], seq95fs[2], seq95fs[3], seq95fs[4], paste0("\u2265", quant95fs, sep = " "))
+
+  fsoln$total[fsoln$total >=quant95fs] <- quant95fs
+
+  gg_fs <- ggplot2::ggplot() +
+    ggplot2::geom_sf(data = fsoln, ggplot2::aes(fill = .data$total), colour = NA) +
+    ggplot2::scale_fill_viridis_c(option = colorMap,
+                                  direction = -1, breaks = seq95fs, labels = lab,
+                                  guide = ggplot2::guide_colourbar(title.position = "right", title = legendTitle,
+                                                                   barwidth = 2, barheight = 20))+#, oob=squish)
+    ggplot2::coord_sf(xlim = c(sf::st_bbox(fsoln)$xmin, sf::st_bbox(fsoln)$xmax),
+                      ylim = c(sf::st_bbox(fsoln)$ymin, sf::st_bbox(fsoln)$ymax),
+                      expand = TRUE) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      legend.title = ggplot2::element_text(angle = -90, hjust = 0.5),
+      text = ggplot2::element_text(size = 20),
+      axis.title = ggplot2::element_blank()) +
+    ggplot2::scale_x_continuous(expand = c(0,0)) +
+    ggplot2::scale_y_continuous(expand = c(0,0)) +
+    ggplot2::labs(title = plotTitle)
 }
 
 #' Plot Longhurst Provinces
