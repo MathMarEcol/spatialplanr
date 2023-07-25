@@ -563,6 +563,66 @@ splnr_plot_featureNo <- function(df, landmass = NA,
 
 }
 
+#' Plot selection frequency of a planning unit in an array of prioritisations
+#'
+#' @param selFreq An `sf` object containing the selection frequency of a planning unit from an array of solutions
+#' @param landmass An `sf` object of land polygon
+#' @param paletteName A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.
+#' @param plotTitle A character value for the title of the plot. Can be empty ("").
+#' @param legendTitle A character value for the title of the legend. Can be empty ("").
+#'
+#' @return A ggplot object of the plot
+#' @export
+#'
+#' @importFrom rlang .data
+#' @examples
+#' \dontrun{
+#' dat_soln_portfolio <- dat_problem %>%
+#'   prioritizr::add_top_portfolio(number_solutions = 5) %>% #create conservation problem that contains a portfolio of solutions
+#'   prioritizr:::solve.ConservationProblem()
+#'
+#' selFreq <- dat_soln_portfolio %>%  # calculate selection frequency
+#' sf::st_drop_geometry() %>%
+#' dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(., dplyr::starts_with("solution_"))))) %>%
+#' sf::st_as_sf(geometry = dat_soln_portfolio$geometry) %>%
+#' dplyr::select(selFreq)
+#'
+#' (splnr_plot_selectionFreq(selFreq))
+#' }
+splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
+                                     plotTitle = "", paletteName = "Greens",
+                                     legendTitle = "Selection \nFrequency"
+){
+  gg <- ggplot2::ggplot() +
+    ggplot2::geom_sf(data = selFreq, ggplot2::aes(fill = .data$selFreq), colour = NA) +
+
+    if (!is.na(landmass)){
+      gg <- gg +
+        ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
+    }
+
+  gg <- gg +
+    ggplot2::scale_fill_brewer(name = legendTitle,
+                               palette = paletteName, aesthetics = "fill", #c("colour", "fill"),
+                               guide = ggplot2::guide_legend(override.aes = list(linetype = 0),
+                                                             title.position = "top")) +
+    ggplot2::coord_sf(xlim = c(sf::st_bbox(selFreq)$xmin, sf::st_bbox(selFreq)$xmax),
+                      ylim = c(sf::st_bbox(selFreq)$ymin, sf::st_bbox(selFreq)$ymax),
+                      expand = TRUE) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      axis.text.y = ggplot2::element_text(size = 16, colour = "black"),
+      axis.text.x = ggplot2::element_text(size = 16, colour = "black"),
+      axis.title.x = ggplot2::element_blank(),
+      legend.title = ggplot2::element_text(size = 16),
+      legend.text = ggplot2::element_text(size = 16),
+      axis.title.y = ggplot2::element_blank()) +
+    ggplot2::scale_x_continuous(expand = c(0,0)) +
+    ggplot2::scale_y_continuous(expand = c(0,0)) +
+    ggplot2::labs(title = plotTitle)
+
+}
+
 #' Plot Ferrier importance score (ONLY WORKS FOR MINIMUM SET OBJECTIVE FUNCTION)
 #' @param soln The `prioritizr` solution
 #' @param pDat The `prioritizr` problem
