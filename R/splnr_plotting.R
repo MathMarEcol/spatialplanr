@@ -664,6 +664,58 @@ splnr_plot_impScoreRWRPlot <- function(soln, pDat, plotTitle = "", colorMap = "A
     ggplot2::labs(title = plotTitle)
 }
 
+#' Replacement cost importance score (takes too long to use in App)
+#' @param soln The `prioritizr` solution
+#' @param pDat The `prioritizr` problem
+#' @param colorMap A character string indicating the color map to use (see https://ggplot2.tidyverse.org/reference/scale_viridis.html for all options)
+#' @param plotTitle A character value for the title of the plot. Can be empty ("").
+#' @param legendTitle A character value for the title of the legend. Can be empty ("").
+#'
+#' @return A ggplot object of the plot
+#' @export
+#'
+#' @importFrom rlang .data
+#' @examples
+#' \dontrun{
+#' (splnr_plot_impScoreRCPlot(dat_soln, dat_problem))
+#' }
+splnr_plot_impScoreRCPlot <- function(soln, pDat, plotTitle = "", colorMap = "A",
+                                      legendTitle = "Importance Score \n(Replacement Cost Score)"
+){
+  soln <- soln %>% tibble::as_tibble()
+  rcsoln <- prioritizr::eval_replacement_importance(pDat, soln[, "solution_1"]) %>%
+    dplyr::mutate(geometry = soln$geometry) %>%
+    sf::st_as_sf()
+
+  selectedRC <- rcsoln %>%
+    dplyr::filter(rc != 0)
+
+  quant95 <- round(quantile(selectedRC$rc, 0.95), 2) #get importance score at 95th percentile of all selected planning units
+  seq95 <- seq(0,quant95, length.out = 5)
+  lab <- c(seq95[1], seq95[2], seq95[3], seq95[4], paste0("\u2265", quant95, sep = " "))
+
+  rcsoln$rc[rcsoln$rc >=quant95] <- quant95
+
+  gg_impScore <- ggplot2::ggplot() +
+    ggplot2::geom_sf(data = rcsoln, ggplot2::aes(fill = .data$rc), colour = NA) +
+    ggplot2::scale_fill_viridis_c(option = colorMap,
+                                  direction = -1, breaks = seq95, labels = lab,
+                                  guide = ggplot2::guide_colourbar(title.position = "right", title = legendTitle,
+                                                                   barwidth = 2, barheight = 20))+#, oob=squish)
+    ggplot2::coord_sf(xlim = c(sf::st_bbox(rcsoln)$xmin, sf::st_bbox(rcsoln)$xmax),
+                      ylim = c(sf::st_bbox(rcsoln)$ymin, sf::st_bbox(rcsoln)$ymax),
+                      expand = TRUE) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      legend.title = ggplot2::element_text(angle = -90, hjust = 0.5),
+      text = ggplot2::element_text(size = 20),
+      axis.title = ggplot2::element_blank()) +
+    ggplot2::scale_x_continuous(expand = c(0,0)) +
+    ggplot2::scale_y_continuous(expand = c(0,0)) +
+    ggplot2::labs(title = plotTitle)
+}
+
+
 #' Plot Longhurst Provinces
 #'
 #' @param PlanUnits Planning Units as an `sf` object
