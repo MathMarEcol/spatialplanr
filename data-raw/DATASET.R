@@ -55,6 +55,10 @@ dat_species_bin <- dat_species_prob %>%
                                                  is.na(.data) ~ 0))) %>%
   sf::st_as_sf()
 
+#create second species_bin data set with unused species
+dat_species_bin2 <- dat_species_bin %>%
+  dplyr::mutate(Spp6 = 1)
+
 # Add MPAs
 # Add a random MPA
 dat_mpas <- dat_PUs %>%
@@ -63,14 +67,17 @@ dat_mpas <- dat_PUs %>%
                     (cellID > 63 & cellID < 68)|
                     (cellID > 93 & cellID < 98), 1,  0))
 
-# Add a solution object
-dat_soln <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-                                features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-                                cost_column = "Cost") %>%
+# Add a problem object
+dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+                                      features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+                                      cost_column = "Cost") %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_relative_targets(0.3) %>%
   prioritizr::add_binary_decisions() %>%
-  prioritizr::add_default_solver(verbose = FALSE) %>%
+  prioritizr::add_default_solver(verbose = FALSE)
+
+# Add a solution object
+dat_soln <- dat_problem %>%
   prioritizr:::solve.ConservationProblem()
 
 
@@ -84,6 +91,14 @@ dat_soln2 <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(
   prioritizr::add_default_solver(verbose = FALSE) %>%
   prioritizr:::solve.ConservationProblem()
 
+# Add a category tibble for the features
+Category_vec <- tibble::tibble(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+                               category = c("Group1", "Group1", "Group1", "Group2", "Group2"))
+
+# Add a second category tibble for the features
+Category_vec2 <- tibble::tibble(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5", "Spp6"),
+                               category = c("Group1", "Group1", "Group1", "Group2", "Group2", "Group3"))
+
 
 # Save the data
-usethis::use_data(dat_bndry, dat_PUs, dat_region, dat_species_prob, dat_species_bin, dat_mpas, dat_soln, dat_soln2, overwrite = TRUE)
+usethis::use_data(dat_bndry, dat_PUs, dat_region, dat_species_prob, dat_species_bin, dat_species_bin2, dat_mpas, dat_problem, dat_soln, dat_soln2, Category_vec, Category_vec2, overwrite = TRUE)

@@ -47,6 +47,21 @@
 "dat_region"
 
 
+# -------------------------------------------------------------------------
+
+#' prioritizr Problem
+#'
+#' An conservation problem for spatial prioritisation
+#'
+#' @format ## `dat_problem`
+#' A class that stores the data, mathematical formula and other information needed to run the prioritisation:
+#' \describe{
+#'   \item{data}{list containing information on the cost and features}
+#'   \item{objective}{object specifying objective function used in conservation problem}
+#'   ...
+#' }
+#' @source "Made up data"
+"dat_problem"
 
 # -------------------------------------------------------------------------
 
@@ -63,7 +78,6 @@
 #' }
 #' @source "Made up data"
 "dat_soln"
-
 
 
 # -------------------------------------------------------------------------
@@ -102,6 +116,23 @@
 
 # -------------------------------------------------------------------------
 
+#' Binary Species Data 2
+#'
+#' An sf dataframe of planning units for spatial prioritisation
+#'
+#' @format ## `dat_species_bin2`
+#' A data frame with XXXX rows and XXX columns:
+#' \describe{
+#'   \item{cellID}{ID number for each row (or cell) of the dataset}
+#'   \item{geometry}{sf geometry column}
+#'   ...
+#' }
+#' @source "Made up data"
+"dat_species_bin2"
+
+
+# -------------------------------------------------------------------------
+
 #' Probability Species Data
 #'
 #' An sf dataframe of planning units for spatial prioritisation
@@ -133,3 +164,55 @@
 #' }
 #' @source "Made up data"
 "dat_mpas"
+
+#' Boundary of planning units
+#'
+#' An sf dataframe of planning units for spatial prioritisation
+#'
+#' @format ## `dat_bndry`
+#' A data frame with XXXX rows and XXX columns:
+#' \describe{
+#'   \item{cellID}{ID number for each row (or cell) of the dataset}
+#'   \item{geometry}{sf geometry column}
+#'   ...
+#' }
+#' @source "Made up data"
+"dat_bndry"
+
+# -------------------------------------------------------------------------
+
+
+#' Category vector
+#'
+#' A tibble containing specific grouping of features
+#'
+#' @format ## `Category_vec`
+#' A data frame with XXXX rows and XXX columns:
+#' \describe{
+#'   \item{feature}{all features available for spatial prioritisation}
+#'   \item{category}{the categories of all features}
+#'   ...
+#' }
+#' @source "Made up data"
+"Category_vec"
+
+
+# -------------------------------------------------------------------------
+
+
+#' Category vector
+#'
+#' A tibble containing specific grouping of features
+#'
+#' @format ## `Category_vec2`
+#' A data frame with XXXX rows and XXX columns:
+#' \describe{
+#'   \item{feature}{all features available for spatial prioritisation}
+#'   \item{category}{the categories of all features}
+#'   ...
+#' }
+#' @source "Made up data"
+"Category_vec2"
+
+
+# -------------------------------------------------------------------------

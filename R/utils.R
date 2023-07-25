@@ -246,46 +246,16 @@ splnr_arrangeFeatures <- function(df){
 #' @return `tbl_df` dataframe
 #' @export
 #'
+#' @importFrom rlang .data
 #'
 #' @examples
 #' #not including incidental species coverage
-#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
-#'   prioritizr::add_min_set_objective() %>%
-#'   prioritizr::add_relative_targets(0.3) %>%
-#'   prioritizr::add_binary_decisions() %>%
-#'   prioritizr::add_default_solver(verbose = FALSE)
-#'
-#' soln <- prioritizr:::solve.ConservationProblem(dat_problem)
-#'
-#' Category_vec <- tibble::tibble(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                category = c("Group1", "Group1", "Group1", "Group2", "Group2"))
-#'
-#'
-#' dfNInc <- splnr_prepTargetData(soln = soln, pDat = dat_problem, allDat = dat_species_bin,
+#' dfNInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin,
 #'                           Category = Category_vec, solnCol = "solution_1")
 #'
 #' #including incidental species coverage
-#' dat_species_bin2 <- dat_species_bin %>%
-#'   dplyr::mutate(Spp6 = 1)
-#'
-#' dat_problem <- prioritizr::problem(dat_species_bin2 %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
-#'   prioritizr::add_min_set_objective() %>%
-#'   prioritizr::add_relative_targets(0.3) %>%
-#'   prioritizr::add_binary_decisions() %>%
-#'   prioritizr::add_default_solver(verbose = FALSE)
-#'
-#' soln <- prioritizr:::solve.ConservationProblem(dat_problem)
-#'
-#' Category_vec <- tibble::tibble(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5", "Spp6"),
-#'                                category = c("Group1", "Group1", "Group1", "Group2", "Group2", "Group3"))
-#'
-#' dfInc <- splnr_prepTargetData(soln = soln, pDat = dat_problem, allDat = dat_species_bin2,
-#'                          Category = Category_vec, solnCol = "solution_1")
-
+#' dfInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin2,
+#'                          Category = Category_vec2, solnCol = "solution_1")
 splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA,
                                  climsmart = FALSE, solnCol = "solution_1"){
 

@@ -43,5 +43,6 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
+    viridis,
     wdpar
 Config/testthat/edition: 3

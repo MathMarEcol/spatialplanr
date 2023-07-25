@@ -231,6 +231,65 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass
     ggplot2::labs(subtitle = plotTitle)
 }
 
+#' Plot how well targets are met
+#'
+#' @param df A `df` containing the target information (resulting from the splnr_prepTargetData() function)
+#' @param nr Number of rows of the legend
+#' @param setTarget A number in percent (%) if all the features have the same set target
+#' @param plotTitle A character value for the title of the plot. Can be empty ("").
+#'
+#' @return A ggplot object of the plot
+#' @export
+#'
+#' @examples
+#' #not including incidental species coverage
+#' dfNInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin,
+#'                           Category = Category_vec, solnCol = "solution_1")
+#'
+#' (splnr_plot_targets(dfNInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
+#' #including incidental species coverage
+#' dfInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin2,
+#'                          Category = Category_vec2, solnCol = "solution_1")
+#' (splnr_plot_targets(dfInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
+splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
+                               plotTitle = "") {
+
+  uniqueCat <- unique(dfNInc$category[!is.na(dfNInc$category)])
+
+  colr <- tibble::tibble(Category = uniqueCat,
+                         Colour = viridis::viridis(length(uniqueCat))) %>%
+    tibble::deframe()
+
+  df <- df %>%
+    dplyr::filter(feature != "DummyVar")
+
+  gg_target <- ggplot2::ggplot() +
+    ggplot2::geom_bar(data = df, stat = "identity", ggplot2::aes(x = .data$feature, y = .data$value, fill = .data$category), na.rm = TRUE) +
+    ggplot2::geom_bar(data = df, stat = "identity", ggplot2::aes(x = .data$feature, y = .data$incidental_held), na.rm = TRUE, fill = "NA", colour = "black") +
+    ggplot2::labs(title = plotTitle, x = "Feature", y = "Representation of features \nin total selected area (%)") +
+    ggplot2::theme_bw() +
+    ggplot2::scale_y_continuous(limits = c(0, ymax <- max(c(df$value, df$incidental_held), na.rm = TRUE) + 10), expand = c(0,0)) + #only works for min shortfall without incidental yet
+    ggplot2::scale_fill_manual(values = colr,
+                               guide = ggplot2::guide_legend(nrow = nr)) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5, size = 16, colour = "black"),
+                   axis.text.y = ggplot2::element_text(size = 16, colour = "black"),
+                   axis.title.x = ggplot2::element_blank(),
+                   legend.title = ggplot2::element_blank(),
+                   legend.text = ggplot2::element_text(size = 16),
+                   axis.title.y = ggplot2::element_text(size = 16),
+                   title = ggplot2::element_text(size = 16),
+                   legend.position = c(0.5, 0.95),
+                   legend.direction = "horizontal",
+                   legend.background = ggplot2::element_rect(fill = "NA"))
+
+  if (!(is.na(setTarget))) {
+    gg_target <- gg_target +
+      ggplot2::geom_abline(slope = 0, intercept = setTarget, col = "black", lty = 2, size = 1.5) +
+      ggplot2::labs(title = paste0(plotTitle, setTarget, "%"))
+  }
+
+}
+
 
 #' Plot solution comparison
 #'
@@ -291,6 +350,7 @@ splnr_plot_comparison <- function(soln1, soln2, landmass = NA,
 #' @return A ggplot object of the plot
 #' @export
 #'
+#' @importFrom rlang .data
 #' @examples
 #' (splnr_plot_featureNo(dat_species_bin))
 splnr_plot_featureNo <- function(df, landmass = NA,
