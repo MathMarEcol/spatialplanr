@@ -290,6 +290,176 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
 
 }
 
+#' Plot circular barplot
+# Inputs:
+#' @param df data frame that should have the following column names: feature, value, group
+# feature: individual bars
+# value: value plotted in the y-axis
+# group: grouping factors
+#' @param legend_color vector list of colors; should have the group names and their corresponding colors
+#' @param legend_list list of groups/legends of groups
+#' @param indicateTargets logical on whether to show where the targets were set
+#' @param impTarget target of the important features (in %)
+#' @param repTarget target of the representative features (in %)
+#' @param colTarget string with a colour value for the indicator line
+#'
+#' @return
+#' @noRd
+#'
+#' @examples
+#' s1 <- dat_soln %>% #DISCLAIMER: THIS SOLUTION IS NOT ACTUALLY RUN WITH THESE TARGETS YET
+#'   tibble::as_tibble()
+#'
+#' p1 <- dat_problem
+#'
+#' df_rep_imp <- prioritizr::eval_feature_representation_summary(p1, s1[, 'solution_1'])%>%
+#'   dplyr::select(feature, relative_held) %>%
+#'   dplyr::mutate(relative_held = relative_held*100)
+#'
+#' imp_layers <- c("Spp1", "Spp3")
+#'
+#' target <- data.frame(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5")) %>%
+#'   dplyr::mutate(class = dplyr::if_else(.data$feature %in% imp_layers, "important", "representative")) %>%
+#'   dplyr::mutate(target = dplyr::if_else(class == "important", 50/100, 30/100))
+#'
+#' df <- merge(df_rep_imp, target) %>%
+#'   dplyr::select(-target) %>%
+#'   na.omit() %>%
+#'   dplyr::rename(value = relative_held) %>%
+#'   dplyr::rename(group = class)
+#'
+#' colors <- c('important' = 'darkgreen',
+#'             'representative' = 'darkred')
+#' legends <- c('Important', 'Representative')
+#'
+#' (splnr_plot_circBplot(df, legend_list = legends, legend_color = colors))
+splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets = TRUE,
+                              impTarget = NA, repTarget = NA, colTarget = "red") {
+
+  # Adding rows to each group, creating space between the groups
+  groups <- unique(df$group)
+  NA_rows <- list()
+  for(i in 1:length(groups)) {
+    NA_rows[[i]] <- data.frame(feature = NA, value = 0, group = groups[i])
+  }
+
+  data <- df %>%
+    dplyr::bind_rows(do.call(dplyr::bind_rows, NA_rows)) %>%
+    dplyr::group_by(.data$group) %>%
+    dplyr::arrange(.data$feature)
+
+  # Set a number of 'empty bar' to add at the end of each group
+  empty_bar <- 2
+  to_add <- data.frame(matrix(NA, empty_bar * length(unique(data$group)), ncol(data)) )
+  colnames(to_add) <- colnames(data)
+  to_add$group <- rep(levels(as.factor(data$group)), each = empty_bar)
+  data <- rbind(data, to_add)
+  data <- data %>% dplyr::arrange(.data$group)
+  data$id <- seq(1, nrow(data))
+
+  # Labels for each of the bars (features)
+
+  # Get the name and the y position of each label
+  label_data <- data
+  # Calculate the angle of the labels
+  number_of_bar <- nrow(label_data)
+  angle <-  90 - 360 * (label_data$id-0.5) /number_of_bar # Subtracting 0.5 so the labels are not found in the extreme left or right
+  # Calculate the alignment of labels: right or left
+  # If I am on the left part of the plot, my labels have currently an angle < -90
+  label_data$hjust<-ifelse( angle < -90, 1, 0)
+  # Flip angle BY to make them readable
+  label_data$angle<-ifelse(angle < -90, angle+180, angle)
+
+  # For the percentage lines
+  grid_data <- data %>%
+    dplyr::group_by(.data$group) %>%
+    dplyr::summarize(start = min(.data$id), end = max(.data$id) - empty_bar) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(title = mean(c(start, end)))
+  grid_data$end <- grid_data$end[ c( nrow(grid_data), 1:nrow(grid_data)-1)] + 1.5
+  grid_data$start <- grid_data$end - 1
+  grid_data <- grid_data[-1,]
+
+  # Make the plot
+  p <- ggplot2::ggplot(data, ggplot2::aes(x = as.factor(.data$id), y = .data$value, fill = .data$group)) +
+
+    # plotting the bars
+    ggplot2::geom_bar(ggplot2::aes(x = as.factor(.data$id), y = .data$value, fill = .data$group),
+                      stat = "identity",
+                      position = 'dodge') +
+
+    # defining colors of the bars
+    ggplot2::scale_fill_manual(name = "Features",
+                               values = legend_color,
+                               labels = legend_list) +
+
+    # Add text showing the value of each 100/75/50/25 lines
+    ggplot2::geom_segment(data = grid_data,
+                          ggplot2::aes(x = .data$end, y = 25, xend = .data$start, yend = 25),
+                          colour = "grey50",
+                          alpha = 1,
+                          size = 0.5 ,
+                          inherit.aes = FALSE ) +
+    ggplot2::geom_segment(data = grid_data,
+                          ggplot2::aes(x = .data$end, y = 50, xend = .data$start, yend = 50),
+                          colour = "grey50",
+                          alpha = 1,
+                          size = 0.5,
+                          inherit.aes = FALSE ) +
+    ggplot2::geom_segment(data = grid_data,
+                          ggplot2::aes(x = .data$end, y = 75, xend = .data$start, yend = 75),
+                          colour = "grey50",
+                          alpha = 1,
+                          size = 0.5,
+                          inherit.aes = FALSE ) +
+    ggplot2::geom_segment(data = grid_data,
+                          ggplot2::aes(x = .data$end, y = 100, xend = .data$start, yend = 100),
+                          colour = "grey50",
+                          alpha = 1,
+                          size = 0.5,
+                          inherit.aes = FALSE ) +
+    ggplot2::annotate("text", x = rep(max(data$id-1),4),
+                      y = c(25, 50, 75, 100),
+                      label = c(25, 50, 75, 100),
+                      color = "grey50",
+                      size= 4,
+                      angle = 0, #-5
+                      fontface = "bold",
+                      hjust=0.5) +
+
+    # setting limitations of actual plot
+    ggplot2::ylim(-130,130) + #-140, 130
+    ggplot2::theme_minimal() +
+    ggplot2::coord_polar() +
+
+    ggplot2::geom_text(data = label_data, ggplot2::aes(x = .data$id, y = .data$value + 10, label = .data$feature,
+                                                       hjust = .data$hjust), color = "black",
+                       fontface = "bold", alpha = 0.6, size = 2.5, angle = label_data$angle,
+                       inherit.aes = FALSE ) +
+
+    # Defining colors of these lines
+    ggplot2::scale_color_manual(name = "Features",
+                                values = palette) +
+
+    ggplot2::theme(
+      legend.position = "bottom",
+      axis.text = ggplot2::element_blank(),
+      axis.title = ggplot2::element_blank(),
+      panel.grid = ggplot2::element_blank(),
+      plot.margin = ggplot2::unit(rep(0.5,4), "cm")
+    )
+
+  if (indicateTargets == TRUE) {
+    if(is.na(impTarget) | is.na(repTarget)) {
+      print("Please provide the targets you want to indicate.")
+    }
+    p <- p +
+      ggplot2::geom_abline(slope=0, intercept= impTarget,  col = colTarget,lty=2)  +
+      ggplot2::geom_abline(slope=0, intercept= repTarget,  col = colTarget,lty=2)
+  }
+}
+
+
 
 #' Plot solution comparison
 #'
