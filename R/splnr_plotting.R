@@ -254,14 +254,14 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass
 splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
                                plotTitle = "") {
 
-  uniqueCat <- unique(dfNInc$category[!is.na(dfNInc$category)])
+  uniqueCat <- unique(df$category[!is.na(df$category)])
 
   colr <- tibble::tibble(Category = uniqueCat,
                          Colour = viridis::viridis(length(uniqueCat))) %>%
     tibble::deframe()
 
   df <- df %>%
-    dplyr::filter(feature != "DummyVar")
+    dplyr::filter(.data$feature != "DummyVar")
 
   gg_target <- ggplot2::ggplot() +
     ggplot2::geom_bar(data = df, stat = "identity", ggplot2::aes(x = .data$feature, y = .data$value, fill = .data$category), na.rm = TRUE) +
@@ -437,9 +437,9 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets 
                        fontface = "bold", alpha = 0.6, size = 2.5, angle = label_data$angle,
                        inherit.aes = FALSE ) +
 
-    # Defining colors of these lines
-    ggplot2::scale_color_manual(name = "Features",
-                                values = palette) +
+    # # Defining colors of these lines
+    # ggplot2::scale_color_manual(name = "Features",
+    #                             values = palette) +
 
     ggplot2::theme(
       legend.position = "bottom",
@@ -528,13 +528,9 @@ splnr_plot_featureNo <- function(df, landmass = NA,
                                  paletteName = "YlGnBu",
                                  plotTitle = "Number of Features", legendTitle = "Features"){
 
-  if("cellID" %in% colnames(df)) {
-    df <- df %>%
-      dplyr::select(-cellID)
-  }
-
   df <- df %>%
     dplyr::as_tibble() %>%
+    dplyr::select(-tidyselect::any_of(c("cellID"))) %>%
     # NOTE I have changed tidyselect:::where() to where. I think I added it as a global function somewhere else so it shouldn't be needed here....
     dplyr::mutate(FeatureSum = rowSums(dplyr::across(where(is.numeric)), na.rm = TRUE)) %>%
     sf::st_as_sf(sf_column_name = "geometry") %>%
@@ -643,14 +639,14 @@ splnr_plot_impScoreFerrierPlot <- function(soln, pDat, plotTitle = "", colorMap 
   fsoln <- prioritizr::eval_ferrier_importance(pDat, soln[, "solution_1"])
 
   fsoln <- fsoln%>%
-    dplyr::select(total) %>%
+    dplyr::select("total") %>%
     dplyr::mutate(geometry = soln$geometry) %>%
     sf::st_as_sf()
 
   selectedfs <- fsoln %>%
-    dplyr::filter(total != 0)
+    dplyr::filter(.data$total != 0)
 
-  quant95fs <- round(quantile(selectedfs$total, 0.95), 4)
+  quant95fs <- round(stats::quantile(selectedfs$total, 0.95), 4)
   seq95fs <- seq(0,quant95fs, length.out = 5)
   lab <- c(seq95fs[1], seq95fs[2], seq95fs[3], seq95fs[4], paste0("\u2265", quant95fs, sep = " "))
 
@@ -697,9 +693,9 @@ splnr_plot_impScoreRWRPlot <- function(soln, pDat, plotTitle = "", colorMap = "A
     sf::st_as_sf()
 
   selectedRWR <- rwrsoln %>%
-    dplyr::filter(rwr != 0)
+    dplyr::filter(.data$rwr != 0)
 
-  quant95 <- round(quantile(selectedRWR$rwr, 0.95), 2) #get importance score at 95th percentile of all selected planning units
+  quant95 <- round(stats::quantile(selectedRWR$rwr, 0.95), 2) #get importance score at 95th percentile of all selected planning units
   seq95 <- seq(0,quant95, length.out = 5)
   lab <- c(seq95[1], seq95[2], seq95[3], seq95[4], paste0("\u2265", quant95, sep = " "))
 
@@ -748,9 +744,9 @@ splnr_plot_impScoreRCPlot <- function(soln, pDat, plotTitle = "", colorMap = "A"
     sf::st_as_sf()
 
   selectedRC <- rcsoln %>%
-    dplyr::filter(rc != 0)
+    dplyr::filter(.data$rc != 0)
 
-  quant95 <- round(quantile(selectedRC$rc, 0.95), 2) #get importance score at 95th percentile of all selected planning units
+  quant95 <- round(stats::quantile(selectedRC$rc, 0.95), 2) #get importance score at 95th percentile of all selected planning units
   seq95 <- seq(0,quant95, length.out = 5)
   lab <- c(seq95[1], seq95[2], seq95[3], seq95[4], paste0("\u2265", quant95, sep = " "))
 

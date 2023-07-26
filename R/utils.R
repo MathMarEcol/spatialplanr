@@ -264,7 +264,7 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA,
     dplyr::select(-tidyselect::starts_with("Cost"), -tidyselect::any_of(c("metric", "cellID", "FishResBlock"))) %>%
     sf::st_drop_geometry()
 
-  selected <- dat_problem$data$features[[1]]#soln %>%
+  selected <- pDat$data$features[[1]]#soln %>%
   #dplyr::select(-tidyselect::starts_with("Cost"), -tidyselect::any_of(c("metric", "FishResBlock")))
 
   ns_cols <- setdiff(not_selected %>% colnames(), selected)# %>% colnames())
@@ -301,7 +301,7 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA,
   ## Now do the selected features
 
   s1 <- soln %>%
-    dplyr::rename(solution = solution_1) %>%
+    dplyr::rename(solution = !!rlang::sym(solnCol)) %>%
     tibble::as_tibble()
 
   df_rep_imp <- prioritizr::eval_feature_representation_summary(pDat, s1[, 'solution'])
@@ -338,10 +338,10 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA,
                         by = "feature")
 
   if (is.data.frame(Category)){
-    df <- dplyr::left_join(df, Category_vec, by = "feature")
+    df <- dplyr::left_join(df, Category, by = "feature")
   } else if (is.na(Category)) {
     df <- df %>%
-      dplyr::mutate(category = feature)
+      dplyr::mutate(category = .data$feature)
   } else {
     print("Check that your Category input is in the right format.")
   }
