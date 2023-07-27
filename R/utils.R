@@ -239,9 +239,11 @@ splnr_arrangeFeatures <- function(df){
 #' @param soln The `prioritizr` solution
 #' @param pDat The `prioritizr` problem
 #' @param allDat `sf` dataframe containing all features
-#' @param Category `tibble` with information what category the features belong to (if NA, each feature has its own category)
+#' @param Category `tibble` with information what category the features belong to (if NA, either provide a Dict or each feature has its own category)
+#' @param Dict `tibble` resembling a dictionary that has to contain: Common species name ('Common'), the category that features belong to ('Category'), whether the feature is important or representative ('Class') and what the features are called in the Data (e.g. 'Scientific')  (if NA, either provide Catgories or each feature has its own category)
+#' @param dataCol Name of the column in the Dictionary (Dict) of what Species names are saved in (default: 'Abbrev')
 #' @param climsmart logical denoting whether spatial planning was done climate-smart (and targets have to be calculated differently)
-#' @param solnCol Name of the column with the sollution
+#' @param solnCol Name of the column with the solution
 #'
 #' @return `tbl_df` dataframe
 #' @export
@@ -250,13 +252,13 @@ splnr_arrangeFeatures <- function(df){
 #'
 #' @examples
 #' #not including incidental species coverage
-#' dfNInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin,
+#' dfNInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin, Dict = NA,
 #'                           Category = Category_vec, solnCol = "solution_1")
 #'
 #' #including incidental species coverage
-#' dfInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin2,
+#' dfInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin2, Dict = NA,
 #'                          Category = Category_vec2, solnCol = "solution_1")
-splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA,
+splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA, Dict = NA, dataCol = "Abbrev",
                                  climsmart = FALSE, solnCol = "solution_1"){
 
   # ## Calculate the incidental protection for features not chosen
@@ -321,31 +323,42 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA,
 
   }
 
-  # Create named vector to do the replacement
-  # rpl <- Dict[ order(match(Dict$Abbrev, df_rep_imp$feature)), ] %>%
-  #   dplyr::select(.data$Abbrev, .data$Common) %>%
-  #   tibble::deframe()
-
   df <- df_rep_imp %>%
     dplyr::mutate(relative_held = .data$relative_held * 100) %>%
-    #dplyr::mutate(group = dplyr::if_else(.data$feature %in% imp_layers, "important", "representative")) %>%
     stats::na.omit() %>%
     dplyr::rename(value = .data$relative_held)# %>%
-  #dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl))
 
-  df<- dplyr::full_join(df, ns1 %>% # Now join the non-selected values
-                          dplyr::select(c(.data$feature, .data$incidental_held)),
-                        by = "feature")
+  if (is.data.frame(Dict) & !is.data.frame(Category)) {
+    # Create named vector to do the replacement
+    DictNew <- Dict %>%
+      dplyr::rename(feature = !!rlang::sym(dataCol))
 
-  if (is.data.frame(Category)){
+    rpl <- DictNew[ order(match(DictNew$feature, df_rep_imp$feature)), ] %>%
+      dplyr::select("feature", "Common") %>%
+      tibble::deframe()
+
+    groups <- DictNew %>%
+      dplyr::select("feature", "Class", "Category")
+
+    df <- dplyr::left_join(df, groups, by = "feature") %>%
+      dplyr::rename(group = "Class", category = "Category") %>%
+      #dplyr::mutate(group = dplyr::if_else(.data$feature %in% imp_layers, "important", "representative")) %>%
+      dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl))
+  } else if (is.data.frame(Category)& is.na(Dict)) {
     df <- dplyr::left_join(df, Category, by = "feature")
-  } else if (is.na(Category)) {
+  } else if (is.na(Category)& is.na(Dict)) {
     df <- df %>%
       dplyr::mutate(category = .data$feature)
   } else {
-    print("Check that your Category input is in the right format.")
+    print("Check your function input for Dict and Category. At least one has to be NA.")
   }
+
+
+  df<- dplyr::full_join(df, ns1 %>% # Now join the non-selected values
+                          dplyr::select(c("feature", "incidental_held")),
+                        by = "feature")
 
 
   return(df)
 }
+

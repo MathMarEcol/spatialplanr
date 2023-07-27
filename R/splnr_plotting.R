@@ -31,7 +31,7 @@ splnr_plot_Solution <- function(soln, PlanUnits, landmass = NA,
     ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$solution_1), colour = NA, size = 0.1, show.legend = showLegend) +
     ggplot2::geom_sf(data = PlanUnits, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE)
 
-  if (!is.na(landmass)){
+  if (class(landmass)[[1]] == "sf"){
     gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
 
@@ -155,7 +155,7 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", landmass = NA,
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), colour = "grey80", size = 0.1, show.legend = TRUE)
 
-  if (!is.na(landmass)){
+  if (class(landmass)[[1]] == "sf"){
     gg <- gg +
       ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
@@ -205,14 +205,7 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = soln, fill = "black", colour = NA, size = 0.0001) +
-    ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), alpha = 0.5, colour = NA, size = 0.0001)
-
-  if (!is.na(landmass)){
-    gg <- gg +
-      ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
-  }
-
-  gg <- gg +
+    ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), alpha = 0.5, colour = NA, size = 0.0001)+
     ggplot2::scale_fill_gradient(name = legendTitle,
                                  # palette = "Oranges",
                                  low = "#fff5eb",
@@ -227,8 +220,68 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass
                                  #   order = 1,
                                  #   barheight = grid::unit(0.03, "npc"),
                                  #   barwidth = grid::unit(0.25, "npc"))
-    ) +
+    )
+
+  if (class(landmass)[[1]] == "sf"){
+    gg <- gg +
+      ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
+  }
+
+  gg <- gg +
+    ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
     ggplot2::labs(subtitle = plotTitle)
+}
+
+
+#' Plot binary feature
+#'
+#' @param df A `data frame` with binary feature information
+#' @param colInterest column of data frame that contains binary information of feature to plot
+#' @param PlanUnits Planning Units as an `sf` object
+#' @param landmass An `sf` object of land polygon
+#' @param colorVals A `list` object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.
+#' @param colorPUs A color value for the outline of planning units.
+#' @param showLegend A logical command on whether to show the legend of the solution (Default: TRUE).
+#' @param plotTitle A character value for the title of the plot. Can be empty ("").
+#' @param legendTitle A character value for the title of the legend. Can be empty ("").
+#'
+#' @return A ggplot object of the plot
+#' @export
+#'
+#' @examples
+#' (splnr_plot_binFeature(dat_species_bin,  dat_species_bin$Spp1, dat_PUs))
+splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
+                                  colorVals = c("Suitable" = "#3182bd", "Not Suitable" = "#c6dbef"),
+                                  colorPUs = "grey80", showLegend = TRUE,
+                                  plotTitle = " ", legendTitle = "Habitat"){
+
+  df <-  df %>%
+    dplyr::mutate(pred_bin = ifelse(is.na(colInterest), 0, colInterest),
+                  pred_bin = dplyr::if_else(.data$pred_bin == 1, "Suitable", "Not Suitable"),
+                  pred_bin = factor(.data$pred_bin, levels = c("Suitable", "Not Suitable")))
+
+  gg <- ggplot2::ggplot() +
+    ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$pred_bin), colour = NA, size = 0.001, show.legend = showLegend) +
+    ggplot2::geom_sf(data = PlanUnits, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE)
+
+  if (class(landmass)[[1]] == "sf"){
+    gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
+  }
+
+  gg <- gg +
+    ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
+    ggplot2::scale_colour_manual(name = legendTitle,
+                                 values = colorVals,
+                                 aesthetics = "fill", #c("colour", "fill"),
+                                 guide = ggplot2::guide_legend(override.aes = list(linetype = 0),
+                                                               nrow = 2,
+                                                               order = 1,
+                                                               direction = "horizontal",
+                                                               title.position = "top",
+                                                               title.hjust = 0.5)) +
+    ggplot2::theme_bw() +
+    ggplot2::labs(subtitle = plotTitle)
+
 }
 
 #' Plot how well targets are met
@@ -493,7 +546,7 @@ splnr_plot_comparison <- function(soln1, soln2, landmass = NA,
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$Compare), colour = NA, size = 0.0001)
 
-  if (!is.na(landmass)){
+  if (class(landmass)[[1]] == "sf"){
     gg <- gg +
       ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
@@ -539,7 +592,7 @@ splnr_plot_featureNo <- function(df, landmass = NA,
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$FeatureSum), colour = colorPUs, size = 0.1, show.legend = showLegend)
 
-  if (!is.na(landmass)){
+  if (class(landmass)[[1]] == "sf"){
     gg <- gg +
       ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
@@ -592,7 +645,7 @@ splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = selFreq, ggplot2::aes(fill = .data$selFreq), colour = NA) +
 
-    if (!is.na(landmass)){
+    if (class(landmass)[[1]] == "sf"){
       gg <- gg +
         ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
     }

@@ -9,6 +9,8 @@ splnr_prepTargetData(
   pDat,
   allDat,
   Category = NA,
+  Dict = NA,
+  dataCol = "Abbrev",
   climsmart = FALSE,
   solnCol = "solution_1"
 )
@@ -20,11 +22,15 @@ splnr_prepTargetData(
 
 \item{allDat}{\code{sf} dataframe containing all features}
 
-\item{Category}{\code{tibble} with information what category the features belong to (if NA, each feature has its own category)}
+\item{Category}{\code{tibble} with information what category the features belong to (if NA, either provide a Dict or each feature has its own category)}
+
+\item{Dict}{\code{tibble} resembling a dictionary that has to contain: Common species name ('Common'), the category that features belong to ('Category'), whether the feature is important or representative ('Class') and what the features are called in the Data (e.g. 'Scientific')  (if NA, either provide Catgories or each feature has its own category)}
+
+\item{dataCol}{Name of the column in the Dictionary (Dict) of what Species names are saved in (default: 'Abbrev')}
 
 \item{climsmart}{logical denoting whether spatial planning was done climate-smart (and targets have to be calculated differently)}
 
-\item{solnCol}{Name of the column with the sollution}
+\item{solnCol}{Name of the column with the solution}
 }
 \value{
 \code{tbl_df} dataframe
@@ -34,10 +40,10 @@ Prepare data to plot how well targets are met
 }
 \examples{
 #not including incidental species coverage
-dfNInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin,
+dfNInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin, Dict = NA,
                           Category = Category_vec, solnCol = "solution_1")
 
 #including incidental species coverage
-dfInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin2,
+dfInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin2, Dict = NA,
                          Category = Category_vec2, solnCol = "solution_1")
 }
