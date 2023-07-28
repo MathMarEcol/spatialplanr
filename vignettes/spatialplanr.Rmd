@@ -33,19 +33,19 @@ This code has been written to simplify the process for running a _prioritizr_ an
 ## Set user parameters 
 You can set a region if it is defined in `splnr_get_PlanningUnits`. 
 ```{r}
-Region <- "South Atlantic Ocean" # "Australia"
+Region <- "Coral Sea" # "Australia"
 Type <- "Oceans" # "EEZ"
 ```
 
 You can also define a region with square boundaries if you need.
 ```{r, eval=FALSE}
-Region <- c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)
+#Region <- c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)
 ```
 
 Set the shape and area of the planning unit in square kilometres.
 ```{r}
 Shape <- "Hexagon" # "Shape of PUs
-PU_size <- 20000 # km2
+PU_size <- 10000 # km2
 ```
 
 Choose CRS for analysis

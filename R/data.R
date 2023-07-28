@@ -216,3 +216,40 @@
 
 
 # -------------------------------------------------------------------------
+
+
+#' Aquamaps species example data
+#'
+#' sf file containing the suitable habitat for a few marine species of the coral sea
+#'
+#' @format ## `spDataFiltered`
+#' A data frame with 397 rows and 17 columns:
+#' \describe{
+#'   \item{Chelonia_mydas}{suitable habitat for Chelonia mydas}
+#'   \item{cellID}{cell ID of planning units}
+#'   ...
+#' }
+#' @source Aquamaps.org
+"spDataFiltered"
+
+
+# -------------------------------------------------------------------------
+
+
+#' Current MPAs of the Coral Sea
+#'
+#' sf file containing the current marine protected areas of the coral sea
+#'
+#' @format ## `MPAsCoralSea`
+#' A data frame with 397 rows and 17 columns:
+#' \describe{
+#'   \item{wdpa}{binary vector denoting presence or absence of a current marine protected area}
+#'   \item{cellID}{cell ID of planning units}
+#'   ...
+#' }
+#' @source https://www.protectedplanet.net/en/thematic-areas/wdpa?tab=WDPA
+"MPAsCoralSea"
+
+
+# -------------------------------------------------------------------------
+

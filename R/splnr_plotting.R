@@ -105,7 +105,7 @@ splnr_plot_MPAs <- function(df, landmass = NA,
   }
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$wdpa), colour = "grey80", size = 0.1, show.legend = showLegend) +
+    ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$wdpa), colour = "grey80", size = 0.1, show.legend = showLegend)
 
   if (class(landmass)[[1]] == "sf"){
     gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
@@ -519,6 +519,8 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets 
 #' @param soln1 The first `prioritizr` solution
 #' @param soln2 The second `prioritizr` solution
 #' @param landmass An `sf` object of land polygon
+#' @param PlanUnits Planning Units as an `sf` object
+#' @param colorPUs A color value for the outline of planning units.
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
 #'
 #' @return A ggplot object of the plot
@@ -527,11 +529,11 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets 
 #' @importFrom rlang .data
 #' @examples
 #' (splnr_plot_comparison(dat_soln, dat_soln2))
-splnr_plot_comparison <- function(soln1, soln2, landmass = NA,
+splnr_plot_comparison <- function(soln1, soln2, landmass = NA, PlanUnits = NA, colorPUs = "grey80",
                                   legendTitle = "Scenario 2 compared to Scenario 1:"){
 
   soln <- soln1 %>%
-    dplyr::select(.data$solution_1) %>%
+    dplyr::select("solution_1") %>%
     dplyr::bind_cols(soln2 %>%
                        dplyr::as_tibble() %>%
                        dplyr::select(.data$solution_1) %>%
@@ -551,8 +553,17 @@ splnr_plot_comparison <- function(soln1, soln2, landmass = NA,
       ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
 
+  if (class(PlanUnits)[[1]] == "sf"){
+    gg <- gg + ggplot2::geom_sf(data = PlanUnits, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE) +
+      ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim)
+
+  } else {
+
+    gg <- gg +
+      ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim)
+  }
+
   gg <- gg +
-    ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
     ggplot2::theme_bw() +
     ggplot2::scale_fill_manual(name=legendTitle,
                                values = c("Added (+)" = "Red", "Same" = "ivory3", "Removed (-)" = "Blue"), drop = FALSE)

@@ -8,6 +8,8 @@ splnr_plot_comparison(
   soln1,
   soln2,
   landmass = NA,
+  PlanUnits = NA,
+  colorPUs = "grey80",
   legendTitle = "Scenario 2 compared to Scenario 1:"
 )
 }
@@ -17,6 +19,10 @@ splnr_plot_comparison(
 \item{soln2}{The second \code{prioritizr} solution}
 
 \item{landmass}{An \code{sf} object of land polygon}
+
+\item{PlanUnits}{Planning Units as an \code{sf} object}
+
+\item{colorPUs}{A color value for the outline of planning units.}
 
 \item{legendTitle}{A character value for the title of the legend. Can be empty ("").}
 }
