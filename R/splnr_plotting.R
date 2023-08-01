@@ -228,7 +228,7 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass
   }
 
   gg <- gg +
-    ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
+    ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
     ggplot2::labs(subtitle = plotTitle)
 }
 

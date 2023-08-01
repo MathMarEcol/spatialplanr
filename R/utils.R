@@ -343,7 +343,8 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA, Dict = NA, d
     df <- dplyr::left_join(df, groups, by = "feature") %>%
       dplyr::rename(group = "Class", category = "Category") %>%
       #dplyr::mutate(group = dplyr::if_else(.data$feature %in% imp_layers, "important", "representative")) %>%
-      dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl))
+      dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl)) %>%
+      dplyr::mutate(category = as.factor(category), group = as.factor(group))
   } else if (is.data.frame(Category)& is.na(Dict)) {
     df <- dplyr::left_join(df, Category, by = "feature")
   } else if (is.na(Category)& is.na(Dict)) {
