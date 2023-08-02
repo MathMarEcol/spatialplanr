@@ -344,7 +344,7 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA, Dict = NA, d
       dplyr::rename(group = "Class", category = "Category") %>%
       #dplyr::mutate(group = dplyr::if_else(.data$feature %in% imp_layers, "important", "representative")) %>%
       dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl)) %>%
-      dplyr::mutate(category = as.factor(category), group = as.factor(group))
+      dplyr::mutate(category = as.factor(.data$category), group = as.factor(.data$group))
   } else if (is.data.frame(Category)& is.na(Dict)) {
     df <- dplyr::left_join(df, Category, by = "feature")
   } else if (is.na(Category)& is.na(Dict)) {
@@ -363,3 +363,58 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA, Dict = NA, d
   return(df)
 }
 
+#' Prepare data to plot Cohen's Kappa correlation matrix
+#'
+#' @param sol List of `prioritizr` solutions (`sf` objects) with solutions having a column name `solution_1`
+#' @param name_sol Name tags to the different solutions
+#'
+#' @return `matrixOut` matrix
+#' @export
+#'
+#' @importFrom rlang .data
+#'
+#' @examples
+#' corrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
+splnr_prepKappaCorrData <- function(sol, name_sol) {
+
+  s_list <- lapply(seq_along(sol), function(x) {
+    sol[[x]] %>%
+      tibble::as_tibble() %>%
+      dplyr::select("solution_1") %>%
+      stats::setNames(name_sol[[x]])
+  }
+  )
+
+  y = 1
+  s_matrix <- list()
+  for(i in 1:length(s_list)) {
+    for(j in 1:length(s_list)) {
+      kappa_temp <- irr::kappa2(dplyr::bind_cols(s_list[[i]], s_list[[j]]))
+      kappa_corrvalue <- kappa_temp$value
+      kappa_pvalue <- kappa_temp$p.value
+      s_matrix[[y]] <- cbind(colnames(s_list[[i]]), colnames(s_list[[j]]), kappa_corrvalue, kappa_pvalue)
+      y = y + 1
+    }
+  }
+
+  s_matrix_all <- do.call(rbind, s_matrix) %>%
+    tibble::as_tibble()
+  colnames(s_matrix_all)[1:2] <- c('plan1','plan2')
+
+  matrix_final <- s_matrix_all %>%
+    tibble::as_tibble() %>%
+    dplyr::select(-kappa_pvalue) %>%
+    tidyr::pivot_wider(names_from = .data$plan2, values_from = kappa_corrvalue) %>%
+    as.matrix()
+
+  matrix_x <- s_matrix_all %>%
+    tibble::as_tibble()
+
+  # creating corrplot
+  rownames(matrix_final) <- matrix_final[,1]
+  n <- length(s_list) + 1 # 4 is the number of inputted scenarios
+  matrixOut <- matrix_final[,2:n]
+  class(matrixOut) <- "numeric"
+
+  return(matrixOut)
+}

@@ -38,6 +38,8 @@ Imports:
     exactextractr,
     fs,
     ggplot2,
+    ggcorrplot,
+    irr,
     magrittr,
     purrr,
     rappdirs,

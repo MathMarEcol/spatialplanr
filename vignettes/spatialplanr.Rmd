@@ -283,19 +283,21 @@ We will also include targets based on IUCN categories to prioritise species with
 We assign a 30% target to species within these categories. All species that do not fall into any of these categories receive an inverse area target, so species with a greater area of suitable habitat are assigned a lower target. 
 
 ```{r}
-Species <- gsub("_", " ", col_name) #to transform Aquamaps species names to IUCN species names
-dfSpecies <- data.frame(Species)
+# Species <- gsub("_", " ", col_name) #to transform Aquamaps species names to IUCN species names
+# dfSpecies <- data.frame(Species)
+# 
+# minTarget = 0.1
+# maxTarget = 0.2
+# 
+# Targets <- splnr_get_TargetsIA(datEx_species_bin, minTarget, maxTarget) #inverse area target
+# 
+# speciesCol <- "Species"
+# Targets <- Targets %>%
+#   splnr_match_IUCNRedList() %>% # Add RL data to the df
+#   dplyr::mutate(Target = dplyr::case_when(IUCN_Category %in% c("EX","EW","CR","EN","VU") ~ 0.3,
+#                                           TRUE ~ Targets$Target))
 
-minTarget = 0.1
-maxTarget = 0.2
-
-Targets <- splnr_get_TargetsIA(datEx_species_bin, minTarget, maxTarget) #inverse area target
-
-speciesCol <- "Species"
-Targets <- Targets %>%
-  splnr_match_IUCNRedList() %>% # Add RL data to the df
-  dplyr::mutate(Target = dplyr::case_when(IUCN_Category %in% c("EX","EW","CR","EN","VU") ~ 0.3,
-                                          TRUE ~ Targets$Target))
+Targets <- IUCN_IA_Targets
 
 ```
  **Note:** Accessing the IUCN database requires a login token from `rl_use_iucn()` that needs to be added to the environment using `Sys.setenv(IUCN_REDLIST_KEY = "[Your Token]")`.
@@ -324,6 +326,13 @@ datEx_soln2 <- datEx_problem2 %>%
 ```
 
 This plot shows how the first solution (without current MPAs) differs from the second solution (including current MPAs. The categorical map displays, which of the planning units were selected in solution 2 but not in solution 1 (red), in solution 1 but not in solution 2 (blue), or selected in both solutions (grey).
+
+```{r, fig.width=9}
+CorrMat <- splnr_prepKappaCorrData(list(datEx_soln, datEx_soln2), name_sol = c("soln1", "soln2"))
+(ggCorr <- splnr_plot_CorrMat(CorrMat, AxisLabels = c("Solution 1", "Solution 2")))
+```
+
+The correlation matrix shows the similarity as the Cohen's Kappa correlation between solution 1 and solution 2. 
 
 ### Plotting selection frequency
 

@@ -721,7 +721,7 @@ splnr_plot_impScoreFerrierPlot <- function(soln, pDat, plotTitle = "", colorMap 
     ggplot2::scale_fill_viridis_c(option = colorMap,
                                   direction = -1, breaks = seq95fs, labels = lab,
                                   guide = ggplot2::guide_colourbar(title.position = "right", title = legendTitle,
-                                                                   barwidth = 2, barheight = 20))+#, oob=squish)
+                                                                   barwidth = 2, barheight = 10))+#, oob=squish)
     ggplot2::coord_sf(xlim = c(sf::st_bbox(fsoln)$xmin, sf::st_bbox(fsoln)$xmax),
                       ylim = c(sf::st_bbox(fsoln)$ymin, sf::st_bbox(fsoln)$ymax),
                       expand = TRUE) +
@@ -770,7 +770,7 @@ splnr_plot_impScoreRWRPlot <- function(soln, pDat, plotTitle = "", colorMap = "A
     ggplot2::scale_fill_viridis_c(option = colorMap,
                                   direction = -1, breaks = seq95, labels = lab,
                                   guide = ggplot2::guide_colourbar(title.position = "right", title = legendTitle,
-                                                                   barwidth = 2, barheight = 20))+#, oob=squish)
+                                                                   barwidth = 2, barheight = 10))+#, oob=squish)
     ggplot2::coord_sf(xlim = c(sf::st_bbox(rwrsoln)$xmin, sf::st_bbox(rwrsoln)$xmax),
                       ylim = c(sf::st_bbox(rwrsoln)$ymin, sf::st_bbox(rwrsoln)$ymax),
                       expand = TRUE) +
@@ -821,7 +821,7 @@ splnr_plot_impScoreRCPlot <- function(soln, pDat, plotTitle = "", colorMap = "A"
     ggplot2::scale_fill_viridis_c(option = colorMap,
                                   direction = -1, breaks = seq95, labels = lab,
                                   guide = ggplot2::guide_colourbar(title.position = "right", title = legendTitle,
-                                                                   barwidth = 2, barheight = 20))+#, oob=squish)
+                                                                   barwidth = 2, barheight = 10))+#, oob=squish)
     ggplot2::coord_sf(xlim = c(sf::st_bbox(rcsoln)$xmin, sf::st_bbox(rcsoln)$xmax),
                       ylim = c(sf::st_bbox(rcsoln)$ymin, sf::st_bbox(rcsoln)$ymax),
                       expand = TRUE) +
@@ -835,6 +835,58 @@ splnr_plot_impScoreRCPlot <- function(soln, pDat, plotTitle = "", colorMap = "A"
     ggplot2::labs(title = plotTitle)
 }
 
+#' Plot correlation matrices
+#' @param x A correlation matrix of `prioritizr` solutions
+#' @param colourGradient A list of three colour values for high positive, no and high negative correlation
+#' @param legendTitle A character value for the title of the legend. Can be empty ("").
+#' @param AxisLabels A list of labels of the solutions to be correlated (Default: NULL). Length needs to match number of correlated solutions.
+#' @param plotTitle A character value for the title of the plot. Can be empty ("").
+#'
+#' @return A ggplot object of the plot
+#' @export
+#'
+#' @importFrom rlang .data
+#' @examples
+#' CorrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
+#' (splnr_plot_CorrMat(CorrMat, AxisLabels = c("Solution 1", "Solution 2")))
+splnr_plot_CorrMat <- function(x, colourGradient = c("#BB4444","#FFFFFF","#4477AA"),
+                               legendTitle = "Correlation \ncoefficient",
+                               AxisLabels = NULL, plotTitle = "") {
+
+  if ((class(AxisLabels)[[1]] == "character") & (nrow(x) != length(AxisLabels))) {
+    print("Not enough labels for the length of the matrix. Please check your labels.")
+  }
+
+  gg_cor <- ggcorrplot::ggcorrplot(x,
+                                   outline.color = "black",
+                                   lab = TRUE) +
+    ggplot2::scale_fill_gradient2(
+      low = colourGradient[3],
+      mid = colourGradient[2],
+      high = colourGradient[1],
+      limits = c(-1, 1),
+      guide = ggplot2::guide_colourbar(title = legendTitle,
+                                       barwidth = 2, barheight = 10)) +
+    ggplot2::scale_x_discrete(guide = ggplot2::guide_axis(angle = 45)) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(legend.title = ggplot2::element_text(),
+                   legend.text = ggplot2::element_text(color = "black", size = 10),
+                   panel.grid = ggplot2::element_blank(),
+                   #panel.grid.major = element_line(color = "grey86"),
+                   panel.border = ggplot2::element_blank(),
+                   axis.ticks = ggplot2::element_blank(),
+                   axis.text.y = ggplot2::element_text(color = "black", size = 12),
+                   axis.title = ggplot2::element_blank(),
+                   axis.text.x = ggplot2::element_text(color = "black", size = 12)) +
+    ggplot2::labs(title = plotTitle)
+
+  if (class(AxisLabels)[[1]] == "character") {
+    gg_cor <- gg_cor +
+      ggplot2::scale_x_discrete(guide = ggplot2::guide_axis(angle = 45),
+                                labels= AxisLabels) +
+      ggplot2::scale_y_discrete(labels= AxisLabels)
+  }
+}
 
 #' Plot Longhurst Provinces
 #'

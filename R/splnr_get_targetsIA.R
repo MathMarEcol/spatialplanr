@@ -22,7 +22,7 @@ splnr_get_TargetsIA <- function(df, target_min, target_max){
   feature_area <- df %>%
     dplyr::select(-"cellID") %>%
     sf::st_drop_geometry() %>%
-    replace(is.na(.), 0) %>%
+    dplyr::mutate(dplyr::across(dplyr::everything(), ~tidyr::replace_na(.x, 0))) %>%
     dplyr::summarise(dplyr::across(dplyr::everything(), ~ sum(., is.na(.), 0))) %>%
     tidyr::pivot_longer(dplyr::everything(), names_to = "Species", values_to = "Area_km2") %>%
     dplyr::mutate(Species = stringr::str_replace_all(.data$Species, pattern = "_", replacement = " "),
