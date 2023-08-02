@@ -164,7 +164,7 @@ In our example, we use a minimum set objective function, which aims to minimize 
 
 ```{r, fig.width=9}
 out_sf$Cost_None <- rep(1, 397)
-(ggCost <- splnr_plot_cost(out_sf, Cost_name = "Cost_None"))
+(ggCost <- splnr_plot_cost(out_sf, Cost_name = "Cost_None", plotTitle = "Cost (Area)"))
 ```
 
 #### Set Targets
@@ -220,7 +220,7 @@ This plot shows the optimal solution for the planning region that meets the sele
 
 To visualize how well the targets are met, we first need to extract how much suitable habitat of each feature are selected in the spatial plan. This also includes potential incidental coverage of feature that were not included in the spatial plan but can still be found in the planning region.
 
-```{r, fig.width=9, fig.height=11}
+```{r, fig.width=9, fig.height=10}
 dfTarget <- splnr_prepTargetData(datEx_soln, datEx_problem, datEx_species_bin, Dict = Dict, Category = NA,
                                  dataCol = "Scientific",
                                  climsmart = FALSE, solnCol = "solution_1")
@@ -250,7 +250,7 @@ Importance scores can help to assess the relative importance of an individual se
 
 Here, we use two different importance scores, the Ferrier Score and Rarity Weighted Richness.
 
-```{r, fig.width=9}
+```{r, fig.width=9, fig.height = 10}
 ggFerrier <- splnr_plot_impScoreFerrierPlot(datEx_soln, datEx_problem)
 ggRWR <- splnr_plot_impScoreRWRPlot(datEx_soln, datEx_problem)
 
@@ -264,20 +264,48 @@ In our example, both scores label similar -coastal- planning units as most impor
 Sometimes it can be useful to have a direct comparison of two spatial plans. To show how to achieve this with this package, we first need a second conservatio problem and resulting solution. 
 
 Here, our second spatial plan will include already existing marine protected areas in the area (https://www.protectedplanet.net/en/thematic-areas/wdpa?tab=WDPA) with the following characteristics:
-+ Status = c("Designated", "Established", "Inscribed")
-+ Designation Type = c("National", "Regional", "International", "Not Applicable")
-+ IUCN Category = c("Ia", "Ib", "II", "III", "IV")
+* Status = c("Designated", "Established", "Inscribed")
+* Designation Type = c("National", "Regional", "International", "Not Applicable")
+* IUCN Category = c("Ia", "Ib", "II", "III", "IV")
 
 ```{r, fig.width=9}
 (ggMPA <- splnr_plot_MPAs(MPAsCoralSea, landmass = landmass)) 
 ```
+
+We will also include targets based on IUCN categories to prioritise species with an IUCN status of:
+
+* Vulnerable
+* Endangered
+* Critically Endangered
+* Extinct in the Wild
+* Extinct
+
+We assign a 30% target to species within these categories. All species that do not fall into any of these categories receive an inverse area target, so species with a greater area of suitable habitat are assigned a lower target. 
+
+```{r}
+Species <- gsub("_", " ", col_name) #to transform Aquamaps species names to IUCN species names
+dfSpecies <- data.frame(Species)
+
+minTarget = 0.1
+maxTarget = 0.2
+
+Targets <- splnr_get_TargetsIA(datEx_species_bin, minTarget, maxTarget) #inverse area target
+
+speciesCol <- "Species"
+Targets <- Targets %>%
+  splnr_match_IUCNRedList() %>% # Add RL data to the df
+  dplyr::mutate(Target = dplyr::case_when(IUCN_Category %in% c("EX","EW","CR","EN","VU") ~ 0.3,
+                                          TRUE ~ Targets$Target))
+
+```
+ **Note:** Accessing the IUCN database requires a login token from `rl_use_iucn()` that needs to be added to the environment using `Sys.setenv(IUCN_REDLIST_KEY = "[Your Token]")`.
 
 #### Set up second conservation problem
 
 ```{r, fig.width=9}
 datEx_problem2 <- prioritizr::problem(out_sf, col_name, "Cost_None") %>%
   prioritizr::add_min_set_objective() %>%
-  prioritizr::add_relative_targets(target$target) %>%
+  prioritizr::add_relative_targets(Targets$Target) %>%
   prioritizr::add_locked_in_constraints(as.logical(MPAsCoralSea$wdpa)) %>%
   prioritizr::add_binary_decisions() %>%
   prioritizr::add_default_solver(verbose = FALSE)
