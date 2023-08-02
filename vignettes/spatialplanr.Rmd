@@ -261,7 +261,7 @@ In our example, both scores label similar -coastal- planning units as most impor
 
 ### Comparing Spatial Plans
 
-Sometimes it can be useful to have a direct comparison of two spatial plans. To show how to achieve this with this package, we first need a second conservatio problem and resulting solution. 
+Sometimes it can be useful to have a direct comparison of two spatial plans. To show how to achieve this with this package, we first need a second conservation problem and resulting solution. 
 
 Here, our second spatial plan will include already existing marine protected areas in the area (https://www.protectedplanet.net/en/thematic-areas/wdpa?tab=WDPA) with the following characteristics:
 * Status = c("Designated", "Established", "Inscribed")
@@ -331,7 +331,7 @@ Sometimes when multiple spatial plans are generated, we are interesting in how m
 
 ```{r, fig.width=9}
 datEx_soln_portfolio <- datEx_problem %>%
-  prioritizr::add_gap_portfolio(5, 0.2) %>% #create conservation problem that contains a portfolio of solutions
+  prioritizr::add_cuts_portfolio(5) %>% #create conservation problem that contains a portfolio of solutions
   prioritizr:::solve.ConservationProblem()
 
 selFreq <- datEx_soln_portfolio %>%  # calculate selection frequency
