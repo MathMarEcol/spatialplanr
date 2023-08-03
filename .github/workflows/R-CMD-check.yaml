@@ -21,13 +21,6 @@ jobs:
         with:
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck
-          needs: check
-
-      - uses: r-lib/actions/check-r-package@v2
-
       - name: Query dependencies
         run: |
           install.packages('remotes')
@@ -60,4 +53,21 @@ jobs:
           remotes::install_cran("covr")
           remotes::install_bioc("lpsymphony")
           remotes::install_cran("urlchecker", force = TRUE)
+        shell: Rscript {0}
+
+        - name: Session information
+        run: |
+          options(width = 100)
+          pkgs <- installed.packages()[, "Package"]
+          sessioninfo::session_info(pkgs, include_base = TRUE)
+        shell: Rscript {0}
+
+      - name: Set environmental variables for package checks
+        if: matrix.config.pkgs == 'depends only'
+        run: |
+          echo "_R_CHECK_DEPENDS_ONLY_=true" >> $GITHUB_ENV
+
+      - name: Check
+        run: |
+          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", "--no-build-vignettes"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
