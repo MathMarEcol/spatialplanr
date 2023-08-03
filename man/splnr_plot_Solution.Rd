@@ -4,7 +4,16 @@
 \alias{splnr_plot_Solution}
 \title{Plot prioritizr solution}
 \usage{
-splnr_plot_Solution(soln, PlanUnits, landmass = NA)
+splnr_plot_Solution(
+  soln,
+  PlanUnits,
+  landmass = NA,
+  colorVals = c(`TRUE` = "#3182bd", `FALSE` = "#c6dbef"),
+  colorPUs = "grey80",
+  showLegend = TRUE,
+  plotTitle = "Solution",
+  legendTitle = "Planning Units"
+)
 }
 \arguments{
 \item{soln}{The \code{prioritizr} solution}
@@ -12,6 +21,16 @@ splnr_plot_Solution(soln, PlanUnits, landmass = NA)
 \item{PlanUnits}{Planning Units as an \code{sf} object}
 
 \item{landmass}{An \code{sf} object of land polygon}
+
+\item{colorVals}{A \code{list} object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.}
+
+\item{colorPUs}{A color value for the outline of planning units.}
+
+\item{showLegend}{A logical command on whether to show the legend of the solution (Default: TRUE).}
+
+\item{plotTitle}{A character value for the title of the plot. Can be empty ("").}
+
+\item{legendTitle}{A character value for the title of the legend. Can be empty ("").}
 }
 \value{
 A ggplot object of the plot
@@ -20,6 +39,5 @@ A ggplot object of the plot
 Plot prioritizr solution
 }
 \examples{
-dat_soln \%>\%
-    splnr_plot_Solution(dat_soln)
+(splnr_plot_Solution(dat_soln, dat_PUs))
 }

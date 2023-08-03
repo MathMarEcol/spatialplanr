@@ -4,12 +4,30 @@
 \alias{splnr_plot_featureNo}
 \title{Plot number of features}
 \usage{
-splnr_plot_featureNo(df, landmass = NA)
+splnr_plot_featureNo(
+  df,
+  landmass = NA,
+  colorPUs = "grey80",
+  showLegend = TRUE,
+  paletteName = "YlGnBu",
+  plotTitle = "Number of Features",
+  legendTitle = "Features"
+)
 }
 \arguments{
 \item{df}{An \code{sf} object of features}
 
 \item{landmass}{An \code{sf} object of land polygon}
+
+\item{colorPUs}{A color value for the outline of planning units.}
+
+\item{showLegend}{A logical command on whether to show the legend of the solution (Default: TRUE).}
+
+\item{paletteName}{A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.}
+
+\item{plotTitle}{A character value for the title of the plot. Can be empty ("").}
+
+\item{legendTitle}{A character value for the title of the legend. Can be empty ("").}
 }
 \value{
 A ggplot object of the plot
@@ -18,5 +36,5 @@ A ggplot object of the plot
 Plot number of features
 }
 \examples{
-splnr_plot_featureNo(dat_species_bin)
+(splnr_plot_featureNo(dat_species_bin))
 }

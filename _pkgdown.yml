@@ -42,3 +42,13 @@ reference:
   - dat_soln2
   - dat_species_bin
   - dat_species_prob
+  - Category_vec
+  - Category_vec2
+  - IUCN_IA_Targets
+  - MPAsCoralSea
+  - dat_mpas
+  - dat_problem
+  - dat_species_bin2
+  - spDataFiltered
+  - splnr_prepKappaCorrData
+  - splnr_prepTargetData

@@ -20,8 +20,9 @@ splnr_get_TargetsIA <- function(df, target_min, target_max){
   total_PU_area <- nrow(df) * PU_area_km2 # Total area of the study region
 
   feature_area <- df %>%
-    dplyr::select(-.data$cellID) %>%
+    dplyr::select(-"cellID") %>%
     sf::st_drop_geometry() %>%
+    dplyr::mutate(dplyr::across(dplyr::everything(), ~tidyr::replace_na(.x, 0))) %>%
     dplyr::summarise(dplyr::across(dplyr::everything(), ~ sum(., is.na(.), 0))) %>%
     tidyr::pivot_longer(dplyr::everything(), names_to = "Species", values_to = "Area_km2") %>%
     dplyr::mutate(Species = stringr::str_replace_all(.data$Species, pattern = "_", replacement = " "),

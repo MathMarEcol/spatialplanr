@@ -4,16 +4,37 @@
 \alias{splnr_plot_MPAs}
 \title{Plot MPAs}
 \usage{
-splnr_plot_MPAs(df, landmass)
+splnr_plot_MPAs(
+  df,
+  landmass = NA,
+  colorVals = c(`TRUE` = "blue", `FALSE` = "white"),
+  colorPUs = "grey80",
+  showLegend = TRUE,
+  plotTitle = "Locked In Areas",
+  legendTitle = ""
+)
 }
 \arguments{
 \item{df}{An \code{sf} object of marine protected areas}
 
 \item{landmass}{An \code{sf} object of land polygon}
+
+\item{colorVals}{A \code{list} object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.}
+
+\item{colorPUs}{A color value for the outline of planning units.}
+
+\item{showLegend}{A logical command on whether to show the legend of the solution (Default: TRUE).}
+
+\item{plotTitle}{A character value for the title of the plot. Can be empty ("").}
+
+\item{legendTitle}{A character value for the title of the legend. Can be empty ("").}
 }
 \value{
 A ggplot object of the plot
 }
 \description{
 Plot MPAs
+}
+\examples{
+(splnr_plot_MPAs(dat_mpas))
 }

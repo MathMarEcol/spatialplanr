@@ -4,7 +4,14 @@
 \alias{splnr_plot_comparison}
 \title{Plot solution comparison}
 \usage{
-splnr_plot_comparison(soln1, soln2, landmass = NA)
+splnr_plot_comparison(
+  soln1,
+  soln2,
+  landmass = NA,
+  PlanUnits = NA,
+  colorPUs = "grey80",
+  legendTitle = "Scenario 2 compared to Scenario 1:"
+)
 }
 \arguments{
 \item{soln1}{The first \code{prioritizr} solution}
@@ -12,6 +19,12 @@ splnr_plot_comparison(soln1, soln2, landmass = NA)
 \item{soln2}{The second \code{prioritizr} solution}
 
 \item{landmass}{An \code{sf} object of land polygon}
+
+\item{PlanUnits}{Planning Units as an \code{sf} object}
+
+\item{colorPUs}{A color value for the outline of planning units.}
+
+\item{legendTitle}{A character value for the title of the legend. Can be empty ("").}
 }
 \value{
 A ggplot object of the plot
@@ -20,5 +33,5 @@ A ggplot object of the plot
 Plot solution comparison
 }
 \examples{
-splnr_plot_comparison(dat_soln, dat_soln2)
+(splnr_plot_comparison(dat_soln, dat_soln2))
 }

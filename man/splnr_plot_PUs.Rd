@@ -17,3 +17,6 @@ A ggplot object of the plot
 \description{
 Plot Planning Units
 }
+\examples{
+(splnr_plot_PUs(dat_PUs))
+}
