@@ -56,7 +56,4 @@ Imports:
     tidyselect,
     viridis,
     wdpar
-Remotes:
-    jaseeverett/rnaturalearth,
-    jaseeverett/rnaturalearthdata
 Config/testthat/edition: 3
