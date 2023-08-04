@@ -12,7 +12,7 @@
 library(spatialplanr)
 
 Shape <- "Hexagon" # "Shape of PUs
-PU_size <- 1000000 # km2
+# PU_size <- 100000 # km2
 # cCRS <- "ESRI:54009" # Mollweide
 # cCRS <- "ESRI:54030" # Robinson
 cCRS <- "EPSG:4326"
@@ -59,7 +59,7 @@ ggplot2::ggplot() + ggplot2::geom_sf(data = landmass) + ggplot2::geom_sf(data = 
 
 PUs <- sf::st_make_grid(Bndry,
                         square = FALSE,
-                        cellsize = c(5, 5),
+                        cellsize = c(2, 2),
                         what = "polygons") %>%
   sf::st_sf() %>%
   sf::st_intersection(Bndry) %>%

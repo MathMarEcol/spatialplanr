@@ -31,13 +31,15 @@ Plot selection frequency of a planning unit in an array of prioritisations
 }
 \examples{
 \dontrun{
+# create conservation problem that contains a portfolio of solutions
 dat_soln_portfolio <- dat_problem \%>\%
-  prioritizr::add_top_portfolio(number_solutions = 5) \%>\% #create conservation problem that contains a portfolio of solutions
+  prioritizr::add_top_portfolio(number_solutions = 5) \%>\%
   prioritizr:::solve.ConservationProblem()
 
 selFreq <- dat_soln_portfolio \%>\%  # calculate selection frequency
 sf::st_drop_geometry() \%>\%
-dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(., dplyr::starts_with("solution_"))))) \%>\%
+dplyr::mutate(selFreq = as.factor(rowSums(
+                  dplyr::select(., dplyr::starts_with("solution_"))))) \%>\%
 sf::st_as_sf(geometry = dat_soln_portfolio$geometry) \%>\%
 dplyr::select(selFreq)
 

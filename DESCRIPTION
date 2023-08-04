@@ -45,7 +45,6 @@ Imports:
     rappdirs,
     rlang,
     rnaturalearth,
-    rnaturalearthdata,
     rredlist,
     scales,
     sf,

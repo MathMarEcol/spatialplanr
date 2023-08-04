@@ -23,12 +23,18 @@ Plot how well targets are met
 }
 \examples{
 #not including incidental species coverage
-dfNInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin,
-                          Category = Category_vec, solnCol = "solution_1")
+dfNInc <- splnr_prepTargetData(soln = dat_soln,
+                                pDat = dat_problem,
+                                allDat = dat_species_bin,
+                                Category = Category_vec,
+                                solnCol = "solution_1")
 
 (splnr_plot_targets(dfNInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
 #including incidental species coverage
-dfInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin2,
-                         Category = Category_vec2, solnCol = "solution_1")
+dfInc <- splnr_prepTargetData(soln = dat_soln,
+                              pDat = dat_problem,
+                              allDat = dat_species_bin2,
+                              Category = Category_vec2,
+                              solnCol = "solution_1")
 (splnr_plot_targets(dfInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
 }

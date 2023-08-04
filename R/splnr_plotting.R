@@ -296,13 +296,19 @@ splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
 #'
 #' @examples
 #' #not including incidental species coverage
-#' dfNInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin,
-#'                           Category = Category_vec, solnCol = "solution_1")
+#' dfNInc <- splnr_prepTargetData(soln = dat_soln,
+#'                                 pDat = dat_problem,
+#'                                 allDat = dat_species_bin,
+#'                                 Category = Category_vec,
+#'                                 solnCol = "solution_1")
 #'
 #' (splnr_plot_targets(dfNInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
 #' #including incidental species coverage
-#' dfInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin2,
-#'                          Category = Category_vec2, solnCol = "solution_1")
+#' dfInc <- splnr_prepTargetData(soln = dat_soln,
+#'                               pDat = dat_problem,
+#'                               allDat = dat_species_bin2,
+#'                               Category = Category_vec2,
+#'                               solnCol = "solution_1")
 #' (splnr_plot_targets(dfInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
 splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
                                plotTitle = "") {
@@ -360,20 +366,24 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
 #' @export
 #'
 #' @examples
-#' s1 <- dat_soln %>% #DISCLAIMER: THIS SOLUTION IS NOT ACTUALLY RUN WITH THESE TARGETS YET
+#' # DISCLAIMER: THIS SOLUTION IS NOT ACTUALLY RUN WITH THESE TARGETS YET
+#' s1 <- dat_soln %>%
 #'   tibble::as_tibble()
 #'
 #' p1 <- dat_problem
 #'
-#' df_rep_imp <- prioritizr::eval_feature_representation_summary(p1, s1[, 'solution_1'])%>%
+#' df_rep_imp <- prioritizr::eval_feature_representation_summary(p1,
+#'                                                   s1[, 'solution_1'])%>%
 #'   dplyr::select(feature, relative_held) %>%
 #'   dplyr::mutate(relative_held = relative_held*100)
 #'
 #' imp_layers <- c("Spp1", "Spp3")
 #'
 #' target <- data.frame(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5")) %>%
-#'   dplyr::mutate(class = dplyr::if_else(.data$feature %in% imp_layers, "important", "representative")) %>%
-#'   dplyr::mutate(target = dplyr::if_else(class == "important", 50/100, 30/100))
+#'   dplyr::mutate(class = dplyr::if_else(.data$feature %in% imp_layers,
+#'                           "important", "representative")) %>%
+#'   dplyr::mutate(target = dplyr::if_else(class == "important",
+#'                                             50/100, 30/100))
 #'
 #' df <- merge(df_rep_imp, target) %>%
 #'   dplyr::select(-target) %>%
@@ -385,9 +395,12 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
 #'             'representative' = 'darkred')
 #' legends <- c('Important', 'Representative')
 #'
-#' (splnr_plot_circBplot(df, legend_list = legends, legend_color = colors, impTarget = 50, repTarget = 30))
-splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets = TRUE,
-                              impTarget = NA, repTarget = NA, colTarget = "red") {
+#' (splnr_plot_circBplot(df, legend_list = legends,
+#'                           legend_color = colors,
+#'                           impTarget = 50, repTarget = 30))
+splnr_plot_circBplot <- function(df, legend_color, legend_list,
+                                 indicateTargets = TRUE, impTarget = NA,
+                                 repTarget = NA, colTarget = "red") {
 
   # Adding rows to each group, creating space between the groups
   groups <- unique(df$group)
@@ -637,13 +650,15 @@ splnr_plot_featureNo <- function(df, landmass = NA,
 #' @importFrom rlang .data
 #' @examples
 #' \dontrun{
+#' # create conservation problem that contains a portfolio of solutions
 #' dat_soln_portfolio <- dat_problem %>%
-#'   prioritizr::add_top_portfolio(number_solutions = 5) %>% #create conservation problem that contains a portfolio of solutions
+#'   prioritizr::add_top_portfolio(number_solutions = 5) %>%
 #'   prioritizr:::solve.ConservationProblem()
 #'
 #' selFreq <- dat_soln_portfolio %>%  # calculate selection frequency
 #' sf::st_drop_geometry() %>%
-#' dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(., dplyr::starts_with("solution_"))))) %>%
+#' dplyr::mutate(selFreq = as.factor(rowSums(
+#'                   dplyr::select(., dplyr::starts_with("solution_"))))) %>%
 #' sf::st_as_sf(geometry = dat_soln_portfolio$geometry) %>%
 #' dplyr::select(selFreq)
 #'
