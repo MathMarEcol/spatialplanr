@@ -37,8 +37,10 @@ splnr_create_polygon <- function(x, cCRS = "EPSG:4326"){
 #' @importFrom rlang .data
 #' @importFrom rlang :=
 #' @examples
+#' \dontrun{
 #' df <- dat_species_prob %>%
 #'     splnr_replace_NAs("Spp2")
+#'     }
 splnr_replace_NAs <- function(df, vari){
   if (sum(is.na(dplyr::pull(df, !!rlang::sym(vari)))) > 0){ # Check if there are NAs
 
@@ -95,9 +97,11 @@ splnr_match_names <- function(dat, nam){
 #' @importFrom rlang :=
 #'
 #' @examples
+#' \dontrun{
 #' df <- dat_species_prob %>%
 #'     dplyr::mutate(Spp1 = Spp1 * 100) %>%
 #'     splnr_scale_01(col_name = "Spp1")
+#'     }
 splnr_scale_01 <- function(dat, col_name){
 
   mx  <- max(dplyr::pull(dat, !!rlang::sym(col_name)), na.rm = TRUE) # Get max probability
@@ -219,8 +223,8 @@ splnr_convert2Pacific <- function(df,
 #' @export
 #'
 #' @examples
-#' df <- dat_species_prob %>%
-#'       splnr_arrangeFeatures()
+# df <- dat_species_prob %>%
+#       splnr_arrangeFeatures()
 splnr_arrangeFeatures <- function(df){
 
   # Sort rows to ensure all features are in the same order.
@@ -251,6 +255,7 @@ splnr_arrangeFeatures <- function(df){
 #' @importFrom rlang .data
 #'
 #' @examples
+#' \dontrun{
 #' #not including incidental species coverage
 #' dfNInc <- splnr_prepTargetData(soln = dat_soln,
 #'                                pDat = dat_problem,
@@ -266,7 +271,7 @@ splnr_arrangeFeatures <- function(df){
 #'                               Dict = NA,
 #'                               Category = Category_vec2,
 #'                               solnCol = "solution_1")
-#'
+#'}
 splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA, Dict = NA, dataCol = "Abbrev",
                                  climsmart = FALSE, solnCol = "solution_1"){
 
@@ -383,7 +388,7 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA, Dict = NA, d
 #' @importFrom rlang .data
 #'
 #' @examples
-#' corrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
+# corrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
 splnr_prepKappaCorrData <- function(sol, name_sol) {
 
   s_list <- lapply(seq_along(sol), function(x) {

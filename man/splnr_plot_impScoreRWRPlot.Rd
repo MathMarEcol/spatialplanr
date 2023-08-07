@@ -30,5 +30,7 @@ A ggplot object of the plot
 Plot Rarity weighted richness importance score (can be used with minimum shortfall OBJECTIVE FUNCTION)
 }
 \examples{
+\dontrun{
 (splnr_plot_impScoreRWRPlot(dat_soln, dat_problem))
+}
 }

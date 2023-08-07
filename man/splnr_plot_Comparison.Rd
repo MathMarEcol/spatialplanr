@@ -33,5 +33,7 @@ A ggplot object of the plot
 Plot solution comparison
 }
 \examples{
+\dontrun{
 (splnr_plot_comparison(dat_soln, dat_soln2))
+}
 }

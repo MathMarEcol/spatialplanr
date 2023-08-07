@@ -11,8 +11,10 @@
 #'
 #' @importFrom rlang .data
 #' @examples
+#' \dontrun{
 #' targets <- dat_species_prob %>%
 #'    splnr_get_TargetsIA(target_min = 0.3, target_max = 0.8)
+#'    }
 splnr_get_TargetsIA <- function(df, target_min, target_max){
 
   PU_area_km2 <- as.numeric(sf::st_area(df[1,1])/1e+06) # Area of each planning unit

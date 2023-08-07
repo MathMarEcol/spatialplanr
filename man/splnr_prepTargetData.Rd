@@ -39,6 +39,7 @@ splnr_prepTargetData(
 Prepare data to plot how well targets are met
 }
 \examples{
+\dontrun{
 #not including incidental species coverage
 dfNInc <- splnr_prepTargetData(soln = dat_soln,
                                pDat = dat_problem,
@@ -54,5 +55,5 @@ dfInc <- splnr_prepTargetData(soln = dat_soln,
                               Dict = NA,
                               Category = Category_vec2,
                               solnCol = "solution_1")
-
+}
 }

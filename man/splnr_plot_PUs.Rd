@@ -18,5 +18,7 @@ A ggplot object of the plot
 Plot Planning Units
 }
 \examples{
+ \dontrun{
 (splnr_plot_PUs(dat_PUs))
+}
 }

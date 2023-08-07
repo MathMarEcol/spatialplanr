@@ -5,14 +5,12 @@
 \alias{dat_region}
 \title{Regionalisation}
 \format{
-\subsection{\code{dat_region}}{
-
+\code{dat_region}
 A data frame with XXXX rows and XXX columns:
 \describe{
 \item{cellID}{ID number for each row (or cell) of the dataset}
 \item{geometry}{sf geometry column}
 ...
-}
 }
 }
 \source{

@@ -36,5 +36,7 @@ A ggplot object of the plot
 Plot number of features
 }
 \examples{
+\dontrun{
 (splnr_plot_featureNo(dat_species_bin))
+}
 }

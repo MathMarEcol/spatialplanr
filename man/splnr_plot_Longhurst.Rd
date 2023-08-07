@@ -17,3 +17,8 @@ A ggplot object of the plot
 \description{
 Plot Longhurst Provinces
 }
+\examples{
+\dontrun{
+df <- splnr_plot_longhurst(PlanUnits, landmass)
+}
+}

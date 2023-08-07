@@ -16,6 +16,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' df <- splnr_convert_regionalisation(dat, PUs){
+#' }
 splnr_convert_regionalisation <- function(dat, PUs, cat_name = NA, col_name = NA){
 
   if (stringr::str_detect(class(dat)[1], "SpatRaster") == TRUE) { # Rasters

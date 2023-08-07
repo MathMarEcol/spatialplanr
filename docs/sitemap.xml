@@ -10,12 +10,6 @@
     <loc>https://mathmarecol.github.io/spatialplanr/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/articles/spatialplanr.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/authors.html</loc>
   </url>
   <url>
@@ -28,12 +22,6 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/Category_vec2.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/IUCN_IA_Targets.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/MPAsCoralSea.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_PUs.html</loc>
   </url>
   <url>
@@ -43,16 +31,7 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_mpas.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_problem.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_region.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_soln.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_soln2.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_species_bin.html</loc>
@@ -68,9 +47,6 @@
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/spDataFiltered.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_apply_cutoffs.html</loc>
