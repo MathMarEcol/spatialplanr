@@ -21,7 +21,6 @@ jobs:
           - {os: ubuntu-20.04, r: 'release', pkgs: 'all'}
 
     env:
-      _SP_EVOLUTION_STATUS_: 0
       _R_REMOTES_NO_ERRORS_FROM_WARNINGS_: true
       _R_CHECK_FORCE_SUGGESTS_: false
       _R_CHECK_TIMINGS_: 10
@@ -85,6 +84,10 @@ jobs:
         if: matrix.config.pkgs == 'depends only'
         run: |
           echo "_R_CHECK_DEPENDS_ONLY_=true" >> $GITHUB_ENV
+
+      - name: Set environmental variables for package checks sp
+        run: |
+          echo "_SP_EVOLUTION_STATUS_=0" >>" $GITHUB_ENV
 
       - name: Check
         run: |
