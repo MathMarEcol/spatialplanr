@@ -21,6 +21,7 @@ jobs:
           - {os: ubuntu-20.04, r: 'release', pkgs: 'all'}
 
     env:
+      _SP_EVOLUTION_STATUS_: 0
       _R_REMOTES_NO_ERRORS_FROM_WARNINGS_: true
       _R_CHECK_FORCE_SUGGESTS_: false
       _R_CHECK_TIMINGS_: 10
