@@ -5,14 +5,12 @@
 \alias{Category_vec2}
 \title{Category vector}
 \format{
-\subsection{\code{Category_vec2}}{
-
+\code{Category_vec2}
 A data frame with XXXX rows and XXX columns:
 \describe{
 \item{feature}{all features available for spatial prioritisation}
 \item{category}{the categories of all features}
 ...
-}
 }
 }
 \source{

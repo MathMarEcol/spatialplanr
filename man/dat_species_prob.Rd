@@ -5,14 +5,12 @@
 \alias{dat_species_prob}
 \title{Probability Species Data}
 \format{
-\subsection{\code{dat_species_prob}}{
-
+\code{dat_species_prob}
 A data frame with XXXX rows and XXX columns:
 \describe{
 \item{cellID}{ID number for each row (or cell) of the dataset}
 \item{geometry}{sf geometry column}
 ...
-}
 }
 }
 \source{

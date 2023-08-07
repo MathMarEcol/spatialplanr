@@ -15,7 +15,3 @@ A sorted sf object with the additionl cellID column
 \description{
 Ensure all features are in the same order.
 }
-\examples{
-df <- dat_species_prob \%>\%
-      splnr_arrangeFeatures()
-}

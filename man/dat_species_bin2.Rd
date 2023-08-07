@@ -5,14 +5,12 @@
 \alias{dat_species_bin2}
 \title{Binary Species Data 2}
 \format{
-\subsection{\code{dat_species_bin2}}{
-
+\code{dat_species_bin2}
 A data frame with XXXX rows and XXX columns:
 \describe{
 \item{cellID}{ID number for each row (or cell) of the dataset}
 \item{geometry}{sf geometry column}
 ...
-}
 }
 }
 \source{

@@ -30,7 +30,9 @@ A ggplot object of the plot
 Plot cost
 }
 \examples{
+\dontrun{
 dat_cost <- dat_soln \%>\%
               dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
 (splnr_plot_cost(dat_cost))
+}
 }

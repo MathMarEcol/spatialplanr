@@ -39,5 +39,7 @@ A ggplot object of the plot
 Plot prioritizr solution
 }
 \examples{
+\dontrun{
 (splnr_plot_Solution(dat_soln, dat_PUs))
+}
 }

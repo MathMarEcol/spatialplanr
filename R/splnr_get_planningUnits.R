@@ -24,12 +24,14 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' dat_bndry_moll <- dat_bndry %>% sf::st_transform("ESRI:54009")
 #' landmass <- rnaturalearth::ne_countries(returnclass = "sf") %>% sf::st_transform("ESRI:54009")
 #' PUs <- splnr_get_PlanningUnits(dat_bndry_moll, landmass, CellArea = 10000, Shape = "hexagon")
 #' ggplot2::ggplot() +
 #'   ggplot2::geom_sf(data = dat_bndry_moll, colour = "blue", fill = NA) +
 #'   ggplot2::geom_sf(data = PUs, colour = "black", fill = NA)
+#'   }
 splnr_get_PlanningUnits <- function(Bndry,
                                     InnerB,
                                     CellArea = 1000,

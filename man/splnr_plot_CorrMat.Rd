@@ -30,6 +30,8 @@ A ggplot object of the plot
 Plot correlation matrices
 }
 \examples{
+\dontrun{
 CorrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
 (splnr_plot_CorrMat(CorrMat, AxisLabels = c("Solution 1", "Solution 2")))
+}
 }

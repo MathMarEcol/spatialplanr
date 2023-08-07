@@ -1,6 +1,9 @@
 ## code to prepare `DATASET` dataset goes here
+# options("sp_evolution_status"=0)
 
 library(magrittr)
+suppressPackageStartupMessages(library(prioritizr))
+
 set.seed(1222)
 
 # I need a dataset I can use in the examples to demonstrate
@@ -23,6 +26,7 @@ dat_bndry <- dplyr::tibble(x = 100, y = seq(-50, 0, by = 1)) %>%
 dat_PUs <- sf::st_make_grid(dat_bndry, cellsize = 2) %>%
   sf::st_sf() %>%
   dplyr::mutate(cellID = dplyr::row_number()) # Add a cell ID reference
+
 
 # Create some regionalisations
 dat_region <- dat_PUs %>%
@@ -68,28 +72,28 @@ dat_mpas <- dat_PUs %>%
                     (cellID > 93 & cellID < 98), 1,  0))
 
 # Add a problem object
-dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+dat_problem <- problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
                                       features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
                                       cost_column = "Cost") %>%
-  prioritizr::add_min_set_objective() %>%
-  prioritizr::add_relative_targets(0.3) %>%
-  prioritizr::add_binary_decisions() %>%
-  prioritizr::add_default_solver(verbose = FALSE)
+  add_min_set_objective() %>%
+  add_relative_targets(0.3) %>%
+  add_binary_decisions() %>%
+  add_default_solver(verbose = FALSE)
 
 # Add a solution object
 dat_soln <- dat_problem %>%
-  prioritizr:::solve.ConservationProblem()
+  solve.ConservationProblem()
 
 
 # Add a 2nd solution object
-dat_soln2 <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+dat_soln2 <- problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
                                 features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
                                 cost_column = "Cost") %>%
-  prioritizr::add_min_set_objective() %>%
-  prioritizr::add_relative_targets(0.5) %>%
-  prioritizr::add_binary_decisions() %>%
-  prioritizr::add_default_solver(verbose = FALSE) %>%
-  prioritizr:::solve.ConservationProblem()
+  add_min_set_objective() %>%
+  add_relative_targets(0.5) %>%
+  add_binary_decisions() %>%
+  add_default_solver(verbose = FALSE) %>%
+  solve.ConservationProblem()
 
 # Add a category tibble for the features
 Category_vec <- tibble::tibble(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
@@ -101,4 +105,16 @@ Category_vec2 <- tibble::tibble(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp
 
 
 # Save the data
-usethis::use_data(dat_bndry, dat_PUs, dat_region, dat_species_prob, dat_species_bin, dat_species_bin2, dat_mpas, dat_problem, dat_soln, dat_soln2, Category_vec, Category_vec2, overwrite = TRUE)
+usethis::use_data(dat_bndry,
+                  dat_PUs,
+                  dat_region,
+                  dat_species_prob,
+                  dat_species_bin,
+                  dat_species_bin2,
+                  dat_mpas,
+                  # dat_problem,
+                  # dat_soln,
+                  # dat_soln2,
+                  Category_vec,
+                  Category_vec2,
+                  overwrite = TRUE)

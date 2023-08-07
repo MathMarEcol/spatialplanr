@@ -10,7 +10,9 @@
 #' @importFrom rlang .data
 #'
 #' @examples
+#' \dontrun{
 #' df <- splnr_apply_cutoffs(dat_species_prob, Cutoffs = 0.5)
+#' }
 splnr_apply_cutoffs <- function(features, Cutoffs, inverse = FALSE){
 
 

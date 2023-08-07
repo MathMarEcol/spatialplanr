@@ -22,6 +22,7 @@ A ggplot object of the plot
 Plot how well targets are met
 }
 \examples{
+\dontrun{
 #not including incidental species coverage
 dfNInc <- splnr_prepTargetData(soln = dat_soln,
                                 pDat = dat_problem,
@@ -37,4 +38,5 @@ dfInc <- splnr_prepTargetData(soln = dat_soln,
                               Category = Category_vec2,
                               solnCol = "solution_1")
 (splnr_plot_targets(dfInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
+}
 }

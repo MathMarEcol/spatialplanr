@@ -30,5 +30,7 @@ A ggplot object of the plot
 Plot Ferrier importance score (ONLY WORKS FOR MINIMUM SET OBJECTIVE FUNCTION)
 }
 \examples{
+\dontrun{
 (splnr_plot_impScoreFerrierPlot(dat_soln, dat_problem))
+}
 }

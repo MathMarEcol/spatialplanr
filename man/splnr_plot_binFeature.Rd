@@ -42,5 +42,7 @@ A ggplot object of the plot
 Plot binary feature
 }
 \examples{
+\dontrun{
 (splnr_plot_binFeature(dat_species_bin,  dat_species_bin$Spp1, dat_PUs))
+}
 }
