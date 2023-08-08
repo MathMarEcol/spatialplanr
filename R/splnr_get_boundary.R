@@ -14,9 +14,8 @@
 splnr_get_Boundary <- function(Limits,
                                Type,
                                cCRS = "ESRI:54009" # Mollweide
-){
-
-  if (is.numeric(Limits)){
+) {
+  if (is.numeric(Limits)) {
     Bndry <- dplyr::tibble(x = seq(Limits["xmin"], Limits["xmax"], by = 1), y = Limits["ymin"]) %>%
       dplyr::bind_rows(dplyr::tibble(x = Limits["xmax"], y = seq(Limits["ymin"], Limits["ymax"], by = 1))) %>%
       dplyr::bind_rows(dplyr::tibble(x = seq(Limits["xmax"], Limits["xmin"], by = -1), y = Limits["ymax"])) %>%
@@ -26,7 +25,7 @@ splnr_get_Boundary <- function(Limits,
     return(Bndry)
   }
 
-  if (Limits == "Global"){
+  if (Limits == "Global") {
     Bndry <- dplyr::tibble(x = seq(-180, 180, by = 1), y = -90) %>%
       dplyr::bind_rows(dplyr::tibble(x = 180, y = seq(-90, 90, by = 1))) %>%
       dplyr::bind_rows(dplyr::tibble(x = seq(180, -180, by = -1), y = 90)) %>%
@@ -37,7 +36,7 @@ splnr_get_Boundary <- function(Limits,
   }
 
 
-## TODO Disable EEZ until offshoredatr publicly online.
+  ## TODO Disable EEZ until offshoredatr publicly online.
   # if (Type == "EEZ"){
   #   Bndry <- offshoredatr::get_area(area_name = Limits) %>%
   #     dplyr::filter(.data$territory1 %in% Limits) %>%
@@ -46,15 +45,16 @@ splnr_get_Boundary <- function(Limits,
   #   return(Bndry)
   # }
 
-  if (Type == "Oceans" | Type == "Ocean"){
-    Bndry <- rnaturalearth::ne_download(scale = "large",
-                                        category = "physical",
-                                        type = "geography_marine_polys",
-                                        returnclass = "sf") %>%
+  if (Type == "Oceans" | Type == "Ocean") {
+    Bndry <- rnaturalearth::ne_download(
+      scale = "large",
+      category = "physical",
+      type = "geography_marine_polys",
+      returnclass = "sf"
+    ) %>%
       dplyr::filter(.data$name %in% Limits) %>%
       sf::st_union() %>%
       sf::st_transform(cCRS)
     return(Bndry)
   }
-
 }

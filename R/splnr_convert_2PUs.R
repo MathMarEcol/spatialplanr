@@ -1,4 +1,3 @@
-
 # 1) Input can be string (file) or data.
 # a) If a file, we check the extension and load that way and then go to step b.
 # b) If data, we check the format and process that way (skipping Step a)
@@ -31,12 +30,11 @@
 #' \dontrun{
 #' df <- splnr_convert_2PUs(dat, PlanUnits)
 #' }
-splnr_convert_2PUs <- function(dat, PlanUnits){
-
+splnr_convert_2PUs <- function(dat, PlanUnits) {
   ## First deal with whether the input is a file or a dataset
 
   ## LOAD FILES IF NEEDED
-  if(class(dat)[1] == "character"){ # If a file, we need to load the data
+  if (class(dat)[1] == "character") { # If a file, we need to load the data
 
     ext <- fs::path_ext(dat)
     nm <- fs::path_ext_remove(basename(dat)) # Strip out the junk and get the name
@@ -50,23 +48,23 @@ splnr_convert_2PUs <- function(dat, PlanUnits){
   }
 
   ## PROCESS DATA
-  if (stringr::str_detect(class(dat)[1], "SpatRaster") == TRUE){ # Is it a raster or a vector dataset
+  if (stringr::str_detect(class(dat)[1], "SpatRaster") == TRUE) { # Is it a raster or a vector dataset
 
-    if (stringr::str_detect(names(dat), "layer")){ # Replace "layer" with better name
+    if (stringr::str_detect(names(dat), "layer")) { # Replace "layer" with better name
       names(dat) <- fs::path_ext_remove(basename(terra::sources(dat)))
     }
 
     nm <- names(dat)
 
     # Transform the data as required
-    if (terra::crs(dat) != sf::st_crs(PlanUnits)){
+    if (terra::crs(dat) != sf::st_crs(PlanUnits)) {
       dat <- dat %>%
-        terra::project(sf::st_crs(PlanUnits)[[1]])# Transform to correct CRS # project should default to NN if categorical, and bilinear if continuous
+        terra::project(sf::st_crs(PlanUnits)[[1]]) # Transform to correct CRS # project should default to NN if categorical, and bilinear if continuous
     }
 
-    if(terra::is.factor(dat)){
+    if (terra::is.factor(dat)) {
       meth <- "mode"
-    } else{
+    } else {
       meth <- "mean"
     }
 
@@ -79,13 +77,12 @@ splnr_convert_2PUs <- function(dat, PlanUnits){
 
 
     return(out)
+  } else if (stringr::str_detect(class(dat)[1], "sf") == TRUE) { # Is it a raster or a vector dataset #TODO - This doesn't make it a polygon.
 
-  } else if(stringr::str_detect(class(dat)[1], "sf") == TRUE){ # Is it a raster or a vector dataset #TODO - This doesn't make it a polygon.
-
-    nm = stringr::str_subset(colnames(dat), "geometry", negate = TRUE) # Don't return "geometry"
+    nm <- stringr::str_subset(colnames(dat), "geometry", negate = TRUE) # Don't return "geometry"
 
     # Transform the data as required
-    if (sf::st_crs(dat) != sf::st_crs(PlanUnits)){
+    if (sf::st_crs(dat) != sf::st_crs(PlanUnits)) {
       dat <- dat %>%
         sf::st_transform(sf::st_crs(PlanUnits)) %>% # Transform to correct CRS
         sf::st_make_valid() # Make valid if needed
@@ -101,10 +98,11 @@ splnr_convert_2PUs <- function(dat, PlanUnits){
 
     out <- PlanUnits %>%
       dplyr::left_join(inter, by = "cellID") %>%
-      dplyr::mutate(!!nm := tidyr::replace_na(!!rlang::sym(nm), 0),
-                    !!nm := !!rlang::sym(nm) / as.numeric(sf::st_area(PlanUnits)))
+      dplyr::mutate(
+        !!nm := tidyr::replace_na(!!rlang::sym(nm), 0),
+        !!nm := !!rlang::sym(nm) / as.numeric(sf::st_area(PlanUnits))
+      )
 
     return(out)
   }
-
 }

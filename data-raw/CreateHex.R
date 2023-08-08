@@ -38,8 +38,10 @@ xi5 <- pracma::interp1(c(40, -30), c(blx, blx), yi5, method = "linear")
 xi6 <- seq(blx, 75) # Top left
 yi6 <- pracma::interp1(c(blx, 75), c(40, 80), xi6, method = "linear")
 
-Bndry <- dplyr::tibble(x = c(xi1, xi2, xi3, xi4, xi5, xi6),
-                y = c(yi1, yi2, yi3, yi4, yi5, yi6)) %>%
+Bndry <- dplyr::tibble(
+  x = c(xi1, xi2, xi3, xi4, xi5, xi6),
+  y = c(yi1, yi2, yi3, yi4, yi5, yi6)
+) %>%
   as.matrix() %>%
   list() %>%
   sf::st_polygon() %>%
@@ -47,20 +49,24 @@ Bndry <- dplyr::tibble(x = c(xi1, xi2, xi3, xi4, xi5, xi6),
   sf::st_sf() %>%
   sf::st_make_valid()
 
-ggplot2::ggplot(data = Bndry) + ggplot2::geom_sf()
+ggplot2::ggplot(data = Bndry) +
+  ggplot2::geom_sf()
 
 landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
   sf::st_make_valid() %>%
   sf::st_intersection(Bndry) %>%
   sf::st_make_valid()
 
-ggplot2::ggplot() + ggplot2::geom_sf(data = landmass) + ggplot2::geom_sf(data = Bndry, fill = NA)
+ggplot2::ggplot() +
+  ggplot2::geom_sf(data = landmass) +
+  ggplot2::geom_sf(data = Bndry, fill = NA)
 
 
 PUs <- sf::st_make_grid(Bndry,
-                        square = FALSE,
-                        cellsize = c(2, 2),
-                        what = "polygons") %>%
+  square = FALSE,
+  cellsize = c(2, 2),
+  what = "polygons"
+) %>%
   sf::st_sf() %>%
   sf::st_intersection(Bndry) %>%
   sf::st_make_valid()
@@ -69,25 +75,26 @@ PUs <- PUs %>%
   dplyr::mutate(Prob = runif(dim(PUs)[1]))
 
 (gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = PUs, colour = "black", linewidth = 0.1, show.legend = FALSE, ggplot2::aes(fill = Prob)) +
-    ggplot2::geom_sf(data = landmass, colour = "grey30", fill = "grey50", alpha = 1, linewidth = 0.1, show.legend = FALSE) +
-    ggplot2::coord_sf(xlim = sf::st_bbox(PUs)$xlim, ylim = sf::st_bbox(PUs)$ylim) +
-    ggplot2::theme_void())
+  ggplot2::geom_sf(data = PUs, colour = "black", linewidth = 0.1, show.legend = FALSE, ggplot2::aes(fill = Prob)) +
+  ggplot2::geom_sf(data = landmass, colour = "grey30", fill = "grey50", alpha = 1, linewidth = 0.1, show.legend = FALSE) +
+  ggplot2::coord_sf(xlim = sf::st_bbox(PUs)$xlim, ylim = sf::st_bbox(PUs)$ylim) +
+  ggplot2::theme_void())
 
 
 hexSticker::sticker(gg,
-                    package = "spatialplanr",
-                    p_y = 1,
-                    p_x = 1,
-                    p_color = "grey90",
-                    p_size = 80,
-                    p_fontface = "bold",
-                    s_x = 1,
-                    s_y = 1,
-                    s_width = 2,
-                    s_height = 4,
-                    # h_fill = "#9FE2BF",
-                    h_color = "grey20",
-                    dpi = 1000,
-                    asp = 1,
-                    filename = file.path("man", "figures", "spatialplanr.png"))
+  package = "spatialplanr",
+  p_y = 1,
+  p_x = 1,
+  p_color = "grey90",
+  p_size = 80,
+  p_fontface = "bold",
+  s_x = 1,
+  s_y = 1,
+  s_width = 2,
+  s_height = 4,
+  # h_fill = "#9FE2BF",
+  h_color = "grey20",
+  dpi = 1000,
+  asp = 1,
+  filename = file.path("man", "figures", "spatialplanr.png")
+)

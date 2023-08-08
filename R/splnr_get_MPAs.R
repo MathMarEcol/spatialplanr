@@ -1,4 +1,3 @@
-
 #' Get marine parks from the WDPA.
 #'
 #' This code is a wrapper for the wonderful `wdpar` package written by Jeffrey O. Hanson. This data is then interfaced with the planning units.
@@ -20,14 +19,15 @@
 #'   ggplot2::geom_sf(data = dat, ggplot2::aes(fill = wdpa)) +
 #'   ggplot2::geom_sf(data = aust, fill = "grey50")
 splnr_get_MPAs <- function(PlanUnits,
-                              Countries,
-                              Status = c("Designated", "Established", "Inscribed"),
-                              Desig = c("National", "Regional", "International", "Not Applicable"),
-                              Category = c("Ia", "Ib", "II", "III", "IV")){
-
+                           Countries,
+                           Status = c("Designated", "Established", "Inscribed"),
+                           Desig = c("National", "Regional", "International", "Not Applicable"),
+                           Category = c("Ia", "Ib", "II", "III", "IV")) {
   wdpa_data <- Countries %>%
-    lapply(wdpar::wdpa_fetch, wait = TRUE,
-           download_dir = rappdirs::user_data_dir("wdpar")) %>%
+    lapply(wdpar::wdpa_fetch,
+      wait = TRUE,
+      download_dir = rappdirs::user_data_dir("wdpar")
+    ) %>%
     dplyr::bind_rows() %>%
     dplyr::filter(.data$MARINE > 0) %>%
     dplyr::filter(.data$IUCN_CAT %in% Category) %>% # filter category
@@ -41,4 +41,3 @@ splnr_get_MPAs <- function(PlanUnits,
 
   return(wdpa_data)
 }
-

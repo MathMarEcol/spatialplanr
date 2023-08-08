@@ -32,18 +32,20 @@ dat_PUs <- sf::st_make_grid(dat_bndry, cellsize = 2) %>%
 dat_region <- dat_PUs %>%
   sf::st_sf() %>%
   dplyr::mutate(Region = "Region1")
-dat_region$Region[30:65] = "Region2"
-dat_region$Region[66:80] = "Region3"
+dat_region$Region[30:65] <- "Region2"
+dat_region$Region[66:80] <- "Region3"
 
 
 # Add some species probabilities
 dat_species_prob <- dat_PUs %>%
   sf::st_sf() %>%
-  dplyr::mutate(Spp1 = runif(n = dim(.)[[1]]),
-                Spp2 = runif(n = dim(.)[[1]]),
-                Spp3 = runif(n = dim(.)[[1]]),
-                Spp4 = runif(n = dim(.)[[1]]),
-                Spp5 = runif(n = dim(.)[[1]]))
+  dplyr::mutate(
+    Spp1 = runif(n = dim(.)[[1]]),
+    Spp2 = runif(n = dim(.)[[1]]),
+    Spp3 = runif(n = dim(.)[[1]]),
+    Spp4 = runif(n = dim(.)[[1]]),
+    Spp5 = runif(n = dim(.)[[1]])
+  )
 
 
 # Convert the probabilities to binary data
@@ -53,13 +55,17 @@ col_name <- dat_species_prob %>%
 
 dat_species_bin <- dat_species_prob %>%
   dplyr::as_tibble() %>%
-  dplyr::mutate(dplyr::across(-dplyr::any_of(c("cellID", "geometry")), # Apply to all columns except geometry and cellID
-                              ~ dplyr::case_when(. >= 0.5 ~ 1,
-                                                 . < 0.5 ~ 0,
-                                                 is.na(.data) ~ 0))) %>%
+  dplyr::mutate(dplyr::across(
+    -dplyr::any_of(c("cellID", "geometry")), # Apply to all columns except geometry and cellID
+    ~ dplyr::case_when(
+      . >= 0.5 ~ 1,
+      . < 0.5 ~ 0,
+      is.na(.data) ~ 0
+    )
+  )) %>%
   sf::st_as_sf()
 
-#create second species_bin data set with unused species
+# create second species_bin data set with unused species
 dat_species_bin2 <- dat_species_bin %>%
   dplyr::mutate(Spp6 = 1)
 
@@ -68,13 +74,14 @@ dat_species_bin2 <- dat_species_bin %>%
 dat_mpas <- dat_PUs %>%
   sf::st_sf() %>%
   dplyr::mutate(wdpa = ifelse((cellID > 33 & cellID < 38) |
-                    (cellID > 63 & cellID < 68)|
-                    (cellID > 93 & cellID < 98), 1,  0))
+    (cellID > 63 & cellID < 68) |
+    (cellID > 93 & cellID < 98), 1, 0))
 
 # Add a problem object
 dat_problem <- problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-                                      features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-                                      cost_column = "Cost") %>%
+  features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+  cost_column = "Cost"
+) %>%
   add_min_set_objective() %>%
   add_relative_targets(0.3) %>%
   add_binary_decisions() %>%
@@ -87,8 +94,9 @@ dat_soln <- dat_problem %>%
 
 # Add a 2nd solution object
 dat_soln2 <- problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-                                features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-                                cost_column = "Cost") %>%
+  features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+  cost_column = "Cost"
+) %>%
   add_min_set_objective() %>%
   add_relative_targets(0.5) %>%
   add_binary_decisions() %>%
@@ -96,25 +104,30 @@ dat_soln2 <- problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[
   solve.ConservationProblem()
 
 # Add a category tibble for the features
-Category_vec <- tibble::tibble(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-                               category = c("Group1", "Group1", "Group1", "Group2", "Group2"))
+Category_vec <- tibble::tibble(
+  feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+  category = c("Group1", "Group1", "Group1", "Group2", "Group2")
+)
 
 # Add a second category tibble for the features
-Category_vec2 <- tibble::tibble(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5", "Spp6"),
-                               category = c("Group1", "Group1", "Group1", "Group2", "Group2", "Group3"))
+Category_vec2 <- tibble::tibble(
+  feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5", "Spp6"),
+  category = c("Group1", "Group1", "Group1", "Group2", "Group2", "Group3")
+)
 
 
 # Save the data
 usethis::use_data(dat_bndry,
-                  dat_PUs,
-                  dat_region,
-                  dat_species_prob,
-                  dat_species_bin,
-                  dat_species_bin2,
-                  dat_mpas,
-                  dat_problem,
-                  dat_soln,
-                  dat_soln2,
-                  Category_vec,
-                  Category_vec2,
-                  overwrite = TRUE)
+  dat_PUs,
+  dat_region,
+  dat_species_prob,
+  dat_species_bin,
+  dat_species_bin2,
+  dat_mpas,
+  dat_problem,
+  dat_soln,
+  dat_soln2,
+  Category_vec,
+  Category_vec2,
+  overwrite = TRUE
+)

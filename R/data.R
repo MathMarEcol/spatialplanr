@@ -179,7 +179,7 @@
 #   ...
 # }
 # @source Aquamaps.org
-#"spDataFiltered"
+# "spDataFiltered"
 
 
 # -------------------------------------------------------------------------
@@ -301,5 +301,3 @@
 #' }
 #' @source "Made up data"
 "dat_soln2"
-
-
