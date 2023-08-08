@@ -44,7 +44,7 @@ jobs:
             libcurl4-openssl-dev coinor-libsymphony-dev coinor-libcbc-dev coinor-libclp-dev \
             libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev
 
-     - name: Install R dependencies
+      - name: Install R dependencies
         run: |
           install.packages('remotes')
           remotes::install_deps(dependencies = TRUE)
