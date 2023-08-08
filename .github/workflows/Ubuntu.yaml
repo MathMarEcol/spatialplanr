@@ -44,10 +44,15 @@ jobs:
             libcurl4-openssl-dev coinor-libsymphony-dev coinor-libcbc-dev coinor-libclp-dev \
             libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck, any::remotes, any::lpsymphony
-          needs: check
+     - name: Install R dependencies
+        run: |
+          install.packages('remotes')
+          remotes::install_deps(dependencies = TRUE)
+          remotes::install_cran("rcmdcheck")
+          remotes::install_cran("covr")
+          remotes::install_bioc("lpsymphony")
+          remotes::install_cran("urlchecker", force = TRUE)
+        shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
         with:
