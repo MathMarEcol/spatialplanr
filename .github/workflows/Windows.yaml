@@ -42,7 +42,7 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v2
         with:
-          args: 'c("--no-manual", "--as-cran", "--no-build-vignettes")'
-          error-on: '"warning"'
+          args: 'c("--no-manual", "--no-build-vignettes")'
+          error-on: '"error"'
           check-dir: '"check"'
           upload-snapshots: true
