@@ -19,3 +19,8 @@ The dataset needs to be raster or vector format.
 If the input contains continuous data, the output is an area-averaged mean for each planning unit.
 If the input is binary, the output is the proportion of the planning unit covered.
 }
+\examples{
+\dontrun{
+    splnr_convert_2PUs(dat, PlanUnits)
+}
+}

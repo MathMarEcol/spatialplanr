@@ -36,7 +36,6 @@ A ggplot object of the plot
 Plot circular barplot
 }
 \examples{
-\dontrun{
 # DISCLAIMER: THIS SOLUTION IS NOT ACTUALLY RUN WITH THESE TARGETS YET
 s1 <- dat_soln \%>\%
   tibble::as_tibble()
@@ -69,5 +68,4 @@ legends <- c('Important', 'Representative')
 (splnr_plot_circBplot(df, legend_list = legends,
                           legend_color = colors,
                           impTarget = 50, repTarget = 30))
-                          }
 }

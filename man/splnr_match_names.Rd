@@ -19,3 +19,8 @@ Many regionalisations have numeric values in teh shape files that correpond
 to a vector of names. Here we provide a function to quickly replace the
 numbers with names.
 }
+\examples{
+\dontrun{
+   splnr_match_names(dat, nam)
+}
+}

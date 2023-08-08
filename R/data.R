@@ -46,57 +46,6 @@
 #' @source "Made up data"
 "dat_region"
 
-
-# -------------------------------------------------------------------------
-
-# prioritizr Problem
-#
-# An conservation problem for spatial prioritisation
-#
-# @format `dat_problem`
-# A class that stores the data, mathematical formula and other information needed to run the prioritisation:
-# \describe{
-#   \item{data}{list containing information on the cost and features}
-#   \item{objective}{object specifying objective function used in conservation problem}
-#   ...
-# }
-# @source "Made up data"
-# "dat_problem"
-
-# -------------------------------------------------------------------------
-
-# prioritizr Solution
-#
-# An sf dataframe of planning units for spatial prioritisation
-#
-# @format `dat_soln`
-# A data frame with XXXX rows and XXX columns:
-# \describe{
-#   \item{cellID}{ID number for each row (or cell) of the dataset}
-#   \item{geometry}{sf geometry column}
-#   ...
-# }
-# @source "Made up data"
-# "dat_soln"
-
-
-# -------------------------------------------------------------------------
-
-# prioritizr Solution2
-#
-# An sf dataframe of planning units for spatial prioritisation
-#
-# @format `dat_soln2`
-# A data frame with XXXX rows and XXX columns:
-# \describe{
-#   \item{cellID}{ID number for each row (or cell) of the dataset}
-#   \item{geometry}{sf geometry column}
-#   ...
-# }
-# @source "Made up data"
-# "dat_soln2"
-
-
 # -------------------------------------------------------------------------
 
 #' Binary Species Data
@@ -298,5 +247,59 @@
 #' A data frame with .....
 #' \describe{
 #' }
-#' @source
+#' @source "Made up data"
 "spDataFiltered"
+
+
+
+
+# PRIORITIZR DATA -------------------------------------------------------------------------
+
+#'' prioritizr Problem
+#'
+#' An conservation problem for spatial prioritisation
+#'
+#' @format `dat_problem`
+#' A class that stores the data, mathematical formula and other information needed to run the prioritisation:
+#' \describe{
+#'   \item{data}{list containing information on the cost and features}
+#'   \item{objective}{object specifying objective function used in conservation problem}
+#'   ...
+#' }
+#' @source "Made up data"
+"dat_problem"
+
+# -------------------------------------------------------------------------
+
+#' prioritizr Solution
+#'
+#' An sf dataframe of planning units for spatial prioritisation
+#'
+#' @format `dat_soln`
+#' A data frame with XXXX rows and XXX columns:
+#' \describe{
+#'   \item{cellID}{ID number for each row (or cell) of the dataset}
+#'   \item{geometry}{sf geometry column}
+#'   ...
+#' }
+#' @source "Made up data"
+"dat_soln"
+
+
+# -------------------------------------------------------------------------
+
+# prioritizr Solution2
+#
+# An sf dataframe of planning units for spatial prioritisation
+#
+# @format `dat_soln2`
+# A data frame with XXXX rows and XXX columns:
+# \describe{
+#   \item{cellID}{ID number for each row (or cell) of the dataset}
+#   \item{geometry}{sf geometry column}
+#   ...
+# }
+# @source "Made up data"
+# "dat_soln2"
+
+

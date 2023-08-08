@@ -7,10 +7,10 @@
 #' @return The boundary of the planning region
 #' @export
 #'
+#' @importFrom rlang .data
+#'
 #' @examples
 #' Bndry <- splnr_get_Boundary("North Atlantic Ocean", "Ocean")
-#'
-#' @importFrom rlang .data
 splnr_get_Boundary <- function(Limits,
                                Type,
                                cCRS = "ESRI:54009" # Mollweide

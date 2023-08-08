@@ -378,7 +378,6 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # DISCLAIMER: THIS SOLUTION IS NOT ACTUALLY RUN WITH THESE TARGETS YET
 #' s1 <- dat_soln %>%
 #'   tibble::as_tibble()
@@ -411,7 +410,6 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
 #' (splnr_plot_circBplot(df, legend_list = legends,
 #'                           legend_color = colors,
 #'                           impTarget = 50, repTarget = 30))
-#'                           }
 splnr_plot_circBplot <- function(df, legend_color, legend_list,
                                  indicateTargets = TRUE, impTarget = NA,
                                  repTarget = NA, colTarget = "red") {

@@ -12,6 +12,9 @@ A data frame with .....
 }
 }
 }
+\source{
+"Made up data"
+}
 \usage{
 spDataFiltered
 }

@@ -14,6 +14,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#'     splnr_get_MPAs(PlanUnits, Countries)
+#' }
 splnr_get_MPAs <- function(PlanUnits,
                               Countries,
                               Status = c("Designated", "Established", "Inscribed"),

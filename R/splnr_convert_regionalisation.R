@@ -17,8 +17,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' df <- splnr_convert_regionalisation(dat, PUs){
-#' }
+#' df <- splnr_convert_regionalisation(dat, PUs)
+#'   }
 splnr_convert_regionalisation <- function(dat, PUs, cat_name = NA, col_name = NA){
 
   if (stringr::str_detect(class(dat)[1], "SpatRaster") == TRUE) { # Rasters
@@ -47,9 +47,9 @@ splnr_convert_regionalisation <- function(dat, PUs, cat_name = NA, col_name = NA
     # Run through each regionalisation type to get proportion of PU coverage.
     for (idx in 1:length(cat_name)){
       PUs <- splnr_convert_2PUs(dat %>%
-                                     dplyr::filter(!!rlang::sym(col_name) == cat_name[idx]) %>%
-                                     dplyr::rename(!!cat_name[idx] := col_name),
-                                   PUs)
+                                  dplyr::filter(!!rlang::sym(col_name) == cat_name[idx]) %>%
+                                  dplyr::rename(!!cat_name[idx] := col_name),
+                                PUs)
     }
     return(PUs)
   }

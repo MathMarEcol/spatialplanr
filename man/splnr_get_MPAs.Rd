@@ -30,3 +30,8 @@ A \code{sf} object with the MPAs intersected with the planning units
 This code is a wrapper for the wonderful \code{wdpar} package written by Jeffrey O. Hanson. This data is then interfaced with the planning units.
 An \code{sf} object is returned with the PU area covered by the selected marine protected areas.
 }
+\examples{
+\dontrun{
+    splnr_get_MPAs(PlanUnits, Countries)
+}
+}

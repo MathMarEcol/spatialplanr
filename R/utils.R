@@ -77,6 +77,10 @@ splnr_replace_NAs <- function(df, vari){
 #'
 #' @importFrom rlang :=
 #' @examples
+#' \dontrun{
+#'    splnr_match_names(dat, nam)
+#' }
+
 splnr_match_names <- function(dat, nam){
   col_name = stringr::str_subset(colnames(dat), "geometry", negate = TRUE)[[1]]
 
@@ -225,8 +229,10 @@ splnr_convert2Pacific <- function(df,
 #' @export
 #'
 #' @examples
-# df <- dat_species_prob %>%
-#       splnr_arrangeFeatures()
+#' \dontrun{
+#' df <- dat_species_prob %>%
+#'         splnr_arrangeFeatures()
+#' }
 splnr_arrangeFeatures <- function(df){
 
   # Sort rows to ensure all features are in the same order.
