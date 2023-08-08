@@ -46,13 +46,8 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck, any::remotes
+          extra-packages: any::rcmdcheck, any::remotes, any::lpsymphony
           needs: check
-
-      - name: Install dependencies
-        run: |
-          remotes::install_bioc("lpsymphony")
-        shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
         with:
