@@ -44,27 +44,10 @@ jobs:
             libcurl4-openssl-dev coinor-libsymphony-dev coinor-libcbc-dev coinor-libclp-dev \
             libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev
 
-      - name: Install R dependencies
-        run: |
-          install.packages('remotes')
-          remotes::install_deps(dependencies = TRUE)
-          remotes::install_cran("rcmdcheck")
-          remotes::install_cran("covr")
-          remotes::install_bioc("lpsymphony")
-          remotes::install_cran("urlchecker", force = TRUE)
-        shell: Rscript {0}
-
-      - name: Session information
-        run: |
-          options(width = 100)
-          pkgs <- installed.packages()[, "Package"]
-          sessioninfo::session_info(pkgs, include_base = TRUE)
-        shell: Rscript {0}
-
-      - name: Set environmental variables for package checks
-        if: matrix.config.pkgs == 'depends only'
-        run: |
-          echo "_R_CHECK_DEPENDS_ONLY_=true" >> $GITHUB_ENV
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck, any::remotes, any::lpsymphony
+          needs: check
 
       - uses: r-lib/actions/check-r-package@v2
         with:
