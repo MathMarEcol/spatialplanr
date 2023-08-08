@@ -21,6 +21,6 @@ If the input is binary, the output is the proportion of the planning unit covere
 }
 \examples{
 \dontrun{
-    splnr_convert_2PUs(dat, PlanUnits)
+df <- splnr_convert_2PUs(dat, PlanUnits)
 }
 }

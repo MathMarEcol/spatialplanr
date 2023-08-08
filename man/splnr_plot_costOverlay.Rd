@@ -33,7 +33,5 @@ A ggplot object of the plot
 Plot cost overlay
 }
 \examples{
-\dontrun{
-(splnr_plot_costOverlay(soln = dat_soln))
-}
+splnr_plot_costOverlay(soln = dat_soln)
 }

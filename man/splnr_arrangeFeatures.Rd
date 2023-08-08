@@ -16,8 +16,6 @@ A sorted sf object with the additionl cellID column
 Ensure all features are in the same order.
 }
 \examples{
-\dontrun{
 df <- dat_species_prob \%>\%
         splnr_arrangeFeatures()
-}
 }

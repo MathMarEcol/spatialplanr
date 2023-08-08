@@ -36,7 +36,5 @@ A ggplot object of the plot
 Plot MPAs
 }
 \examples{
- \dontrun{
-(splnr_plot_MPAs(dat_mpas))
-}
+splnr_plot_MPAs(dat_mpas)
 }

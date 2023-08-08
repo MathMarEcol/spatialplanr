@@ -288,18 +288,18 @@
 
 # -------------------------------------------------------------------------
 
-# prioritizr Solution2
-#
-# An sf dataframe of planning units for spatial prioritisation
-#
-# @format `dat_soln2`
-# A data frame with XXXX rows and XXX columns:
-# \describe{
-#   \item{cellID}{ID number for each row (or cell) of the dataset}
-#   \item{geometry}{sf geometry column}
-#   ...
-# }
-# @source "Made up data"
-# "dat_soln2"
+#' prioritizr Solution2
+#'
+#' An sf dataframe of planning units for spatial prioritisation
+#'
+#' @format `dat_soln2`
+#' A data frame with XXXX rows and XXX columns:
+#' \describe{
+#'   \item{cellID}{ID number for each row (or cell) of the dataset}
+#'   \item{geometry}{sf geometry column}
+#'   ...
+#' }
+#' @source "Made up data"
+"dat_soln2"
 
 

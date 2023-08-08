@@ -20,7 +20,5 @@ A new sf dataframe that has cutoffs applied.
 Function to apply cutoffs to feature data
 }
 \examples{
-\dontrun{
 df <- splnr_apply_cutoffs(dat_species_prob, Cutoffs = 0.5)
-}
 }

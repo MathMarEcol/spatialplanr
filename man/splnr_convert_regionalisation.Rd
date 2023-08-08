@@ -29,5 +29,5 @@ If the input is binary, the output is the proportion of the planning unit covere
 \examples{
 \dontrun{
 df <- splnr_convert_regionalisation(dat, PUs)
-  }
+}
 }

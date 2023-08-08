@@ -14,9 +14,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' (splnr_plot_Solution(dat_soln, dat_PUs))
-#' }
+#' splnr_plot_Solution(dat_soln, dat_PUs)
 splnr_plot_Solution <- function(soln, PlanUnits, landmass = NA,
                                 colorVals = c("TRUE" = "#3182bd", "FALSE" = "#c6dbef"),
                                 colorPUs = "grey80", showLegend = TRUE,
@@ -62,9 +60,7 @@ splnr_plot_Solution <- function(soln, PlanUnits, landmass = NA,
 #' @export
 #'
 #' @examples
-#'  \dontrun{
-#' (splnr_plot_PUs(dat_PUs))
-#' }
+#' splnr_plot_PUs(dat_PUs)
 splnr_plot_PUs <- function(PlanUnits, landmass = NA){
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = PlanUnits, colour = "grey80", fill = NA, size = 0.1, show.legend = FALSE)
@@ -95,9 +91,7 @@ splnr_plot_PUs <- function(PlanUnits, landmass = NA){
 #' @export
 #'
 #' @examples
-#'  \dontrun{
-#' (splnr_plot_MPAs(dat_mpas))
-#' }
+#' splnr_plot_MPAs(dat_mpas)
 splnr_plot_MPAs <- function(df, landmass = NA,
                             colorVals = c("TRUE" = "blue", "FALSE" = "white"),
                             colorPUs = "grey80", showLegend = TRUE,
@@ -148,11 +142,9 @@ splnr_plot_MPAs <- function(df, landmass = NA,
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' dat_cost <- dat_soln %>%
 #'               dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
-#' (splnr_plot_cost(dat_cost))
-#' }
+#' splnr_plot_cost(dat_cost)
 splnr_plot_cost <- function(Cost, Cost_name = "Cost", landmass = NA,
                             paletteName = "YlGnBu", plotTitle = "Cost (USD)"){
 
@@ -191,9 +183,7 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", landmass = NA,
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' (splnr_plot_costOverlay(soln = dat_soln))
-#' }
+#' splnr_plot_costOverlay(soln = dat_soln)
 splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass = NA,
                                    legendTitle = "Cost",
                                    plotTitle = "Solution overlaid with cost"){
@@ -257,9 +247,7 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' (splnr_plot_binFeature(dat_species_bin,  dat_species_bin$Spp1, dat_PUs))
-#' }
+#' splnr_plot_binFeature(dat_species_bin,  dat_species_bin$Spp1, dat_PUs)
 splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
                                   colorVals = c("Suitable" = "#3182bd", "Not Suitable" = "#c6dbef"),
                                   colorPUs = "grey80", showLegend = TRUE,
@@ -305,7 +293,6 @@ splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' #not including incidental species coverage
 #' dfNInc <- splnr_prepTargetData(soln = dat_soln,
 #'                                 pDat = dat_problem,
@@ -314,6 +301,7 @@ splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
 #'                                 solnCol = "solution_1")
 #'
 #' (splnr_plot_targets(dfNInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
+#'
 #' #including incidental species coverage
 #' dfInc <- splnr_prepTargetData(soln = dat_soln,
 #'                               pDat = dat_problem,
@@ -321,7 +309,6 @@ splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
 #'                               Category = Category_vec2,
 #'                               solnCol = "solution_1")
 #' (splnr_plot_targets(dfInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
-#' }
 splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
                                plotTitle = "") {
 
@@ -553,9 +540,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
 #'
 #' @importFrom rlang .data
 #' @examples
-#' \dontrun{
 #' (splnr_plot_comparison(dat_soln, dat_soln2))
-#' }
 splnr_plot_comparison <- function(soln1, soln2, landmass = NA, PlanUnits = NA, colorPUs = "grey80",
                                   legendTitle = "Scenario 2 compared to Scenario 1:"){
 
@@ -613,9 +598,7 @@ splnr_plot_comparison <- function(soln1, soln2, landmass = NA, PlanUnits = NA, c
 #'
 #' @importFrom rlang .data
 #' @examples
-#' \dontrun{
 #' (splnr_plot_featureNo(dat_species_bin))
-#' }
 splnr_plot_featureNo <- function(df, landmass = NA,
                                  colorPUs = "grey80", showLegend = TRUE,
                                  paletteName = "YlGnBu",
@@ -665,10 +648,9 @@ splnr_plot_featureNo <- function(df, landmass = NA,
 #'
 #' @importFrom rlang .data
 #' @examples
-#' \dontrun{
 #' # create conservation problem that contains a portfolio of solutions
 #' dat_soln_portfolio <- dat_problem %>%
-#'   prioritizr::add_top_portfolio(number_solutions = 5) %>%
+#'   prioritizr::add_cuts_portfolio(number_solutions = 5) %>%
 #'   prioritizr:::solve.ConservationProblem()
 #'
 #' selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
@@ -677,7 +659,6 @@ splnr_plot_featureNo <- function(df, landmass = NA,
 #' solnList <- list(dat_soln, dat_soln2)
 #' selFreq <- splnr_prep_selFreq(solnMany = solnList, type = "list")
 #' (splnr_plot_selectionFreq(selFreq))
-#' }
 splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
                                      plotTitle = "", paletteName = "Greens",
                                      legendTitle = "Selection \nFrequency"
@@ -724,9 +705,7 @@ splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
 #'
 #' @importFrom rlang .data
 #' @examples
-#' \dontrun{
 #' (splnr_plot_impScoreFerrierPlot(dat_soln, dat_problem))
-#' }
 splnr_plot_impScoreFerrierPlot <- function(soln, pDat, plotTitle = "", colorMap = "A",
                                            legendTitle = "Importance Score \n(Ferrier Score)"
 ){
@@ -778,9 +757,7 @@ splnr_plot_impScoreFerrierPlot <- function(soln, pDat, plotTitle = "", colorMap 
 #'
 #' @importFrom rlang .data
 #' @examples
-#' \dontrun{
 #' (splnr_plot_impScoreRWRPlot(dat_soln, dat_problem))
-#' }
 splnr_plot_impScoreRWRPlot <- function(soln, pDat, plotTitle = "", colorMap = "A",
                                        legendTitle = "Importance Score \n(Rarity Weighted Richness Score)"
 ){
@@ -880,10 +857,8 @@ splnr_plot_impScoreRCPlot <- function(soln, pDat, plotTitle = "", colorMap = "A"
 #'
 #' @importFrom rlang .data
 #' @examples
-#' \dontrun{
 #' CorrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
 #' (splnr_plot_CorrMat(CorrMat, AxisLabels = c("Solution 1", "Solution 2")))
-#' }
 splnr_plot_CorrMat <- function(x, colourGradient = c("#BB4444","#FFFFFF","#4477AA"),
                                legendTitle = "Correlation \ncoefficient",
                                AxisLabels = NULL, plotTitle = "") {
@@ -921,26 +896,4 @@ splnr_plot_CorrMat <- function(x, colourGradient = c("#BB4444","#FFFFFF","#4477A
                                 labels= AxisLabels) +
       ggplot2::scale_y_discrete(labels= AxisLabels)
   }
-}
-
-#' Plot Longhurst Provinces
-#'
-#' @param PlanUnits Planning Units as an `sf` object
-#' @param landmass An `sf` object of land polygon
-#'
-#' @return A ggplot object of the plot
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' df <- splnr_plot_longhurst(PlanUnits, landmass)
-#' }
-splnr_plot_longhurst <- function(PlanUnits, landmass){
-  gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = PlanUnits, colour = "grey80", ggplot2::aes(fill = .data$ProvDescr), size = 0.1, show.legend = TRUE) +
-    ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
-    ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
-    ggplot2::theme_bw() +
-    ggplot2::labs(subtitle = "Longhurst Provinces")
-
 }

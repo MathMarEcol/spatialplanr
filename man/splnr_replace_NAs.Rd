@@ -18,8 +18,6 @@ An \code{sf} object with NAs replaced with the nearest neighbour
 Remove NAs from spatial data using nearest neighbour
 }
 \examples{
-\dontrun{
 df <- dat_species_prob \%>\%
     splnr_replace_NAs("Spp2")
-    }
 }

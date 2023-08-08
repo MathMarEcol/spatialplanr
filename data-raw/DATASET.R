@@ -114,7 +114,7 @@ usethis::use_data(dat_bndry,
                   dat_mpas,
                   dat_problem,
                   dat_soln,
-                  # dat_soln2,
+                  dat_soln2,
                   Category_vec,
                   Category_vec2,
                   overwrite = TRUE)

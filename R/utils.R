@@ -37,10 +37,8 @@ splnr_create_polygon <- function(x, cCRS = "EPSG:4326"){
 #' @importFrom rlang .data
 #' @importFrom rlang :=
 #' @examples
-#' \dontrun{
 #' df <- dat_species_prob %>%
 #'     splnr_replace_NAs("Spp2")
-#'     }
 splnr_replace_NAs <- function(df, vari){
   if (sum(is.na(dplyr::pull(df, !!rlang::sym(vari)))) > 0){ # Check if there are NAs
 
@@ -65,22 +63,21 @@ splnr_replace_NAs <- function(df, vari){
 
 #' Substitute numbers for all_names in regionalisations
 #'
-#' Many regionalisations have numeric values in teh shape files that correpond
+#' Many regionalisations have numeric values in the shape files that correspond
 #' to a vector of names. Here we provide a function to quickly replace the
 #' numbers with names.
 #'
 #' @param dat `sf` data frame with one column of numeric/integer corresponding to `nam`
-#' @param nam character vector of names corresponding to numeric column of dat
+#' @param nam Named character vector of names corresponding to column of dat to recode
 #'
 #' @return An `sf` dataframe with numeric regionalisations substituted for category names
 #' @export
 #'
 #' @importFrom rlang :=
 #' @examples
-#' \dontrun{
-#'    splnr_match_names(dat, nam)
-#' }
-
+#' dat <- dat_region %>% dplyr::select(-cellID)
+#' nam <- c("Region1" = "SE Aust", "Region2" = "Tas", "Region3" = "NE Aust")
+#' df <- splnr_match_names(dat, nam)
 splnr_match_names <- function(dat, nam){
   col_name = stringr::str_subset(colnames(dat), "geometry", negate = TRUE)[[1]]
 
@@ -101,11 +98,9 @@ splnr_match_names <- function(dat, nam){
 #' @importFrom rlang :=
 #'
 #' @examples
-#' \dontrun{
 #' df <- dat_species_prob %>%
 #'     dplyr::mutate(Spp1 = Spp1 * 100) %>%
 #'     splnr_scale_01(col_name = "Spp1")
-#'     }
 splnr_scale_01 <- function(dat, col_name){
 
   mx  <- max(dplyr::pull(dat, !!rlang::sym(col_name)), na.rm = TRUE) # Get max probability
@@ -143,10 +138,8 @@ splnr_scale_01 <- function(dat, col_name){
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' df_rob <- rnaturalearth::ne_coastline(returnclass = "sf") %>%
 #'   splnr_convert2Pacific()
-#'   }
 splnr_convert2Pacific <- function(df,
                                   buff = 0,
                                   cCRS = "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"){
@@ -229,10 +222,8 @@ splnr_convert2Pacific <- function(df,
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' df <- dat_species_prob %>%
 #'         splnr_arrangeFeatures()
-#' }
 splnr_arrangeFeatures <- function(df){
 
   # Sort rows to ensure all features are in the same order.
@@ -263,7 +254,6 @@ splnr_arrangeFeatures <- function(df){
 #' @importFrom rlang .data
 #'
 #' @examples
-#' \dontrun{
 #' #not including incidental species coverage
 #' dfNInc <- splnr_prepTargetData(soln = dat_soln,
 #'                                pDat = dat_problem,
@@ -279,7 +269,6 @@ splnr_arrangeFeatures <- function(df){
 #'                               Dict = NA,
 #'                               Category = Category_vec2,
 #'                               solnCol = "solution_1")
-#'}
 splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA, Dict = NA, dataCol = "Abbrev",
                                  climsmart = FALSE, solnCol = "solution_1"){
 
@@ -396,9 +385,7 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA, Dict = NA, d
 #' @importFrom rlang .data
 #'
 #' @examples
-#' \dontrun{
 #' corrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
-#' }
 splnr_prepKappaCorrData <- function(sol, name_sol) {
 
   s_list <- lapply(seq_along(sol), function(x) {
@@ -454,10 +441,9 @@ splnr_prepKappaCorrData <- function(sol, name_sol) {
 #' @importFrom rlang .data
 #'
 #' @examples
-#' \dontrun{
 #' #create conservation problem that contains a portfolio of solutions
 #' dat_soln_portfolio <- dat_problem %>%
-#'   prioritizr::add_top_portfolio(number_solutions = 5) %>%
+#'   prioritizr::add_cuts_portfolio(number_solutions = 5) %>%
 #'   prioritizr:::solve.ConservationProblem()
 #'
 #' selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
@@ -465,7 +451,6 @@ splnr_prepKappaCorrData <- function(sol, name_sol) {
 #'
 #' solnList <- list(dat_soln, dat_soln2)
 #' selFreq <- splnr_prep_selFreq(solnMany = solnList, type = "list")
-#' }
 splnr_prep_selFreq <- function(solnMany, type = "portfolio"){
   if (type == "portfolio") { # check if provided input is a protfolio
 
@@ -473,9 +458,7 @@ splnr_prep_selFreq <- function(solnMany, type = "portfolio"){
       print("You did not provide a portfolio of solutions. Please check your input.")
     } else {
       selFreq <- solnMany %>%
-        dplyr::select(dplyr::starts_with("solution_")) %>%
-        sf::st_drop_geometry() %>%
-        dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(.data, dplyr::starts_with("solution_"))))) %>%
+        dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(tibble::as_tibble(solnMany), dplyr::starts_with("solution_"))))) %>%
         sf::st_as_sf(geometry = solnMany$geometry) %>%
         dplyr::select("selFreq")
       return(selFreq)
@@ -495,11 +478,11 @@ splnr_prep_selFreq <- function(solnMany, type = "portfolio"){
       }
       )
 
-      soln <- data.frame(matrix(unlist(s_list), ncol =length(s_list)))
+      soln <- data.frame(matrix(unlist(s_list), ncol = length(s_list)))
       colnames(soln) <- name_sol
 
       selFreq <- soln %>%
-        dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(.data, dplyr::starts_with("soln"))))) %>%
+        dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(soln, dplyr::starts_with("soln"))))) %>%
         sf::st_as_sf(geometry = solnMany[[1]]$geometry) %>%
         dplyr::select("selFreq")
       return(selFreq)

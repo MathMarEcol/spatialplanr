@@ -18,10 +18,9 @@ splnr_prep_selFreq(solnMany, type = "portfolio")
 Prepare data to plot Selection Frequency of planning units
 }
 \examples{
-\dontrun{
 #create conservation problem that contains a portfolio of solutions
 dat_soln_portfolio <- dat_problem \%>\%
-  prioritizr::add_top_portfolio(number_solutions = 5) \%>\%
+  prioritizr::add_cuts_portfolio(number_solutions = 5) \%>\%
   prioritizr:::solve.ConservationProblem()
 
 selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
@@ -29,5 +28,4 @@ selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 
 solnList <- list(dat_soln, dat_soln2)
 selFreq <- splnr_prep_selFreq(solnMany = solnList, type = "list")
-}
 }

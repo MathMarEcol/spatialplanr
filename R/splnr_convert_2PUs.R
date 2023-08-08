@@ -29,7 +29,7 @@
 #'
 #' @examples
 #' \dontrun{
-#'     splnr_convert_2PUs(dat, PlanUnits)
+#' df <- splnr_convert_2PUs(dat, PlanUnits)
 #' }
 splnr_convert_2PUs <- function(dat, PlanUnits){
 
