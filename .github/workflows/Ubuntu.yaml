@@ -12,15 +12,13 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) (${{ matrix.config.pkgs }} packages)
 
     strategy:
       fail-fast: false
       matrix:
         config:
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel-1'}
+          - {os: ubuntu-20.04, r: 'release', pkgs: 'all'}
 
     env:
       _R_REMOTES_NO_ERRORS_FROM_WARNINGS_: true
@@ -34,6 +32,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+
       - uses: r-lib/actions/setup-pandoc@v2
 
       - name: Query dependencies
@@ -43,17 +45,31 @@ jobs:
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
 
+      - name: Cache R packages
+        if: runner.os != 'Windows'
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+
       - name: Install system dependencies
         run: |
-          sudo apt-get update
           sudo apt-get -y install \
             libcurl4-openssl-dev coinor-libsymphony-dev coinor-libcbc-dev coinor-libclp-dev \
             libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
+          remotes::install_cran("rcmdcheck")
+          remotes::install_cran("covr")
           remotes::install_bioc("lpsymphony")
+          remotes::install_cran("urlchecker", force = TRUE)
         shell: Rscript {0}
 
       - name: Session information
@@ -63,17 +79,7 @@ jobs:
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-          use-public-rspm: true
-
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck
-          needs: check
-
-      - uses: r-lib/actions/check-r-package@v2
-        with:
-          upload-snapshots: true
+      - name: Set environmental variables for package checks
+        if: matrix.config.pkgs == 'depends only'
+        run: |
+          echo "_R_CHECK_DEPENDS_ONLY_=true" >> $GITHUB_ENV
