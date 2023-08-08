@@ -17,3 +17,8 @@ splnr_prepKappaCorrData(sol, name_sol)
 \description{
 Prepare data to plot Cohen's Kappa correlation matrix
 }
+\examples{
+\dontrun{
+corrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
+}
+}

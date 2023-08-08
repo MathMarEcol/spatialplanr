@@ -139,8 +139,10 @@ splnr_scale_01 <- function(dat, col_name){
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' df_rob <- rnaturalearth::ne_coastline(returnclass = "sf") %>%
 #'   splnr_convert2Pacific()
+#'   }
 splnr_convert2Pacific <- function(df,
                                   buff = 0,
                                   cCRS = "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"){
@@ -388,7 +390,9 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA, Dict = NA, d
 #' @importFrom rlang .data
 #'
 #' @examples
-# corrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
+#' \dontrun{
+#' corrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
+#' }
 splnr_prepKappaCorrData <- function(sol, name_sol) {
 
   s_list <- lapply(seq_along(sol), function(x) {
@@ -445,15 +449,17 @@ splnr_prepKappaCorrData <- function(sol, name_sol) {
 #'
 #' @examples
 #' \dontrun{
+#' #create conservation problem that contains a portfolio of solutions
 #' dat_soln_portfolio <- dat_problem %>%
-#'   prioritizr::add_top_portfolio(number_solutions = 5) %>% #create conservation problem that contains a portfolio of solutions
+#'   prioritizr::add_top_portfolio(number_solutions = 5) %>%
 #'   prioritizr:::solve.ConservationProblem()
 #'
 #' selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 #' (splnr_plot_selectionFreq(selFreq))
-#' }
+#'
 #' solnList <- list(dat_soln, dat_soln2)
 #' selFreq <- splnr_prep_selFreq(solnMany = solnList, type = "list")
+#' }
 splnr_prep_selFreq <- function(solnMany, type = "portfolio"){
   if (type == "portfolio") { # check if provided input is a protfolio
 
@@ -461,9 +467,9 @@ splnr_prep_selFreq <- function(solnMany, type = "portfolio"){
       print("You did not provide a portfolio of solutions. Please check your input.")
     } else {
       selFreq <- solnMany %>%
-        dplyr::select(., dplyr::starts_with("solution_")) %>%
+        dplyr::select(dplyr::starts_with("solution_")) %>%
         sf::st_drop_geometry() %>%
-        dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(., dplyr::starts_with("solution_"))))) %>%
+        dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(.data, dplyr::starts_with("solution_"))))) %>%
         sf::st_as_sf(geometry = solnMany$geometry) %>%
         dplyr::select("selFreq")
       return(selFreq)
@@ -487,7 +493,7 @@ splnr_prep_selFreq <- function(solnMany, type = "portfolio"){
       colnames(soln) <- name_sol
 
       selFreq <- soln %>%
-        dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(., dplyr::starts_with("soln"))))) %>%
+        dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(.data, dplyr::starts_with("soln"))))) %>%
         sf::st_as_sf(geometry = solnMany[[1]]$geometry) %>%
         dplyr::select("selFreq")
       return(selFreq)

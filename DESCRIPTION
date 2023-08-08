@@ -28,6 +28,7 @@ Suggests:
     knitr,
     prioritizr,
     rmarkdown,
+    rnaturalearthdata,
     rredlist,
     testthat (>= 3.0.0),
     viridis,

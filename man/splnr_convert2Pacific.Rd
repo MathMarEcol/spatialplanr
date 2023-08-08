@@ -28,6 +28,8 @@ UQ/CSIRO/UNSW
 Last edited 8th Sept 2021
 }
 \examples{
+\dontrun{
 df_rob <- rnaturalearth::ne_coastline(returnclass = "sf") \%>\%
   splnr_convert2Pacific()
+  }
 }
