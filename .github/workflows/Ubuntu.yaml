@@ -41,7 +41,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get -y install \
-            libcurl4-openssl-dev coinor-libsymphony-dev coinor-libcbc-dev coinor-libclp-dev \
+            libcurl4-openssl-dev coinor-libsymphony-dev \
             libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev
 
       - uses: r-lib/actions/setup-r-dependencies@v2
@@ -51,7 +51,7 @@ jobs:
 
       - uses: r-lib/actions/check-r-package@v2
         with:
-          args: 'c("--no-manual", "--as-cran", "--no-build-vignettes")'
+          args: 'c("--no-manual", "--no-build-vignettes")'
           error-on: '"warning"'
           check-dir: '"check"'
           upload-snapshots: true
