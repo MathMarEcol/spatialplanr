@@ -236,39 +236,39 @@
 # -------------------------------------------------------------------------
 
 
-# Current MPAs of the Coral Sea
-#
-# sf file containing the current marine protected areas of the coral sea
-#
-# @format `MPAsCoralSea`
-# A data frame with 397 rows and 17 columns:
-# \describe{
-#   \item{wdpa}{binary vector denoting presence or absence of a current marine protected area}
-#   \item{cellID}{cell ID of planning units}
-#   ...
-# }
-# @source https://www.protectedplanet.net/en/thematic-areas/wdpa?tab=WDPA
-#"MPAsCoralSea"
+#' Current MPAs of the Coral Sea
+#'
+#' sf file containing the current marine protected areas of the coral sea
+#'
+#' @format `MPAsCoralSea`
+#' A data frame with 397 rows and 17 columns:
+#' \describe{
+#'   \item{wdpa}{binary vector denoting presence or absence of a current marine protected area}
+#'   \item{cellID}{cell ID of planning units}
+#'   ...
+#' }
+#' @source https://www.protectedplanet.net/en/thematic-areas/wdpa?tab=WDPA
+"MPAsCoralSea"
 
 
 # -------------------------------------------------------------------------
 
 
-# IUCN and Inverse Area based Targets for Aquamaps example species
-#
-# tbl_df file containing IUCN and IA targets of the selected species of the coral sea
-#
-# @format `IUCN_IA_Targets`
-# A data frame with 15 rows and 4 columns:
-# \describe{
-#   \item{Species}{Species names as found in the IUCN database}
-#   \item{Area km2}{total suitable habitat of a species}
-#   \item{Target}{Individual species-specific target}
-#   \item{IUCN_Category}{IUCN category of the species}
-#   ...
-# }
-# @source https://www.iucnredlist.org/
-# "IUCN_IA_Targets"
+#' IUCN and Inverse Area based Targets for Aquamaps example species
+#'
+#' tbl_df file containing IUCN and IA targets of the selected species of the coral sea
+#'
+#' @format `IUCN_IA_Targets`
+#' A data frame with 15 rows and 4 columns:
+#' \describe{
+#'   \item{Species}{Species names as found in the IUCN database}
+#'   \item{Area km2}{total suitable habitat of a species}
+#'   \item{Target}{Individual species-specific target}
+#'   \item{IUCN_Category}{IUCN category of the species}
+#'   ...
+#' }
+#' @source https://www.iucnredlist.org/
+"IUCN_IA_Targets"
 
 
 # -------------------------------------------------------------------------
@@ -289,3 +289,14 @@
 #' @source https://www.iucnredlist.org/
 "CoralSeaVelocity"
 
+
+#' Example....
+#'
+#'
+#'
+#' @format ## `spDataFiltered`
+#' A data frame with .....
+#' \describe{
+#' }
+#' @source
+"spDataFiltered"
