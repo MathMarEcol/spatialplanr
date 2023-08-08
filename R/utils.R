@@ -432,3 +432,68 @@ splnr_prepKappaCorrData <- function(sol, name_sol) {
 
   return(matrixOut)
 }
+
+#' Prepare data to plot Selection Frequency of planning units
+#'
+#' @param solnMany List or portfolio of `prioritizr` solutions
+#' @param type Either "portfolio" (`sf` object) with a portfolop produced using `prioritizr` or "list" with a list of solutions
+#'
+#' @return `selFreq` `sf` object containing a column with the selection frequency (sum over all solutions).
+#' @export
+#'
+#' @importFrom rlang .data
+#'
+#' @examples
+#' \dontrun{
+#' dat_soln_portfolio <- dat_problem %>%
+#'   prioritizr::add_top_portfolio(number_solutions = 5) %>% #create conservation problem that contains a portfolio of solutions
+#'   prioritizr:::solve.ConservationProblem()
+#'
+#' selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
+#' (splnr_plot_selectionFreq(selFreq))
+#' }
+#' solnList <- list(dat_soln, dat_soln2)
+#' selFreq <- splnr_prep_selFreq(solnMany = solnList, type = "list")
+splnr_prep_selFreq <- function(solnMany, type = "portfolio"){
+  if (type == "portfolio") { # check if provided input is a protfolio
+
+    if (class(solnMany)[[1]] != "sf") {
+      print("You did not provide a portfolio of solutions. Please check your input.")
+    } else {
+      selFreq <- solnMany %>%
+        dplyr::select(., dplyr::starts_with("solution_")) %>%
+        sf::st_drop_geometry() %>%
+        dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(., dplyr::starts_with("solution_"))))) %>%
+        sf::st_as_sf(geometry = solnMany$geometry) %>%
+        dplyr::select("selFreq")
+      return(selFreq)
+    }
+
+  } else if (type == "list") { #if not portfolio check if input is list of solutions
+    if (class(solnMany)[[1]] != "list") {
+      print("You did not provide a list of solutions. Please check your input.")
+    } else {
+      name_sol <- stringr::str_c("soln", stringr::str_pad(1:length(solnMany), width = 1, pad = 0))
+
+      s_list <- lapply(seq_along(solnMany), function(x) {
+        solnMany[[x]] %>%
+          tibble::as_tibble() %>%
+          dplyr::select("solution_1") %>%
+          stats::setNames(name_sol[[x]])
+      }
+      )
+
+      soln <- data.frame(matrix(unlist(s_list), ncol =length(s_list)))
+      colnames(soln) <- name_sol
+
+      selFreq <- soln %>%
+        dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(., dplyr::starts_with("soln"))))) %>%
+        sf::st_as_sf(geometry = solnMany[[1]]$geometry) %>%
+        dplyr::select("selFreq")
+      return(selFreq)
+    }
+
+  } else {
+    print("This function requires either a prioritizr portfolio or a list of solutions. Please check your input.")
+  }
+}

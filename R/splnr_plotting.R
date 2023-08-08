@@ -673,13 +673,11 @@ splnr_plot_featureNo <- function(df, landmass = NA,
 #'   prioritizr::add_top_portfolio(number_solutions = 5) %>%
 #'   prioritizr:::solve.ConservationProblem()
 #'
-#' selFreq <- dat_soln_portfolio %>%  # calculate selection frequency
-#' sf::st_drop_geometry() %>%
-#' dplyr::mutate(selFreq = as.factor(rowSums(
-#'                   dplyr::select(., dplyr::starts_with("solution_"))))) %>%
-#' sf::st_as_sf(geometry = dat_soln_portfolio$geometry) %>%
-#' dplyr::select(selFreq)
+#' selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
+#' (splnr_plot_selectionFreq(selFreq))
 #'
+#' solnList <- list(dat_soln, dat_soln2)
+#' selFreq <- splnr_prep_selFreq(solnMany = solnList, type = "list")
 #' (splnr_plot_selectionFreq(selFreq))
 #' }
 splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
@@ -704,11 +702,11 @@ splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
                       expand = TRUE) +
     ggplot2::theme_bw() +
     ggplot2::theme(
-      axis.text.y = ggplot2::element_text(size = 16, colour = "black"),
-      axis.text.x = ggplot2::element_text(size = 16, colour = "black"),
+      axis.text.y = ggplot2::element_text(size = 12, colour = "black"),
+      axis.text.x = ggplot2::element_text(size = 12, colour = "black"),
       axis.title.x = ggplot2::element_blank(),
-      legend.title = ggplot2::element_text(size = 16),
-      legend.text = ggplot2::element_text(size = 16),
+      legend.title = ggplot2::element_text(size = 12),
+      legend.text = ggplot2::element_text(size = 12),
       axis.title.y = ggplot2::element_blank()) +
     ggplot2::scale_x_continuous(expand = c(0,0)) +
     ggplot2::scale_y_continuous(expand = c(0,0)) +

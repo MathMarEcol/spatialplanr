@@ -272,3 +272,20 @@
 
 
 # -------------------------------------------------------------------------
+
+
+#' Example climate velocity for the example region of the coral sea
+#'
+#' tsf file containing climate velocity (SSP5-8.5) of the coral sea
+#'
+#' @format ## `CoralSeaVelocity`
+#' A data frame with 397 rows and 3 columns:
+#' \describe{
+#'   \item{cellID}{cell ID of the planning units}
+#'   \item{vocMagg_transformed}{Climate velocity column}
+#'   \item{geometry}{Geometry column of sf object}
+#'   ...
+#' }
+#' @source https://www.iucnredlist.org/
+"CoralSeaVelocity"
+

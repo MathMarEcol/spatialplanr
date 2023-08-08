@@ -36,13 +36,11 @@ dat_soln_portfolio <- dat_problem \%>\%
   prioritizr::add_top_portfolio(number_solutions = 5) \%>\%
   prioritizr:::solve.ConservationProblem()
 
-selFreq <- dat_soln_portfolio \%>\%  # calculate selection frequency
-sf::st_drop_geometry() \%>\%
-dplyr::mutate(selFreq = as.factor(rowSums(
-                  dplyr::select(., dplyr::starts_with("solution_"))))) \%>\%
-sf::st_as_sf(geometry = dat_soln_portfolio$geometry) \%>\%
-dplyr::select(selFreq)
+selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
+(splnr_plot_selectionFreq(selFreq))
 
+solnList <- list(dat_soln, dat_soln2)
+selFreq <- splnr_prep_selFreq(solnMany = solnList, type = "list")
 (splnr_plot_selectionFreq(selFreq))
 }
 }
