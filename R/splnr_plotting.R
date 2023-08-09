@@ -13,6 +13,17 @@
 #' @export
 #'
 #' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#'dat_soln <- dat_problem %>%
+#'  prioritizr:::solve.ConservationProblem()
+#'
 #' splnr_plot_Solution(dat_soln, dat_PUs)
 splnr_plot_Solution <- function(soln, PlanUnits, landmass = NA,
                                 colorVals = c("TRUE" = "#3182bd", "FALSE" = "#c6dbef"),
@@ -146,8 +157,20 @@ splnr_plot_MPAs <- function(df, landmass = NA,
 #' @export
 #'
 #' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#'dat_soln <- dat_problem %>%
+#'  prioritizr:::solve.ConservationProblem()
+#'
 #' dat_cost <- dat_soln %>%
 #'   dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
+#'
 #' splnr_plot_cost(dat_cost)
 splnr_plot_cost <- function(Cost, Cost_name = "Cost", landmass = NA,
                             paletteName = "YlGnBu", plotTitle = "Cost (USD)") {
@@ -189,6 +212,17 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", landmass = NA,
 #' @export
 #'
 #' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#'dat_soln <- dat_problem %>%
+#'  prioritizr:::solve.ConservationProblem()
+#'
 #' splnr_plot_costOverlay(soln = dat_soln)
 splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass = NA,
                                    legendTitle = "Cost",
@@ -305,6 +339,17 @@ splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
 #' @export
 #'
 #' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#'dat_soln <- dat_problem %>%
+#'  prioritizr:::solve.ConservationProblem()
+#'
 #' # not including incidental species coverage
 #' dfNInc <- splnr_prepTargetData(
 #'   soln = dat_soln,
@@ -386,6 +431,18 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
 #'
 #' @examples
 #' # DISCLAIMER: THIS SOLUTION IS NOT ACTUALLY RUN WITH THESE TARGETS YET
+#'
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#'dat_soln <- dat_problem %>%
+#'  prioritizr:::solve.ConservationProblem()
+#'
 #' s1 <- dat_soln %>%
 #'   tibble::as_tibble()
 #'
@@ -583,7 +640,33 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
 #'
 #' @importFrom rlang .data
 #' @examples
+#' # 30 % target for problem/solution 1
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
+#' # 50 % target for problem/solution 2
+#' dat_problem2 <- prioritizr::problem(dat_species_bin %>%
+#'                                       dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.5) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln2 <- dat_problem2 %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' (splnr_plot_comparison(dat_soln, dat_soln2))
+#'
 splnr_plot_comparison <- function(soln1, soln2, landmass = NA, PlanUnits = NA, colorPUs = "grey80",
                                   legendTitle = "Scenario 2 compared to Scenario 1:") {
   soln <- soln1 %>%
@@ -692,17 +775,22 @@ splnr_plot_featureNo <- function(df, landmass = NA,
 #'
 #' @importFrom rlang .data
 #' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
 #' # create conservation problem that contains a portfolio of solutions
 #' dat_soln_portfolio <- dat_problem %>%
 #'   prioritizr::add_cuts_portfolio(number_solutions = 5) %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 #' (splnr_plot_selectionFreq(selFreq))
 #'
-#' solnList <- list(dat_soln, dat_soln2)
-#' selFreq <- splnr_prep_selFreq(solnMany = solnList, type = "list")
-#' (splnr_plot_selectionFreq(selFreq))
 splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
                                      plotTitle = "", paletteName = "Greens",
                                      legendTitle = "Selection \nFrequency") {
@@ -753,6 +841,17 @@ splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
 #'
 #' @importFrom rlang .data
 #' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' (splnr_plot_impScoreFerrierPlot(dat_soln, dat_problem))
 splnr_plot_impScoreFerrierPlot <- function(soln, pDat, plotTitle = "", colorMap = "A",
                                            legendTitle = "Importance Score \n(Ferrier Score)") {
@@ -811,6 +910,17 @@ splnr_plot_impScoreFerrierPlot <- function(soln, pDat, plotTitle = "", colorMap 
 #'
 #' @importFrom rlang .data
 #' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' (splnr_plot_impScoreRWRPlot(dat_soln, dat_problem))
 splnr_plot_impScoreRWRPlot <- function(soln, pDat, plotTitle = "", colorMap = "A",
                                        legendTitle = "Importance Score \n(Rarity Weighted Richness Score)") {
@@ -867,6 +977,17 @@ splnr_plot_impScoreRWRPlot <- function(soln, pDat, plotTitle = "", colorMap = "A
 #' @importFrom rlang .data
 #' @examples
 #' \dontrun{
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' (splnr_plot_impScoreRCPlot(dat_soln, dat_problem))
 #' }
 splnr_plot_impScoreRCPlot <- function(soln, pDat, plotTitle = "", colorMap = "A",
@@ -923,7 +1044,33 @@ splnr_plot_impScoreRCPlot <- function(soln, pDat, plotTitle = "", colorMap = "A"
 #'
 #' @importFrom rlang .data
 #' @examples
+#' # 30 % target for problem/solution 1
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
+#' # 50 % target for problem/solution 2
+#' dat_problem2 <- prioritizr::problem(dat_species_bin %>%
+#'                                       dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.5) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln2 <- dat_problem2 %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' CorrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
+#'
 #' (splnr_plot_CorrMat(CorrMat, AxisLabels = c("Solution 1", "Solution 2")))
 splnr_plot_CorrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#4477AA"),
                                legendTitle = "Correlation \ncoefficient",

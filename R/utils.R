@@ -251,6 +251,17 @@ splnr_arrangeFeatures <- function(df) {
 #'
 #' @examples
 #' # not including incidental species coverage
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' dfNInc <- splnr_prepTargetData(
 #'   soln = dat_soln,
 #'   pDat = dat_problem,
@@ -389,6 +400,31 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA, Dict = NA, d
 #' @importFrom rlang .data
 #'
 #' @examples
+#' # 30 % target for problem/solution 1
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
+#' # 50 % target for problem/solution 2
+#' dat_problem2 <- prioritizr::problem(dat_species_bin %>%
+#'                                       dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.5) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln2 <- dat_problem2 %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' corrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
 splnr_prepKappaCorrData <- function(sol, name_sol) {
   s_list <- lapply(seq_along(sol), function(x) {
@@ -443,6 +479,17 @@ splnr_prepKappaCorrData <- function(sol, name_sol) {
 #' @importFrom rlang .data
 #'
 #' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' # create conservation problem that contains a portfolio of solutions
 #' dat_soln_portfolio <- dat_problem %>%
 #'   prioritizr::add_cuts_portfolio(number_solutions = 5) %>%
@@ -451,8 +498,6 @@ splnr_prepKappaCorrData <- function(sol, name_sol) {
 #' selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 #' (splnr_plot_selectionFreq(selFreq))
 #'
-#' solnList <- list(dat_soln, dat_soln2)
-#' selFreq <- splnr_prep_selFreq(solnMany = solnList, type = "list")
 splnr_prep_selFreq <- function(solnMany, type = "portfolio") {
   if (type == "portfolio") { # check if provided input is a protfolio
 
