@@ -30,17 +30,20 @@ A ggplot object of the plot
 Plot selection frequency of a planning unit in an array of prioritisations
 }
 \examples{
-\dontrun{
+dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+                                   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+                                   cost_column = "Cost") \%>\%
+  prioritizr::add_min_set_objective() \%>\%
+  prioritizr::add_relative_targets(0.3) \%>\%
+  prioritizr::add_binary_decisions() \%>\%
+  prioritizr::add_default_solver(verbose = FALSE)
+
+# create conservation problem that contains a portfolio of solutions
 dat_soln_portfolio <- dat_problem \%>\%
-  prioritizr::add_top_portfolio(number_solutions = 5) \%>\% #create conservation problem that contains a portfolio of solutions
+  prioritizr::add_cuts_portfolio(number_solutions = 5) \%>\%
   prioritizr:::solve.ConservationProblem()
 
-selFreq <- dat_soln_portfolio \%>\%  # calculate selection frequency
-sf::st_drop_geometry() \%>\%
-dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(., dplyr::starts_with("solution_"))))) \%>\%
-sf::st_as_sf(geometry = dat_soln_portfolio$geometry) \%>\%
-dplyr::select(selFreq)
-
+selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 (splnr_plot_selectionFreq(selFreq))
-}
+
 }

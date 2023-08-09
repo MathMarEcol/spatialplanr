@@ -19,7 +19,7 @@ Function for creating polygon
 }
 \examples{
 splnr_create_polygon(x = dplyr::tibble(x = seq(-50, 50, by = 1), y = 120) \%>\%
-                      dplyr::bind_rows(dplyr::tibble(x = 50, y = seq(120, 180, by = 1))) \%>\%
-                      dplyr::bind_rows(dplyr::tibble(x = seq(50, -50, by = -1), y = 180)) \%>\%
-                      dplyr::bind_rows(dplyr::tibble(x = -50, y = seq(150, 120, by = -1))))
+  dplyr::bind_rows(dplyr::tibble(x = 50, y = seq(120, 180, by = 1))) \%>\%
+  dplyr::bind_rows(dplyr::tibble(x = seq(50, -50, by = -1), y = 180)) \%>\%
+  dplyr::bind_rows(dplyr::tibble(x = -50, y = seq(150, 120, by = -1))))
 }

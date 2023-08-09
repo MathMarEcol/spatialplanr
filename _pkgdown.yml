@@ -32,23 +32,20 @@ reference:
   - starts_with("splnr_create_polygon")
   - starts_with("splnr_replace_NAs")
   - starts_with("splnr_scale_01")
+  - starts_with("splnr_prep")
 
 - title: Built in datasets
   contents:
-  - dat_PUs
-  - dat_bndry
-  - dat_region
-  - dat_soln
-  - dat_soln2
-  - dat_species_bin
-  - dat_species_prob
   - Category_vec
   - Category_vec2
+  - dat_bndry
+  - dat_mpas
+  - dat_PUs
+  - dat_region
+  - dat_species_bin
+  - dat_species_bin2
+  - dat_species_prob
+  - CoralSeaVelocity
   - IUCN_IA_Targets
   - MPAsCoralSea
-  - dat_mpas
-  - dat_problem
-  - dat_species_bin2
   - spDataFiltered
-  - splnr_prepKappaCorrData
-  - splnr_prepTargetData

@@ -17,7 +17,9 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![R-CMD-check](https://github.com/MathMarEcol/spatialplanr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/MathMarEcol/spatialplanr/actions/workflows/R-CMD-check.yaml)
+[![Ubuntu](https://github.com/MathMarEcol/spatialplanr/actions/workflows/Ubuntu.yaml/badge.svg)](https://github.com/MathMarEcol/spatialplanr/actions/workflows/Ubuntu.yaml)
+[![MacOS](https://github.com/MathMarEcol/spatialplanr/actions/workflows/MacOS.yaml/badge.svg)](https://github.com/MathMarEcol/spatialplanr/actions/workflows/MacOS.yaml)
+[![Windows](https://github.com/MathMarEcol/spatialplanr/actions/workflows/Windows.yaml/badge.svg)](https://github.com/MathMarEcol/spatialplanr/actions/workflows/Windows.yaml)
 [![Codecov test coverage](https://codecov.io/gh/MathMarEcol/spatialplanr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/MathMarEcol/spatialplanr?branch=main)
 [![issues - planktonr](https://img.shields.io/github/issues/MathMarEcol/spatialplanr)](https://github.com/MathMarEcol/spatialplanr/issues)
 <!-- badges: end -->

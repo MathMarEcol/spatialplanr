@@ -5,14 +5,12 @@
 \alias{MPAsCoralSea}
 \title{Current MPAs of the Coral Sea}
 \format{
-\subsection{\code{MPAsCoralSea}}{
-
+\code{MPAsCoralSea}
 A data frame with 397 rows and 17 columns:
 \describe{
 \item{wdpa}{binary vector denoting presence or absence of a current marine protected area}
 \item{cellID}{cell ID of planning units}
 ...
-}
 }
 }
 \source{

@@ -11,10 +11,10 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  warning=FALSE, 
-  cache=FALSE, 
-  message=FALSE,
-  eval=TRUE
+  warning = FALSE,
+  cache = FALSE,
+  message = FALSE,
+  eval = TRUE
 )
 ```
 
@@ -39,7 +39,7 @@ Type <- "Oceans" # "EEZ"
 
 You can also define a region with square boundaries if you need.
 ```{r, eval=FALSE}
-#Region <- c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)
+# Region <- c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)
 ```
 
 Set the shape and area of the planning unit in square kilometres.
@@ -64,7 +64,7 @@ Bndry <- splnr_get_Boundary(Region, Type, cCRS)
 
 Get the land boundaries to remove overlap. The object "landmass" represents the land mass that should be removed (inverse = FALSE)
 ```{r}
-landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>% 
+landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
   sf::st_transform(cCRS)
 ```
 
@@ -83,7 +83,7 @@ We can check what the PUs look like
 For our example, we will use a small subset of charismatic megafauna species of the Coral Sea to inform the conservation plan. We filtered the Aquamaps (Aquamaps.org) species distribution models for our study area for the following species: 
 ```{r}
 Dict <- tibble::tribble(
-  ~ Common, ~ Scientific, ~ Category, ~ Class,
+  ~Common, ~Scientific, ~Category, ~Class,
   "Green sea turtle", "Chelonia_mydas", "Reptiles", "important",
   "Loggerhead sea turtle", "Caretta_caretta", "Reptiles", "important",
   "Hawksbill sea turtle", "Eretmochelys_imbricata", "Reptiles", "important",
@@ -109,28 +109,28 @@ These species were not chosen based on their importance for this region and only
 ### Convert the probabilities to binary data
 
 ```{r}
-
 datEx_species_bin <- spDataFiltered %>%
   dplyr::as_tibble() %>%
-  dplyr::mutate(dplyr::across(-dplyr::any_of(c("cellID", "geometry")), # Don't apply to geometry and cellID
-                              ~ dplyr::case_when(. >= 0.5 ~ 1,
-                                                 . < 0.5 ~ 0,
-                                                 is.na(.data) ~ 0))) %>%
+  dplyr::mutate(dplyr::across(
+    -dplyr::any_of(c("cellID", "geometry")), # Don't apply to geometry and cellID
+    ~ dplyr::case_when(
+      . >= 0.5 ~ 1,
+      . < 0.5 ~ 0,
+      is.na(.data) ~ 0
+    )
+  )) %>%
   sf::st_as_sf()
-
 ```
 
 We can now look at the feature data used for the spatial plan individually by calling `splnr_plot_binFeature()`, for example to see the binary habitat suitability map for Green sea turtles:
 ```{r, fig.width=9}
 (ggFeature1 <- splnr_plot_binFeature(datEx_species_bin, datEx_species_bin$Chelonia_mydas, PlanUnits = PUs, landmass))
-
 ```
 
 The suitable habitat for Green sea turtles as predicted by Aquamaps is restricted to few cells close to the coast. If we now compare this with the predicted suitable habitat for Humpback whales, we can see that they are fairly ubiquitous across the whole Coral Sea. 
 
 ```{r, fig.width=9}
 (ggFeature <- splnr_plot_binFeature(datEx_species_bin, datEx_species_bin$Megaptera_novaeangliae, PlanUnits = PUs, landmass = landmass))
-
 ```
 
 In our example, this was the only reason why we classified species as either representative if their suitable habitat is wide-ranging within the study region or important if they are restricted to a few number of cells. 
@@ -139,7 +139,6 @@ To get a better idea of the overall distribution of the used features, we can al
 
 ```{r, fig.width=9}
 (ggFeatNo <- splnr_plot_featureNo(datEx_species_bin))
-
 ```
 
 ### Prepare Data for prioritisation
@@ -173,7 +172,7 @@ As shown previously, we assigned the conservation features a class reflecting th
 
 ```{r}
 target <- Dict %>%
-  dplyr::mutate(target = dplyr::if_else(Class == "important", 30/100, 10/100))
+  dplyr::mutate(target = dplyr::if_else(Class == "important", 30 / 100, 10 / 100))
 ```
 
 **Note:** The assigned classes and targets were not based on any ecological information and only chosen for visualization purposes. 
@@ -221,12 +220,13 @@ This plot shows the optimal solution for the planning region that meets the sele
 To visualize how well the targets are met, we first need to extract how much suitable habitat of each feature are selected in the spatial plan. This also includes potential incidental coverage of feature that were not included in the spatial plan but can still be found in the planning region.
 
 ```{r, fig.width=9, fig.height=10}
-dfTarget <- splnr_prepTargetData(datEx_soln, datEx_problem, datEx_species_bin, Dict = Dict, Category = NA,
-                                 dataCol = "Scientific",
-                                 climsmart = FALSE, solnCol = "solution_1")
+dfTarget <- splnr_prepTargetData(datEx_soln, datEx_problem, datEx_species_bin,
+  Dict = Dict, Category = NA,
+  dataCol = "Scientific",
+  climsmart = FALSE, solnCol = "solution_1"
+)
 
 (ggTarget <- splnr_plot_targets(dfTarget, nr = 1, setTarget = 30, plotTitle = "Target: "))
-
 ```
 
 For a circular bar plot, one additional step of data preparation needs to be done.
@@ -236,12 +236,13 @@ dfTargetCirc <- dfTarget %>%
   dplyr::select("feature", "value", "group") %>%
   na.omit()
 
-colors <- c('important' = 'darkgreen',
-            'representative' = 'darkred')
-legends <- c('Important', 'Representative')
+colors <- c(
+  "important" = "darkgreen",
+  "representative" = "darkred"
+)
+legends <- c("Important", "Representative")
 
 (ggCircTarg <- splnr_plot_circBplot(df = dfTargetCirc, legend_list = legends, legend_color = colors, impTarget = 30, repTarget = 10))
-
 ```
 
 #### Visualization of importance scores
@@ -269,7 +270,7 @@ Here, our second spatial plan will include already existing marine protected are
 * IUCN Category = c("Ia", "Ib", "II", "III", "IV")
 
 ```{r, fig.width=9}
-(ggMPA <- splnr_plot_MPAs(MPAsCoralSea, landmass = landmass)) 
+(ggMPA <- splnr_plot_MPAs(MPAsCoralSea, landmass = landmass))
 ```
 
 We will also include targets based on IUCN categories to prioritise species with an IUCN status of:
@@ -285,12 +286,12 @@ We assign a 30% target to species within these categories. All species that do n
 ```{r}
 # Species <- gsub("_", " ", col_name) #to transform Aquamaps species names to IUCN species names
 # dfSpecies <- data.frame(Species)
-# 
+#
 # minTarget = 0.1
 # maxTarget = 0.2
-# 
+#
 # Targets <- splnr_get_TargetsIA(datEx_species_bin, minTarget, maxTarget) #inverse area target
-# 
+#
 # speciesCol <- "Species"
 # Targets <- Targets %>%
 #   splnr_match_IUCNRedList() %>% # Add RL data to the df
@@ -298,7 +299,6 @@ We assign a 30% target to species within these categories. All species that do n
 #                                           TRUE ~ Targets$Target))
 
 Targets <- IUCN_IA_Targets
-
 ```
  **Note:** Accessing the IUCN database requires a login token from `rl_use_iucn()` that needs to be added to the environment using `Sys.setenv(IUCN_REDLIST_KEY = "[Your Token]")`.
 
@@ -340,17 +340,16 @@ Sometimes when multiple spatial plans are generated, we are interesting in how m
 
 ```{r, fig.width=9}
 datEx_soln_portfolio <- datEx_problem %>%
-  prioritizr::add_cuts_portfolio(5) %>% #create conservation problem that contains a portfolio of solutions
+  prioritizr::add_cuts_portfolio(5) %>% # create conservation problem that contains a portfolio of solutions
   prioritizr:::solve.ConservationProblem()
 
-selFreq <- datEx_soln_portfolio %>%  # calculate selection frequency
+selFreq <- datEx_soln_portfolio %>% # calculate selection frequency
   sf::st_drop_geometry() %>%
   dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(., dplyr::starts_with("solution_"))))) %>%
   sf::st_as_sf(geometry = datEx_soln_portfolio$geometry) %>%
   dplyr::select(selFreq)
 
 (ggselFreq <- splnr_plot_selectionFreq(selFreq))
-
 ```
 
 
@@ -363,7 +362,7 @@ Set the depth range and probability cutoff (`CO`) for extracting AquaMaps data.
 ```{r}
 # MinDepth <- 0
 # MaxDepth <- 200
-# 
+#
 # AQM <- splnr_get_AquaMaps(PUs, MinDepth, MaxDepth)
 ```
 
@@ -379,7 +378,7 @@ Add geomorphic features to the existing features object.
 ```{r}
 # Cutoffs <- 0.5
 # AQM_bin <- splnr_Apply_Cutoffs(AQM, Cutoffs)
-# 
+#
 # Cutoffs <- c(Shelf = 0.01, Ridge = 0.2, Plateau = 0.1, Seamount = 0.3)
 # GeoMorph_bin <- splnr_Apply_Cutoffs(GeoMorph, Cutoffs)
 ```
@@ -388,9 +387,9 @@ Add geomorphic features to the existing features object.
 
 ### Join all features together.
 ```{r}
-# features <- GeoMorph_bin %>% 
+# features <- GeoMorph_bin %>%
 #   dplyr::left_join(AQM_bin %>% sf::st_drop_geometry(), by = "cellID")
-# 
+#
 # (ggFeatureNo <- splnr_plot_FeatureNo(features, landmass)) # Plot Number of features
 ```
 
@@ -403,8 +402,8 @@ You can also assign a Longhurst Province to each PU and set targets individually
 
 ### Get locked in areas 
 ```{r, fig.width=7}
-# LockedIn <- splnr_get_MPAs(PUs, "Australia") %>% 
-#   splnr_Apply_Cutoffs(0.5) %>% 
+# LockedIn <- splnr_get_MPAs(PUs, "Australia") %>%
+#   splnr_Apply_Cutoffs(0.5) %>%
 #   dplyr::mutate(wdpa = as.logical(wdpa))
 # (ggMPA <- splnr_plot_MPAs(LockedIn, landmass)) # Plot Locked in areas
 ```
@@ -427,7 +426,7 @@ Set minimum and maximum limits for inverse area targets
 ```{r, eval = FALSE}
 # minTarget = 0.2
 # maxTarget = 0.5
-# 
+#
 # Targets <- splnr_get_TargetsIA(features, minTarget, maxTarget)
 ```
 
@@ -435,24 +434,24 @@ Set minimum and maximum limits for inverse area targets
 To run this code you will need to sign up for your own IUCN RedList token. Start by running `rredlist::rl_use_iucn()`. 
 ```{r, eval=FALSE}
 # speciesCol <- "Species"
-# Targets <- Targets %>% 
+# Targets <- Targets %>%
 #   splnr_Match_IUCNRedList(speciesCol) %>% # Add RL data to the df
 #   dplyr::mutate(Target = dplyr::case_when(IUCN_Category %in% c("EX","EW","CR","EN","VU") ~ 1,
-                                          # TRUE ~ Targets$Target))
+# TRUE ~ Targets$Target))
 ```
 
 ## Set up the planning problem 
 
 ### Get the list of features
 ```{r}
-# feature_names <- features %>% 
-#   sf::st_drop_geometry() %>% 
+# feature_names <- features %>%
+#   sf::st_drop_geometry() %>%
 #   names()
-# 
-# out_sf <- cbind(Cost, 
-#                 LockedIn %>% sf::st_drop_geometry(), 
+#
+# out_sf <- cbind(Cost,
+#                 LockedIn %>% sf::st_drop_geometry(),
 #                 features %>% sf::st_drop_geometry())
-# 
+#
 # p1 <- prioritizr::problem(out_sf, feature_names, "Cost") %>%
 #   prioritizr::add_min_set_objective() %>%
 #   prioritizr::add_relative_targets(Targets$Target) %>%

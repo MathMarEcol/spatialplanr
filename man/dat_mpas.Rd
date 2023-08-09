@@ -5,15 +5,13 @@
 \alias{dat_mpas}
 \title{MPA Data}
 \format{
-\subsection{\code{dat_mpas}}{
-
+\code{dat_mpas}
 A data frame with XXXX rows and XXX columns:
 \describe{
 \item{cellID}{ID number for each row (or cell) of the dataset}
 \item{geometry}{sf geometry column}
 \item{wdpa}{binary MPA information (1: MPA)}
 ...
-}
 }
 }
 \source{

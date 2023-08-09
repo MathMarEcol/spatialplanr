@@ -1,4 +1,3 @@
-
 #' Plot prioritizr solution
 #'
 #' @param soln The `prioritizr` solution
@@ -14,15 +13,22 @@
 #' @export
 #'
 #' @examples
-#' (splnr_plot_Solution(dat_soln, dat_PUs))
-# dat_soln %>%
-#     splnr_plot_Solution(dat_soln)
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#'dat_soln <- dat_problem %>%
+#'  prioritizr:::solve.ConservationProblem()
+#'
+#' splnr_plot_Solution(dat_soln, dat_PUs)
 splnr_plot_Solution <- function(soln, PlanUnits, landmass = NA,
                                 colorVals = c("TRUE" = "#3182bd", "FALSE" = "#c6dbef"),
                                 colorPUs = "grey80", showLegend = TRUE,
-                                plotTitle = "Solution", legendTitle = "Planning Units"
-                                ){
-
+                                plotTitle = "Solution", legendTitle = "Planning Units") {
   soln <- soln %>%
     dplyr::select(.data$solution_1) %>%
     dplyr::mutate(solution_1 = as.logical(.data$solution_1)) # Making it logical helps with the plotting
@@ -31,25 +37,28 @@ splnr_plot_Solution <- function(soln, PlanUnits, landmass = NA,
     ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$solution_1), colour = NA, size = 0.1, show.legend = showLegend) +
     ggplot2::geom_sf(data = PlanUnits, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE)
 
-  if (class(landmass)[[1]] == "sf"){
+  if (class(landmass)[[1]] == "sf") {
     gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
 
   gg <- gg +
     ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
-    ggplot2::scale_colour_manual(name = legendTitle,
-                                 values = colorVals,
-                                 labels = c("Not Selected", "Selected"),
-                                 aesthetics = "fill", #c("colour", "fill"),
-                                 guide = ggplot2::guide_legend(override.aes = list(linetype = 0),
-                                                               nrow = 2,
-                                                               order = 1,
-                                                               direction = "horizontal",
-                                                               title.position = "top",
-                                                               title.hjust = 0.5)) +
+    ggplot2::scale_colour_manual(
+      name = legendTitle,
+      values = colorVals,
+      labels = c("Not Selected", "Selected"),
+      aesthetics = "fill", # c("colour", "fill"),
+      guide = ggplot2::guide_legend(
+        override.aes = list(linetype = 0),
+        nrow = 2,
+        order = 1,
+        direction = "horizontal",
+        title.position = "top",
+        title.hjust = 0.5
+      )
+    ) +
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = plotTitle)
-
 }
 
 
@@ -62,12 +71,12 @@ splnr_plot_Solution <- function(soln, PlanUnits, landmass = NA,
 #' @export
 #'
 #' @examples
-#' (splnr_plot_PUs(dat_PUs))
-splnr_plot_PUs <- function(PlanUnits, landmass = NA){
+#' splnr_plot_PUs(dat_PUs)
+splnr_plot_PUs <- function(PlanUnits, landmass = NA) {
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = PlanUnits, colour = "grey80", fill = NA, size = 0.1, show.legend = FALSE)
 
-  if (class(landmass)[[1]] == "sf"){
+  if (class(landmass)[[1]] == "sf") {
     gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
 
@@ -75,7 +84,6 @@ splnr_plot_PUs <- function(PlanUnits, landmass = NA){
     ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = "Planning Units")
-
 }
 
 
@@ -93,13 +101,12 @@ splnr_plot_PUs <- function(PlanUnits, landmass = NA){
 #' @export
 #'
 #' @examples
-#' (splnr_plot_MPAs(dat_mpas))
+#' splnr_plot_MPAs(dat_mpas)
 splnr_plot_MPAs <- function(df, landmass = NA,
                             colorVals = c("TRUE" = "blue", "FALSE" = "white"),
                             colorPUs = "grey80", showLegend = TRUE,
-                            plotTitle = "Locked In Areas", legendTitle = ""){
-
-  if (isa(df$wdpa, "logical") == FALSE){
+                            plotTitle = "Locked In Areas", legendTitle = "") {
+  if (isa(df$wdpa, "logical") == FALSE) {
     df <- df %>%
       dplyr::mutate(wdpa = as.logical(.data$wdpa))
   }
@@ -107,28 +114,34 @@ splnr_plot_MPAs <- function(df, landmass = NA,
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$wdpa), colour = "grey80", size = 0.1, show.legend = showLegend)
 
-  if (class(landmass)[[1]] == "sf"){
+  if (class(landmass)[[1]] == "sf") {
     gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
 
-  gg<- gg + ggplot2::scale_colour_manual(values = c("TRUE" = "blue",
-                                            "FALSE" = "grey50")) +
-    ggplot2::scale_fill_manual(name = legendTitle,
-                               values = colorVals,
-                               labels = c("No MPA", "MPA"),
-                               aesthetics = "fill", #c("colour", "fill"),
-                               guide = ggplot2::guide_legend(override.aes = list(linetype = 0),
-                                                             nrow = 2,
-                                                             order = 1,
-                                                             direction = "horizontal",
-                                                             title.position = "top",
-                                                             title.hjust = 0.5)) +
+  gg <- gg + ggplot2::scale_colour_manual(values = c(
+    "TRUE" = "blue",
+    "FALSE" = "grey50"
+  )) +
+    ggplot2::scale_fill_manual(
+      name = legendTitle,
+      values = colorVals,
+      labels = c("No MPA", "MPA"),
+      aesthetics = "fill", # c("colour", "fill"),
+      guide = ggplot2::guide_legend(
+        override.aes = list(linetype = 0),
+        nrow = 2,
+        order = 1,
+        direction = "horizontal",
+        title.position = "top",
+        title.hjust = 0.5
+      )
+    ) +
     ggplot2::theme_bw() +
     ggplot2::coord_sf(
       xlim = sf::st_bbox(df)$xlim,
-      ylim = sf::st_bbox(df)$ylim) +
+      ylim = sf::st_bbox(df)$ylim
+    ) +
     ggplot2::labs(subtitle = plotTitle)
-
 }
 
 
@@ -144,32 +157,46 @@ splnr_plot_MPAs <- function(df, landmass = NA,
 #' @export
 #'
 #' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#'dat_soln <- dat_problem %>%
+#'  prioritizr:::solve.ConservationProblem()
+#'
 #' dat_cost <- dat_soln %>%
-#'               dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
-#' (splnr_plot_cost(dat_cost))
+#'   dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
+#'
+#' splnr_plot_cost(dat_cost)
 splnr_plot_cost <- function(Cost, Cost_name = "Cost", landmass = NA,
-                            paletteName = "YlGnBu", plotTitle = "Cost (USD)"){
-
+                            paletteName = "YlGnBu", plotTitle = "Cost (USD)") {
   # col_name = stringr::str_subset(colnames(Cost), "geometry", negate = TRUE)
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), colour = "grey80", size = 0.1, show.legend = TRUE)
 
-  if (class(landmass)[[1]] == "sf"){
+  if (class(landmass)[[1]] == "sf") {
     gg <- gg +
       ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
 
   gg <- gg +
     ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
-    ggplot2::scale_fill_distiller(palette = paletteName,
-                                  aesthetics = c("colour", "fill"),
-                                  limits = c(0,
-                                             as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))),
-                                  oob = scales::squish) +
+    ggplot2::scale_fill_distiller(
+      palette = paletteName,
+      aesthetics = c("colour", "fill"),
+      limits = c(
+        0,
+        as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))
+      ),
+      oob = scales::squish
+    ) +
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = plotTitle)
-
 }
 
 #' Plot cost overlay
@@ -185,14 +212,24 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", landmass = NA,
 #' @export
 #'
 #' @examples
-#' (splnr_plot_costOverlay(soln = dat_soln))
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#'dat_soln <- dat_problem %>%
+#'  prioritizr:::solve.ConservationProblem()
+#'
+#' splnr_plot_costOverlay(soln = dat_soln)
 splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass = NA,
                                    legendTitle = "Cost",
-                                   plotTitle = "Solution overlaid with cost"){
-
-  if (!is.data.frame(get("Cost"))){ #potentially needed for app later
-    if(! Cost_name %in% colnames(soln)) {
-      cat("Cost column not found. Please check your solution data frame for your column of interest.");
+                                   plotTitle = "Solution overlaid with cost") {
+  if (!is.data.frame(get("Cost"))) { # potentially needed for app later
+    if (!Cost_name %in% colnames(soln)) {
+      cat("Cost column not found. Please check your solution data frame for your column of interest.")
     } else {
       Cost <- soln %>%
         dplyr::select(!!rlang::sym(Cost_name))
@@ -205,24 +242,27 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = soln, fill = "black", colour = NA, size = 0.0001) +
-    ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), alpha = 0.5, colour = NA, size = 0.0001)+
-    ggplot2::scale_fill_gradient(name = legendTitle,
-                                 # palette = "Oranges",
-                                 low = "#fff5eb",
-                                 high = "#d94801", #"#f16913",
-                                 limits = c(0,
-                                            as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))),
-                                 # direction = 1,
-                                 # oob = scales::squish,
-                                 # guide = ggplot2::guide_colourbar(
-                                 #   title.position = "bottom",
-                                 #   title.hjust = 0.5,
-                                 #   order = 1,
-                                 #   barheight = grid::unit(0.03, "npc"),
-                                 #   barwidth = grid::unit(0.25, "npc"))
+    ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), alpha = 0.5, colour = NA, size = 0.0001) +
+    ggplot2::scale_fill_gradient(
+      name = legendTitle,
+      # palette = "Oranges",
+      low = "#fff5eb",
+      high = "#d94801", # "#f16913",
+      limits = c(
+        0,
+        as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))
+      ),
+      # direction = 1,
+      # oob = scales::squish,
+      # guide = ggplot2::guide_colourbar(
+      #   title.position = "bottom",
+      #   title.hjust = 0.5,
+      #   order = 1,
+      #   barheight = grid::unit(0.03, "npc"),
+      #   barwidth = grid::unit(0.25, "npc"))
     )
 
-  if (class(landmass)[[1]] == "sf"){
+  if (class(landmass)[[1]] == "sf") {
     gg <- gg +
       ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
@@ -249,39 +289,43 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass
 #' @export
 #'
 #' @examples
-#' (splnr_plot_binFeature(dat_species_bin,  dat_species_bin$Spp1, dat_PUs))
+#' splnr_plot_binFeature(dat_species_bin, dat_species_bin$Spp1, dat_PUs)
 splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
                                   colorVals = c("Suitable" = "#3182bd", "Not Suitable" = "#c6dbef"),
                                   colorPUs = "grey80", showLegend = TRUE,
-                                  plotTitle = " ", legendTitle = "Habitat"){
-
-  df <-  df %>%
-    dplyr::mutate(pred_bin = ifelse(is.na(colInterest), 0, colInterest),
-                  pred_bin = dplyr::if_else(.data$pred_bin == 1, "Suitable", "Not Suitable"),
-                  pred_bin = factor(.data$pred_bin, levels = c("Suitable", "Not Suitable")))
+                                  plotTitle = " ", legendTitle = "Habitat") {
+  df <- df %>%
+    dplyr::mutate(
+      pred_bin = ifelse(is.na(colInterest), 0, colInterest),
+      pred_bin = dplyr::if_else(.data$pred_bin == 1, "Suitable", "Not Suitable"),
+      pred_bin = factor(.data$pred_bin, levels = c("Suitable", "Not Suitable"))
+    )
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$pred_bin), colour = NA, size = 0.001, show.legend = showLegend) +
     ggplot2::geom_sf(data = PlanUnits, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE)
 
-  if (class(landmass)[[1]] == "sf"){
+  if (class(landmass)[[1]] == "sf") {
     gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
 
   gg <- gg +
     ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
-    ggplot2::scale_colour_manual(name = legendTitle,
-                                 values = colorVals,
-                                 aesthetics = "fill", #c("colour", "fill"),
-                                 guide = ggplot2::guide_legend(override.aes = list(linetype = 0),
-                                                               nrow = 2,
-                                                               order = 1,
-                                                               direction = "horizontal",
-                                                               title.position = "top",
-                                                               title.hjust = 0.5)) +
+    ggplot2::scale_colour_manual(
+      name = legendTitle,
+      values = colorVals,
+      aesthetics = "fill", # c("colour", "fill"),
+      guide = ggplot2::guide_legend(
+        override.aes = list(linetype = 0),
+        nrow = 2,
+        order = 1,
+        direction = "horizontal",
+        title.position = "top",
+        title.hjust = 0.5
+      )
+    ) +
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = plotTitle)
-
 }
 
 #' Plot how well targets are met
@@ -295,22 +339,45 @@ splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
 #' @export
 #'
 #' @examples
-#' #not including incidental species coverage
-#' dfNInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin,
-#'                           Category = Category_vec, solnCol = "solution_1")
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#'dat_soln <- dat_problem %>%
+#'  prioritizr:::solve.ConservationProblem()
+#'
+#' # not including incidental species coverage
+#' dfNInc <- splnr_prepTargetData(
+#'   soln = dat_soln,
+#'   pDat = dat_problem,
+#'   allDat = dat_species_bin,
+#'   Category = Category_vec,
+#'   solnCol = "solution_1"
+#' )
 #'
 #' (splnr_plot_targets(dfNInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
-#' #including incidental species coverage
-#' dfInc <- splnr_prepTargetData(soln = dat_soln, pDat = dat_problem, allDat = dat_species_bin2,
-#'                          Category = Category_vec2, solnCol = "solution_1")
+#'
+#' # including incidental species coverage
+#' dfInc <- splnr_prepTargetData(
+#'   soln = dat_soln,
+#'   pDat = dat_problem,
+#'   allDat = dat_species_bin2,
+#'   Category = Category_vec2,
+#'   solnCol = "solution_1"
+#' )
 #' (splnr_plot_targets(dfInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
 splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
                                plotTitle = "") {
-
   uniqueCat <- unique(df$category[!is.na(df$category)])
 
-  colr <- tibble::tibble(Category = uniqueCat,
-                         Colour = viridis::viridis(length(uniqueCat))) %>%
+  colr <- tibble::tibble(
+    Category = uniqueCat,
+    Colour = viridis::viridis(length(uniqueCat))
+  ) %>%
     tibble::deframe()
 
   df <- df %>%
@@ -321,26 +388,29 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
     ggplot2::geom_bar(data = df, stat = "identity", ggplot2::aes(x = .data$feature, y = .data$incidental_held), na.rm = TRUE, fill = "NA", colour = "black") +
     ggplot2::labs(title = plotTitle, x = "Feature", y = "Representation of features \nin total selected area (%)") +
     ggplot2::theme_bw() +
-    ggplot2::scale_y_continuous(limits = c(0, ymax <- max(c(df$value, df$incidental_held), na.rm = TRUE) + 10), expand = c(0,0)) + #only works for min shortfall without incidental yet
-    ggplot2::scale_fill_manual(values = colr,
-                               guide = ggplot2::guide_legend(nrow = nr)) +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5, size = 16, colour = "black"),
-                   axis.text.y = ggplot2::element_text(size = 16, colour = "black"),
-                   axis.title.x = ggplot2::element_blank(),
-                   legend.title = ggplot2::element_blank(),
-                   legend.text = ggplot2::element_text(size = 16),
-                   axis.title.y = ggplot2::element_text(size = 16),
-                   title = ggplot2::element_text(size = 16),
-                   legend.position = c(0.5, 0.95),
-                   legend.direction = "horizontal",
-                   legend.background = ggplot2::element_rect(fill = "NA"))
+    ggplot2::scale_y_continuous(limits = c(0, ymax <- max(c(df$value, df$incidental_held), na.rm = TRUE) + 10), expand = c(0, 0)) + # only works for min shortfall without incidental yet
+    ggplot2::scale_fill_manual(
+      values = colr,
+      guide = ggplot2::guide_legend(nrow = nr)
+    ) +
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5, size = 16, colour = "black"),
+      axis.text.y = ggplot2::element_text(size = 16, colour = "black"),
+      axis.title.x = ggplot2::element_blank(),
+      legend.title = ggplot2::element_blank(),
+      legend.text = ggplot2::element_text(size = 16),
+      axis.title.y = ggplot2::element_text(size = 16),
+      title = ggplot2::element_text(size = 16),
+      legend.position = c(0.5, 0.95),
+      legend.direction = "horizontal",
+      legend.background = ggplot2::element_rect(fill = "NA")
+    )
 
   if (!(is.na(setTarget))) {
     gg_target <- gg_target +
       ggplot2::geom_abline(slope = 0, intercept = setTarget, col = "black", lty = 2, size = 1.5) +
       ggplot2::labs(title = paste0(plotTitle, setTarget, "%"))
   }
-
 }
 
 #' Plot circular barplot
@@ -360,20 +430,40 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
 #' @export
 #'
 #' @examples
-#' s1 <- dat_soln %>% #DISCLAIMER: THIS SOLUTION IS NOT ACTUALLY RUN WITH THESE TARGETS YET
+#' # DISCLAIMER: THIS SOLUTION IS NOT ACTUALLY RUN WITH THESE TARGETS YET
+#'
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#'dat_soln <- dat_problem %>%
+#'  prioritizr:::solve.ConservationProblem()
+#'
+#' s1 <- dat_soln %>%
 #'   tibble::as_tibble()
 #'
 #' p1 <- dat_problem
 #'
-#' df_rep_imp <- prioritizr::eval_feature_representation_summary(p1, s1[, 'solution_1'])%>%
+#' df_rep_imp <- prioritizr::eval_feature_representation_summary(
+#'   p1,
+#'   s1[, "solution_1"]
+#' ) %>%
 #'   dplyr::select(feature, relative_held) %>%
-#'   dplyr::mutate(relative_held = relative_held*100)
+#'   dplyr::mutate(relative_held = relative_held * 100)
 #'
 #' imp_layers <- c("Spp1", "Spp3")
 #'
 #' target <- data.frame(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5")) %>%
-#'   dplyr::mutate(class = dplyr::if_else(.data$feature %in% imp_layers, "important", "representative")) %>%
-#'   dplyr::mutate(target = dplyr::if_else(class == "important", 50/100, 30/100))
+#'   dplyr::mutate(class = dplyr::if_else(.data$feature %in% imp_layers,
+#'     "important", "representative"
+#'   )) %>%
+#'   dplyr::mutate(target = dplyr::if_else(class == "important",
+#'     50 / 100, 30 / 100
+#'   ))
 #'
 #' df <- merge(df_rep_imp, target) %>%
 #'   dplyr::select(-target) %>%
@@ -381,18 +471,24 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
 #'   dplyr::rename(value = relative_held) %>%
 #'   dplyr::rename(group = class)
 #'
-#' colors <- c('important' = 'darkgreen',
-#'             'representative' = 'darkred')
-#' legends <- c('Important', 'Representative')
+#' colors <- c(
+#'   "important" = "darkgreen",
+#'   "representative" = "darkred"
+#' )
+#' legends <- c("Important", "Representative")
 #'
-#' (splnr_plot_circBplot(df, legend_list = legends, legend_color = colors, impTarget = 50, repTarget = 30))
-splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets = TRUE,
-                              impTarget = NA, repTarget = NA, colTarget = "red") {
-
+#' (splnr_plot_circBplot(df,
+#'   legend_list = legends,
+#'   legend_color = colors,
+#'   impTarget = 50, repTarget = 30
+#' ))
+splnr_plot_circBplot <- function(df, legend_color, legend_list,
+                                 indicateTargets = TRUE, impTarget = NA,
+                                 repTarget = NA, colTarget = "red") {
   # Adding rows to each group, creating space between the groups
   groups <- unique(df$group)
   NA_rows <- list()
-  for(i in 1:length(groups)) {
+  for (i in 1:length(groups)) {
     NA_rows[[i]] <- data.frame(feature = NA, value = 0, group = groups[i])
   }
 
@@ -403,7 +499,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets 
 
   # Set a number of 'empty bar' to add at the end of each group
   empty_bar <- 2
-  to_add <- data.frame(matrix(NA, empty_bar * length(unique(data$group)), ncol(data)) )
+  to_add <- data.frame(matrix(NA, empty_bar * length(unique(data$group)), ncol(data)))
   colnames(to_add) <- colnames(data)
   to_add$group <- rep(levels(as.factor(data$group)), each = empty_bar)
   data <- rbind(data, to_add)
@@ -416,12 +512,12 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets 
   label_data <- data
   # Calculate the angle of the labels
   number_of_bar <- nrow(label_data)
-  angle <-  90 - 360 * (label_data$id-0.5) /number_of_bar # Subtracting 0.5 so the labels are not found in the extreme left or right
+  angle <- 90 - 360 * (label_data$id - 0.5) / number_of_bar # Subtracting 0.5 so the labels are not found in the extreme left or right
   # Calculate the alignment of labels: right or left
   # If I am on the left part of the plot, my labels have currently an angle < -90
-  label_data$hjust<-ifelse( angle < -90, 1, 0)
+  label_data$hjust <- ifelse(angle < -90, 1, 0)
   # Flip angle BY to make them readable
-  label_data$angle<-ifelse(angle < -90, angle+180, angle)
+  label_data$angle <- ifelse(angle < -90, angle + 180, angle)
 
   # For the percentage lines
   grid_data <- data %>%
@@ -429,66 +525,82 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets 
     dplyr::summarize(start = min(.data$id), end = max(.data$id) - empty_bar) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(title = mean(c(.data$start, .data$end)))
-  grid_data$end <- grid_data$end[ c( nrow(grid_data), 1:nrow(grid_data)-1)] + 1.5
+  grid_data$end <- grid_data$end[c(nrow(grid_data), 1:nrow(grid_data) - 1)] + 1.5
   grid_data$start <- grid_data$end - 1
-  grid_data <- grid_data[-1,]
+  grid_data <- grid_data[-1, ]
 
   # Make the plot
   p <- ggplot2::ggplot(data, ggplot2::aes(x = as.factor(.data$id), y = .data$value, fill = .data$group)) +
 
     # plotting the bars
     ggplot2::geom_bar(ggplot2::aes(x = as.factor(.data$id), y = .data$value, fill = .data$group),
-                      stat = "identity",
-                      position = 'dodge') +
+      stat = "identity",
+      position = "dodge"
+    ) +
 
     # defining colors of the bars
-    ggplot2::scale_fill_manual(name = "Features",
-                               values = legend_color,
-                               labels = legend_list) +
+    ggplot2::scale_fill_manual(
+      name = "Features",
+      values = legend_color,
+      labels = legend_list
+    ) +
 
     # Add text showing the value of each 100/75/50/25 lines
-    ggplot2::geom_segment(data = grid_data,
-                          ggplot2::aes(x = .data$end, y = 25, xend = .data$start, yend = 25),
-                          colour = "grey50",
-                          alpha = 1,
-                          size = 0.5 ,
-                          inherit.aes = FALSE ) +
-    ggplot2::geom_segment(data = grid_data,
-                          ggplot2::aes(x = .data$end, y = 50, xend = .data$start, yend = 50),
-                          colour = "grey50",
-                          alpha = 1,
-                          size = 0.5,
-                          inherit.aes = FALSE ) +
-    ggplot2::geom_segment(data = grid_data,
-                          ggplot2::aes(x = .data$end, y = 75, xend = .data$start, yend = 75),
-                          colour = "grey50",
-                          alpha = 1,
-                          size = 0.5,
-                          inherit.aes = FALSE ) +
-    ggplot2::geom_segment(data = grid_data,
-                          ggplot2::aes(x = .data$end, y = 100, xend = .data$start, yend = 100),
-                          colour = "grey50",
-                          alpha = 1,
-                          size = 0.5,
-                          inherit.aes = FALSE ) +
-    ggplot2::annotate("text", x = rep(max(data$id-1),4),
-                      y = c(25, 50, 75, 100),
-                      label = c(25, 50, 75, 100),
-                      color = "grey50",
-                      size= 4,
-                      angle = 0, #-5
-                      fontface = "bold",
-                      hjust=0.5) +
+    ggplot2::geom_segment(
+      data = grid_data,
+      ggplot2::aes(x = .data$end, y = 25, xend = .data$start, yend = 25),
+      colour = "grey50",
+      alpha = 1,
+      size = 0.5,
+      inherit.aes = FALSE
+    ) +
+    ggplot2::geom_segment(
+      data = grid_data,
+      ggplot2::aes(x = .data$end, y = 50, xend = .data$start, yend = 50),
+      colour = "grey50",
+      alpha = 1,
+      size = 0.5,
+      inherit.aes = FALSE
+    ) +
+    ggplot2::geom_segment(
+      data = grid_data,
+      ggplot2::aes(x = .data$end, y = 75, xend = .data$start, yend = 75),
+      colour = "grey50",
+      alpha = 1,
+      size = 0.5,
+      inherit.aes = FALSE
+    ) +
+    ggplot2::geom_segment(
+      data = grid_data,
+      ggplot2::aes(x = .data$end, y = 100, xend = .data$start, yend = 100),
+      colour = "grey50",
+      alpha = 1,
+      size = 0.5,
+      inherit.aes = FALSE
+    ) +
+    ggplot2::annotate("text",
+      x = rep(max(data$id - 1), 4),
+      y = c(25, 50, 75, 100),
+      label = c(25, 50, 75, 100),
+      color = "grey50",
+      size = 4,
+      angle = 0, #-5
+      fontface = "bold",
+      hjust = 0.5
+    ) +
 
     # setting limitations of actual plot
-    ggplot2::ylim(-130,130) + #-140, 130
+    ggplot2::ylim(-130, 130) + #-140, 130
     ggplot2::theme_minimal() +
     ggplot2::coord_polar() +
-
-    ggplot2::geom_text(data = label_data, ggplot2::aes(x = .data$id, y = .data$value + 10, label = .data$feature,
-                                                       hjust = .data$hjust), color = "black",
-                       fontface = "bold", alpha = 0.6, size = 2.5, angle = label_data$angle,
-                       inherit.aes = FALSE ) +
+    ggplot2::geom_text(
+      data = label_data, ggplot2::aes(
+        x = .data$id, y = .data$value + 10, label = .data$feature,
+        hjust = .data$hjust
+      ), color = "black",
+      fontface = "bold", alpha = 0.6, size = 2.5, angle = label_data$angle,
+      inherit.aes = FALSE
+    ) +
 
     # # Defining colors of these lines
     # ggplot2::scale_color_manual(name = "Features",
@@ -499,16 +611,16 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets 
       axis.text = ggplot2::element_blank(),
       axis.title = ggplot2::element_blank(),
       panel.grid = ggplot2::element_blank(),
-      plot.margin = ggplot2::unit(rep(0.5,4), "cm")
+      plot.margin = ggplot2::unit(rep(0.5, 4), "cm")
     )
 
   if (indicateTargets == TRUE) {
-    if(is.na(impTarget) | is.na(repTarget)) {
+    if (is.na(impTarget) | is.na(repTarget)) {
       print("Please provide the targets you want to indicate.")
     }
     p <- p +
-      ggplot2::geom_abline(slope=0, intercept= impTarget,  col = colTarget,lty=2)  +
-      ggplot2::geom_abline(slope=0, intercept= repTarget,  col = colTarget,lty=2)
+      ggplot2::geom_abline(slope = 0, intercept = impTarget, col = colTarget, lty = 2) +
+      ggplot2::geom_abline(slope = 0, intercept = repTarget, col = colTarget, lty = 2)
   }
 }
 
@@ -528,46 +640,74 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list, indicateTargets 
 #'
 #' @importFrom rlang .data
 #' @examples
+#' # 30 % target for problem/solution 1
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
+#' # 50 % target for problem/solution 2
+#' dat_problem2 <- prioritizr::problem(dat_species_bin %>%
+#'                                       dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.5) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln2 <- dat_problem2 %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' (splnr_plot_comparison(dat_soln, dat_soln2))
+#'
 splnr_plot_comparison <- function(soln1, soln2, landmass = NA, PlanUnits = NA, colorPUs = "grey80",
-                                  legendTitle = "Scenario 2 compared to Scenario 1:"){
-
+                                  legendTitle = "Scenario 2 compared to Scenario 1:") {
   soln <- soln1 %>%
     dplyr::select("solution_1") %>%
     dplyr::bind_cols(soln2 %>%
-                       dplyr::as_tibble() %>%
-                       dplyr::select(.data$solution_1) %>%
-                       dplyr::rename(solution_2 = .data$solution_1)) %>%
+      dplyr::as_tibble() %>%
+      dplyr::select(.data$solution_1) %>%
+      dplyr::rename(solution_2 = .data$solution_1)) %>%
     dplyr::mutate(Combined = .data$solution_1 + .data$solution_2) %>%
-    dplyr::mutate(Compare = dplyr::case_when(Combined == 2 ~ "Same",
-                                             solution_1 == 1 & solution_2 == 0 ~ "Removed (-)",
-                                             solution_1 == 0 & solution_2 == 1 ~ "Added (+)"),
-                  Compare = factor(.data$Compare, levels = c("Added (+)", "Same", "Removed (-)"))) %>%
+    dplyr::mutate(
+      Compare = dplyr::case_when(
+        Combined == 2 ~ "Same",
+        solution_1 == 1 & solution_2 == 0 ~ "Removed (-)",
+        solution_1 == 0 & solution_2 == 1 ~ "Added (+)"
+      ),
+      Compare = factor(.data$Compare, levels = c("Added (+)", "Same", "Removed (-)"))
+    ) %>%
     dplyr::filter(!is.na(.data$Compare))
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$Compare), colour = NA, size = 0.0001)
 
-  if (class(landmass)[[1]] == "sf"){
+  if (class(landmass)[[1]] == "sf") {
     gg <- gg +
       ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
 
-  if (class(PlanUnits)[[1]] == "sf"){
+  if (class(PlanUnits)[[1]] == "sf") {
     gg <- gg + ggplot2::geom_sf(data = PlanUnits, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE) +
       ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim)
-
   } else {
-
     gg <- gg +
       ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim)
   }
 
   gg <- gg +
     ggplot2::theme_bw() +
-    ggplot2::scale_fill_manual(name=legendTitle,
-                               values = c("Added (+)" = "Red", "Same" = "ivory3", "Removed (-)" = "Blue"), drop = FALSE)
-
+    ggplot2::scale_fill_manual(
+      name = legendTitle,
+      values = c("Added (+)" = "Red", "Same" = "ivory3", "Removed (-)" = "Blue"), drop = FALSE
+    )
 }
 
 
@@ -590,8 +730,7 @@ splnr_plot_comparison <- function(soln1, soln2, landmass = NA, PlanUnits = NA, c
 splnr_plot_featureNo <- function(df, landmass = NA,
                                  colorPUs = "grey80", showLegend = TRUE,
                                  paletteName = "YlGnBu",
-                                 plotTitle = "Number of Features", legendTitle = "Features"){
-
+                                 plotTitle = "Number of Features", legendTitle = "Features") {
   df <- df %>%
     dplyr::as_tibble() %>%
     dplyr::select(-tidyselect::any_of(c("cellID"))) %>%
@@ -603,24 +742,24 @@ splnr_plot_featureNo <- function(df, landmass = NA,
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$FeatureSum), colour = colorPUs, size = 0.1, show.legend = showLegend)
 
-  if (class(landmass)[[1]] == "sf"){
+  if (class(landmass)[[1]] == "sf") {
     gg <- gg +
       ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
 
   gg <- gg +
     ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
-    ggplot2::scale_fill_distiller(name = legendTitle,
-                                  palette = paletteName,
-                                  aesthetics = c("fill"),
-                                  # limits = c(0,
-                                  #            as.numeric(quantile(Cost$Cost, 0.99))),
-                                  oob = scales::squish#,
-                                  #trans = "log10" #produces infinity if cells have 0 features
-                                  ) +
+    ggplot2::scale_fill_distiller(
+      name = legendTitle,
+      palette = paletteName,
+      aesthetics = c("fill"),
+      # limits = c(0,
+      #            as.numeric(quantile(Cost$Cost, 0.99))),
+      oob = scales::squish # ,
+      # trans = "log10" #produces infinity if cells have 0 features
+    ) +
     ggplot2::theme_bw() +
     ggplot2::labs(subtitle = plotTitle)
-
 }
 
 #' Plot selection frequency of a planning unit in an array of prioritisations
@@ -636,51 +775,58 @@ splnr_plot_featureNo <- function(df, landmass = NA,
 #'
 #' @importFrom rlang .data
 #' @examples
-#' \dontrun{
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' # create conservation problem that contains a portfolio of solutions
 #' dat_soln_portfolio <- dat_problem %>%
-#'   prioritizr::add_top_portfolio(number_solutions = 5) %>% #create conservation problem that contains a portfolio of solutions
+#'   prioritizr::add_cuts_portfolio(number_solutions = 5) %>%
 #'   prioritizr:::solve.ConservationProblem()
 #'
-#' selFreq <- dat_soln_portfolio %>%  # calculate selection frequency
-#' sf::st_drop_geometry() %>%
-#' dplyr::mutate(selFreq = as.factor(rowSums(dplyr::select(., dplyr::starts_with("solution_"))))) %>%
-#' sf::st_as_sf(geometry = dat_soln_portfolio$geometry) %>%
-#' dplyr::select(selFreq)
-#'
+#' selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 #' (splnr_plot_selectionFreq(selFreq))
-#' }
+#'
 splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
                                      plotTitle = "", paletteName = "Greens",
-                                     legendTitle = "Selection \nFrequency"
-){
+                                     legendTitle = "Selection \nFrequency") {
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = selFreq, ggplot2::aes(fill = .data$selFreq), colour = NA) +
-
-    if (class(landmass)[[1]] == "sf"){
+    if (class(landmass)[[1]] == "sf") {
       gg <- gg +
         ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
     }
 
   gg <- gg +
-    ggplot2::scale_fill_brewer(name = legendTitle,
-                               palette = paletteName, aesthetics = "fill", #c("colour", "fill"),
-                               guide = ggplot2::guide_legend(override.aes = list(linetype = 0),
-                                                             title.position = "top")) +
-    ggplot2::coord_sf(xlim = c(sf::st_bbox(selFreq)$xmin, sf::st_bbox(selFreq)$xmax),
-                      ylim = c(sf::st_bbox(selFreq)$ymin, sf::st_bbox(selFreq)$ymax),
-                      expand = TRUE) +
+    ggplot2::scale_fill_brewer(
+      name = legendTitle,
+      palette = paletteName, aesthetics = "fill", # c("colour", "fill"),
+      guide = ggplot2::guide_legend(
+        override.aes = list(linetype = 0),
+        title.position = "top"
+      )
+    ) +
+    ggplot2::coord_sf(
+      xlim = c(sf::st_bbox(selFreq)$xmin, sf::st_bbox(selFreq)$xmax),
+      ylim = c(sf::st_bbox(selFreq)$ymin, sf::st_bbox(selFreq)$ymax),
+      expand = TRUE
+    ) +
     ggplot2::theme_bw() +
     ggplot2::theme(
-      axis.text.y = ggplot2::element_text(size = 16, colour = "black"),
-      axis.text.x = ggplot2::element_text(size = 16, colour = "black"),
+      axis.text.y = ggplot2::element_text(size = 12, colour = "black"),
+      axis.text.x = ggplot2::element_text(size = 12, colour = "black"),
       axis.title.x = ggplot2::element_blank(),
-      legend.title = ggplot2::element_text(size = 16),
-      legend.text = ggplot2::element_text(size = 16),
-      axis.title.y = ggplot2::element_blank()) +
-    ggplot2::scale_x_continuous(expand = c(0,0)) +
-    ggplot2::scale_y_continuous(expand = c(0,0)) +
+      legend.title = ggplot2::element_text(size = 12),
+      legend.text = ggplot2::element_text(size = 12),
+      axis.title.y = ggplot2::element_blank()
+    ) +
+    ggplot2::scale_x_continuous(expand = c(0, 0)) +
+    ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::labs(title = plotTitle)
-
 }
 
 #' Plot Ferrier importance score (ONLY WORKS FOR MINIMUM SET OBJECTIVE FUNCTION)
@@ -695,14 +841,24 @@ splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
 #'
 #' @importFrom rlang .data
 #' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' (splnr_plot_impScoreFerrierPlot(dat_soln, dat_problem))
 splnr_plot_impScoreFerrierPlot <- function(soln, pDat, plotTitle = "", colorMap = "A",
-                                           legendTitle = "Importance Score \n(Ferrier Score)"
-){
+                                           legendTitle = "Importance Score \n(Ferrier Score)") {
   soln <- soln %>% tibble::as_tibble()
   fsoln <- prioritizr::eval_ferrier_importance(pDat, soln[, "solution_1"])
 
-  fsoln <- fsoln%>%
+  fsoln <- fsoln %>%
     dplyr::select("total") %>%
     dplyr::mutate(geometry = soln$geometry) %>%
     sf::st_as_sf()
@@ -711,27 +867,34 @@ splnr_plot_impScoreFerrierPlot <- function(soln, pDat, plotTitle = "", colorMap 
     dplyr::filter(.data$total != 0)
 
   quant95fs <- round(stats::quantile(selectedfs$total, 0.95), 4)
-  seq95fs <- seq(0,quant95fs, length.out = 5)
+  seq95fs <- seq(0, quant95fs, length.out = 5)
   lab <- c(seq95fs[1], seq95fs[2], seq95fs[3], seq95fs[4], paste0("\u2265", quant95fs, sep = " "))
 
-  fsoln$total[fsoln$total >=quant95fs] <- quant95fs
+  fsoln$total[fsoln$total >= quant95fs] <- quant95fs
 
   gg_fs <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = fsoln, ggplot2::aes(fill = .data$total), colour = NA) +
-    ggplot2::scale_fill_viridis_c(option = colorMap,
-                                  direction = -1, breaks = seq95fs, labels = lab,
-                                  guide = ggplot2::guide_colourbar(title.position = "right", title = legendTitle,
-                                                                   barwidth = 2, barheight = 10))+#, oob=squish)
-    ggplot2::coord_sf(xlim = c(sf::st_bbox(fsoln)$xmin, sf::st_bbox(fsoln)$xmax),
-                      ylim = c(sf::st_bbox(fsoln)$ymin, sf::st_bbox(fsoln)$ymax),
-                      expand = TRUE) +
+    ggplot2::scale_fill_viridis_c(
+      option = colorMap,
+      direction = -1, breaks = seq95fs, labels = lab,
+      guide = ggplot2::guide_colourbar(
+        title.position = "right", title = legendTitle,
+        barwidth = 2, barheight = 10
+      )
+    ) + # , oob=squish)
+    ggplot2::coord_sf(
+      xlim = c(sf::st_bbox(fsoln)$xmin, sf::st_bbox(fsoln)$xmax),
+      ylim = c(sf::st_bbox(fsoln)$ymin, sf::st_bbox(fsoln)$ymax),
+      expand = TRUE
+    ) +
     ggplot2::theme_bw() +
     ggplot2::theme(
       legend.title = ggplot2::element_text(angle = -90, hjust = 0.5),
       text = ggplot2::element_text(size = 20),
-      axis.title = ggplot2::element_blank()) +
-    ggplot2::scale_x_continuous(expand = c(0,0)) +
-    ggplot2::scale_y_continuous(expand = c(0,0)) +
+      axis.title = ggplot2::element_blank()
+    ) +
+    ggplot2::scale_x_continuous(expand = c(0, 0)) +
+    ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::labs(title = plotTitle)
 }
 
@@ -747,10 +910,20 @@ splnr_plot_impScoreFerrierPlot <- function(soln, pDat, plotTitle = "", colorMap 
 #'
 #' @importFrom rlang .data
 #' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' (splnr_plot_impScoreRWRPlot(dat_soln, dat_problem))
 splnr_plot_impScoreRWRPlot <- function(soln, pDat, plotTitle = "", colorMap = "A",
-                                       legendTitle = "Importance Score \n(Rarity Weighted Richness Score)"
-){
+                                       legendTitle = "Importance Score \n(Rarity Weighted Richness Score)") {
   soln <- soln %>% tibble::as_tibble()
   rwrsoln <- prioritizr::eval_rare_richness_importance(pDat, soln[, "solution_1"]) %>%
     dplyr::mutate(geometry = soln$geometry) %>%
@@ -759,28 +932,35 @@ splnr_plot_impScoreRWRPlot <- function(soln, pDat, plotTitle = "", colorMap = "A
   selectedRWR <- rwrsoln %>%
     dplyr::filter(.data$rwr != 0)
 
-  quant95 <- round(stats::quantile(selectedRWR$rwr, 0.95), 2) #get importance score at 95th percentile of all selected planning units
-  seq95 <- seq(0,quant95, length.out = 5)
+  quant95 <- round(stats::quantile(selectedRWR$rwr, 0.95), 2) # get importance score at 95th percentile of all selected planning units
+  seq95 <- seq(0, quant95, length.out = 5)
   lab <- c(seq95[1], seq95[2], seq95[3], seq95[4], paste0("\u2265", quant95, sep = " "))
 
-  rwrsoln$rwr[rwrsoln$rwr >=quant95] <- quant95
+  rwrsoln$rwr[rwrsoln$rwr >= quant95] <- quant95
 
   gg_impScore <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = rwrsoln, ggplot2::aes(fill = .data$rwr), colour = NA) +
-    ggplot2::scale_fill_viridis_c(option = colorMap,
-                                  direction = -1, breaks = seq95, labels = lab,
-                                  guide = ggplot2::guide_colourbar(title.position = "right", title = legendTitle,
-                                                                   barwidth = 2, barheight = 10))+#, oob=squish)
-    ggplot2::coord_sf(xlim = c(sf::st_bbox(rwrsoln)$xmin, sf::st_bbox(rwrsoln)$xmax),
-                      ylim = c(sf::st_bbox(rwrsoln)$ymin, sf::st_bbox(rwrsoln)$ymax),
-                      expand = TRUE) +
+    ggplot2::scale_fill_viridis_c(
+      option = colorMap,
+      direction = -1, breaks = seq95, labels = lab,
+      guide = ggplot2::guide_colourbar(
+        title.position = "right", title = legendTitle,
+        barwidth = 2, barheight = 10
+      )
+    ) + # , oob=squish)
+    ggplot2::coord_sf(
+      xlim = c(sf::st_bbox(rwrsoln)$xmin, sf::st_bbox(rwrsoln)$xmax),
+      ylim = c(sf::st_bbox(rwrsoln)$ymin, sf::st_bbox(rwrsoln)$ymax),
+      expand = TRUE
+    ) +
     ggplot2::theme_bw() +
     ggplot2::theme(
       legend.title = ggplot2::element_text(angle = -90, hjust = 0.5),
       text = ggplot2::element_text(size = 20),
-      axis.title = ggplot2::element_blank()) +
-    ggplot2::scale_x_continuous(expand = c(0,0)) +
-    ggplot2::scale_y_continuous(expand = c(0,0)) +
+      axis.title = ggplot2::element_blank()
+    ) +
+    ggplot2::scale_x_continuous(expand = c(0, 0)) +
+    ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::labs(title = plotTitle)
 }
 
@@ -797,11 +977,21 @@ splnr_plot_impScoreRWRPlot <- function(soln, pDat, plotTitle = "", colorMap = "A
 #' @importFrom rlang .data
 #' @examples
 #' \dontrun{
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' (splnr_plot_impScoreRCPlot(dat_soln, dat_problem))
 #' }
 splnr_plot_impScoreRCPlot <- function(soln, pDat, plotTitle = "", colorMap = "A",
-                                      legendTitle = "Importance Score \n(Replacement Cost Score)"
-){
+                                      legendTitle = "Importance Score \n(Replacement Cost Score)") {
   soln <- soln %>% tibble::as_tibble()
   rcsoln <- prioritizr::eval_replacement_importance(pDat, soln[, "solution_1"]) %>%
     dplyr::mutate(geometry = soln$geometry) %>%
@@ -810,28 +1000,35 @@ splnr_plot_impScoreRCPlot <- function(soln, pDat, plotTitle = "", colorMap = "A"
   selectedRC <- rcsoln %>%
     dplyr::filter(.data$rc != 0)
 
-  quant95 <- round(stats::quantile(selectedRC$rc, 0.95), 2) #get importance score at 95th percentile of all selected planning units
-  seq95 <- seq(0,quant95, length.out = 5)
+  quant95 <- round(stats::quantile(selectedRC$rc, 0.95), 2) # get importance score at 95th percentile of all selected planning units
+  seq95 <- seq(0, quant95, length.out = 5)
   lab <- c(seq95[1], seq95[2], seq95[3], seq95[4], paste0("\u2265", quant95, sep = " "))
 
-  rcsoln$rc[rcsoln$rc >=quant95] <- quant95
+  rcsoln$rc[rcsoln$rc >= quant95] <- quant95
 
   gg_impScore <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = rcsoln, ggplot2::aes(fill = .data$rc), colour = NA) +
-    ggplot2::scale_fill_viridis_c(option = colorMap,
-                                  direction = -1, breaks = seq95, labels = lab,
-                                  guide = ggplot2::guide_colourbar(title.position = "right", title = legendTitle,
-                                                                   barwidth = 2, barheight = 10))+#, oob=squish)
-    ggplot2::coord_sf(xlim = c(sf::st_bbox(rcsoln)$xmin, sf::st_bbox(rcsoln)$xmax),
-                      ylim = c(sf::st_bbox(rcsoln)$ymin, sf::st_bbox(rcsoln)$ymax),
-                      expand = TRUE) +
+    ggplot2::scale_fill_viridis_c(
+      option = colorMap,
+      direction = -1, breaks = seq95, labels = lab,
+      guide = ggplot2::guide_colourbar(
+        title.position = "right", title = legendTitle,
+        barwidth = 2, barheight = 10
+      )
+    ) + # , oob=squish)
+    ggplot2::coord_sf(
+      xlim = c(sf::st_bbox(rcsoln)$xmin, sf::st_bbox(rcsoln)$xmax),
+      ylim = c(sf::st_bbox(rcsoln)$ymin, sf::st_bbox(rcsoln)$ymax),
+      expand = TRUE
+    ) +
     ggplot2::theme_bw() +
     ggplot2::theme(
       legend.title = ggplot2::element_text(angle = -90, hjust = 0.5),
       text = ggplot2::element_text(size = 20),
-      axis.title = ggplot2::element_blank()) +
-    ggplot2::scale_x_continuous(expand = c(0,0)) +
-    ggplot2::scale_y_continuous(expand = c(0,0)) +
+      axis.title = ggplot2::element_blank()
+    ) +
+    ggplot2::scale_x_continuous(expand = c(0, 0)) +
+    ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::labs(title = plotTitle)
 }
 
@@ -847,62 +1044,76 @@ splnr_plot_impScoreRCPlot <- function(soln, pDat, plotTitle = "", colorMap = "A"
 #'
 #' @importFrom rlang .data
 #' @examples
+#' # 30 % target for problem/solution 1
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
+#' # 50 % target for problem/solution 2
+#' dat_problem2 <- prioritizr::problem(dat_species_bin %>%
+#'                                       dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.5) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln2 <- dat_problem2 %>%
+#'   prioritizr:::solve.ConservationProblem()
+#'
 #' CorrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
+#'
 #' (splnr_plot_CorrMat(CorrMat, AxisLabels = c("Solution 1", "Solution 2")))
-splnr_plot_CorrMat <- function(x, colourGradient = c("#BB4444","#FFFFFF","#4477AA"),
+splnr_plot_CorrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#4477AA"),
                                legendTitle = "Correlation \ncoefficient",
                                AxisLabels = NULL, plotTitle = "") {
-
   if ((class(AxisLabels)[[1]] == "character") & (nrow(x) != length(AxisLabels))) {
     print("Not enough labels for the length of the matrix. Please check your labels.")
   }
 
   gg_cor <- ggcorrplot::ggcorrplot(x,
-                                   outline.color = "black",
-                                   lab = TRUE) +
+    outline.color = "black",
+    lab = TRUE
+  ) +
     ggplot2::scale_fill_gradient2(
       low = colourGradient[3],
       mid = colourGradient[2],
       high = colourGradient[1],
       limits = c(-1, 1),
-      guide = ggplot2::guide_colourbar(title = legendTitle,
-                                       barwidth = 2, barheight = 10)) +
+      guide = ggplot2::guide_colourbar(
+        title = legendTitle,
+        barwidth = 2, barheight = 10
+      )
+    ) +
     ggplot2::scale_x_discrete(guide = ggplot2::guide_axis(angle = 45)) +
     ggplot2::theme_bw() +
-    ggplot2::theme(legend.title = ggplot2::element_text(),
-                   legend.text = ggplot2::element_text(color = "black", size = 10),
-                   panel.grid = ggplot2::element_blank(),
-                   #panel.grid.major = element_line(color = "grey86"),
-                   panel.border = ggplot2::element_blank(),
-                   axis.ticks = ggplot2::element_blank(),
-                   axis.text.y = ggplot2::element_text(color = "black", size = 12),
-                   axis.title = ggplot2::element_blank(),
-                   axis.text.x = ggplot2::element_text(color = "black", size = 12)) +
+    ggplot2::theme(
+      legend.title = ggplot2::element_text(),
+      legend.text = ggplot2::element_text(color = "black", size = 10),
+      panel.grid = ggplot2::element_blank(),
+      # panel.grid.major = element_line(color = "grey86"),
+      panel.border = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_text(color = "black", size = 12),
+      axis.title = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_text(color = "black", size = 12)
+    ) +
     ggplot2::labs(title = plotTitle)
 
   if (class(AxisLabels)[[1]] == "character") {
     gg_cor <- gg_cor +
-      ggplot2::scale_x_discrete(guide = ggplot2::guide_axis(angle = 45),
-                                labels= AxisLabels) +
-      ggplot2::scale_y_discrete(labels= AxisLabels)
+      ggplot2::scale_x_discrete(
+        guide = ggplot2::guide_axis(angle = 45),
+        labels = AxisLabels
+      ) +
+      ggplot2::scale_y_discrete(labels = AxisLabels)
   }
-}
-
-#' Plot Longhurst Provinces
-#'
-#' @param PlanUnits Planning Units as an `sf` object
-#' @param landmass An `sf` object of land polygon
-#'
-#' @return A ggplot object of the plot
-#' @export
-#'
-#' @examples
-splnr_plot_longhurst <- function(PlanUnits, landmass){
-  gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = PlanUnits, colour = "grey80", ggplot2::aes(fill = .data$ProvDescr), size = 0.1, show.legend = TRUE) +
-    ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE) +
-    ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
-    ggplot2::theme_bw() +
-    ggplot2::labs(subtitle = "Longhurst Provinces")
-
 }

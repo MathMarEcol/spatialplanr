@@ -1,6 +1,6 @@
 Package: spatialplanr
 Title: Help files for prioritzr Spatial Planning projects
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: c(
     person(
       given = "Jason D.",
@@ -29,24 +29,24 @@ Suggests:
     patchwork,
     prioritizr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    rnaturalearthdata,
+    rredlist,
+    testthat (>= 3.0.0),
+    viridis,
+    wdpar
 VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
 Imports: 
     dplyr,
-    exactextractr,
     fs,
-    ggplot2,
     ggcorrplot,
+    ggplot2,
     irr,
     magrittr,
     purrr,
     rappdirs,
-    rlang,
     rnaturalearth,
-    rnaturalearthdata,
-    rredlist,
     scales,
     sf,
     stringr,
@@ -54,6 +54,5 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
-    viridis,
-    wdpar
+    rlang
 Config/testthat/edition: 3

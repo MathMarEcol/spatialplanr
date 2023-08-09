@@ -12,23 +12,23 @@
 #' @importFrom rlang .data
 #' @examples
 #' targets <- dat_species_prob %>%
-#'    splnr_get_TargetsIA(target_min = 0.3, target_max = 0.8)
-splnr_get_TargetsIA <- function(df, target_min, target_max){
-
-  PU_area_km2 <- as.numeric(sf::st_area(df[1,1])/1e+06) # Area of each planning unit
+#'   splnr_get_TargetsIA(target_min = 0.3, target_max = 0.8)
+splnr_get_TargetsIA <- function(df, target_min, target_max) {
+  PU_area_km2 <- as.numeric(sf::st_area(df[1, 1]) / 1e+06) # Area of each planning unit
 
   total_PU_area <- nrow(df) * PU_area_km2 # Total area of the study region
 
   feature_area <- df %>%
     dplyr::select(-"cellID") %>%
     sf::st_drop_geometry() %>%
-    dplyr::mutate(dplyr::across(dplyr::everything(), ~tidyr::replace_na(.x, 0))) %>%
+    dplyr::mutate(dplyr::across(dplyr::everything(), ~ tidyr::replace_na(.x, 0))) %>%
     dplyr::summarise(dplyr::across(dplyr::everything(), ~ sum(., is.na(.), 0))) %>%
     tidyr::pivot_longer(dplyr::everything(), names_to = "Species", values_to = "Area_km2") %>%
-    dplyr::mutate(Species = stringr::str_replace_all(.data$Species, pattern = "_", replacement = " "),
-           Area_km2 = .data$Area_km2 * PU_area_km2,
-           Target = target_max-((.data$Area_km2/total_PU_area)*(target_max-target_min)))
+    dplyr::mutate(
+      Species = stringr::str_replace_all(.data$Species, pattern = "_", replacement = " "),
+      Area_km2 = .data$Area_km2 * PU_area_km2,
+      Target = target_max - ((.data$Area_km2 / total_PU_area) * (target_max - target_min))
+    )
 
   return(feature_area)
 }
-

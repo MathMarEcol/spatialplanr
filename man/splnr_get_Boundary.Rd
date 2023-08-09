@@ -21,5 +21,4 @@ Get the boundary of the planning region.
 }
 \examples{
 Bndry <- splnr_get_Boundary("North Atlantic Ocean", "Ocean")
-
 }

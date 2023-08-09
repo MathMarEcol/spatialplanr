@@ -5,8 +5,7 @@
 \alias{IUCN_IA_Targets}
 \title{IUCN and Inverse Area based Targets for Aquamaps example species}
 \format{
-\subsection{\code{IUCN_IA_Targets}}{
-
+\code{IUCN_IA_Targets}
 A data frame with 15 rows and 4 columns:
 \describe{
 \item{Species}{Species names as found in the IUCN database}
@@ -14,7 +13,6 @@ A data frame with 15 rows and 4 columns:
 \item{Target}{Individual species-specific target}
 \item{IUCN_Category}{IUCN category of the species}
 ...
-}
 }
 }
 \source{

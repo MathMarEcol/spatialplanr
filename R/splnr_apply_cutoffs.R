@@ -11,24 +11,25 @@
 #'
 #' @examples
 #' df <- splnr_apply_cutoffs(dat_species_prob, Cutoffs = 0.5)
-splnr_apply_cutoffs <- function(features, Cutoffs, inverse = FALSE){
-
-
-  if (length(Cutoffs) == 1 & length(names(Cutoffs)) == 0){ # Single cutoff for all data if unnamed vector
+splnr_apply_cutoffs <- function(features, Cutoffs, inverse = FALSE) {
+  if (length(Cutoffs) == 1 & length(names(Cutoffs)) == 0) { # Single cutoff for all data if unnamed vector
 
     features <- features %>%
       dplyr::as_tibble() %>%
-      dplyr::mutate(dplyr::across(-dplyr::any_of(c("cellID", "geometry")), # Apply to all columns except geometry and cellID
-                                  ~ dplyr::case_when(. >= Cutoffs ~ 1,
-                                                     . < Cutoffs ~ 0,
-                                                     is.na(.data) ~ 0))) %>%
+      dplyr::mutate(dplyr::across(
+        -dplyr::any_of(c("cellID", "geometry")), # Apply to all columns except geometry and cellID
+        ~ dplyr::case_when(
+          . >= Cutoffs ~ 1,
+          . < Cutoffs ~ 0,
+          is.na(.data) ~ 0
+        )
+      )) %>%
       sf::st_as_sf()
 
-    if (inverse == TRUE){ # Need to flip the ones/zeros
+    if (inverse == TRUE) { # Need to flip the ones/zeros
       features <- features %>%
         dplyr::mutate(dplyr::across(-dplyr::any_of(c("cellID", "geometry")), ~ 1 - .))
     }
-
   } else if (length(Cutoffs) == length(names(Cutoffs))) { # Named vector with values for each column
 
     # nm <- features %>%
@@ -38,17 +39,18 @@ splnr_apply_cutoffs <- function(features, Cutoffs, inverse = FALSE){
 
     nm <- names(Cutoffs) # Testing - We should only be operating on the columns in the Cutoffs vector
 
-    for (f in 1:length(nm)){
+    for (f in 1:length(nm)) {
       features <- features %>%
-        dplyr::mutate(!!nm[f] := dplyr::case_when(!!rlang::sym(nm[f]) >= Cutoffs[nm[f]] ~ 1,
-                                                  !!rlang::sym(nm[f]) < Cutoffs[nm[f]] ~ 0,
-                                                  is.na(!!rlang::sym(nm[f])) ~ 0))
+        dplyr::mutate(!!nm[f] := dplyr::case_when(
+          !!rlang::sym(nm[f]) >= Cutoffs[nm[f]] ~ 1,
+          !!rlang::sym(nm[f]) < Cutoffs[nm[f]] ~ 0,
+          is.na(!!rlang::sym(nm[f])) ~ 0
+        ))
 
-      if (inverse == TRUE){ # Need to flip the ones/zeros
+      if (inverse == TRUE) { # Need to flip the ones/zeros
         features <- features %>%
           dplyr::mutate(!!nm[f] := 1 - !!rlang::sym(nm[f]))
       }
-
     }
   }
   return(features)

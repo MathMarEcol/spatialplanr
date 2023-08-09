@@ -2,7 +2,7 @@
 #'
 #' An sf dataframe of planning units for spatial prioritisation
 #'
-#' @format ## `dat_PUs`
+#' @format `dat_PUs`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{cellID}{ID number for each row (or cell) of the dataset}
@@ -19,7 +19,7 @@
 #'
 #' An sf dataframe of planning units for spatial prioritisation
 #'
-#' @format ## `dat_bndry`
+#' @format `dat_bndry`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{cellID}{ID number for each row (or cell) of the dataset}
@@ -36,7 +36,7 @@
 #'
 #' An sf dataframe of planning units for spatial prioritisation
 #'
-#' @format ## `dat_region`
+#' @format `dat_region`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{cellID}{ID number for each row (or cell) of the dataset}
@@ -46,64 +46,13 @@
 #' @source "Made up data"
 "dat_region"
 
-
-# -------------------------------------------------------------------------
-
-#' prioritizr Problem
-#'
-#' An conservation problem for spatial prioritisation
-#'
-#' @format ## `dat_problem`
-#' A class that stores the data, mathematical formula and other information needed to run the prioritisation:
-#' \describe{
-#'   \item{data}{list containing information on the cost and features}
-#'   \item{objective}{object specifying objective function used in conservation problem}
-#'   ...
-#' }
-#' @source "Made up data"
-"dat_problem"
-
-# -------------------------------------------------------------------------
-
-#' prioritizr Solution
-#'
-#' An sf dataframe of planning units for spatial prioritisation
-#'
-#' @format ## `dat_soln`
-#' A data frame with XXXX rows and XXX columns:
-#' \describe{
-#'   \item{cellID}{ID number for each row (or cell) of the dataset}
-#'   \item{geometry}{sf geometry column}
-#'   ...
-#' }
-#' @source "Made up data"
-"dat_soln"
-
-
-# -------------------------------------------------------------------------
-
-#' prioritizr Solution2
-#'
-#' An sf dataframe of planning units for spatial prioritisation
-#'
-#' @format ## `dat_soln2`
-#' A data frame with XXXX rows and XXX columns:
-#' \describe{
-#'   \item{cellID}{ID number for each row (or cell) of the dataset}
-#'   \item{geometry}{sf geometry column}
-#'   ...
-#' }
-#' @source "Made up data"
-"dat_soln2"
-
-
 # -------------------------------------------------------------------------
 
 #' Binary Species Data
 #'
 #' An sf dataframe of planning units for spatial prioritisation
 #'
-#' @format ## `dat_species_bin`
+#' @format `dat_species_bin`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{cellID}{ID number for each row (or cell) of the dataset}
@@ -120,7 +69,7 @@
 #'
 #' An sf dataframe of planning units for spatial prioritisation
 #'
-#' @format ## `dat_species_bin2`
+#' @format `dat_species_bin2`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{cellID}{ID number for each row (or cell) of the dataset}
@@ -137,7 +86,7 @@
 #'
 #' An sf dataframe of planning units for spatial prioritisation
 #'
-#' @format ## `dat_species_prob`
+#' @format `dat_species_prob`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{cellID}{ID number for each row (or cell) of the dataset}
@@ -154,7 +103,7 @@
 #'
 #' An sf dataframe of planning units for spatial prioritisation
 #'
-#' @format ## `dat_mpas`
+#' @format `dat_mpas`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{cellID}{ID number for each row (or cell) of the dataset}
@@ -169,7 +118,7 @@
 #'
 #' An sf dataframe of planning units for spatial prioritisation
 #'
-#' @format ## `dat_bndry`
+#' @format `dat_bndry`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{cellID}{ID number for each row (or cell) of the dataset}
@@ -186,7 +135,7 @@
 #'
 #' A tibble containing specific grouping of features
 #'
-#' @format ## `Category_vec`
+#' @format `Category_vec`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{feature}{all features available for spatial prioritisation}
@@ -204,7 +153,7 @@
 #'
 #' A tibble containing specific grouping of features
 #'
-#' @format ## `Category_vec2`
+#' @format `Category_vec2`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{feature}{all features available for spatial prioritisation}
@@ -218,19 +167,19 @@
 # -------------------------------------------------------------------------
 
 
-#' Aquamaps species example data
-#'
-#' sf file containing the suitable habitat for a few marine species of the coral sea
-#'
-#' @format ## `spDataFiltered`
-#' A data frame with 397 rows and 17 columns:
-#' \describe{
-#'   \item{Chelonia_mydas}{suitable habitat for Chelonia mydas}
-#'   \item{cellID}{cell ID of planning units}
-#'   ...
-#' }
-#' @source Aquamaps.org
-"spDataFiltered"
+# Aquamaps species example data
+#
+# sf file containing the suitable habitat for a few marine species of the coral sea
+#
+# @format `spDataFiltered`
+# A data frame with 397 rows and 17 columns:
+# \describe{
+#   \item{Chelonia_mydas}{suitable habitat for Chelonia mydas}
+#   \item{cellID}{cell ID of planning units}
+#   ...
+# }
+# @source Aquamaps.org
+# "spDataFiltered"
 
 
 # -------------------------------------------------------------------------
@@ -240,7 +189,7 @@
 #'
 #' sf file containing the current marine protected areas of the coral sea
 #'
-#' @format ## `MPAsCoralSea`
+#' @format `MPAsCoralSea`
 #' A data frame with 397 rows and 17 columns:
 #' \describe{
 #'   \item{wdpa}{binary vector denoting presence or absence of a current marine protected area}
@@ -258,7 +207,7 @@
 #'
 #' tbl_df file containing IUCN and IA targets of the selected species of the coral sea
 #'
-#' @format ## `IUCN_IA_Targets`
+#' @format `IUCN_IA_Targets`
 #' A data frame with 15 rows and 4 columns:
 #' \describe{
 #'   \item{Species}{Species names as found in the IUCN database}
@@ -272,3 +221,31 @@
 
 
 # -------------------------------------------------------------------------
+
+
+#' Example climate velocity for the example region of the coral sea
+#'
+#' tsf file containing climate velocity (SSP5-8.5) of the coral sea
+#'
+#' @format ## `CoralSeaVelocity`
+#' A data frame with 397 rows and 3 columns:
+#' \describe{
+#'   \item{cellID}{cell ID of the planning units}
+#'   \item{vocMagg_transformed}{Climate velocity column}
+#'   \item{geometry}{Geometry column of sf object}
+#'   ...
+#' }
+#' @source https://www.iucnredlist.org/
+"CoralSeaVelocity"
+
+
+#' Example....
+#'
+#'
+#'
+#' @format ## `spDataFiltered`
+#' A data frame with .....
+#' \describe{
+#' }
+#' @source "Made up data"
+"spDataFiltered"

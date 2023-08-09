@@ -1,4 +1,3 @@
-
 #' Match Species to IUCN RedList
 #'
 #'
@@ -39,10 +38,9 @@
 #' @examples
 #' \dontrun{
 #' df <- data.frame(Species = c("Diomedea exulans", "Hippocampus kuda", "Squatina squatina")) %>%
-#' splnr_match_IUCNRedList()
+#'   splnr_match_IUCNRedList()
 #' }
-splnr_match_IUCNRedList <- function(df, species_col = "Species"){
-
+splnr_match_IUCNRedList <- function(df, species_col = "Species") {
   # Get all IUCN categories
   cate <- c("DD", "LC", "NT", "VU", "EN", "CR", "EW", "EX", "LRlc", "LRnt", "LRcd")
 
@@ -50,10 +48,10 @@ splnr_match_IUCNRedList <- function(df, species_col = "Species"){
   RL <- purrr::map_df(cate, function(x) data.frame(rredlist::rl_sp_category(x))) %>%
     dplyr::select(.data$category, .data$result.scientific_name) %>%
     dplyr::rename(!!species_col := .data$result.scientific_name,
-           IUCN_Category = .data$category)
+      IUCN_Category = .data$category
+    )
 
   # Now try and link the species to the categories - only links 2 %
   df <- df %>%
     dplyr::left_join(RL, by = species_col)
-
 }

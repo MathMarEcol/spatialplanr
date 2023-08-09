@@ -21,5 +21,5 @@ This function takes a min (\code{target_min}) and max (\code{target_max}) target
 }
 \examples{
 targets <- dat_species_prob \%>\%
-   splnr_get_TargetsIA(target_min = 0.3, target_max = 0.8)
+  splnr_get_TargetsIA(target_min = 0.3, target_max = 0.8)
 }

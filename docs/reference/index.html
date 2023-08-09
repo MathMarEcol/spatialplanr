@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">spatialplanr</a>
 
-    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -173,11 +173,6 @@
         <dd>Plot Rarity weighted richness importance score (can be used with minimum shortfall OBJECTIVE FUNCTION)</dd>
       </dl><dl><dt>
           
-          <code><a href="splnr_plot_longhurst.html">splnr_plot_longhurst()</a></code> 
-        </dt>
-        <dd>Plot Longhurst Provinces</dd>
-      </dl><dl><dt>
-          
           <code><a href="splnr_plot_selectionFreq.html">splnr_plot_selectionFreq()</a></code> 
         </dt>
         <dd>Plot selection frequency of a planning unit in an array of prioritisations</dd>
@@ -238,6 +233,21 @@ Defaults to assuming Robinson projection</dd>
           <code><a href="splnr_scale_01.html">splnr_scale_01()</a></code> 
         </dt>
         <dd>Scale spatial layers to between 0 and 1</dd>
+      </dl><dl><dt>
+          
+          <code><a href="splnr_prepKappaCorrData.html">splnr_prepKappaCorrData()</a></code> 
+        </dt>
+        <dd>Prepare data to plot Cohen's Kappa correlation matrix</dd>
+      </dl><dl><dt>
+          
+          <code><a href="splnr_prepTargetData.html">splnr_prepTargetData()</a></code> 
+        </dt>
+        <dd>Prepare data to plot how well targets are met</dd>
+      </dl><dl><dt>
+          
+          <code><a href="splnr_prep_selFreq.html">splnr_prep_selFreq()</a></code> 
+        </dt>
+        <dd>Prepare data to plot Selection Frequency of planning units</dd>
       </dl></div><div class="section level2">
       <h2 id="built-in-datasets">Built in datasets<a class="anchor" aria-label="anchor" href="#built-in-datasets"></a></h2>
       
@@ -251,41 +261,6 @@ Defaults to assuming Robinson projection</dd>
 
       <dl><dt>
           
-          <code><a href="dat_PUs.html">dat_PUs</a></code> 
-        </dt>
-        <dd>Planning Units</dd>
-      </dl><dl><dt>
-          
-          <code><a href="dat_bndry.html">dat_bndry</a></code> <code><a href="dat_bndry.html">dat_bndry</a></code> 
-        </dt>
-        <dd>Boundary of planning units</dd>
-      </dl><dl><dt>
-          
-          <code><a href="dat_region.html">dat_region</a></code> 
-        </dt>
-        <dd>Regionalisation</dd>
-      </dl><dl><dt>
-          
-          <code><a href="dat_soln.html">dat_soln</a></code> 
-        </dt>
-        <dd>prioritizr Solution</dd>
-      </dl><dl><dt>
-          
-          <code><a href="dat_soln2.html">dat_soln2</a></code> 
-        </dt>
-        <dd>prioritizr Solution2</dd>
-      </dl><dl><dt>
-          
-          <code><a href="dat_species_bin.html">dat_species_bin</a></code> 
-        </dt>
-        <dd>Binary Species Data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="dat_species_prob.html">dat_species_prob</a></code> 
-        </dt>
-        <dd>Probability Species Data</dd>
-      </dl><dl><dt>
-          
           <code><a href="Category_vec.html">Category_vec</a></code> 
         </dt>
         <dd>Category vector</dd>
@@ -294,6 +269,46 @@ Defaults to assuming Robinson projection</dd>
           <code><a href="Category_vec2.html">Category_vec2</a></code> 
         </dt>
         <dd>Category vector</dd>
+      </dl><dl><dt>
+          
+          <code><a href="dat_bndry.html">dat_bndry</a></code> <code><a href="dat_bndry.html">dat_bndry</a></code> 
+        </dt>
+        <dd>Boundary of planning units</dd>
+      </dl><dl><dt>
+          
+          <code><a href="dat_mpas.html">dat_mpas</a></code> 
+        </dt>
+        <dd>MPA Data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="dat_PUs.html">dat_PUs</a></code> 
+        </dt>
+        <dd>Planning Units</dd>
+      </dl><dl><dt>
+          
+          <code><a href="dat_region.html">dat_region</a></code> 
+        </dt>
+        <dd>Regionalisation</dd>
+      </dl><dl><dt>
+          
+          <code><a href="dat_species_bin.html">dat_species_bin</a></code> 
+        </dt>
+        <dd>Binary Species Data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="dat_species_bin2.html">dat_species_bin2</a></code> 
+        </dt>
+        <dd>Binary Species Data 2</dd>
+      </dl><dl><dt>
+          
+          <code><a href="dat_species_prob.html">dat_species_prob</a></code> 
+        </dt>
+        <dd>Probability Species Data</dd>
+      </dl><dl><dt>
+          
+          <code><a href="CoralSeaVelocity.html">CoralSeaVelocity</a></code> 
+        </dt>
+        <dd>Example climate velocity for the example region of the coral sea</dd>
       </dl><dl><dt>
           
           <code><a href="IUCN_IA_Targets.html">IUCN_IA_Targets</a></code> 
@@ -306,34 +321,9 @@ Defaults to assuming Robinson projection</dd>
         <dd>Current MPAs of the Coral Sea</dd>
       </dl><dl><dt>
           
-          <code><a href="dat_mpas.html">dat_mpas</a></code> 
-        </dt>
-        <dd>MPA Data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="dat_problem.html">dat_problem</a></code> 
-        </dt>
-        <dd>prioritizr Problem</dd>
-      </dl><dl><dt>
-          
-          <code><a href="dat_species_bin2.html">dat_species_bin2</a></code> 
-        </dt>
-        <dd>Binary Species Data 2</dd>
-      </dl><dl><dt>
-          
           <code><a href="spDataFiltered.html">spDataFiltered</a></code> 
         </dt>
-        <dd>Aquamaps species example data</dd>
-      </dl><dl><dt>
-          
-          <code><a href="splnr_prepKappaCorrData.html">splnr_prepKappaCorrData()</a></code> 
-        </dt>
-        <dd>Prepare data to plot Cohen's Kappa correlation matrix</dd>
-      </dl><dl><dt>
-          
-          <code><a href="splnr_prepTargetData.html">splnr_prepTargetData()</a></code> 
-        </dt>
-        <dd>Prepare data to plot how well targets are met</dd>
+        <dd>Example....</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

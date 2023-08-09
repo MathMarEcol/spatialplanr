@@ -3,25 +3,22 @@
 \docType{data}
 \name{spDataFiltered}
 \alias{spDataFiltered}
-\title{Aquamaps species example data}
+\title{Example....}
 \format{
 \subsection{\code{spDataFiltered}}{
 
-A data frame with 397 rows and 17 columns:
+A data frame with .....
 \describe{
-\item{Chelonia_mydas}{suitable habitat for Chelonia mydas}
-\item{cellID}{cell ID of planning units}
-...
 }
 }
 }
 \source{
-Aquamaps.org
+"Made up data"
 }
 \usage{
 spDataFiltered
 }
 \description{
-sf file containing the suitable habitat for a few marine species of the coral sea
+Example....
 }
 \keyword{datasets}

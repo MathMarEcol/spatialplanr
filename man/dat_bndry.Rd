@@ -5,24 +5,20 @@
 \alias{dat_bndry}
 \title{Boundary of planning units}
 \format{
-\subsection{\code{dat_bndry}}{
-
+\code{dat_bndry}
 A data frame with XXXX rows and XXX columns:
 \describe{
 \item{cellID}{ID number for each row (or cell) of the dataset}
 \item{geometry}{sf geometry column}
 ...
 }
-}
 
-\subsection{\code{dat_bndry}}{
-
+\code{dat_bndry}
 A data frame with XXXX rows and XXX columns:
 \describe{
 \item{cellID}{ID number for each row (or cell) of the dataset}
 \item{geometry}{sf geometry column}
 ...
-}
 }
 }
 \source{

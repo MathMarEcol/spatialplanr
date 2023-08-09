@@ -28,6 +28,9 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/Category_vec2.html</loc>
   </url>
   <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/CoralSeaVelocity.html</loc>
+  </url>
+  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/IUCN_IA_Targets.html</loc>
   </url>
   <url>
@@ -161,6 +164,9 @@
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_prepTargetData.html</loc>
+  </url>
+  <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_prep_selFreq.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_replace_NAs.html</loc>

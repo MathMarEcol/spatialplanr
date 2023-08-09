@@ -1,4 +1,3 @@
-
 #' Function to create square or heaxagonal planning units for your area of interest.
 #'
 #' The code takes the bbox so the limits are the most important.
@@ -34,42 +33,41 @@ splnr_get_PlanningUnits <- function(Bndry,
                                     InnerB,
                                     CellArea = 1000,
                                     Shape = "hexagon",
-                                    inverse = FALSE){
-
-  if(Shape %in% c("hexagon", "Hexagon")){
+                                    inverse = FALSE) {
+  if (Shape %in% c("hexagon", "Hexagon")) {
     sq <- FALSE
-    diameter <- 2 * sqrt((CellArea*1e6)/((3*sqrt(3)/2))) * sqrt(3)/2 # Diameter in m's
+    diameter <- 2 * sqrt((CellArea * 1e6) / ((3 * sqrt(3) / 2))) * sqrt(3) / 2 # Diameter in m's
   }
 
-  if(Shape %in% c("square", "Square")){
+  if (Shape %in% c("square", "Square")) {
     sq <- TRUE
-    diameter <- sqrt(CellArea*1e6) # Diameter in m's
+    diameter <- sqrt(CellArea * 1e6) # Diameter in m's
   }
 
   # First create planning units for the whole region
   PUs <- sf::st_make_grid(Bndry,
-                          square = sq,
-                          cellsize = c(diameter, diameter),
-                          what = "polygons") %>%
+    square = sq,
+    cellsize = c(diameter, diameter),
+    what = "polygons"
+  ) %>%
     sf::st_sf()
 
   # First get all the PUs partially/wholly within the planning region
   logi_Reg <- sf::st_centroid(PUs) %>%
     sf::st_intersects(Bndry) %>%
-    lengths > 0 # Get logical vector instead of sparse geometry binary
+    lengths() > 0 # Get logical vector instead of sparse geometry binary
 
   PUs <- PUs[logi_Reg, ] # Get TRUE
 
   # Second, get all the pu's with < 50 % area on land (approximated from the centroid)
   logi_Ocean <- sf::st_centroid(PUs) %>%
     sf::st_intersects(InnerB) %>%
-    lengths > 0 # Get logical vector instead of sparse geometry binary
+    lengths() > 0 # Get logical vector instead of sparse geometry binary
 
-  if(inverse == FALSE){
+  if (inverse == FALSE) {
     PUs <- PUs[!logi_Ocean, ] # Get FALSE
-  }
-  else {
-    PUs <- PUs[logi_Ocean==TRUE, ] # Get TRUE
+  } else {
+    PUs <- PUs[logi_Ocean == TRUE, ] # Get TRUE
   }
 
   PUs <- PUs %>%
