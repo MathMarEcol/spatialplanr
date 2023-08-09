@@ -17,5 +17,5 @@ Ensure all features are in the same order.
 }
 \examples{
 df <- dat_species_prob \%>\%
-        splnr_arrangeFeatures()
+  splnr_arrangeFeatures()
 }

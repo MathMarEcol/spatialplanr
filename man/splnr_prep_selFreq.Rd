@@ -18,7 +18,18 @@ splnr_prep_selFreq(solnMany, type = "portfolio")
 Prepare data to plot Selection Frequency of planning units
 }
 \examples{
-#create conservation problem that contains a portfolio of solutions
+dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+                                   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+                                   cost_column = "Cost") \%>\%
+  prioritizr::add_min_set_objective() \%>\%
+  prioritizr::add_relative_targets(0.3) \%>\%
+  prioritizr::add_binary_decisions() \%>\%
+  prioritizr::add_default_solver(verbose = FALSE)
+
+dat_soln <- dat_problem \%>\%
+  prioritizr:::solve.ConservationProblem()
+
+# create conservation problem that contains a portfolio of solutions
 dat_soln_portfolio <- dat_problem \%>\%
   prioritizr::add_cuts_portfolio(number_solutions = 5) \%>\%
   prioritizr:::solve.ConservationProblem()
@@ -26,6 +37,4 @@ dat_soln_portfolio <- dat_problem \%>\%
 selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 (splnr_plot_selectionFreq(selFreq))
 
-solnList <- list(dat_soln, dat_soln2)
-selFreq <- splnr_prep_selFreq(solnMany = solnList, type = "list")
 }

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">spatialplanr</a>
 
-    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4</small>
+    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,10 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/spatialplanr.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -103,23 +106,36 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="co">#not including incidental species coverage</span></span></span>
-<span class="r-in"><span><span class="va">dfNInc</span> <span class="op">&lt;-</span> <span class="fu">splnr_prepTargetData</span><span class="op">(</span>soln <span class="op">=</span> <span class="va">dat_soln</span>,</span></span>
-<span class="r-in"><span>                               pDat <span class="op">=</span> <span class="va">dat_problem</span>,</span></span>
-<span class="r-in"><span>                               allDat <span class="op">=</span> <span class="va">dat_species_bin</span>,</span></span>
-<span class="r-in"><span>                               Dict <span class="op">=</span> <span class="cn">NA</span>,</span></span>
-<span class="r-in"><span>                               Category <span class="op">=</span> <span class="va">Category_vec</span>,</span></span>
-<span class="r-in"><span>                               solnCol <span class="op">=</span> <span class="st">"solution_1"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># not including incidental species coverage</span></span></span>
+<span class="r-in"><span><span class="va">dat_problem</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">dat_species_bin</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                                   features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Spp1"</span>, <span class="st">"Spp2"</span>, <span class="st">"Spp3"</span>, <span class="st">"Spp4"</span>, <span class="st">"Spp5"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                                   cost_column <span class="op">=</span> <span class="st">"Cost"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="fl">0.3</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_binary_decisions.html" class="external-link">add_binary_decisions</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_default_solver.html" class="external-link">add_default_solver</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#including incidental species coverage</span></span></span>
-<span class="r-in"><span><span class="va">dfInc</span> <span class="op">&lt;-</span> <span class="fu">splnr_prepTargetData</span><span class="op">(</span>soln <span class="op">=</span> <span class="va">dat_soln</span>,</span></span>
-<span class="r-in"><span>                              pDat <span class="op">=</span> <span class="va">dat_problem</span>,</span></span>
-<span class="r-in"><span>                              allDat <span class="op">=</span> <span class="va">dat_species_bin2</span>,</span></span>
-<span class="r-in"><span>                              Dict <span class="op">=</span> <span class="cn">NA</span>,</span></span>
-<span class="r-in"><span>                              Category <span class="op">=</span> <span class="va">Category_vec2</span>,</span></span>
-<span class="r-in"><span>                              solnCol <span class="op">=</span> <span class="st">"solution_1"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="va">dat_soln</span> <span class="op">&lt;-</span> <span class="va">dat_problem</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">prioritizr</span><span class="fu">:::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dfNInc</span> <span class="op">&lt;-</span> <span class="fu">splnr_prepTargetData</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  soln <span class="op">=</span> <span class="va">dat_soln</span>,</span></span>
+<span class="r-in"><span>  pDat <span class="op">=</span> <span class="va">dat_problem</span>,</span></span>
+<span class="r-in"><span>  allDat <span class="op">=</span> <span class="va">dat_species_bin</span>,</span></span>
+<span class="r-in"><span>  Dict <span class="op">=</span> <span class="cn">NA</span>,</span></span>
+<span class="r-in"><span>  Category <span class="op">=</span> <span class="va">Category_vec</span>,</span></span>
+<span class="r-in"><span>  solnCol <span class="op">=</span> <span class="st">"solution_1"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># including incidental species coverage</span></span></span>
+<span class="r-in"><span><span class="va">dfInc</span> <span class="op">&lt;-</span> <span class="fu">splnr_prepTargetData</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  soln <span class="op">=</span> <span class="va">dat_soln</span>,</span></span>
+<span class="r-in"><span>  pDat <span class="op">=</span> <span class="va">dat_problem</span>,</span></span>
+<span class="r-in"><span>  allDat <span class="op">=</span> <span class="va">dat_species_bin2</span>,</span></span>
+<span class="r-in"><span>  Dict <span class="op">=</span> <span class="cn">NA</span>,</span></span>
+<span class="r-in"><span>  Category <span class="op">=</span> <span class="va">Category_vec2</span>,</span></span>
+<span class="r-in"><span>  solnCol <span class="op">=</span> <span class="st">"solution_1"</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

@@ -45,3 +45,7 @@ reference:
   - dat_species_bin
   - dat_species_bin2
   - dat_species_prob
+  - CoralSeaVelocity
+  - IUCN_IA_Targets
+  - MPAsCoralSea
+  - spDataFiltered
