@@ -63,9 +63,9 @@ ggplot2::ggplot() +
 
 
 PUs <- sf::st_make_grid(Bndry,
-  square = FALSE,
-  cellsize = c(2, 2),
-  what = "polygons"
+                        square = FALSE,
+                        cellsize = c(2, 2),
+                        what = "polygons"
 ) %>%
   sf::st_sf() %>%
   sf::st_intersection(Bndry) %>%
@@ -74,27 +74,60 @@ PUs <- sf::st_make_grid(Bndry,
 PUs <- PUs %>%
   dplyr::mutate(Prob = runif(dim(PUs)[1]))
 
+
+# Possible colours...
+# https://www.pinterest.com.au/pin/sunset-color-scheme-image-search-results-in-2023--224194887692504381/
+
 (gg <- ggplot2::ggplot() +
-  ggplot2::geom_sf(data = PUs, colour = "black", linewidth = 0.1, show.legend = FALSE, ggplot2::aes(fill = Prob)) +
-  ggplot2::geom_sf(data = landmass, colour = "grey30", fill = "grey50", alpha = 1, linewidth = 0.1, show.legend = FALSE) +
-  ggplot2::coord_sf(xlim = sf::st_bbox(PUs)$xlim, ylim = sf::st_bbox(PUs)$ylim) +
-  ggplot2::theme_void())
+    ggplot2::geom_sf(data = PUs, colour = "#fdf7c2", linewidth = 0.05, show.legend = FALSE, ggplot2::aes(fill = Prob)) +
+    ggplot2::scale_fill_gradient(low = "#3eadbe", # "#84dfd3"
+                                  high = "#05555f") +
+    ggplot2::geom_sf(data = landmass, colour = "#2e1707", fill = "#9d3c11", alpha = 1, linewidth = 0.05, show.legend = FALSE) +
+    ggplot2::coord_sf(xlim = sf::st_bbox(PUs)$xlim, ylim = sf::st_bbox(PUs)$ylim) +
+    ggplot2::theme_void())
 
 
 hexSticker::sticker(gg,
-  package = "spatialplanr",
-  p_y = 1,
-  p_x = 1,
-  p_color = "grey90",
-  p_size = 80,
-  p_fontface = "bold",
-  s_x = 1,
-  s_y = 1,
-  s_width = 2,
-  s_height = 4,
-  # h_fill = "#9FE2BF",
-  h_color = "grey20",
-  dpi = 1000,
-  asp = 1,
-  filename = file.path("man", "figures", "spatialplanr.png")
+                    package = "spatialplanr",
+                    p_y = 1,
+                    p_x = 1,
+                    p_color = "white",
+                    p_size = 80,
+                    p_fontface = "bold",
+                    s_x = 1,
+                    s_y = 1,
+                    s_width = 2,
+                    s_height = 4,
+                    # h_fill = "#9FE2BF",
+                    h_color = "#2e1707", #"grey40",
+                    dpi = 1000,
+                    asp = 1,
+                    filename = file.path("man", "figures", "spatialplanr.png")
 )
+
+# Original
+
+#
+# (gg <- ggplot2::ggplot() +
+#     ggplot2::geom_sf(data = PUs, colour = "black", linewidth = 0.1, show.legend = FALSE, ggplot2::aes(fill = Prob)) +
+#     ggplot2::geom_sf(data = landmass, colour = "grey30", fill = "grey50", alpha = 1, linewidth = 0.1, show.legend = FALSE) +
+#     ggplot2::coord_sf(xlim = sf::st_bbox(PUs)$xlim, ylim = sf::st_bbox(PUs)$ylim) +
+#     ggplot2::theme_void())
+#
+#
+# hexSticker::sticker(gg,
+#                     package = "spatialplanr",
+#                     p_y = 1,
+#                     p_x = 1,
+#                     p_color = "grey90",
+#                     p_size = 80,
+#                     p_fontface = "bold",
+#                     s_x = 1,
+#                     s_y = 1,
+#                     s_width = 2,
+#                     s_height = 4,
+#                     # h_fill = "#9FE2BF",
+#                     h_color = "grey20",
+#                     dpi = 1000,
+#                     asp = 1,
+#                     filename = file.path("man", "figures", "spatialplanr.png"))
