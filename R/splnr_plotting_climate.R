@@ -1,3 +1,5 @@
+utils::globalVariables("..x..")
+
 #' Plot climate data
 #'
 #' @param df An `sf` object with climate metric information with
