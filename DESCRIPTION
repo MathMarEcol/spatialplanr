@@ -39,9 +39,11 @@ Depends:
     R (>= 3.5.0)
 Imports: 
     dplyr,
+    forcats,
     fs,
     ggcorrplot,
     ggplot2,
+    ggridges,
     irr,
     magrittr,
     purrr,
