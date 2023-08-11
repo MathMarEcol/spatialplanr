@@ -115,6 +115,12 @@ Category_vec2 <- tibble::tibble(
   category = c("Group1", "Group1", "Group1", "Group2", "Group2", "Group3")
 )
 
+# create random climate metric example
+climVec <- unlist(rep(seq(0,1,length.out = 30), 26))
+
+dat_clim <- dat_PUs %>%
+  sf::st_sf() %>%
+  dplyr::mutate(metric = climVec)
 
 # Save the data
 usethis::use_data(dat_bndry,
@@ -124,10 +130,11 @@ usethis::use_data(dat_bndry,
   dat_species_bin,
   dat_species_bin2,
   dat_mpas,
-  dat_problem,
-  dat_soln,
-  dat_soln2,
+  #dat_problem,
+  #dat_soln,
+  #dat_soln2,
   Category_vec,
   Category_vec2,
+  dat_clim,
   overwrite = TRUE
 )

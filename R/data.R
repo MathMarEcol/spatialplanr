@@ -167,6 +167,23 @@
 # -------------------------------------------------------------------------
 
 
+#' Climate metric data
+#'
+#' An sf dataframe of planning units for spatial prioritisation
+#'
+#' @format `dat_clim`
+#' A data frame with 780 rows and 3 columns:
+#' \describe{
+#'   \item{cellID}{ID number for each row (or cell) of the dataset}
+#'   \item{geometry}{sf geometry column}
+#'   \item{metric}{climate metric information}
+#'   ...
+#' }
+#' @source "Made up data"
+"dat_clim"
+
+# -------------------------------------------------------------------------
+
 # Aquamaps species example data
 #
 # sf file containing the suitable habitat for a few marine species of the coral sea
