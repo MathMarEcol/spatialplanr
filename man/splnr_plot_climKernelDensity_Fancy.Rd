@@ -43,18 +43,22 @@ target <- Features \%>\%
 dat_species_binDF <- dat_species_bin \%>\%
   sf::st_drop_geometry()
 
-out_sf <- splnr_ClimatePriorityArea_CSapproach(featuresDF = dat_species_bin,
-                                               percentile = 5, metricDF = dat_clim, direction = -1)
+out_sf <- splnr_ClimatePriorityArea_CSapproach(
+  featuresDF = dat_species_bin,
+  percentile = 5, metricDF = dat_clim, direction = -1
+)
 
-target <- splnr_CPA_CSapproach_assignTargets(featuresDF = Features,
-                                             targetsDF = target,
-                                             climateSmartDF = out_sf,
-                                             refugiaTarget = 1)
+target <- splnr_CPA_CSapproach_assignTargets(
+  featuresDF = Features,
+  targetsDF = target,
+  climateSmartDF = out_sf,
+  refugiaTarget = 1
+)
 
 out_sf <- out_sf \%>\%
   dplyr::mutate(Cost_None = rep(1, 780)) \%>\%
   dplyr::left_join(dat_clim \%>\%
-                     sf::st_drop_geometry(), by = "cellID")
+    sf::st_drop_geometry(), by = "cellID")
 
 usedFeatures <- out_sf \%>\%
   sf::st_drop_geometry() \%>\%

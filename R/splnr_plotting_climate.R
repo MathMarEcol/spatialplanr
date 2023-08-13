@@ -1,5 +1,3 @@
-utils::globalVariables("..x..")
-
 #' Plot climate data
 #'
 #' @param df An `sf` object with climate metric information with
@@ -17,36 +15,35 @@ utils::globalVariables("..x..")
 #' @examples
 #' splnr_plot_climData(dat_clim, dat_clim$metric, dat_PUs)
 splnr_plot_climData <- function(df, colInterest, PlanUnits, landmass = NA,
-                                  colorMap = "C",
-                                  colorPUs = "grey80",
-                                  plotTitle = " ", legendTitle = "Climate metric") {
-
+                                colorMap = "C",
+                                colorPUs = "grey80",
+                                plotTitle = " ", legendTitle = "Climate metric") {
   df <- df %>%
     dplyr::mutate(metric = colInterest)
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = df %>% sf::st_as_sf(), ggplot2::aes(fill = .data$metric), colour = NA) +
-    ggplot2::scale_fill_viridis_c(name = legendTitle,
-                                  option = colorMap#,
-                                  #guide = ggplot2::guide_colourbar(
-                                  # title.position = "bottom",
-                                  #  title.hjust = 0.5,
-                                  #  order = 1,
-                                  #barheight = grid::unit(0.03, "npc"),
-                                  #barwidth = grid::unit(0.25, "npc"))
-                                  #)
+    ggplot2::scale_fill_viridis_c(
+      name = legendTitle,
+      option = colorMap # ,
+      # guide = ggplot2::guide_colourbar(
+      # title.position = "bottom",
+      #  title.hjust = 0.5,
+      #  order = 1,
+      # barheight = grid::unit(0.03, "npc"),
+      # barwidth = grid::unit(0.25, "npc"))
+      # )
     ) +
     ggplot2::geom_sf(data = PlanUnits, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE)
 
-  if (class(landmass)[[1]] == "sf"){
+  if (class(landmass)[[1]] == "sf") {
     gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
   }
 
   gg <- gg +
     ggplot2::theme_bw() +
-    ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim)+
+    ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
     ggplot2::labs(subtitle = plotTitle)
-
 }
 
 
@@ -72,18 +69,22 @@ splnr_plot_climData <- function(df, colInterest, PlanUnits, landmass = NA,
 #' dat_species_binDF <- dat_species_bin %>%
 #'   sf::st_drop_geometry()
 #'
-#' out_sf <- splnr_ClimatePriorityArea_CSapproach(featuresDF = dat_species_bin,
-#'                                                percentile = 5, metricDF = dat_clim, direction = -1)
+#' out_sf <- splnr_ClimatePriorityArea_CSapproach(
+#'   featuresDF = dat_species_bin,
+#'   percentile = 5, metricDF = dat_clim, direction = -1
+#' )
 #'
-#' target <- splnr_CPA_CSapproach_assignTargets(featuresDF = Features,
-#'                                              targetsDF = target,
-#'                                              climateSmartDF = out_sf,
-#'                                              refugiaTarget = 1)
+#' target <- splnr_CPA_CSapproach_assignTargets(
+#'   featuresDF = Features,
+#'   targetsDF = target,
+#'   climateSmartDF = out_sf,
+#'   refugiaTarget = 1
+#' )
 #'
 #' out_sf <- out_sf %>%
 #'   dplyr::mutate(Cost_None = rep(1, 780)) %>%
 #'   dplyr::left_join(dat_clim %>%
-#'                      sf::st_drop_geometry(), by = "cellID")
+#'     sf::st_drop_geometry(), by = "cellID")
 #'
 #' usedFeatures <- out_sf %>%
 #'   sf::st_drop_geometry() %>%
@@ -97,45 +98,57 @@ splnr_plot_climData <- function(df, colInterest, PlanUnits, landmass = NA,
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_solnClim <- prioritizr::solve.ConservationProblem(p1)
-#'splnr_plot_climKernelDensity_Basic(dat_solnClim)
-splnr_plot_climKernelDensity_Basic <- function(soln){
-
+#' splnr_plot_climKernelDensity_Basic(dat_solnClim)
+splnr_plot_climKernelDensity_Basic <- function(soln) {
   soln$approach <- "Ridge" # Need a dummy variable here.
 
   ggRidge <- ggplot2::ggplot() +
-    ggridges::stat_density_ridges(data = soln %>% dplyr::filter(.data$solution_1 == 1) %>% dplyr::mutate(solution_1 = "Selected"),
-                                  ggplot2::aes(x = .data$metric, y = .data$approach, fill = .data$solution_1),
-                                  # fill = "#3182bd",
-                                  color = "#194361", quantile_lines = TRUE, quantiles = 2,
-                                  show.legend = TRUE) +
-    ggridges::stat_density_ridges(data = soln %>% dplyr::filter(.data$solution_1 == 0) %>% dplyr::mutate(solution_1 = "Not Selected"),
-                                  ggplot2::aes(x = .data$metric, y = .data$approach, fill = .data$solution_1),
-                                  # fill = "#c6dbef",
-                                  color = "#3182bd", quantile_lines = TRUE, quantiles = 2,
-                                  alpha = 0.5,
-                                  show.legend = TRUE) +
-    ggplot2::scale_x_continuous(name = "Climate resilience metric",
-                                breaks = c(min(soln$metric), max(soln$metric)),
-                                labels = c("more climate-resilient", "less climate-resilient")) +
+    ggridges::stat_density_ridges(
+      data = soln %>% dplyr::filter(.data$solution_1 == 1) %>% dplyr::mutate(solution_1 = "Selected"),
+      ggplot2::aes(x = .data$metric, y = .data$approach, fill = .data$solution_1),
+      # fill = "#3182bd",
+      color = "#194361", quantile_lines = TRUE, quantiles = 2,
+      show.legend = TRUE
+    ) +
+    ggridges::stat_density_ridges(
+      data = soln %>% dplyr::filter(.data$solution_1 == 0) %>% dplyr::mutate(solution_1 = "Not Selected"),
+      ggplot2::aes(x = .data$metric, y = .data$approach, fill = .data$solution_1),
+      # fill = "#c6dbef",
+      color = "#3182bd", quantile_lines = TRUE, quantiles = 2,
+      alpha = 0.5,
+      show.legend = TRUE
+    ) +
+    ggplot2::scale_x_continuous(
+      name = "Climate resilience metric",
+      breaks = c(min(soln$metric), max(soln$metric)),
+      labels = c("more climate-resilient", "less climate-resilient")
+    ) +
     ggplot2::scale_y_discrete(expand = c(0, 0)) +
-    ggplot2::labs(x = "Climate resilience metric",
-                  y = "Proportion of planning units") +
+    ggplot2::labs(
+      x = "Climate resilience metric",
+      y = "Proportion of planning units"
+    ) +
     ggplot2::theme_bw() +
-    ggplot2::theme(axis.ticks = ggplot2::element_line(color = "black", size = 1),
-                   text = ggplot2::element_text(size = 20),
-                   axis.line = ggplot2::element_line(colour = "black", size = 1),
-                   axis.text.y = ggplot2::element_blank(),
-                   axis.text.x = ggplot2::element_text(size = 20),
-                   axis.title = ggplot2::element_text(size = 20),
-                   legend.title = ggplot2::element_text(color = "black", angle = 270, hjust = 0.5),
-                   legend.position = "bottom",
-                   legend.text = ggplot2::element_text(size = 20)) +
-    ggplot2::scale_fill_manual(name = "",
-                               values = c("Not Selected" = "#c6dbef", "Selected" = "#3182bd"),
-                               aesthetics = "fill",
-                               guide = ggplot2::guide_legend(
-                                 override.aes = list(linetype = 0),
-                                 nrow = 1))
+    ggplot2::theme(
+      axis.ticks = ggplot2::element_line(color = "black", size = 1),
+      text = ggplot2::element_text(size = 20),
+      axis.line = ggplot2::element_line(colour = "black", size = 1),
+      axis.text.y = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_text(size = 20),
+      axis.title = ggplot2::element_text(size = 20),
+      legend.title = ggplot2::element_text(color = "black", angle = 270, hjust = 0.5),
+      legend.position = "bottom",
+      legend.text = ggplot2::element_text(size = 20)
+    ) +
+    ggplot2::scale_fill_manual(
+      name = "",
+      values = c("Not Selected" = "#c6dbef", "Selected" = "#3182bd"),
+      aesthetics = "fill",
+      guide = ggplot2::guide_legend(
+        override.aes = list(linetype = 0),
+        nrow = 1
+      )
+    )
 }
 
 #' Fancy Kernel Density Plots for climate-smart spatial plans
@@ -162,18 +175,22 @@ splnr_plot_climKernelDensity_Basic <- function(soln){
 #' dat_species_binDF <- dat_species_bin %>%
 #'   sf::st_drop_geometry()
 #'
-#' out_sf <- splnr_ClimatePriorityArea_CSapproach(featuresDF = dat_species_bin,
-#'                                                percentile = 5, metricDF = dat_clim, direction = -1)
+#' out_sf <- splnr_ClimatePriorityArea_CSapproach(
+#'   featuresDF = dat_species_bin,
+#'   percentile = 5, metricDF = dat_clim, direction = -1
+#' )
 #'
-#' target <- splnr_CPA_CSapproach_assignTargets(featuresDF = Features,
-#'                                              targetsDF = target,
-#'                                              climateSmartDF = out_sf,
-#'                                              refugiaTarget = 1)
+#' target <- splnr_CPA_CSapproach_assignTargets(
+#'   featuresDF = Features,
+#'   targetsDF = target,
+#'   climateSmartDF = out_sf,
+#'   refugiaTarget = 1
+#' )
 #'
 #' out_sf <- out_sf %>%
 #'   dplyr::mutate(Cost_None = rep(1, 780)) %>%
 #'   dplyr::left_join(dat_clim %>%
-#'                      sf::st_drop_geometry(), by = "cellID")
+#'     sf::st_drop_geometry(), by = "cellID")
 #'
 #' usedFeatures <- out_sf %>%
 #'   sf::st_drop_geometry() %>%
@@ -187,19 +204,19 @@ splnr_plot_climKernelDensity_Basic <- function(soln){
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_solnClim <- prioritizr::solve.ConservationProblem(p1)
-#'splnr_plot_climKernelDensity_Basic(dat_solnClim)
+#' splnr_plot_climKernelDensity_Basic(dat_solnClim)
 splnr_plot_climKernelDensity_Fancy <- function(solution_list, names,
                                                colorMap = "C",
-                                               legendTitle = expression('\u0394 \u00B0C y'^"-1"*''),
-                                               xAxisLab = expression('Climate warming (\u0394 \u00B0C y'^"-1"*')')){
+                                               legendTitle = expression("\u0394 \u00B0C y"^"-1" * ""),
+                                               xAxisLab = expression("Climate warming (\u0394 \u00B0C y"^"-1" * ")")) {
   list_sol <- list()
-  group_name = "approach"
+  group_name <- "approach"
 
-  for(i in 1:length(names)) {
+  for (i in 1:length(names)) {
     list_sol[[i]] <- solution_list[[i]] %>%
       tibble::as_tibble() %>%
       dplyr::select("solution_1", "metric") %>%
-      dplyr::rename(!!rlang::sym(names[i]) :=  .data$metric) %>%
+      dplyr::rename(!!rlang::sym(names[i]) := .data$metric) %>%
       tidyr::pivot_longer(!!rlang::sym(names[i]), names_to = group_name, values_to = "metric")
   }
 
@@ -207,27 +224,36 @@ splnr_plot_climKernelDensity_Fancy <- function(solution_list, names,
     dplyr::mutate(approach = forcats::fct_relevel(.data$approach, rev))
 
   ggRidge <- ggplot2::ggplot() +
-    ggridges::geom_density_ridges_gradient(data = df %>% dplyr::filter(.data$solution_1 == 1),
-                                           ggplot2::aes(x = .data$metric, y = .data$approach,
-                                                        fill = ..x..), scale = 1) +
+    ggridges::geom_density_ridges_gradient(
+      data = df %>% dplyr::filter(.data$solution_1 == 1),
+      ggplot2::aes(
+        x = .data$metric,
+        y = .data$approach,
+        fill = ggplot2::after_stat("x"),
+      ), scale = 1
+    ) +
     ggplot2::scale_fill_viridis_c(name = legendTitle, option = colorMap) +
-    ggridges::geom_density_ridges(data = df %>% dplyr::filter(.data$solution_1 == 0),
-                                  ggplot2::aes(x =  .data$metric, y = .data$approach),
-                                  alpha = 0.25, linetype = "dotted", scale = 1) +
+    ggridges::geom_density_ridges(
+      data = df %>% dplyr::filter(.data$solution_1 == 0),
+      ggplot2::aes(x = .data$metric, y = .data$approach),
+      alpha = 0.25, linetype = "dotted", scale = 1
+    ) +
 
     # geom_vline(xintercept = climate$mean_climate_warming,
     #            linetype = "dashed", color = "tan1", size = 0.5) +
-    ggplot2::scale_x_continuous(expand = c(0,0)) +
+    ggplot2::scale_x_continuous(expand = c(0, 0)) +
     ggplot2::scale_y_discrete(expand = ggplot2::expansion(mult = c(0.01, 0))) +
     ggplot2::labs(x = xAxisLab) +
     ggplot2::theme_bw() +
-    ggplot2::theme(axis.ticks = ggplot2::element_line(color = "black", size = 1),
-                   axis.line = ggplot2::element_line(colour = "black", size = 1),
-                   axis.text = ggplot2::element_text(color = "black", size = 14),
-                   axis.title.x = ggplot2::element_text(size = 14),
-                   axis.title.y = ggplot2::element_blank(),
-                   axis.text.y = ggplot2::element_blank(),
-                   # legend.key.height = unit(1, "inch"),
-                   legend.text = ggplot2::element_text(size = 15, color = "black"),
-                   legend.title = ggplot2::element_text(size = 15, color = "black"))
+    ggplot2::theme(
+      axis.ticks = ggplot2::element_line(color = "black", size = 1),
+      axis.line = ggplot2::element_line(colour = "black", size = 1),
+      axis.text = ggplot2::element_text(color = "black", size = 14),
+      axis.title.x = ggplot2::element_text(size = 14),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      # legend.key.height = unit(1, "inch"),
+      legend.text = ggplot2::element_text(size = 15, color = "black"),
+      legend.title = ggplot2::element_text(size = 15, color = "black")
+    )
 }
