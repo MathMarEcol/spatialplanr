@@ -191,7 +191,7 @@ datEx_problem <- prioritizr::problem(out_sf, col_name, "Cost_None") %>%
 
 ```{r, fig.width=9}
 datEx_soln <- datEx_problem %>%
-  prioritizr:::solve.ConservationProblem()
+  prioritizr::solve.ConservationProblem()
 ```
 
 ### Visualize Output
@@ -314,7 +314,7 @@ datEx_problem2 <- prioritizr::problem(out_sf, col_name, "Cost_None") %>%
 
 # Add a solution object
 datEx_soln2 <- datEx_problem2 %>%
-  prioritizr:::solve.ConservationProblem()
+  prioritizr::solve.ConservationProblem()
 
 (ggSoln2 <- splnr_plot_Solution(datEx_soln2, PUs, landmass))
 ```
@@ -341,7 +341,7 @@ Sometimes when multiple spatial plans are generated, we are interesting in how m
 ```{r, fig.width=9}
 datEx_soln_portfolio <- datEx_problem %>%
   prioritizr::add_cuts_portfolio(5) %>% # create conservation problem that contains a portfolio of solutions
-  prioritizr:::solve.ConservationProblem()
+  prioritizr::solve.ConservationProblem()
 
 selFreq <- datEx_soln_portfolio %>% # calculate selection frequency
   sf::st_drop_geometry() %>%

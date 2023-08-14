@@ -39,7 +39,7 @@ dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = ru
   prioritizr::add_default_solver(verbose = FALSE)
 
 dat_soln <- dat_problem \%>\%
- prioritizr:::solve.ConservationProblem()
+ prioritizr::solve.ConservationProblem()
 
 dat_cost <- dat_soln \%>\%
   dplyr::mutate(Cost = runif(n = dim(.)[[1]]))

@@ -260,7 +260,7 @@ splnr_arrangeFeatures <- function(df) {
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_soln <- dat_problem %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' dfNInc <- splnr_prepTargetData(
 #'   soln = dat_soln,
@@ -410,7 +410,7 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA, Dict = NA, d
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_soln <- dat_problem %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' # 50 % target for problem/solution 2
 #' dat_problem2 <- prioritizr::problem(dat_species_bin %>%
@@ -423,7 +423,7 @@ splnr_prepTargetData <- function(soln, pDat, allDat, Category = NA, Dict = NA, d
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_soln2 <- dat_problem2 %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' corrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
 splnr_prepKappaCorrData <- function(sol, name_sol) {
@@ -488,12 +488,12 @@ splnr_prepKappaCorrData <- function(sol, name_sol) {
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_soln <- dat_problem %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' # create conservation problem that contains a portfolio of solutions
 #' dat_soln_portfolio <- dat_problem %>%
 #'   prioritizr::add_cuts_portfolio(number_solutions = 5) %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 #' (splnr_plot_selectionFreq(selFreq))

@@ -32,6 +32,8 @@ metric_df <- dat_clim
 dat_species_binDF <- dat_species_bin \%>\%
   sf::st_drop_geometry()
 
-out_sf <- splnr_ClimatePriorityArea_CSapproach (featuresDF = dat_species_bin,
-        percentile = 5, metricDF = metric_df, direction = 1)
+out_sf <- splnr_ClimatePriorityArea_CSapproach(
+  featuresDF = dat_species_bin,
+  percentile = 5, metricDF = metric_df, direction = 1
+)
 }

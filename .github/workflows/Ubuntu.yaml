@@ -19,8 +19,6 @@ jobs:
       matrix:
         config:
           - {os: ubuntu-20.04, r: 'release', pkgs: 'all'}
-          - {os: ubuntu-20.04, r: 'devel', pkgs: 'all'}
-          - {os: ubuntu-20.04, r: 'devel', pkgs: 'depends only'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

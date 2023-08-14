@@ -22,7 +22,7 @@
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #'dat_soln <- dat_problem %>%
-#'  prioritizr:::solve.ConservationProblem()
+#'  prioritizr::solve.ConservationProblem()
 #'
 #' splnr_plot_Solution(dat_soln, dat_PUs)
 splnr_plot_Solution <- function(soln, PlanUnits, landmass = NA,
@@ -166,7 +166,7 @@ splnr_plot_MPAs <- function(df, landmass = NA,
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #'dat_soln <- dat_problem %>%
-#'  prioritizr:::solve.ConservationProblem()
+#'  prioritizr::solve.ConservationProblem()
 #'
 #' dat_cost <- dat_soln %>%
 #'   dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
@@ -221,7 +221,7 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", landmass = NA,
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #'dat_soln <- dat_problem %>%
-#'  prioritizr:::solve.ConservationProblem()
+#'  prioritizr::solve.ConservationProblem()
 #'
 #' splnr_plot_costOverlay(soln = dat_soln)
 splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass = NA,
@@ -348,7 +348,7 @@ splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #'dat_soln <- dat_problem %>%
-#'  prioritizr:::solve.ConservationProblem()
+#'  prioritizr::solve.ConservationProblem()
 #'
 #' # not including incidental species coverage
 #' dfNInc <- splnr_prepTargetData(
@@ -441,7 +441,7 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #'dat_soln <- dat_problem %>%
-#'  prioritizr:::solve.ConservationProblem()
+#'  prioritizr::solve.ConservationProblem()
 #'
 #' s1 <- dat_soln %>%
 #'   tibble::as_tibble()
@@ -650,7 +650,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_soln <- dat_problem %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' # 50 % target for problem/solution 2
 #' dat_problem2 <- prioritizr::problem(dat_species_bin %>%
@@ -663,7 +663,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_soln2 <- dat_problem2 %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' (splnr_plot_comparison(dat_soln, dat_soln2))
 #'
@@ -786,7 +786,7 @@ splnr_plot_featureNo <- function(df, landmass = NA,
 #' # create conservation problem that contains a portfolio of solutions
 #' dat_soln_portfolio <- dat_problem %>%
 #'   prioritizr::add_cuts_portfolio(number_solutions = 5) %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 #' (splnr_plot_selectionFreq(selFreq))
@@ -850,7 +850,7 @@ splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_soln <- dat_problem %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' (splnr_plot_impScoreFerrierPlot(dat_soln, dat_problem))
 splnr_plot_impScoreFerrierPlot <- function(soln, pDat, plotTitle = "", colorMap = "A",
@@ -919,7 +919,7 @@ splnr_plot_impScoreFerrierPlot <- function(soln, pDat, plotTitle = "", colorMap 
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_soln <- dat_problem %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' (splnr_plot_impScoreRWRPlot(dat_soln, dat_problem))
 splnr_plot_impScoreRWRPlot <- function(soln, pDat, plotTitle = "", colorMap = "A",
@@ -986,7 +986,7 @@ splnr_plot_impScoreRWRPlot <- function(soln, pDat, plotTitle = "", colorMap = "A
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_soln <- dat_problem %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' (splnr_plot_impScoreRCPlot(dat_soln, dat_problem))
 #' }
@@ -1054,7 +1054,7 @@ splnr_plot_impScoreRCPlot <- function(soln, pDat, plotTitle = "", colorMap = "A"
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_soln <- dat_problem %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' # 50 % target for problem/solution 2
 #' dat_problem2 <- prioritizr::problem(dat_species_bin %>%
@@ -1067,7 +1067,7 @@ splnr_plot_impScoreRCPlot <- function(soln, pDat, plotTitle = "", colorMap = "A"
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_soln2 <- dat_problem2 %>%
-#'   prioritizr:::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' CorrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
 #'

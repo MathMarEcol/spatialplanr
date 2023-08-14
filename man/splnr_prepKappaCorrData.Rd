@@ -28,7 +28,7 @@ dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = ru
   prioritizr::add_default_solver(verbose = FALSE)
 
 dat_soln <- dat_problem \%>\%
-  prioritizr:::solve.ConservationProblem()
+  prioritizr::solve.ConservationProblem()
 
 # 50 \% target for problem/solution 2
 dat_problem2 <- prioritizr::problem(dat_species_bin \%>\%
@@ -41,7 +41,7 @@ dat_problem2 <- prioritizr::problem(dat_species_bin \%>\%
   prioritizr::add_default_solver(verbose = FALSE)
 
 dat_soln2 <- dat_problem2 \%>\%
-  prioritizr:::solve.ConservationProblem()
+  prioritizr::solve.ConservationProblem()
 
 corrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
 }
