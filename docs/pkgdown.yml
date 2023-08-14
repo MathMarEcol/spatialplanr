@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   spatialplanr: spatialplanr.html
-last_built: 2023-08-09T04:56Z
+last_built: 2023-08-14T00:16Z
 urls:
   reference: https://mathmarecol.github.io/spatialplanr/reference
   article: https://mathmarecol.github.io/spatialplanr/articles

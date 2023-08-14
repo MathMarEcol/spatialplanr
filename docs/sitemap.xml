@@ -43,6 +43,9 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_bndry.html</loc>
   </url>
   <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_clim.html</loc>
+  </url>
+  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_mpas.html</loc>
   </url>
   <url>
@@ -74,6 +77,12 @@
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/spDataFiltered.html</loc>
+  </url>
+  <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_CPA_CSapproach_assignTargets.html</loc>
+  </url>
+  <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_ClimatePriorityArea_CSapproach.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_apply_cutoffs.html</loc>
@@ -128,6 +137,15 @@
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_circBplot.html</loc>
+  </url>
+  <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_climData.html</loc>
+  </url>
+  <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_climKernelDensity_Basic.html</loc>
+  </url>
+  <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_climKernelDensity_Fancy.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_comparison.html</loc>

@@ -41,7 +41,7 @@ dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = ru
 # create conservation problem that contains a portfolio of solutions
 dat_soln_portfolio <- dat_problem \%>\%
   prioritizr::add_cuts_portfolio(number_solutions = 5) \%>\%
-  prioritizr:::solve.ConservationProblem()
+  prioritizr::solve.ConservationProblem()
 
 selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 (splnr_plot_selectionFreq(selFreq))

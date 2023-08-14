@@ -31,7 +31,7 @@ dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = ru
   prioritizr::add_default_solver(verbose = FALSE)
 
 dat_soln <- dat_problem \%>\%
- prioritizr:::solve.ConservationProblem()
+ prioritizr::solve.ConservationProblem()
 
 # not including incidental species coverage
 dfNInc <- splnr_prepTargetData(

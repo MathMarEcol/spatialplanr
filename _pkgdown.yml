@@ -18,6 +18,12 @@ reference:
 - contents:
   - starts_with("splnr_match_")
 
+- title: Climate-smart
+  desc: Functions to create climate-smart prioritisations
+- contents:
+  - splnr_CPA_CSapproach_assignTargets
+  - splnr_ClimatePriorityArea_CSapproach
+
 - title: Plotting
   desc: Functions for plotting.
 - contents:
@@ -39,6 +45,7 @@ reference:
   - Category_vec
   - Category_vec2
   - dat_bndry
+  - dat_clim
   - dat_mpas
   - dat_PUs
   - dat_region

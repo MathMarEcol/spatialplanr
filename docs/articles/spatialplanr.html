@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">spatialplanr</a>
 
-    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.5</small>
+    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -257,7 +257,7 @@ purposes.</p>
 </h4>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_soln</span> <span class="op">&lt;-</span> <span class="va">datEx_problem</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">prioritizr</span><span class="fu">:::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="visualize-output">Visualize Output<a class="anchor" aria-label="anchor" href="#visualize-output"></a>
@@ -397,7 +397,7 @@ environment using
 <span></span>
 <span><span class="co"># Add a solution object</span></span>
 <span><span class="va">datEx_soln2</span> <span class="op">&lt;-</span> <span class="va">datEx_problem2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">prioritizr</span><span class="fu">:::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">ggSoln2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_Solution.html">splnr_plot_Solution</a></span><span class="op">(</span><span class="va">datEx_soln2</span>, <span class="va">PUs</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-28-1.png" width="864"></p>
@@ -432,7 +432,7 @@ example of this is by using the portfolio</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_soln_portfolio</span> <span class="op">&lt;-</span> <span class="va">datEx_problem</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_cuts_portfolio.html" class="external-link">add_cuts_portfolio</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># create conservation problem that contains a portfolio of solutions</span></span>
-<span>  <span class="fu">prioritizr</span><span class="fu">:::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">selFreq</span> <span class="op">&lt;-</span> <span class="va">datEx_soln_portfolio</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># calculate selection frequency</span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
