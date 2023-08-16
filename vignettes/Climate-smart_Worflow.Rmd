@@ -1,0 +1,211 @@
+---
+title: "A Basic Cliamte-Smart Spatial Planning Workflow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{A Basic Cliamte-Smart Spatial Planning Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  cache = FALSE,
+  message = FALSE,
+  eval = TRUE
+)
+```
+
+```{r klippy, eval=TRUE, echo=FALSE, include=TRUE}
+# klippy::klippy(position = c('top', 'right'))
+```
+
+```{r setup}
+library(spatialplanr)
+```
+
+# Overview
+
+This code has been written to simplify the process for running a _prioritizr_ analysis on a given region. It is still a work in progress so feel free to submit pull requests with new features and code improvements.
+
+## Set user parameters 
+You can set a region if it is defined in `splnr_get_PlanningUnits`. 
+```{r}
+Region <- "Coral Sea" # "Australia"
+Type <- "Oceans" # "EEZ"
+Shape <- "Hexagon" # "Shape of PUs
+PU_size <- 10000 # km2
+
+cCRS <- "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs" # Mollweide
+```
+
+## Analysis Region
+
+Start your analysis by defining your region and setting up the planning units.
+
+Get the boundary for your chosen region.
+```{r}
+Bndry <- splnr_get_Boundary(Region, Type, cCRS)
+
+landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
+  sf::st_transform(cCRS)
+```
+
+## Create Planning Units 
+```{r}
+PUs <- splnr_get_PlanningUnits(Bndry, landmass, PU_size, Shape)
+```
+
+## Get the features 
+
+For our example, we will use a small subset of charismatic megafauna species of the Coral Sea to inform the conservation plan. We filtered the Aquamaps (Aquamaps.org) species distribution models for our study area for the following species: 
+```{r}
+Dict <- tibble::tribble(
+  ~Common, ~Scientific, ~Category, ~Class,
+  "Green sea turtle", "Chelonia_mydas", "Reptiles", "important",
+  "Loggerhead sea turtle", "Caretta_caretta", "Reptiles", "important",
+  "Hawksbill sea turtle", "Eretmochelys_imbricata", "Reptiles", "important",
+  "Olive ridley sea turtle", "Lepidochelys_olivacea", "Reptiles", "important",
+  "Saltwater crocodile", "Crocodylus_porosus", "Reptiles", "important",
+  "Humpback whale", "Megaptera_novaeangliae", "Mammals", "representative",
+  "Common Minke whale", "Balaenoptera_acutorostrata", "Mammals", "representative",
+  "Dugong", "Dugong_dugon", "Mammals", "important",
+  "Grey nurse shark", "Carcharias_taurus", "Sharks and rays", "important",
+  "Tiger shark", "Galeocerdo_cuvier", "Sharks and rays", "important",
+  "Great hammerhead shark", "Sphyrna_mokarran", "Sharks and rays", "representative",
+  "Giant oceanic manta ray", "Mobula_birostris", "Sharks and rays", "important",
+  "Reef manta ray", "Mobula_alfredi", "Sharks and rays", "important",
+  "Whitetip reef shark", "Triaenodon_obesus", "Sharks and rays", "important",
+  "Red-footed booby", "Sula_sula", "Birds", "important"
+)
+```
+
+These species were not chosen based on their importance for this region and only represent an example for visualization purposes. 
+
+**Note:** The structure of the `tribble`above is required for some of the downstream plotting. *Common* denotes the common name of a species, *Scientific* the scientific name in the format used by Aquamaps, *Category* is the category that a species belongs to and *Class* represents the importance of the species for the conservation plan.
+
+### Convert the probabilities to binary data
+
+```{r}
+datEx_species_bin <- spDataFiltered %>%
+  dplyr::as_tibble() %>%
+  dplyr::mutate(dplyr::across(
+    -dplyr::any_of(c("cellID", "geometry")), # Don't apply to geometry and cellID
+    ~ dplyr::case_when(
+      . >= 0.5 ~ 1,
+      . < 0.5 ~ 0,
+      is.na(.data) ~ 0
+    )
+  )) %>%
+  sf::st_as_sf()
+
+col_name <- spDataFiltered %>%
+  sf::st_drop_geometry() %>%
+  dplyr::select(-"cellID") %>%
+  colnames()
+```
+
+### Climate-smart spatial planning
+
+So far, all steps were exactly the same as in a spatial plan that does not include climate change. To make the spatial plan climate smart, we need climate metrics.
+
+We will use climate velocity data obtained from x, y and z models using SSP5-8.5. For downstream analysis, we rename the column of interest (here: the velocity data) `metric`.
+
+```{r}
+metric_df = CoralSeaVelocity %>%
+  dplyr::rename(metric = voccMag_transformed) 
+```
+
+The climate velocity data can be visualized using the `splnr_plot_climData()` function.
+
+```{r, fig.width=9}
+(ggclim <- splnr_plot_climData(metric_df, metric_df$metric, PUs))
+```
+
+In our case, there were few areas with low climate velocity, which are the areas we define as climate refugia in our example. Usually, we would combine several metrics (e.g. exposure, velocity etc.) of multiple SSP scenarios to get more robust climate refugia. For our example, we randomly set areas with very high velocity to a value between `0.85-1` to visualize the output (CHANGE THIS LATER TO BETTER DATA).
+
+```{r, fig.width=9}
+set.seed(5)
+
+metric_df = CoralSeaVelocity %>%
+  dplyr::rename(metric = voccMag_transformed) %>%
+  dplyr::mutate(
+    metricOG = metric,
+    metric = ifelse(metric > 0.99, runif(., 0.85, 1.0), metric))
+
+(ggclim <- splnr_plot_climData(metric_df, metric_df$metric, PUs))
+
+```
+
+We then use the climate priority area approach `splnr_ClimatePriorityArea_CSapproach()` detailed in Buenafe et al (2023) to determine climate refugia. Briefly, this approach selects a percentile (in our case 5%) of the suitable habitat of each feature that is considered the most climate-smart. It also requires a `direction` input indicating at which side of the metric range the more climate-smart areas can be found. In our case, lower climate velocity denotes more climate-smart (`direction = -1`), but in other cases a higher value might represent the more climate-smart planning units (`direction = 1`). 
+
+```{r}
+datEx_species_binDF <- datEx_species_bin %>%
+  sf::st_drop_geometry()
+
+out_sf <- spatialplanr::splnr_ClimatePriorityArea_CSapproach(featuresDF = datEx_species_bin,
+                                          percentile = 5, 
+                                          metricDF = metric_df,
+                                          direction = -1) %>% 
+  dplyr::left_join(datEx_species_binDF %>%
+                     dplyr::select(.data$cellID, tidyselect::starts_with("Cost_")), by = "cellID") %>%
+  dplyr::left_join(metric_df %>%
+                     sf::st_drop_geometry(), by = "cellID")
+```
+
+Using this approach also requires an adaptation of the targets, since 5% of the suitable habitat of each species is already protected in the climate-smart areas. We calculate the targets by using `splnr_CPA_CSapproach_assignTargets()`, where we can decide how much of the 5% of the most climate-smart areas is supposed to be included in the spatial plan (here: `refugiaTarget = 1` to protect 100% of the 5% most climate-smart areas).
+
+```{r}
+target <- datEx_species_bin %>%
+  sf::st_drop_geometry() %>%
+  dplyr::select(-"cellID") %>%
+  colnames() %>%
+  data.frame() %>%
+  setNames(c("feature")) %>%
+  dplyr::mutate(target = 0.3)
+
+target <- splnr_CPA_CSapproach_assignTargets(featuresDF = datEx_species_bin,
+                             targetsDF = target,
+                             climateSmartDF = out_sf,
+                            refugiaTarget = 1)
+```
+
+We now add other information required to perform the spatial planning, such as the cost, and extract the names of all used features.
+
+```{r}
+out_sf$Cost_None <- rep(1, 397)
+
+usedFeatures <- out_sf %>%
+  sf::st_drop_geometry() %>%
+  dplyr::select(-tidyselect::starts_with("Cost_"), -"cellID", -tidyselect::starts_with("metric")) %>%
+  names()
+```
+
+### Run the climate-smart spatial planning
+
+The `prioritizr`steps when including climate change are the same as when running a non-climate-smart spatial prioritization. 
+
+```{r}
+p1 <- prioritizr::problem(out_sf, usedFeatures, "Cost_None") %>%
+  prioritizr::add_min_set_objective() %>%
+  prioritizr::add_relative_targets(target$target) %>%
+  prioritizr::add_binary_decisions() %>%
+  prioritizr::add_default_solver(verbose = FALSE)
+
+dat_solnClim <- prioritizr::solve.ConservationProblem(p1)
+```
+
+We can look at the resulting plan using `splnr_plot_Solution()`.
+
+```{r, fig.width=9}
+(ggSoln <- splnr_plot_Solution(dat_solnClim, PUs, landmass))
+```
+
+However, we are also interested how climate-smart the selected planning units in the solution actually are. For this, we can use a kernel density plot 
+
+
+```{r, fig.width=8, height=5}
+(ggClimDens <- splnr_plot_climKernelDensity_Fancy(solution_list = list(dat_solnClim), names = c("Input 1"), legendTitle = "Climate velocity (add unit)", xAxisLab = "Climate velocity"))
+```
