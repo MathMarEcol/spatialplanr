@@ -73,7 +73,7 @@ splnr_convert_2PUs <- function(dat, PlanUnits) {
     #   dplyr::mutate(!!nm := exactextractr::exact_extract(dat, PlanUnits, meth, progress = FALSE)) # Use mean for continuous. Use mode for categorical
 
     out <- PlanUnits %>%
-      dplyr::mutate(!!nm := terra::extract(dat, PlanUnits, fun = meth, method = "bilinear", ID = FALSE)) # Use mean for continuous. Use mode for categorical
+      dplyr::mutate(!!nm := dplyr::pull(terra::extract(dat, PlanUnits, fun = meth, method = "bilinear", ID = FALSE))) # Use mean for continuous. Use mode for categorical
 
 
     return(out)

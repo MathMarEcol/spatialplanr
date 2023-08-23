@@ -45,12 +45,13 @@ splnr_replace_NAs <- function(df, vari) {
 
     gp <- df %>%
       dplyr::mutate(isna = is.na(!!rlang::sym(vari)))
+
     gp <- split(gp, f = as.factor(gp$isna))
 
     d <- sf::st_nearest_feature(gp$`TRUE`, gp$`FALSE`)
 
     gp$`TRUE` <- gp$`TRUE` %>%
-      dplyr::mutate(!!rlang::sym(vari) := dplyr::pull(gp$`FALSE`, !!rlang::sym(vari))[d,])
+      dplyr::mutate(!!rlang::sym(vari) := dplyr::pull(gp$`FALSE`, !!rlang::sym(vari))[d])
 
     df <- rbind(gp$`FALSE`, gp$`TRUE`) %>%
       dplyr::select(-.data$isna) %>%
