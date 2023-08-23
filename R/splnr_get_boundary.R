@@ -20,7 +20,8 @@ splnr_get_Boundary <- function(Limits,
       dplyr::bind_rows(dplyr::tibble(x = Limits["xmax"], y = seq(Limits["ymin"], Limits["ymax"], by = 1))) %>%
       dplyr::bind_rows(dplyr::tibble(x = seq(Limits["xmax"], Limits["xmin"], by = -1), y = Limits["ymax"])) %>%
       dplyr::bind_rows(dplyr::tibble(x = Limits["xmin"], y = seq(Limits["ymax"], Limits["ymin"], by = -1))) %>%
-      splnr_create_polygon(cCRS)
+      splnr_create_polygon(cCRS) %>%
+      sf::st_sf()
 
     return(Bndry)
   }
@@ -30,7 +31,8 @@ splnr_get_Boundary <- function(Limits,
       dplyr::bind_rows(dplyr::tibble(x = 180, y = seq(-90, 90, by = 1))) %>%
       dplyr::bind_rows(dplyr::tibble(x = seq(180, -180, by = -1), y = 90)) %>%
       dplyr::bind_rows(dplyr::tibble(x = -180, y = seq(90, -90, by = -1))) %>%
-      splnr_create_polygon(cCRS)
+      splnr_create_polygon(cCRS) %>%
+      sf::st_sf()
 
     return(Bndry)
   }

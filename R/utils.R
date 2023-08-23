@@ -40,10 +40,12 @@ splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
 #' df <- dat_species_prob %>%
 #'   splnr_replace_NAs("Spp2")
 splnr_replace_NAs <- function(df, vari) {
+
   if (sum(is.na(dplyr::pull(df, !!rlang::sym(vari)))) > 0) { # Check if there are NAs
 
     gp <- df %>%
       dplyr::mutate(isna = is.na(!!rlang::sym(vari)))
+
     gp <- split(gp, f = as.factor(gp$isna))
 
     d <- sf::st_nearest_feature(gp$`TRUE`, gp$`FALSE`)

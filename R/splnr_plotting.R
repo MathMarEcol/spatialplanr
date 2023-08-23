@@ -411,6 +411,9 @@ splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
       ggplot2::geom_abline(slope = 0, intercept = setTarget, col = "black", lty = 2, size = 1.5) +
       ggplot2::labs(title = paste0(plotTitle, setTarget, "%"))
   }
+
+  return(gg_target)
+
 }
 
 #' Plot circular barplot
