@@ -330,9 +330,9 @@ splnr_plot_climKernelDensity <- function(type, soln,
                                                         legendTitle = legendTitle, xAxisLab = xAxisLab)
     }
   } else if (type == "App") {
-    if (inherits(dat_solnClim,"sf") == FALSE){
+    if (inherits(soln,"sf") == FALSE){
       cat("Please provide an sf object.")
-    } else if (inherits(dat_solnClim,"sf")){
+    } else if (inherits(soln,"sf")){
       ggclimDens <-  splnr_plot_climKernelDensity_Basic(soln = soln)
     }
   }
