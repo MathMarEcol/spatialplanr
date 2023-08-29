@@ -10,6 +10,9 @@
     <loc>https://mathmarecol.github.io/spatialplanr/LICENSE.html</loc>
   </url>
   <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/articles/Climate-smart_Workflow.html</loc>
+  </url>
+  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/articles/index.html</loc>
   </url>
   <url>
@@ -49,16 +52,7 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_mpas.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_problem.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_region.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_soln.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_soln2.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_species_bin.html</loc>
@@ -79,16 +73,13 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/spDataFiltered.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_CPA_CSapproach_assignTargets.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_ClimatePriorityArea_CSapproach.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_apply_cutoffs.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_arrangeFeatures.html</loc>
+  </url>
+  <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_climate_PriorityApproach.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_convert2Pacific.html</loc>
@@ -124,6 +115,9 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_CorrMat.html</loc>
   </url>
   <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_ImportanceScore.html</loc>
+  </url>
+  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_MPAs.html</loc>
   </url>
   <url>
@@ -142,10 +136,7 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_climData.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_climKernelDensity_Basic.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_climKernelDensity_Fancy.html</loc>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_climKernelDensity.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_comparison.html</loc>
@@ -158,18 +149,6 @@
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_featureNo.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_impScoreFerrierPlot.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_impScoreRCPlot.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_impScoreRWRPlot.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_longhurst.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_selectionFreq.html</loc>
