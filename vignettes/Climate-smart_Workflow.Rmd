@@ -139,50 +139,25 @@ metric_df = CoralSeaVelocity %>%
 
 ```
 
-We then use the climate priority area approach `splnr_ClimatePriorityArea_CSapproach()` detailed in Buenafe et al (2023) to determine climate refugia. Briefly, this approach selects a percentile (in our case 5%) of the suitable habitat of each feature that is considered the most climate-smart. It also requires a `direction` input indicating at which side of the metric range the more climate-smart areas can be found. In our case, lower climate velocity denotes more climate-smart (`direction = -1`), but in other cases a higher value might represent the more climate-smart planning units (`direction = 1`). 
+We then use the climate priority area approach `splnr_climate_PriorityArea()` detailed in Buenafe et al (2023) to determine climate refugia. Briefly, this approach selects a percentile (in our case 5%) of the suitable habitat of each feature that is considered the most climate-smart. It also requires a `direction` input indicating at which side of the metric range the more climate-smart areas can be found. In our case, lower climate velocity denotes more climate-smart (`direction = -1`), but in other cases a higher value might represent the more climate-smart planning units (`direction = 1`). 
+
+Using this approach also requires an adaptation of the targets, since 5% of the suitable habitat of each species is already protected in the climate-smart areas. We can decide how much of the 5% of the most climate-smart areas is supposed to be included in the spatial plan (here: `refugiaTarget = 1` to protect 100% of the 5% most climate-smart areas).
+
 
 ```{r}
 datEx_species_binDF <- datEx_species_bin %>%
   sf::st_drop_geometry()
 
-out_sf <- spatialplanr:::splnr_ClimatePriorityArea_CSapproach(featuresDF = datEx_species_bin,
-                                          percentile = 5, 
-                                          metricDF = metric_df,
-                                          direction = -1) %>% 
+CPA_Approach <- splnr_climate_PriorityApproach(featuresDF = datEx_species_bin,
+                    metricDF = metric_df, targetsDF = target, direction = -1, refugiaTarget = 1)
+
+out_sf <- CPA_Approach[["Features"]] %>% 
   dplyr::left_join(datEx_species_binDF %>%
                      dplyr::select(.data$cellID, tidyselect::starts_with("Cost_")), by = "cellID") %>%
   dplyr::left_join(metric_df %>%
                      sf::st_drop_geometry(), by = "cellID")
-```
 
-Using this approach also requires an adaptation of the targets, since 5% of the suitable habitat of each species is already protected in the climate-smart areas. We calculate the targets by using `splnr_CPA_CSapproach_assignTargets()`, where we can decide how much of the 5% of the most climate-smart areas is supposed to be included in the spatial plan (here: `refugiaTarget = 1` to protect 100% of the 5% most climate-smart areas).
-
-```{r}
-target <- datEx_species_bin %>%
-  sf::st_drop_geometry() %>%
-  dplyr::select(-"cellID") %>%
-  colnames() %>%
-  data.frame() %>%
-  setNames(c("feature")) %>%
-  dplyr::mutate(target = 0.3)
-
-targets <- spatialplanr:::splnr_CPA_CSapproach_assignTargets(featuresDF = datEx_species_bin,
-                             targetsDF = target,
-                             climateSmartDF = out_sf,
-                            refugiaTarget = 1)
-```
-The two chunks above can also be simplified by calling `splnr_CPA_Approach_Meta()`:
-
-```{r}
-CPA_Approach_ls <- splnr_CPA_Approach_Meta(featuresDF = datEx_species_bin,
-                    metricDF = metric_df, targetsDF = target, direction = -1)
-
-out_sf <- CPA_Approach_ls[[1]] %>% 
-  dplyr::left_join(datEx_species_binDF %>%
-                     dplyr::select(.data$cellID, tidyselect::starts_with("Cost_")), by = "cellID") %>%
-  dplyr::left_join(metric_df %>%
-                     sf::st_drop_geometry(), by = "cellID")
-targets <- CPA_Approach_ls[[2]]
+targets <- CPA_Approach[["Targets"]]
 ```
 
 
