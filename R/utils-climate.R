@@ -6,7 +6,8 @@
 #' @param direction If direction = 1, metric values are from low (least climate-smart) to high (most climate-smart). If direction = -1, metric values are from high (least climate-smart) to low (most climate-smart).
 #'
 #' @return A new sf dataframe that has cutoffs applied.
-#' @export
+#' @noRd
+#' @keywords internal
 #'
 #' @importFrom rlang .data
 #'
@@ -16,11 +17,11 @@
 #' dat_species_binDF <- dat_species_bin %>%
 #'   sf::st_drop_geometry()
 #'
-#' out_sf <- splnr_ClimatePriorityArea_CSapproach(
+#' out_sf <- splnr_climate_PriorityArea_splitFeature(
 #'   featuresDF = dat_species_bin,
 #'   percentile = 5, metricDF = metric_df, direction = 1
 #' )
-splnr_ClimatePriorityArea_CSapproach <- function(featuresDF,
+splnr_climate_PriorityArea_splitFeature <- function(featuresDF,
                                                  percentile,
                                                  metricDF,
                                                  direction) {
@@ -117,7 +118,8 @@ splnr_ClimatePriorityArea_CSapproach <- function(featuresDF,
 #' @param refugiaTarget target assigned to climate-smart areas
 #'
 #' @return A new sf dataframe that has cutoffs applied.
-#' @export
+#' @noRd
+#' @keywords internal
 #'
 #' @importFrom rlang .data
 #'
@@ -137,18 +139,18 @@ splnr_ClimatePriorityArea_CSapproach <- function(featuresDF,
 #' dat_species_binDF <- dat_species_bin %>%
 #'   sf::st_drop_geometry()
 #'
-#' out_sf <- splnr_ClimatePriorityArea_CSapproach(
+#' out_sf <- splnr_climate_PriorityArea_splitFeature(
 #'   featuresDF = dat_species_bin,
 #'   percentile = 5, metricDF = metric_df, direction = 1
 #' )
 #'
-#' target <- splnr_CPA_CSapproach_assignTargets(
+#' target <- splnr_climate_PriorityApproach_assignTargets (
 #'   featuresDF = Features,
 #'   targetsDF = target,
 #'   climateSmartDF = out_sf,
 #'   refugiaTarget = 1
 #' )
-splnr_CPA_CSapproach_assignTargets <- function(featuresDF,
+splnr_climate_PriorityApproach_assignTargets <- function(featuresDF,
                                                targetsDF,
                                                climateSmartDF,
                                                refugiaTarget = 1) {
@@ -210,4 +212,53 @@ splnr_CPA_CSapproach_assignTargets <- function(featuresDF,
   finalDF <- do.call(dplyr::bind_rows, finalList)
 
   return(finalDF)
+}
+
+#' Function to run the climate-priority-area approach
+#'
+#' @param featuresDF feature `sf`object which should have a column for cellID
+#' @param targetsDF `data.frame`with list of features under "feature" column and their corresponding targets under "target" column
+#' @param metricDF climate metric data.frame with 'metric' as the column name of the metric values per planning unit. This should also have a column for the cellID
+#' @param refugiaTarget target assigned to climate-smart areas
+#' @param direction If direction = 1, metric values are from low (least climate-smart) to high (most climate-smart). If direction = -1, metric values are from high (least climate-smart) to low (most climate-smart).
+#' @param percentile cut-off threshold for determining whether an area is a climate priority area or not (e.g., lower 35th percentile of warming or upper 65th percentile of acidification). Note that the percentile here is the lower limit of the threshold.
+#'
+#' @return A `list` with two components: 1. is the data frame passed to `prioritizr` when creating a conservation problem containing the binary information per planning unit per feature. 2. are the targets for the features in the conservation problem when the CPA approach is used.
+#' @export
+#'
+#' @importFrom rlang .data
+#'
+#' @examples
+#' Features <- dat_species_bin %>%
+#'   dplyr::select(-"cellID")
+#'
+#' target <- Features %>%
+#'   sf::st_drop_geometry() %>%
+#'   colnames() %>%
+#'   data.frame() %>%
+#'   setNames(c("feature")) %>%
+#'   dplyr::mutate(target = 0.3)
+#'
+#' metric_df <- dat_clim
+#'
+#'
+#' CPA_Approach <- splnr_climate_PriorityApproach(featuresDF = dat_species_bin,
+#'                     metricDF = metric_df, targetsDF = target, direction = 1)
+#' out_sf <- CPA_Approach$Features
+#' targets <- CPA_Approach$Targets
+splnr_climate_PriorityApproach <- function(featuresDF,
+                                    metricDF,
+                                    targetsDF,
+                                    direction,
+                                    percentile = 5,
+                                    refugiaTarget = 1) {
+
+
+  CPAFeatures <- splnr_climate_PriorityArea_splitFeature(featuresDF = featuresDF, metricDF = metricDF,
+                                                         direction = direction, percentile = percentile)
+
+  CPATargets <- splnr_climate_PriorityApproach_assignTargets(featuresDF = featuresDF, targetsDF = targetsDF,
+                                                  CPAFeatures, refugiaTarget = refugiaTarget)
+  return(list(Features = CPAFeatures, Targets = CPATargets))
+
 }

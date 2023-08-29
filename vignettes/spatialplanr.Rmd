@@ -197,9 +197,9 @@ datEx_soln <- datEx_problem %>%
 ### Visualize Output
 
 There are different ways to visualize the output of the prioritization that can be loosely grouped into three categories:
-+ Visualization of the solution
-+ Visualization of targets
-+ Visualization of importance scores
+*+* Visualization of the solution
+*+* Visualization of targets
+*+* Visualization of importance scores
 
 #### Visualization of the solution
 
@@ -252,8 +252,8 @@ Importance scores can help to assess the relative importance of an individual se
 Here, we use two different importance scores, the Ferrier Score and Rarity Weighted Richness.
 
 ```{r, fig.width=9, fig.height = 10}
-ggFerrier <- splnr_plot_impScoreFerrierPlot(datEx_soln, datEx_problem)
-ggRWR <- splnr_plot_impScoreRWRPlot(datEx_soln, datEx_problem)
+ggFerrier <- splnr_plot_ImportanceScore(soln = datEx_soln, pDat = datEx_problem, method = "Ferrier", decimals = 4, legendTitle = "Importance Score \n(Ferrier Score)")
+ggRWR <- splnr_plot_ImportanceScore(soln = datEx_soln, pDat = datEx_problem, method = "RWR", decimals = 2, legendTitle = "Importance Score \n(Rarity Weighted Richness)")
 
 (ggScores <- patchwork::wrap_plots(ggFerrier + ggRWR))
 ```
