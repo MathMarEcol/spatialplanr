@@ -17,11 +17,11 @@
 #' dat_species_binDF <- dat_species_bin %>%
 #'   sf::st_drop_geometry()
 #'
-#' out_sf <- splnr_ClimatePriorityArea_CSapproach(
+#' out_sf <- splnr_climate_PriorityArea_splitFeature(
 #'   featuresDF = dat_species_bin,
 #'   percentile = 5, metricDF = metric_df, direction = 1
 #' )
-splnr_ClimatePriorityArea_CSapproach <- function(featuresDF,
+splnr_climate_PriorityArea_splitFeature <- function(featuresDF,
                                                  percentile,
                                                  metricDF,
                                                  direction) {
@@ -139,18 +139,18 @@ splnr_ClimatePriorityArea_CSapproach <- function(featuresDF,
 #' dat_species_binDF <- dat_species_bin %>%
 #'   sf::st_drop_geometry()
 #'
-#' out_sf <- splnr_ClimatePriorityArea_CSapproach(
+#' out_sf <- splnr_climate_PriorityArea_splitFeature(
 #'   featuresDF = dat_species_bin,
 #'   percentile = 5, metricDF = metric_df, direction = 1
 #' )
 #'
-#' target <- splnr_CPA_CSapproach_assignTargets(
+#' target <- splnr_climate_PriorityApproach_assignTargets (
 #'   featuresDF = Features,
 #'   targetsDF = target,
 #'   climateSmartDF = out_sf,
 #'   refugiaTarget = 1
 #' )
-splnr_CPA_CSapproach_assignTargets <- function(featuresDF,
+splnr_climate_PriorityApproach_assignTargets <- function(featuresDF,
                                                targetsDF,
                                                climateSmartDF,
                                                refugiaTarget = 1) {
@@ -242,11 +242,11 @@ splnr_CPA_CSapproach_assignTargets <- function(featuresDF,
 #' metric_df <- dat_clim
 #'
 #'
-#' CPA_Approach_ls <- splnr_CPA_Approach_Meta(featuresDF = dat_species_bin,
+#' CPA_Approach <- splnr_climate_PriorityApproach(featuresDF = dat_species_bin,
 #'                     metricDF = metric_df, targetsDF = target, direction = 1)
-#' out_sf <- CPA_Approach_ls[[1]]
-#' targets <- CPA_Approach_ls[[2]]
-splnr_CPA_Approach_Meta <- function(featuresDF,
+#' out_sf <- CPA_Approach$Features
+#' targets <- CPA_Approach$Targets
+splnr_climate_PriorityApproach <- function(featuresDF,
                                     metricDF,
                                     targetsDF,
                                     direction,
@@ -254,11 +254,11 @@ splnr_CPA_Approach_Meta <- function(featuresDF,
                                     refugiaTarget = 1) {
 
 
-  climateSmartDF <- splnr_ClimatePriorityArea_CSapproach(featuresDF = featuresDF, metricDF = metricDF,
+  CPAFeatures <- splnr_climate_PriorityArea_splitFeature(featuresDF = featuresDF, metricDF = metricDF,
                                                          direction = direction, percentile = percentile)
 
-  CPATarget <- splnr_CPA_CSapproach_assignTargets(featuresDF = featuresDF, targetsDF = targetsDF,
-                                                  climateSmartDF, refugiaTarget = refugiaTarget)
-  return(list(climateSmartDF, CPATarget))
+  CPATargets <- splnr_climate_PriorityApproach_assignTargets(featuresDF = featuresDF, targetsDF = targetsDF,
+                                                  CPAFeatures, refugiaTarget = refugiaTarget)
+  return(list(Features = CPAFeatures, Targets = CPATargets))
 
 }

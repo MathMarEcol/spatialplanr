@@ -5,20 +5,20 @@
 \title{Kernel Density Plots for climate-smart spatial plans}
 \usage{
 splnr_plot_climKernelDensity(
-  type,
   soln,
-  names,
+  names = NA,
+  type = "Normal",
   colorMap = "C",
   legendTitle = expression("Δ °C y"^"-1" * ""),
   xAxisLab = expression("Climate warming (Δ °C y"^"-1" * ")")
 )
 }
 \arguments{
-\item{type}{The plotting style of the kernel density plots. Either "Publication" which gives axis information etc., or "App" which condenses the information in the plot to simplify it for stakeholders.}
-
 \item{soln}{For type "Publication": A list of \code{prioirtizr} solutions (e.g. solution_list = list(s1, s2)) containing a "metric" column containing the used climate metric information; For type "App": needs to be a prioritizr solution}
 
 \item{names}{A list of names of the solutions (names = c("Input 1", "Input 2"))}
+
+\item{type}{The plotting style of the kernel density plots. Either "Publication" which gives axis information etc., or "App" which condenses the information in the plot to simplify it for stakeholders.}
 
 \item{colorMap}{A character string indicating the color map to use (see https://ggplot2.tidyverse.org/reference/scale_viridis.html for all options)}
 
@@ -33,32 +33,23 @@ A ggplot object of the plot
 Kernel Density Plots for climate-smart spatial plans
 }
 \examples{
-Features <- dat_species_bin \%>\%
-  dplyr::select(-"cellID")
-
-target <- Features \%>\%
+target <- dat_species_bin \%>\%
+  dplyr::select(-"cellID") \%>\%
   sf::st_drop_geometry() \%>\%
   colnames() \%>\%
   data.frame() \%>\%
   setNames(c("feature")) \%>\%
   dplyr::mutate(target = 0.3)
 
-dat_species_binDF <- dat_species_bin \%>\%
-  sf::st_drop_geometry()
-
-out_sf <- splnr_ClimatePriorityArea_CSapproach(
+CPA <- splnr_climate_PriorityApproach(
   featuresDF = dat_species_bin,
-  percentile = 5, metricDF = dat_clim, direction = -1
-)
-
-target <- splnr_CPA_CSapproach_assignTargets(
-  featuresDF = Features,
+  metricDF = dat_clim,
   targetsDF = target,
-  climateSmartDF = out_sf,
+  direction = -1,
   refugiaTarget = 1
 )
 
-out_sf <- out_sf \%>\%
+out_sf <- CPA$Features  \%>\%
   dplyr::mutate(Cost_None = rep(1, 780)) \%>\%
   dplyr::left_join(dat_clim \%>\%
     sf::st_drop_geometry(), by = "cellID")
@@ -70,11 +61,11 @@ usedFeatures <- out_sf \%>\%
 
 p1 <- prioritizr::problem(out_sf, usedFeatures, "Cost_None") \%>\%
   prioritizr::add_min_set_objective() \%>\%
-  prioritizr::add_relative_targets(target$target) \%>\%
+  prioritizr::add_relative_targets(CPA$Targets$target) \%>\%
   prioritizr::add_binary_decisions() \%>\%
   prioritizr::add_default_solver(verbose = FALSE)
 
 dat_solnClim <- prioritizr::solve.ConservationProblem(p1)
-splnr_plot_climKernelDensity(type = "App", dat_solnClim)
-splnr_plot_climKernelDensity(type = "Publication", soln = list(dat_solnClim), names = c("Input 1"))
+splnr_plot_climKernelDensity(dat_solnClim, type = "Basic")
+splnr_plot_climKernelDensity(soln = list(dat_solnClim),  names = c("Input 1"), type = "Normal")
 }
