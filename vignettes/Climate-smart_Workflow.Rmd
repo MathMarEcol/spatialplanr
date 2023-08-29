@@ -145,19 +145,27 @@ Using this approach also requires an adaptation of the targets, since 5% of the 
 
 
 ```{r}
-datEx_species_binDF <- datEx_species_bin %>%
-  sf::st_drop_geometry()
+
+target <- datEx_species_bin %>%
+  sf::st_drop_geometry() %>%
+  dplyr::select(-"cellID") %>%
+  colnames() %>%
+  data.frame() %>%
+  setNames(c("feature")) %>%
+  dplyr::mutate(target = 0.3)
+
 
 CPA_Approach <- splnr_climate_PriorityApproach(featuresDF = datEx_species_bin,
                     metricDF = metric_df, targetsDF = target, direction = -1, refugiaTarget = 1)
 
-out_sf <- CPA_Approach[["Features"]] %>% 
-  dplyr::left_join(datEx_species_binDF %>%
-                     dplyr::select(.data$cellID, tidyselect::starts_with("Cost_")), by = "cellID") %>%
+out_sf <- CPA_Approach$Features %>% 
+  dplyr::left_join(datEx_species_bin %>% 
+                     sf::st_drop_geometry() %>%
+                     dplyr::select("cellID", tidyselect::starts_with("Cost_")), by = "cellID") %>%
   dplyr::left_join(metric_df %>%
                      sf::st_drop_geometry(), by = "cellID")
 
-targets <- CPA_Approach[["Targets"]]
+targets <- CPA_Approach$Targets
 ```
 
 
@@ -196,5 +204,5 @@ However, we are also interested how climate-smart the selected planning units in
 
 
 ```{r, fig.width=8, height=5}
-(ggClimDens <- splnr_plot_climKernelDensity(type = "Publication", soln = list(dat_solnClim), names = c("Input 1"), legendTitle = "Climate velocity (add unit)", xAxisLab = "Climate velocity"))
+(ggClimDens <- splnr_plot_climKernelDensity(soln = list(dat_solnClim), names = c("Input 1"), type = "Normal", legendTitle = "Climate velocity (add unit)", xAxisLab = "Climate velocity"))
 ```
