@@ -6,10 +6,7 @@
 \usage{
 splnr_plot_Solution(
   soln,
-  PlanUnits,
-  landmass = NA,
   colorVals = c(`TRUE` = "#3182bd", `FALSE` = "#c6dbef"),
-  colorPUs = "grey80",
   showLegend = TRUE,
   plotTitle = "Solution",
   legendTitle = "Planning Units"
@@ -18,13 +15,7 @@ splnr_plot_Solution(
 \arguments{
 \item{soln}{The \code{prioritizr} solution}
 
-\item{PlanUnits}{Planning Units as an \code{sf} object}
-
-\item{landmass}{An \code{sf} object of land polygon}
-
 \item{colorVals}{A \code{list} object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.}
-
-\item{colorPUs}{A color value for the outline of planning units.}
 
 \item{showLegend}{A logical command on whether to show the legend of the solution (Default: TRUE).}
 
@@ -50,5 +41,5 @@ dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = ru
 dat_soln <- dat_problem \%>\%
  prioritizr::solve.ConservationProblem()
 
-splnr_plot_Solution(dat_soln, dat_PUs)
+splnr_plot_Solution(dat_soln)
 }

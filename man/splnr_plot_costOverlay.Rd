@@ -20,8 +20,6 @@ splnr_plot_costOverlay(
 
 \item{Cost_name}{Name of the cost column}
 
-\item{landmass}{An \code{sf} object of land polygon}
-
 \item{legendTitle}{A character value for the title of the legend. Can be empty ("").}
 
 \item{plotTitle}{A character value for the title of the plot. Can be empty ("").}

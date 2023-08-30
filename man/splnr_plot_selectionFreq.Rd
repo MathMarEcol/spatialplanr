@@ -6,7 +6,6 @@
 \usage{
 splnr_plot_selectionFreq(
   selFreq,
-  landmass = NA,
   plotTitle = "",
   paletteName = "Greens",
   legendTitle = "Selection \\nFrequency"
@@ -14,8 +13,6 @@ splnr_plot_selectionFreq(
 }
 \arguments{
 \item{selFreq}{An \code{sf} object containing the selection frequency of a planning unit from an array of solutions}
-
-\item{landmass}{An \code{sf} object of land polygon}
 
 \item{plotTitle}{A character value for the title of the plot. Can be empty ("").}
 
@@ -45,5 +42,4 @@ dat_soln_portfolio <- dat_problem \%>\%
 
 selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 (splnr_plot_selectionFreq(selFreq))
-
 }
