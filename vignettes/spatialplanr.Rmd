@@ -75,7 +75,30 @@ PUs <- splnr_get_PlanningUnits(Bndry, landmass, PU_size, Shape)
 
 We can check what the PUs look like
 ```{r, fig.width=9}
-(ggPU <- splnr_plot_PUs(PUs, landmass)) # Plot Planning Units
+(ggPU <- splnr_plot_PUs(PUs)) # Plot Planning Units
+```
+
+If we want to add additional properties to our map, for example landmass or the boundary, we can use `gg_add()`.
+
+```{r, fig.width=9}
+(ggPU <- splnr_plot_PUs(PUs) +
+    gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = "Default"))
+```
+
+We can also use a customised `ggplpot` theme that can be passed as a list to `gg_add()` and that can then be used for all plots. For example:
+
+```{r}
+splnr_theme <- list(ggplot2::theme_bw(),
+                  ggplot2::theme(
+                    legend.position = "right",
+                    legend.direction = "vertical",
+                    text = ggplot2::element_text(size = 9, colour = "black"),
+                    axis.text = ggplot2::element_text(size = 9, colour = "black"),
+                    plot.title = ggplot2::element_text(size = 9),
+                    axis.title = ggplot2::element_blank()))
+
+(ggPU <- splnr_plot_PUs(PUs) +
+    gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 ## Get the features 
@@ -124,13 +147,15 @@ datEx_species_bin <- spDataFiltered %>%
 
 We can now look at the feature data used for the spatial plan individually by calling `splnr_plot_binFeature()`, for example to see the binary habitat suitability map for Green sea turtles:
 ```{r, fig.width=9}
-(ggFeature1 <- splnr_plot_binFeature(datEx_species_bin, datEx_species_bin$Chelonia_mydas, PlanUnits = PUs, landmass))
+(ggFeature1 <- splnr_plot_binFeature(datEx_species_bin, datEx_species_bin$Chelonia_mydas) +
+   gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 The suitable habitat for Green sea turtles as predicted by Aquamaps is restricted to few cells close to the coast. If we now compare this with the predicted suitable habitat for Humpback whales, we can see that they are fairly ubiquitous across the whole Coral Sea. 
 
 ```{r, fig.width=9}
-(ggFeature <- splnr_plot_binFeature(datEx_species_bin, datEx_species_bin$Megaptera_novaeangliae, PlanUnits = PUs, landmass = landmass))
+(ggFeature <- splnr_plot_binFeature(datEx_species_bin, datEx_species_bin$Megaptera_novaeangliae) +
+   gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 In our example, this was the only reason why we classified species as either representative if their suitable habitat is wide-ranging within the study region or important if they are restricted to a few number of cells. 
@@ -138,7 +163,8 @@ In our example, this was the only reason why we classified species as either rep
 To get a better idea of the overall distribution of the used features, we can also plot the number of features with suitable habitat within a planning unit of the study region.
 
 ```{r, fig.width=9}
-(ggFeatNo <- splnr_plot_featureNo(datEx_species_bin))
+(ggFeatNo <- splnr_plot_featureNo(datEx_species_bin) +
+    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 ### Prepare Data for prioritisation
@@ -163,7 +189,8 @@ In our example, we use a minimum set objective function, which aims to minimize 
 
 ```{r, fig.width=9}
 out_sf$Cost_None <- rep(1, 397)
-(ggCost <- splnr_plot_cost(out_sf, Cost_name = "Cost_None", plotTitle = "Cost (Area)"))
+(ggCost <- splnr_plot_cost(out_sf, Cost_name = "Cost_None") +
+  gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 #### Set Targets
@@ -204,13 +231,15 @@ There are different ways to visualize the output of the prioritization that can 
 #### Visualization of the solution
 
 ```{r, fig.width=9}
-(ggSoln <- splnr_plot_Solution(datEx_soln, PUs, landmass))
+(ggSoln <- splnr_plot_Solution(datEx_soln) +
+  gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 This plot shows the optimal solution for the planning region that meets the selected targets for the chosen features for the smallest area possible. The categorical map displays, which of the planning units were selected as important for meeting the conservation targets (dark blue) and which were not selected (light blue). This can also be done with an overlay of the cost to show how the solution avoids highly costly areas:
 
 ```{r, fig.width=9}
-(ggCostOverlay <- splnr_plot_costOverlay(soln = datEx_soln, Cost = NA, Cost_name = "Cost_None", landmass))
+(ggCostOverlay <- splnr_plot_costOverlay(soln = datEx_soln, Cost = NA, Cost_name = "Cost_None") +
+  gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 **Note:** In our example, cost is equal for all planning units. 
@@ -251,9 +280,11 @@ Importance scores can help to assess the relative importance of an individual se
 
 Here, we use two different importance scores, the Ferrier Score and Rarity Weighted Richness.
 
-```{r, fig.width=9, fig.height = 10}
-ggFerrier <- splnr_plot_ImportanceScore(soln = datEx_soln, pDat = datEx_problem, method = "Ferrier", decimals = 4, legendTitle = "Importance Score \n(Ferrier Score)")
-ggRWR <- splnr_plot_ImportanceScore(soln = datEx_soln, pDat = datEx_problem, method = "RWR", decimals = 2, legendTitle = "Importance Score \n(Rarity Weighted Richness)")
+```{r, fig.width=9, fig.height = 5}
+ggFerrier <- splnr_plot_ImportanceScore(soln = datEx_soln, pDat = datEx_problem, method = "Ferrier", decimals = 4, legendTitle = "Importance Score \n(Ferrier Score)") +
+  gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme)
+ggRWR <- splnr_plot_ImportanceScore(soln = datEx_soln, pDat = datEx_problem, method = "RWR", decimals = 2, legendTitle = "Importance Score \n(Rarity Weighted Richness)") +
+  gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme)
 
 (ggScores <- patchwork::wrap_plots(ggFerrier + ggRWR))
 ```
@@ -270,7 +301,8 @@ Here, our second spatial plan will include already existing marine protected are
 * IUCN Category = c("Ia", "Ib", "II", "III", "IV")
 
 ```{r, fig.width=9}
-(ggMPA <- splnr_plot_MPAs(MPAsCoralSea, landmass = landmass))
+(ggMPA <- splnr_plot_MPAs(MPAsCoralSea) +
+    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 We will also include targets based on IUCN categories to prioritise species with an IUCN status of:
@@ -316,13 +348,31 @@ datEx_problem2 <- prioritizr::problem(out_sf, col_name, "Cost_None") %>%
 datEx_soln2 <- datEx_problem2 %>%
   prioritizr::solve.ConservationProblem()
 
-(ggSoln2 <- splnr_plot_Solution(datEx_soln2, PUs, landmass))
+(ggSoln2 <- splnr_plot_Solution(datEx_soln2) +
+    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+```
+
+But we locked in areas that were already existing MPAs. If we want to show the overlap between the selected planning units and the current MPAs, we can can add this to the `gg_add()`function.
+
+```{r, fig.width=9, fig.height=5}
+  (splnr_plot_Solution(datEx_soln2) +
+      gg_add(PUs = PUs, Bndry = Bndry, lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, Type = "Full", colorLI = "lightgrey", alphaLI = 0.2, land = landmass, cropLand = PUs))
+
+```
+
+If we instead only want to see the contours of the locked in areas we can set `Type = "Contours"`in `gg_add()`.
+
+```{r, fig.width=9, fig.height=5}
+ (splnr_plot_Solution(datEx_soln2) +
+    gg_add(lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, Type = "Contours", land = landmass, cropLand = PUs))
+
 ```
 
 #### Visualize comparison
 
-```{r, fig.width=9}
-(ggComp <- splnr_plot_comparison(datEx_soln, datEx_soln2, landmass, PlanUnits = PUs))
+```{r, fig.width=9, fig.height=5}
+(ggComp <- splnr_plot_comparison(datEx_soln, datEx_soln2) +
+    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 This plot shows how the first solution (without current MPAs) differs from the second solution (including current MPAs. The categorical map displays, which of the planning units were selected in solution 2 but not in solution 1 (red), in solution 1 but not in solution 2 (blue), or selected in both solutions (grey).
@@ -349,7 +399,8 @@ selFreq <- datEx_soln_portfolio %>% # calculate selection frequency
   sf::st_as_sf(geometry = datEx_soln_portfolio$geometry) %>%
   dplyr::select(selFreq)
 
-(ggselFreq <- splnr_plot_selectionFreq(selFreq))
+(ggselFreq <- splnr_plot_selectionFreq(selFreq) +
+    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 

@@ -8,7 +8,6 @@ splnr_plot_costOverlay(
   soln,
   Cost = NA,
   Cost_name = "Cost",
-  landmass = NA,
   legendTitle = "Cost",
   plotTitle = "Solution overlaid with cost"
 )

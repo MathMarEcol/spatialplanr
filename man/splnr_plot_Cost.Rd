@@ -7,14 +7,17 @@
 splnr_plot_cost(
   Cost,
   Cost_name = "Cost",
+  legendTitle = "Cost",
   paletteName = "YlGnBu",
-  plotTitle = "Cost (USD)"
+  plotTitle = ""
 )
 }
 \arguments{
 \item{Cost}{An \code{sf} object of cost for \code{prioritizr}}
 
 \item{Cost_name}{Name of the cost column}
+
+\item{legendTitle}{A character value for the title of the legend. Can be empty ("").}
 
 \item{paletteName}{A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.}
 
@@ -27,8 +30,19 @@ A ggplot object of the plot
 Plot cost
 }
 \examples{
+dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+                                   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+                                   cost_column = "Cost") \%>\%
+  prioritizr::add_min_set_objective() \%>\%
+  prioritizr::add_relative_targets(0.3) \%>\%
+  prioritizr::add_binary_decisions() \%>\%
+  prioritizr::add_default_solver(verbose = FALSE)
+
+dat_soln <- dat_problem \%>\%
+ prioritizr::solve.ConservationProblem()
+
 dat_cost <- dat_soln \%>\%
   dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
 
-splnr_plot_cost(dat_cost)
+(splnr_plot_cost(dat_cost))
 }

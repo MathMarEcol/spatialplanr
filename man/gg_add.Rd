@@ -12,15 +12,16 @@ gg_add(
   land = NA,
   colorLand = "grey20",
   contours = NA,
+  cropLand = NA,
   colorsConts = "black",
   lockedInAreas = NA,
-  type = "Full",
+  Type = "Full",
   colInterest = NA,
   alphaLI = 0.5,
   colorLI = "black",
   legendL = "",
   labelL = "MPAs",
-  ggtheme = TRUE
+  ggtheme = "Default"
 )
 }
 \arguments{
@@ -32,17 +33,19 @@ gg_add(
 
 \item{colorBndry}{A color value for the outline of the boundary.}
 
-\item{land}{An \code{sf} object of land polygon}
+\item{land}{An \code{sf} object of land polygon.}
 
 \item{colorLand}{A color value for landmass.}
 
 \item{contours}{An \code{sf} object of contours that are important to visualise (e.g. outline of sea mounts, ridges; can be produced with terra::as.contour()); up to 6 different contours possible.}
 
+\item{cropLand}{An \code{sf} object with the boundary box used for cropping the land object.}
+
 \item{colorsConts}{A color value for contours.}
 
 \item{lockedInAreas}{An \code{sf} object with binary data of locked in areas in the prioritisation (e.g. MPAs).}
 
-\item{type}{Either "Full" or "Contours"; "Full" maps the locked in areas on top of the planning units; "Contours" draws the outline of the locked in areas.}
+\item{Type}{Either "Full" or "Contours"; "Full" maps the locked in areas on top of the planning units; "Contours" draws the outline of the locked in areas.}
 
 \item{colInterest}{column of data frame that contains binary information of the locked in areas to plot}
 
@@ -54,7 +57,7 @@ gg_add(
 
 \item{labelL}{The legend label of the locked in area (e.g. MPAs)}
 
-\item{ggtheme}{The theme applied to the plot. Can either be NA (default ggplot), TRUE (default spatialplanr: theme_bw() and some basic theme settings) or a user-defined list of theme properties.}
+\item{ggtheme}{The theme applied to the plot. Can either be NA (default ggplot), "Default" (default spatialplanr: theme_bw() and some basic theme settings) or a user-defined list of theme properties.}
 }
 \value{
 A ggplot object of the plot

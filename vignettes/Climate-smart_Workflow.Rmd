@@ -121,7 +121,8 @@ metric_df = CoralSeaVelocity %>%
 The climate velocity data can be visualized using the `splnr_plot_climData()` function.
 
 ```{r, fig.width=9}
-(ggclim <- splnr_plot_climData(metric_df, metric_df$metric, PUs))
+(ggclim <- splnr_plot_climData(metric_df, metric_df$metric) +
+    gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = "Default"))
 ```
 
 In our case, there were few areas with low climate velocity, which are the areas we define as climate refugia in our example. Usually, we would combine several metrics (e.g. exposure, velocity etc.) of multiple SSP scenarios to get more robust climate refugia. For our example, we randomly set areas with very high velocity to a value between `0.85-1` to visualize the output (CHANGE THIS LATER TO BETTER DATA).
@@ -135,7 +136,8 @@ metric_df = CoralSeaVelocity %>%
     metricOG = metric,
     metric = ifelse(metric > 0.99, runif(., 0.85, 1.0), metric))
 
-(ggclim <- splnr_plot_climData(metric_df, metric_df$metric, PUs))
+(ggclim <- splnr_plot_climData(metric_df, metric_df$metric) +
+    gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = "Default"))
 
 ```
 
@@ -197,7 +199,8 @@ dat_solnClim <- prioritizr::solve.ConservationProblem(p1)
 We can look at the resulting plan using `splnr_plot_Solution()`.
 
 ```{r, fig.width=9}
-(ggSoln <- splnr_plot_Solution(dat_solnClim, PUs, landmass))
+(ggSoln <- splnr_plot_Solution(dat_solnClim) +
+    gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = "Default"))
 ```
 
 However, we are also interested how climate-smart the selected planning units in the solution actually are. For this, we can use a kernel density plot 

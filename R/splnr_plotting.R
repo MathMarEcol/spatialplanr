@@ -6,18 +6,19 @@
 #' @param colorPUs A color value for the outline of planning units.
 #' @param Bndry The planning region boundaries as an `sf` object
 #' @param colorBndry A color value for the outline of the boundary.
-#' @param land An `sf` object of land polygon
+#' @param land An `sf` object of land polygon.
+#' @param cropLand An `sf` object with the boundary box used for cropping the land object.
 #' @param colorLand A color value for landmass.
 #' @param contours An `sf` object of contours that are important to visualise (e.g. outline of sea mounts, ridges; can be produced with terra::as.contour()); up to 6 different contours possible.
 #' @param colorsConts A color value for contours.
 #' @param lockedInAreas An `sf` object with binary data of locked in areas in the prioritisation (e.g. MPAs).
-#' @param type Either "Full" or "Contours"; "Full" maps the locked in areas on top of the planning units; "Contours" draws the outline of the locked in areas.
+#' @param Type Either "Full" or "Contours"; "Full" maps the locked in areas on top of the planning units; "Contours" draws the outline of the locked in areas.
 #' @param colInterest column of data frame that contains binary information of the locked in areas to plot
 #' @param alphaLI A value (0-1) for the opacity of the locked in areas when plotted on top of other plots.
 #' @param colorLI A color value for the locked in areas.
 #' @param legendL A character value for the title of the legend of the locked in areas. Can be empty ("").
 #' @param labelL The legend label of the locked in area (e.g. MPAs)
-#' @param ggtheme The theme applied to the plot. Can either be NA (default ggplot), TRUE (default spatialplanr: theme_bw() and some basic theme settings) or a user-defined list of theme properties.
+#' @param ggtheme The theme applied to the plot. Can either be NA (default ggplot), "Default" (default spatialplanr: theme_bw() and some basic theme settings) or a user-defined list of theme properties.
 #'
 #' @return A ggplot object of the plot
 #' @export
@@ -39,10 +40,10 @@
 gg_add <- function(PUs = NA, colorPUs = "grey80",
                    Bndry = NA, colorBndry = "black",
                    land = NA, colorLand = "grey20",
-                   contours = NA, colorsConts = "black",
-                   lockedInAreas = NA, type = "Full", colInterest = NA,
+                   contours = NA, cropLand = NA, colorsConts = "black",
+                   lockedInAreas = NA, Type = "Full", colInterest = NA,
                    alphaLI = 0.5, colorLI =  "black", legendL = "", labelL = "MPAs",
-                   ggtheme = TRUE #splnr_theme
+                   ggtheme = "Default" #splnr_theme
 ) {
   ggList <- list()
 
@@ -61,7 +62,6 @@ gg_add <- function(PUs = NA, colorPUs = "grey80",
   if (inherits(land,"sf")) {
     ggList <- c(ggList,
                 ggplot2::geom_sf(data = landmass, colour = colorLand, fill = colorLand, alpha = 0.9, size = 0.1, show.legend = FALSE))
-  }
 
   if (inherits(contours,"sf")) { #needs a geometry col and one names Category that has the wanted contours and their names
     namesConts <- unique(contours$Category)
@@ -92,7 +92,7 @@ gg_add <- function(PUs = NA, colorPUs = "grey80",
       dplyr::mutate(lockedIn = as.logical(colInterest)) %>%
       dplyr::filter(lockedIn == 1)
 
-    if (type == "Full") {
+    if (Type == "Full") {
       ggList <- c(ggList,
                   list(
                     ggnewscale::new_scale_fill(),
@@ -113,7 +113,7 @@ gg_add <- function(PUs = NA, colorPUs = "grey80",
                       )
                     )
                   ))
-    } else if (type == "Contours") {
+    } else if (Type == "Contours") {
 
       lockedInAreas <- lockedInAreas %>%
         sf::st_union() %>%
@@ -126,7 +126,7 @@ gg_add <- function(PUs = NA, colorPUs = "grey80",
                   list(
                     ggnewscale::new_scale_fill(),
                     ggnewscale::new_scale_colour(),
-                    ggplot2::geom_sf(data = lockedInAreas, colour = colorLIContour, fill = NA, ggplot2::aes(linetype = .data$lockedIn), size = 0.5, show.legend = "line"),
+                    ggplot2::geom_sf(data = lockedInAreas, colour = colorLI, fill = NA, ggplot2::aes(linetype = .data$lockedIn), size = 0.5, show.legend = "line"),
                     ggplot2::scale_linetype_manual("",
                                                    values = 1,
                                                    labels = labelL,
@@ -141,7 +141,14 @@ gg_add <- function(PUs = NA, colorPUs = "grey80",
     }
   }
 
-  if (ggtheme == TRUE){
+    if (inherits(cropLand, "sf")) {
+      ggList <- c(ggList,
+                  ggplot2::coord_sf(xlim = sf::st_bbox(cropLand)$xlim, ylim = sf::st_bbox(cropLand)$ylim))
+
+    }
+  }
+
+  if (inherits(ggtheme, "character")){
     ggList <- c(ggList,
                 list( ggplot2::theme_bw(),
                       ggplot2::theme(
@@ -154,6 +161,8 @@ gg_add <- function(PUs = NA, colorPUs = "grey80",
     )
   } else if (inherits(ggtheme,"list")) {
     ggList <- c(ggList, ggtheme)
+  } else if (inherits(ggtheme,"logical")) {
+    ggList <- ggList
   }
 
 }
@@ -272,6 +281,7 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
 #'
 #' @param Cost An `sf` object of cost for `prioritizr`
 #' @param Cost_name Name of the cost column
+#' @param legendTitle A character value for the title of the legend. Can be empty ("").
 #' @param paletteName A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
 #'
@@ -279,18 +289,30 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
 #' @export
 #'
 #' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#'dat_soln <- dat_problem %>%
+#'  prioritizr::solve.ConservationProblem()
+#'
 #' dat_cost <- dat_soln %>%
 #'   dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
 #'
-#' splnr_plot_cost(dat_cost)
-splnr_plot_cost <- function(Cost, Cost_name = "Cost",
-                            paletteName = "YlGnBu", plotTitle = "Cost (USD)") {
+#' (splnr_plot_cost(dat_cost))
+splnr_plot_cost <- function(Cost, Cost_name = "Cost", legendTitle = "Cost",
+                            paletteName = "YlGnBu", plotTitle = "") {
   # col_name = stringr::str_subset(colnames(Cost), "geometry", negate = TRUE)
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), colour = "grey80", size = 0.1, show.legend = TRUE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
     ggplot2::scale_fill_distiller(
+      #name = legendTitle,
       palette = paletteName,
       aesthetics = c("colour", "fill"),
       limits = c(0,
@@ -298,7 +320,7 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost",
       ),
       oob = scales::squish
     ) +
-    ggplot2::labs(subtitle = plotTitle)
+    ggplot2::labs(subtitle = plotTitle, fill=legendTitle)
 }
 
 #' Plot cost overlay
@@ -325,7 +347,7 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost",
 #'  prioritizr::solve.ConservationProblem()
 #'
 #' splnr_plot_costOverlay(soln = dat_soln)
-splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass = NA,
+splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
                                    legendTitle = "Cost",
                                    plotTitle = "Solution overlaid with cost") {
   if (!is.data.frame(get("Cost"))) { # potentially needed for app later
@@ -945,8 +967,9 @@ splnr_plot_ImportanceScore <- function(soln, pDat, method = "Ferrier",
       option = colorMap,
       direction = -1, breaks = seq95fs, labels = lab,
       guide = ggplot2::guide_colourbar(
-        title.position = "right", title = legendTitle,
-        barwidth = 2, barheight = 10
+        title = legendTitle,
+       # title.position = "right",
+        #barwidth = 2, barheight = 10
       )
     ) + # , oob=squish)
     ggplot2::coord_sf(
