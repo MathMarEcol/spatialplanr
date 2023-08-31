@@ -4,12 +4,10 @@
 \alias{splnr_plot_PUs}
 \title{Plot Planning Units}
 \usage{
-splnr_plot_PUs(PlanUnits, landmass = NA)
+splnr_plot_PUs(PlanUnits)
 }
 \arguments{
 \item{PlanUnits}{Planning Units as an \code{sf} object}
-
-\item{landmass}{An \code{sf} object of land polygon}
 }
 \value{
 A ggplot object of the plot

@@ -7,9 +7,9 @@
 splnr_plot_cost(
   Cost,
   Cost_name = "Cost",
-  landmass = NA,
+  legendTitle = "Cost",
   paletteName = "YlGnBu",
-  plotTitle = "Cost (USD)"
+  plotTitle = ""
 )
 }
 \arguments{
@@ -17,7 +17,7 @@ splnr_plot_cost(
 
 \item{Cost_name}{Name of the cost column}
 
-\item{landmass}{An \code{sf} object of land polygon}
+\item{legendTitle}{A character value for the title of the legend. Can be empty ("").}
 
 \item{paletteName}{A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.}
 
@@ -44,5 +44,5 @@ dat_soln <- dat_problem \%>\%
 dat_cost <- dat_soln \%>\%
   dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
 
-splnr_plot_cost(dat_cost)
+(splnr_plot_cost(dat_cost))
 }

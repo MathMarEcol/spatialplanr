@@ -7,10 +7,7 @@
 splnr_plot_binFeature(
   df,
   colInterest,
-  PlanUnits,
-  landmass = NA,
   colorVals = c(Suitable = "#3182bd", `Not Suitable` = "#c6dbef"),
-  colorPUs = "grey80",
   showLegend = TRUE,
   plotTitle = " ",
   legendTitle = "Habitat"
@@ -21,13 +18,7 @@ splnr_plot_binFeature(
 
 \item{colInterest}{column of data frame that contains binary information of feature to plot}
 
-\item{PlanUnits}{Planning Units as an \code{sf} object}
-
-\item{landmass}{An \code{sf} object of land polygon}
-
 \item{colorVals}{A \code{list} object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.}
-
-\item{colorPUs}{A color value for the outline of planning units.}
 
 \item{showLegend}{A logical command on whether to show the legend of the solution (Default: TRUE).}
 
@@ -42,5 +33,5 @@ A ggplot object of the plot
 Plot binary feature
 }
 \examples{
-splnr_plot_binFeature(dat_species_bin, dat_species_bin$Spp1, dat_PUs)
+splnr_plot_binFeature(dat_species_bin, dat_species_bin$Spp1)
 }

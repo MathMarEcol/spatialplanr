@@ -6,8 +6,6 @@
 \usage{
 splnr_plot_featureNo(
   df,
-  landmass = NA,
-  colorPUs = "grey80",
   showLegend = TRUE,
   paletteName = "YlGnBu",
   plotTitle = "Number of Features",
@@ -16,10 +14,6 @@ splnr_plot_featureNo(
 }
 \arguments{
 \item{df}{An \code{sf} object of features}
-
-\item{landmass}{An \code{sf} object of land polygon}
-
-\item{colorPUs}{A color value for the outline of planning units.}
 
 \item{showLegend}{A logical command on whether to show the legend of the solution (Default: TRUE).}
 

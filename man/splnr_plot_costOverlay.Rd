@@ -8,7 +8,6 @@ splnr_plot_costOverlay(
   soln,
   Cost = NA,
   Cost_name = "Cost",
-  landmass = NA,
   legendTitle = "Cost",
   plotTitle = "Solution overlaid with cost"
 )
@@ -19,8 +18,6 @@ splnr_plot_costOverlay(
 \item{Cost}{An \code{sf} object of cost for \code{prioritizr}.In case \code{prioritizr}solution does not contain cost, alternative cost object has to be provided here that was used to generate solution (default: NA).}
 
 \item{Cost_name}{Name of the cost column}
-
-\item{landmass}{An \code{sf} object of land polygon}
 
 \item{legendTitle}{A character value for the title of the legend. Can be empty ("").}
 
