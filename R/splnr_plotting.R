@@ -61,7 +61,7 @@ gg_add <- function(PUs = NA, colorPUs = "grey80",
 
   if (inherits(land,"sf")) {
     ggList <- c(ggList,
-                ggplot2::geom_sf(data = landmass, colour = colorLand, fill = colorLand, alpha = 0.9, size = 0.1, show.legend = FALSE))
+                ggplot2::geom_sf(data = land, colour = colorLand, fill = colorLand, alpha = 0.9, size = 0.1, show.legend = FALSE))
 
   if (inherits(contours,"sf")) { #needs a geometry col and one names Category that has the wanted contours and their names
     namesConts <- unique(contours$Category)
@@ -90,7 +90,7 @@ gg_add <- function(PUs = NA, colorPUs = "grey80",
 
     lockedInAreas <-  lockedInAreas %>%
       dplyr::mutate(lockedIn = as.logical(colInterest)) %>%
-      dplyr::filter(lockedIn == 1)
+      dplyr::filter(.data$lockedIn == 1)
 
     if (Type == "Full") {
       ggList <- c(ggList,
@@ -118,7 +118,7 @@ gg_add <- function(PUs = NA, colorPUs = "grey80",
       lockedInAreas <- lockedInAreas %>%
         sf::st_union() %>%
         sf::st_as_sf() %>%
-        dplyr::rename(geometry = x) %>%
+        dplyr::rename(geometry = .data$x) %>%
         dplyr::mutate(lockedIn = 1) %>%
         dplyr::mutate(lockedIn = as.factor(lockedIn))
 
