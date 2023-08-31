@@ -60,10 +60,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">splnr_plot_binFeature</span><span class="op">(</span></span>
 <span>  <span class="va">df</span>,</span>
 <span>  <span class="va">colInterest</span>,</span>
-<span>  <span class="va">PlanUnits</span>,</span>
-<span>  landmass <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  colorVals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Suitable <span class="op">=</span> <span class="st">"#3182bd"</span>, `Not Suitable` <span class="op">=</span> <span class="st">"#c6dbef"</span><span class="op">)</span>,</span>
-<span>  colorPUs <span class="op">=</span> <span class="st">"grey80"</span>,</span>
 <span>  showLegend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  plotTitle <span class="op">=</span> <span class="st">" "</span>,</span>
 <span>  legendTitle <span class="op">=</span> <span class="st">"Habitat"</span></span>
@@ -80,20 +77,8 @@
 <dd><p>column of data frame that contains binary information of feature to plot</p></dd>
 
 
-<dt>PlanUnits</dt>
-<dd><p>Planning Units as an <code>sf</code> object</p></dd>
-
-
-<dt>landmass</dt>
-<dd><p>An <code>sf</code> object of land polygon</p></dd>
-
-
 <dt>colorVals</dt>
 <dd><p>A <code>list</code> object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.</p></dd>
-
-
-<dt>colorPUs</dt>
-<dd><p>A color value for the outline of planning units.</p></dd>
 
 
 <dt>showLegend</dt>
@@ -117,7 +102,7 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">splnr_plot_binFeature</span><span class="op">(</span><span class="va">dat_species_bin</span>, <span class="va">dat_species_bin</span><span class="op">$</span><span class="va">Spp1</span>, <span class="va">dat_PUs</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">splnr_plot_binFeature</span><span class="op">(</span><span class="va">dat_species_bin</span>, <span class="va">dat_species_bin</span><span class="op">$</span><span class="va">Spp1</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

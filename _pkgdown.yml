@@ -27,6 +27,7 @@ reference:
   desc: Functions for plotting.
 - contents:
   - starts_with("splnr_plot_")
+  - gg_add
 
 - title: Utilities
   desc: Helper functions.
