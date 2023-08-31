@@ -121,7 +121,7 @@ metric_df = CoralSeaVelocity %>%
 The climate velocity data can be visualized using the `splnr_plot_climData()` function.
 
 ```{r, fig.width=9}
-(ggclim <- splnr_plot_climData(metric_df, metric_df$metric) +
+(ggclim <- splnr_plot_climData(metric_df, "metric") +
     gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = "Default"))
 ```
 
@@ -136,7 +136,7 @@ metric_df = CoralSeaVelocity %>%
     metricOG = metric,
     metric = ifelse(metric > 0.99, runif(., 0.85, 1.0), metric))
 
-(ggclim <- splnr_plot_climData(metric_df, metric_df$metric) +
+(ggclim <- splnr_plot_climData(metric_df, "metric") +
     gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = "Default"))
 
 ```
