@@ -120,7 +120,7 @@ gg_add <- function(PUs = NA, colorPUs = "grey80",
         sf::st_as_sf() %>%
         dplyr::rename(geometry = .data$x) %>%
         dplyr::mutate(lockedIn = 1) %>%
-        dplyr::mutate(lockedIn = as.factor(lockedIn))
+        dplyr::mutate(lockedIn = as.factor(.data$lockedIn))
 
       ggList <- c(ggList,
                   list(
