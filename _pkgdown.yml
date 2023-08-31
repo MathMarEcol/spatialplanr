@@ -21,8 +21,7 @@ reference:
 - title: Climate-smart
   desc: Functions to create climate-smart prioritisations
 - contents:
-  - splnr_CPA_CSapproach_assignTargets
-  - splnr_ClimatePriorityArea_CSapproach
+  - starts_with("splnr_climate_")
 
 - title: Plotting
   desc: Functions for plotting.

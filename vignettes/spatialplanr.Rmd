@@ -406,24 +406,6 @@ selFreq <- datEx_soln_portfolio %>% # calculate selection frequency
 
 #################################
 
-### Aquamaps 
-Get aquamaps data for our species and region 
-
-Set the depth range and probability cutoff (`CO`) for extracting AquaMaps data.
-```{r}
-# MinDepth <- 0
-# MaxDepth <- 200
-#
-# AQM <- splnr_get_AquaMaps(PUs, MinDepth, MaxDepth)
-```
-
-### Geomorphic features 
-Add geomorphic features to the existing features object.
-```{r}
-# GeoMorph <- splnr_get_Geomorphic(PUs, Feature = c("Shelf", "Ridge", "Plateau", "Seamount"))
-```
-
-
 ### Apply cutoffs
 Add geomorphic features to the existing features object.
 ```{r}

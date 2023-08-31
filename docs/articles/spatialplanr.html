@@ -41,6 +41,12 @@
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/Climate-smart_Workflow.html">A Basic Cliamte-Smart Spatial Planning Workflow</a>
+  </div>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -263,9 +269,9 @@ purposes.</p>
 <h4 id="visualize-output">Visualize Output<a class="anchor" aria-label="anchor" href="#visualize-output"></a>
 </h4>
 <p>There are different ways to visualize the output of the
-prioritization that can be loosely grouped into three categories: +
-Visualization of the solution + Visualization of targets + Visualization
-of importance scores</p>
+prioritization that can be loosely grouped into three categories:
+<em>+</em> Visualization of the solution <em>+</em> Visualization of
+targets <em>+</em> Visualization of importance scores</p>
 <div class="section level5">
 <h5 id="visualization-of-the-solution">Visualization of the solution<a class="anchor" aria-label="anchor" href="#visualization-of-the-solution"></a>
 </h5>
@@ -327,8 +333,10 @@ information, see <a href="https://prioritizr.net/reference/importance.html" clas
 <p>Here, we use two different importance scores, the Ferrier Score and
 Rarity Weighted Richness.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ggFerrier</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_impScoreFerrierPlot.html">splnr_plot_impScoreFerrierPlot</a></span><span class="op">(</span><span class="va">datEx_soln</span>, <span class="va">datEx_problem</span><span class="op">)</span></span>
-<span><span class="va">ggRWR</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_impScoreRWRPlot.html">splnr_plot_impScoreRWRPlot</a></span><span class="op">(</span><span class="va">datEx_soln</span>, <span class="va">datEx_problem</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">ggFerrier</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_ImportanceScore.html">splnr_plot_ImportanceScore</a></span><span class="op">(</span>soln <span class="op">=</span> <span class="va">datEx_soln</span>, pDat <span class="op">=</span> <span class="va">datEx_problem</span>, method <span class="op">=</span> <span class="st">"Ferrier"</span>, decimals <span class="op">=</span> <span class="fl">4</span>, legendTitle <span class="op">=</span> <span class="st">"Importance Score \n(Ferrier Score)"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Ferrier Score.</span></span>
+<span><span class="va">ggRWR</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_ImportanceScore.html">splnr_plot_ImportanceScore</a></span><span class="op">(</span>soln <span class="op">=</span> <span class="va">datEx_soln</span>, pDat <span class="op">=</span> <span class="va">datEx_problem</span>, method <span class="op">=</span> <span class="st">"RWR"</span>, decimals <span class="op">=</span> <span class="fl">2</span>, legendTitle <span class="op">=</span> <span class="st">"Importance Score \n(Rarity Weighted Richness)"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rarity Wighted Richness.</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">ggScores</span> <span class="op">&lt;-</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">ggFerrier</span> <span class="op">+</span> <span class="va">ggRWR</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-25-1.png" width="864"></p>
@@ -447,29 +455,10 @@ example of this is by using the portfolio</p>
 </div>
 </div>
 <div class="section level4">
-<h4 id="aquamaps">Aquamaps<a class="anchor" aria-label="anchor" href="#aquamaps"></a>
-</h4>
-<p>Get aquamaps data for our species and region</p>
-<p>Set the depth range and probability cutoff (<code>CO</code>) for
-extracting AquaMaps data.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># MinDepth &lt;- 0</span></span>
-<span><span class="co"># MaxDepth &lt;- 200</span></span>
-<span><span class="co">#</span></span>
-<span><span class="co"># AQM &lt;- splnr_get_AquaMaps(PUs, MinDepth, MaxDepth)</span></span></code></pre></div>
-</div>
-<div class="section level4">
-<h4 id="geomorphic-features">Geomorphic features<a class="anchor" aria-label="anchor" href="#geomorphic-features"></a>
-</h4>
-<p>Add geomorphic features to the existing features object.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># GeoMorph &lt;- splnr_get_Geomorphic(PUs, Feature = c("Shelf", "Ridge", "Plateau", "Seamount"))</span></span></code></pre></div>
-</div>
-<div class="section level4">
 <h4 id="apply-cutoffs">Apply cutoffs<a class="anchor" aria-label="anchor" href="#apply-cutoffs"></a>
 </h4>
 <p>Add geomorphic features to the existing features object.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Cutoffs &lt;- 0.5</span></span>
 <span><span class="co"># AQM_bin &lt;- splnr_Apply_Cutoffs(AQM, Cutoffs)</span></span>
 <span><span class="co">#</span></span>
@@ -479,7 +468,7 @@ extracting AquaMaps data.</p>
 <div class="section level4">
 <h4 id="join-all-features-together-">Join all features together.<a class="anchor" aria-label="anchor" href="#join-all-features-together-"></a>
 </h4>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># features &lt;- GeoMorph_bin %&gt;%</span></span>
 <span><span class="co">#   dplyr::left_join(AQM_bin %&gt;% sf::st_drop_geometry(), by = "cellID")</span></span>
 <span><span class="co">#</span></span>
@@ -491,14 +480,14 @@ extracting AquaMaps data.</p>
 <p>You can also assign a Longhurst Province to each PU and set targets
 individually by province. Here we simply demonstrate this, but do not
 implement it into a spatial plan.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Longhurst &lt;- splnr_Match_Longhurst(PUs)</span></span>
 <span><span class="co"># (ggLong &lt;- splnr_plot_Longhurst(Longhurst, landmass))</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="get-locked-in-areas">Get locked in areas<a class="anchor" aria-label="anchor" href="#get-locked-in-areas"></a>
 </h4>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># LockedIn &lt;- splnr_get_MPAs(PUs, "Australia") %&gt;%</span></span>
 <span><span class="co">#   splnr_Apply_Cutoffs(0.5) %&gt;%</span></span>
 <span><span class="co">#   dplyr::mutate(wdpa = as.logical(wdpa))</span></span>
@@ -508,7 +497,7 @@ implement it into a spatial plan.</p>
 <div class="section level3">
 <h3 id="get-fisheries-cost">Get Fisheries cost<a class="anchor" aria-label="anchor" href="#get-fisheries-cost"></a>
 </h3>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Cost &lt;- splnr_get_FishCost(PUs, group = "all")</span></span>
 <span><span class="co"># (ggCost &lt;- splnr_plot_Cost(Cost, landmass)) # Plot cost</span></span></code></pre></div>
 </div>
@@ -518,14 +507,14 @@ implement it into a spatial plan.</p>
 <div class="section level4">
 <h4 id="identical-fixed-targets">Identical fixed targets<a class="anchor" aria-label="anchor" href="#identical-fixed-targets"></a>
 </h4>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Targets &lt;- data.frame(Target = 0.2)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="inverse-area-targets">Inverse area targets<a class="anchor" aria-label="anchor" href="#inverse-area-targets"></a>
 </h4>
 <p>Set minimum and maximum limits for inverse area targets</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># minTarget = 0.2</span></span>
 <span><span class="co"># maxTarget = 0.5</span></span>
 <span><span class="co">#</span></span>
@@ -536,7 +525,7 @@ implement it into a spatial plan.</p>
 </h4>
 <p>To run this code you will need to sign up for your own IUCN RedList
 token. Start by running <code><a href="https://docs.ropensci.org/rredlist/reference/rl_use_iucn.html" class="external-link">rredlist::rl_use_iucn()</a></code>.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># speciesCol &lt;- "Species"</span></span>
 <span><span class="co"># Targets &lt;- Targets %&gt;%</span></span>
 <span><span class="co">#   splnr_Match_IUCNRedList(speciesCol) %&gt;% # Add RL data to the df</span></span>
@@ -550,7 +539,7 @@ token. Start by running <code><a href="https://docs.ropensci.org/rredlist/refere
 <div class="section level4">
 <h4 id="get-the-list-of-features">Get the list of features<a class="anchor" aria-label="anchor" href="#get-the-list-of-features"></a>
 </h4>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># feature_names &lt;- features %&gt;%</span></span>
 <span><span class="co">#   sf::st_drop_geometry() %&gt;%</span></span>
 <span><span class="co">#   names()</span></span>
@@ -570,13 +559,13 @@ token. Start by running <code><a href="https://docs.ropensci.org/rredlist/refere
 <div class="section level3">
 <h3 id="solve-the-planning-problem">Solve the planning problem<a class="anchor" aria-label="anchor" href="#solve-the-planning-problem"></a>
 </h3>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># s1 &lt;- prioritizr::solve(p1)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h3>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># (ggSol &lt;- splnr_plot_Solution(s1, PUs, landmass)) # Plot Solution</span></span>
 <span></span>
 <span><span class="co"># gg &lt;- patchwork::wrap_plots(list(ggPU, ggMPA, ggCost, ggFeatureNo, ggSol), ncol = 3)</span></span></code></pre></div>
@@ -590,7 +579,7 @@ area set aside.</p>
 <div class="section level4">
 <h4 id="create-the-second-planning-problem">Create the second planning problem<a class="anchor" aria-label="anchor" href="#create-the-second-planning-problem"></a>
 </h4>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># p2 &lt;- prioritizr::problem(out_sf, feature_names, "Cost") %&gt;%</span></span>
 <span><span class="co">#   prioritizr::add_min_set_objective() %&gt;%</span></span>
 <span><span class="co">#   prioritizr::add_relative_targets(0.5) %&gt;%</span></span>
@@ -601,13 +590,13 @@ area set aside.</p>
 <div class="section level4">
 <h4 id="solve-the-planning-problem-1">Solve the planning problem<a class="anchor" aria-label="anchor" href="#solve-the-planning-problem-1"></a>
 </h4>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># s2 &lt;- prioritizr::solve(p2)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="plot-comparison">Plot comparison<a class="anchor" aria-label="anchor" href="#plot-comparison"></a>
 </h4>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># gg &lt;- splnr_plot_Comparison(s1, s2, landmass)</span></span></code></pre></div>
 </div>
 </div>
