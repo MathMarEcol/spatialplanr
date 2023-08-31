@@ -30,5 +30,5 @@ A ggplot object of the plot
 Plot climate data
 }
 \examples{
-splnr_plot_climData(dat_clim, dat_clim$metric, dat_PUs)
+splnr_plot_climData(df = dat_clim, colInterest = "metric")
 }
