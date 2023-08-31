@@ -7,10 +7,7 @@
 splnr_plot_climData(
   df,
   colInterest,
-  PlanUnits,
-  landmass = NA,
   colorMap = "C",
-  colorPUs = "grey80",
   plotTitle = " ",
   legendTitle = "Climate metric"
 )
@@ -20,13 +17,7 @@ splnr_plot_climData(
 
 \item{colInterest}{column of data frame that contains the metric informatin}
 
-\item{PlanUnits}{Planning Units as an \code{sf} object}
-
-\item{landmass}{An \code{sf} object of land polygon}
-
 \item{colorMap}{A character string indicating the color map to use (see https://ggplot2.tidyverse.org/reference/scale_viridis.html for all options)}
-
-\item{colorPUs}{A color value for the outline of planning units.}
 
 \item{plotTitle}{A character value for the title of the plot. Can be empty ("").}
 
@@ -39,5 +30,5 @@ A ggplot object of the plot
 Plot climate data
 }
 \examples{
-splnr_plot_climData(dat_clim, dat_clim$metric, dat_PUs)
+splnr_plot_climData(df = dat_clim, colInterest = "metric")
 }

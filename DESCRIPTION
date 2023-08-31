@@ -42,6 +42,7 @@ Imports:
     forcats,
     fs,
     ggcorrplot,
+    ggnewscale,
     ggplot2,
     ggridges,
     irr,

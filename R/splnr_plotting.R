@@ -1,10 +1,176 @@
+#' Add-ons for plotting
+#'
+#' This function allows to customise plots in a simple and reproducible way, by giving the option for several inputs that can be included in maps produced with the other functions of this package.
+#'
+#' @param PUs Planning Units as an `sf` object
+#' @param colorPUs A color value for the outline of planning units.
+#' @param Bndry The planning region boundaries as an `sf` object
+#' @param colorBndry A color value for the outline of the boundary.
+#' @param land An `sf` object of land polygon.
+#' @param cropLand An `sf` object with the boundary box used for cropping the land object.
+#' @param colorLand A color value for landmass.
+#' @param contours An `sf` object of contours that are important to visualise (e.g. outline of sea mounts, ridges; can be produced with terra::as.contour()); up to 6 different contours possible.
+#' @param colorsConts A color value for contours.
+#' @param lockedInAreas An `sf` object with binary data of locked in areas in the prioritisation (e.g. MPAs).
+#' @param Type Either "Full" or "Contours"; "Full" maps the locked in areas on top of the planning units; "Contours" draws the outline of the locked in areas.
+#' @param colInterest column of data frame that contains binary information of the locked in areas to plot
+#' @param alphaLI A value (0-1) for the opacity of the locked in areas when plotted on top of other plots.
+#' @param colorLI A color value for the locked in areas.
+#' @param legendL A character value for the title of the legend of the locked in areas. Can be empty ("").
+#' @param labelL The legend label of the locked in area (e.g. MPAs)
+#' @param ggtheme The theme applied to the plot. Can either be NA (default ggplot), "Default" (default spatialplanr: theme_bw() and some basic theme settings) or a user-defined list of theme properties.
+#'
+#' @return A ggplot object of the plot
+#' @export
+#'
+#' @examples
+#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'                                    cost_column = "Cost") %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(0.3) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' dat_soln <- dat_problem %>%
+#'  prioritizr::solve.ConservationProblem()
+#'
+#' splnr_plot_Solution(dat_soln) +
+#'   gg_add(PUs = dat_PUs, ggtheme = TRUE)
+gg_add <- function(PUs = NA, colorPUs = "grey80",
+                   Bndry = NA, colorBndry = "black",
+                   land = NA, colorLand = "grey20",
+                   contours = NA, cropLand = NA, colorsConts = "black",
+                   lockedInAreas = NA, Type = "Full", colInterest = NA,
+                   alphaLI = 0.5, colorLI =  "black", legendL = "", labelL = "MPAs",
+                   ggtheme = "Default" #splnr_theme
+) {
+  ggList <- list()
+
+  if (inherits(PUs,"sf")) {
+    ggList <- c(ggList,
+                ggplot2::geom_sf(data = PUs, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE),
+                ggplot2::coord_sf(xlim = sf::st_bbox(PUs)$xlim, ylim = sf::st_bbox(PUs)$ylim))
+  }
+
+  if (inherits(Bndry,"sf")) {
+    ggList <- c(ggList,
+                ggplot2::geom_sf(data = Bndry, colour = colorBndry, size = 0.4, fill = NA, show.legend = FALSE),
+                ggplot2::coord_sf(xlim = sf::st_bbox(Bndry)$xlim, ylim = sf::st_bbox(Bndry)$ylim))
+  }
+
+  if (inherits(land,"sf")) {
+    ggList <- c(ggList,
+                ggplot2::geom_sf(data = land, colour = colorLand, fill = colorLand, alpha = 0.9, size = 0.1, show.legend = FALSE))
+
+  if (inherits(contours,"sf")) { #needs a geometry col and one names Category that has the wanted contours and their names
+    namesConts <- unique(contours$Category)
+    contoursRowNum <- length(namesConts)
+    vals <- 1:contoursRowNum
+    if (length(vals) > 6) {
+      cat("Only 6 categories allowed for plotting contours.")
+    } else {
+      ggList <- c(ggList,
+                  list(ggnewscale::new_scale_colour(),
+                       ggplot2::geom_sf(data = contours, colour = colorsConts, fill = NA, ggplot2::aes(linetype = .data$Category), size = 0.5, show.legend = "line"),
+                       ggplot2::scale_linetype_manual(" ",
+                                                      breaks = namesConts,
+                                                      values = vals,
+                                                      guide = ggplot2::guide_legend(
+                                                        override.aes = list(fill = NA),
+                                                        nrow = 2,
+                                                        direction = "horizontal",
+                                                        order = 3,
+                                                        keywidth = grid::unit(0.05, "npc")))))
+    }
+
+  }
+
+  if (inherits(lockedInAreas, "sf")) {
+
+    lockedInAreas <-  lockedInAreas %>%
+      dplyr::mutate(lockedIn = as.logical(colInterest)) %>%
+      dplyr::filter(.data$lockedIn == 1)
+
+    if (Type == "Full") {
+      ggList <- c(ggList,
+                  list(
+                    ggnewscale::new_scale_fill(),
+                    ggnewscale::new_scale_colour(),
+                    ggplot2::geom_sf(data = lockedInAreas, ggplot2::aes(fill = .data$lockedIn), alpha = alphaLI),
+                    ggplot2::scale_fill_manual(
+                      name = legendL,
+                      values = c("TRUE" = colorLI),
+                      labels = labelL,
+                      aesthetics =  c("colour", "fill"),
+                      guide = ggplot2::guide_legend(
+                        override.aes = list(linetype = 0),
+                        nrow = 2,
+                        order = 1,
+                        direction = "horizontal",
+                        title.position = "top",
+                        title.hjust = 0.5
+                      )
+                    )
+                  ))
+    } else if (Type == "Contours") {
+
+      lockedInAreas <- lockedInAreas %>%
+        sf::st_union() %>%
+        sf::st_as_sf() %>%
+        dplyr::rename(geometry = .data$x) %>%
+        dplyr::mutate(lockedIn = 1) %>%
+        dplyr::mutate(lockedIn = as.factor(.data$lockedIn))
+
+      ggList <- c(ggList,
+                  list(
+                    ggnewscale::new_scale_fill(),
+                    ggnewscale::new_scale_colour(),
+                    ggplot2::geom_sf(data = lockedInAreas, colour = colorLI, fill = NA, ggplot2::aes(linetype = .data$lockedIn), size = 0.5, show.legend = "line"),
+                    ggplot2::scale_linetype_manual("",
+                                                   values = 1,
+                                                   labels = labelL,
+                                                   guide = ggplot2::guide_legend(
+                                                     override.aes = list(fill = NA),
+                                                     #nrow = 2,
+                                                     direction = "horizontal",
+                                                     #order = 3,
+                                                     keywidth = grid::unit(0.05, "npc"))
+                    )
+                  ))
+    }
+  }
+
+    if (inherits(cropLand, "sf")) {
+      ggList <- c(ggList,
+                  ggplot2::coord_sf(xlim = sf::st_bbox(cropLand)$xlim, ylim = sf::st_bbox(cropLand)$ylim))
+
+    }
+  }
+
+  if (inherits(ggtheme, "character")){
+    ggList <- c(ggList,
+                list( ggplot2::theme_bw(),
+                      ggplot2::theme(
+                        legend.position = "bottom",
+                        legend.direction = "horizontal",
+                        text = ggplot2::element_text(size = 20, colour = "black"),
+                        axis.text = ggplot2::element_text(size = 16, colour = "black"),
+                        plot.title = ggplot2::element_text(size = 16),
+                        axis.title = ggplot2::element_blank()))
+    )
+  } else if (inherits(ggtheme,"list")) {
+    ggList <- c(ggList, ggtheme)
+  } else if (inherits(ggtheme,"logical")) {
+    ggList <- ggList
+  }
+
+}
+
 #' Plot prioritizr solution
 #'
 #' @param soln The `prioritizr` solution
-#' @param PlanUnits Planning Units as an `sf` object
-#' @param landmass An `sf` object of land polygon
 #' @param colorVals A `list` object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.
-#' @param colorPUs A color value for the outline of planning units.
 #' @param showLegend A logical command on whether to show the legend of the solution (Default: TRUE).
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
@@ -24,30 +190,21 @@
 #'dat_soln <- dat_problem %>%
 #'  prioritizr::solve.ConservationProblem()
 #'
-#' splnr_plot_Solution(dat_soln, dat_PUs)
-splnr_plot_Solution <- function(soln, PlanUnits, landmass = NA,
-                                colorVals = c("TRUE" = "#3182bd", "FALSE" = "#c6dbef"),
-                                colorPUs = "grey80", showLegend = TRUE,
-                                plotTitle = "Solution", legendTitle = "Planning Units") {
+#' splnr_plot_Solution(dat_soln)
+splnr_plot_Solution <- function(soln, colorVals = c("TRUE" = "#3182bd", "FALSE" = "#c6dbef"),
+                                 showLegend = TRUE, plotTitle = "Solution", legendTitle = "Planning Units") {
   soln <- soln %>%
     dplyr::select(.data$solution_1) %>%
     dplyr::mutate(solution_1 = as.logical(.data$solution_1)) # Making it logical helps with the plotting
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$solution_1), colour = NA, size = 0.1, show.legend = showLegend) +
-    ggplot2::geom_sf(data = PlanUnits, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE)
-
-  if (class(landmass)[[1]] == "sf") {
-    gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
-  }
-
-  gg <- gg +
-    ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
-    ggplot2::scale_colour_manual(
+    ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
+    ggplot2::scale_fill_manual(
       name = legendTitle,
       values = colorVals,
       labels = c("Not Selected", "Selected"),
-      aesthetics = "fill", # c("colour", "fill"),
+      aesthetics = c("colour", "fill"),
       guide = ggplot2::guide_legend(
         override.aes = list(linetype = 0),
         nrow = 2,
@@ -57,7 +214,6 @@ splnr_plot_Solution <- function(soln, PlanUnits, landmass = NA,
         title.hjust = 0.5
       )
     ) +
-    ggplot2::theme_bw() +
     ggplot2::labs(subtitle = plotTitle)
 }
 
@@ -65,24 +221,16 @@ splnr_plot_Solution <- function(soln, PlanUnits, landmass = NA,
 #' Plot Planning Units
 #'
 #' @param PlanUnits Planning Units as an `sf` object
-#' @param landmass An `sf` object of land polygon
 #'
 #' @return A ggplot object of the plot
 #' @export
 #'
 #' @examples
 #' splnr_plot_PUs(dat_PUs)
-splnr_plot_PUs <- function(PlanUnits, landmass = NA) {
+splnr_plot_PUs <- function(PlanUnits) {
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = PlanUnits, colour = "grey80", fill = NA, size = 0.1, show.legend = FALSE)
-
-  if (class(landmass)[[1]] == "sf") {
-    gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
-  }
-
-  gg <- gg +
+    ggplot2::geom_sf(data = PlanUnits, colour = "grey80", fill = NA, size = 0.1, show.legend = FALSE)+
     ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
-    ggplot2::theme_bw() +
     ggplot2::labs(subtitle = "Planning Units")
 }
 
@@ -90,9 +238,7 @@ splnr_plot_PUs <- function(PlanUnits, landmass = NA) {
 #' Plot MPAs
 #'
 #' @param df An `sf` object of marine protected areas
-#' @param landmass An `sf` object of land polygon
 #' @param colorVals A `list` object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.
-#' @param colorPUs A color value for the outline of planning units.
 #' @param showLegend A logical command on whether to show the legend of the solution (Default: TRUE).
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
@@ -102,31 +248,21 @@ splnr_plot_PUs <- function(PlanUnits, landmass = NA) {
 #'
 #' @examples
 #' splnr_plot_MPAs(dat_mpas)
-splnr_plot_MPAs <- function(df, landmass = NA,
-                            colorVals = c("TRUE" = "blue", "FALSE" = "white"),
-                            colorPUs = "grey80", showLegend = TRUE,
-                            plotTitle = "Locked In Areas", legendTitle = "") {
+splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"),
+                            showLegend = TRUE, plotTitle = "Locked In Areas", legendTitle = "") {
+
   if (isa(df$wdpa, "logical") == FALSE) {
     df <- df %>%
       dplyr::mutate(wdpa = as.logical(.data$wdpa))
   }
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$wdpa), colour = "grey80", size = 0.1, show.legend = showLegend)
-
-  if (class(landmass)[[1]] == "sf") {
-    gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
-  }
-
-  gg <- gg + ggplot2::scale_colour_manual(values = c(
-    "TRUE" = "blue",
-    "FALSE" = "grey50"
-  )) +
+    ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$wdpa), colour = "grey80", size = 0.1, show.legend = showLegend) +
     ggplot2::scale_fill_manual(
       name = legendTitle,
       values = colorVals,
       labels = c("No MPA", "MPA"),
-      aesthetics = "fill", # c("colour", "fill"),
+      aesthetics =  c("colour", "fill"),
       guide = ggplot2::guide_legend(
         override.aes = list(linetype = 0),
         nrow = 2,
@@ -136,11 +272,7 @@ splnr_plot_MPAs <- function(df, landmass = NA,
         title.hjust = 0.5
       )
     ) +
-    ggplot2::theme_bw() +
-    ggplot2::coord_sf(
-      xlim = sf::st_bbox(df)$xlim,
-      ylim = sf::st_bbox(df)$ylim
-    ) +
+    ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
     ggplot2::labs(subtitle = plotTitle)
 }
 
@@ -149,7 +281,7 @@ splnr_plot_MPAs <- function(df, landmass = NA,
 #'
 #' @param Cost An `sf` object of cost for `prioritizr`
 #' @param Cost_name Name of the cost column
-#' @param landmass An `sf` object of land polygon
+#' @param legendTitle A character value for the title of the legend. Can be empty ("").
 #' @param paletteName A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
 #'
@@ -171,32 +303,24 @@ splnr_plot_MPAs <- function(df, landmass = NA,
 #' dat_cost <- dat_soln %>%
 #'   dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
 #'
-#' splnr_plot_cost(dat_cost)
-splnr_plot_cost <- function(Cost, Cost_name = "Cost", landmass = NA,
-                            paletteName = "YlGnBu", plotTitle = "Cost (USD)") {
+#' (splnr_plot_cost(dat_cost))
+splnr_plot_cost <- function(Cost, Cost_name = "Cost", legendTitle = "Cost",
+                            paletteName = "YlGnBu", plotTitle = "") {
   # col_name = stringr::str_subset(colnames(Cost), "geometry", negate = TRUE)
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), colour = "grey80", size = 0.1, show.legend = TRUE)
-
-  if (class(landmass)[[1]] == "sf") {
-    gg <- gg +
-      ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
-  }
-
-  gg <- gg +
+    ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), colour = "grey80", size = 0.1, show.legend = TRUE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
     ggplot2::scale_fill_distiller(
+      #name = legendTitle,
       palette = paletteName,
       aesthetics = c("colour", "fill"),
-      limits = c(
-        0,
+      limits = c(0,
         as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))
       ),
       oob = scales::squish
     ) +
-    ggplot2::theme_bw() +
-    ggplot2::labs(subtitle = plotTitle)
+    ggplot2::labs(subtitle = plotTitle, fill=legendTitle)
 }
 
 #' Plot cost overlay
@@ -204,7 +328,6 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", landmass = NA,
 #' @param soln The `prioritizr` solution
 #' @param Cost An `sf` object of cost for `prioritizr`.In case `prioritizr`solution does not contain cost, alternative cost object has to be provided here that was used to generate solution (default: NA).
 #' @param Cost_name Name of the cost column
-#' @param landmass An `sf` object of land polygon
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
 #'
@@ -224,7 +347,7 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", landmass = NA,
 #'  prioritizr::solve.ConservationProblem()
 #'
 #' splnr_plot_costOverlay(soln = dat_soln)
-splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass = NA,
+splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
                                    legendTitle = "Cost",
                                    plotTitle = "Solution overlaid with cost") {
   if (!is.data.frame(get("Cost"))) { # potentially needed for app later
@@ -237,7 +360,7 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass
   }
 
   soln <- soln %>%
-    dplyr::select(.data$solution_1) %>%
+    dplyr::select("solution_1") %>%
     dplyr::filter(.data$solution_1 == 1)
 
   gg <- ggplot2::ggplot() +
@@ -260,14 +383,7 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass
       #   order = 1,
       #   barheight = grid::unit(0.03, "npc"),
       #   barwidth = grid::unit(0.25, "npc"))
-    )
-
-  if (class(landmass)[[1]] == "sf") {
-    gg <- gg +
-      ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
-  }
-
-  gg <- gg +
+    ) +
     ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
     ggplot2::labs(subtitle = plotTitle)
 }
@@ -277,10 +393,7 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass
 #'
 #' @param df A `data frame` with binary feature information
 #' @param colInterest column of data frame that contains binary information of feature to plot
-#' @param PlanUnits Planning Units as an `sf` object
-#' @param landmass An `sf` object of land polygon
 #' @param colorVals A `list` object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.
-#' @param colorPUs A color value for the outline of planning units.
 #' @param showLegend A logical command on whether to show the legend of the solution (Default: TRUE).
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
@@ -289,11 +402,10 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost", landmass
 #' @export
 #'
 #' @examples
-#' splnr_plot_binFeature(dat_species_bin, dat_species_bin$Spp1, dat_PUs)
-splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
+#' splnr_plot_binFeature(dat_species_bin, dat_species_bin$Spp1)
+splnr_plot_binFeature <- function(df, colInterest,
                                   colorVals = c("Suitable" = "#3182bd", "Not Suitable" = "#c6dbef"),
-                                  colorPUs = "grey80", showLegend = TRUE,
-                                  plotTitle = " ", legendTitle = "Habitat") {
+                                  showLegend = TRUE, plotTitle = " ", legendTitle = "Habitat") {
   df <- df %>%
     dplyr::mutate(
       pred_bin = ifelse(is.na(colInterest), 0, colInterest),
@@ -303,14 +415,6 @@ splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$pred_bin), colour = NA, size = 0.001, show.legend = showLegend) +
-    ggplot2::geom_sf(data = PlanUnits, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE)
-
-  if (class(landmass)[[1]] == "sf") {
-    gg <- gg + ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
-  }
-
-  gg <- gg +
-    ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
     ggplot2::scale_colour_manual(
       name = legendTitle,
       values = colorVals,
@@ -324,7 +428,6 @@ splnr_plot_binFeature <- function(df, colInterest, PlanUnits, landmass = NA,
         title.hjust = 0.5
       )
     ) +
-    ggplot2::theme_bw() +
     ggplot2::labs(subtitle = plotTitle)
 }
 
@@ -633,9 +736,6 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
 #'
 #' @param soln1 The first `prioritizr` solution
 #' @param soln2 The second `prioritizr` solution
-#' @param landmass An `sf` object of land polygon
-#' @param PlanUnits Planning Units as an `sf` object
-#' @param colorPUs A color value for the outline of planning units.
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
 #'
 #' @return A ggplot object of the plot
@@ -670,8 +770,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
 #'
 #' (splnr_plot_comparison(dat_soln, dat_soln2))
 #'
-splnr_plot_comparison <- function(soln1, soln2, landmass = NA, PlanUnits = NA, colorPUs = "grey80",
-                                  legendTitle = "Scenario 2 compared to Scenario 1:") {
+splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compared to Scenario 1:") {
   soln <- soln1 %>%
     dplyr::select("solution_1") %>%
     dplyr::bind_cols(soln2 %>%
@@ -690,36 +789,19 @@ splnr_plot_comparison <- function(soln1, soln2, landmass = NA, PlanUnits = NA, c
     dplyr::filter(!is.na(.data$Compare))
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$Compare), colour = NA, size = 0.0001)
-
-  if (class(landmass)[[1]] == "sf") {
-    gg <- gg +
-      ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
-  }
-
-  if (class(PlanUnits)[[1]] == "sf") {
-    gg <- gg + ggplot2::geom_sf(data = PlanUnits, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE) +
-      ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim)
-  } else {
-    gg <- gg +
-      ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim)
-  }
-
-  gg <- gg +
-    ggplot2::theme_bw() +
-    ggplot2::scale_fill_manual(
-      name = legendTitle,
-      values = c("Added (+)" = "Red", "Same" = "ivory3", "Removed (-)" = "Blue"), drop = FALSE
-    )
+    ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$Compare), colour = NA, size = 0.0001) +
+      ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
+      ggplot2::scale_fill_manual(
+        name = legendTitle,
+        values = c("Added (+)" = "Red", "Same" = "ivory3", "Removed (-)" = "Blue"), drop = FALSE
+      )
 }
 
 
 #' Plot number of features
 #'
 #' @param df An `sf` object of features
-#' @param landmass An `sf` object of land polygon
 #' @param paletteName A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.
-#' @param colorPUs A color value for the outline of planning units.
 #' @param showLegend A logical command on whether to show the legend of the solution (Default: TRUE).
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
@@ -730,9 +812,7 @@ splnr_plot_comparison <- function(soln1, soln2, landmass = NA, PlanUnits = NA, c
 #' @importFrom rlang .data
 #' @examples
 #' (splnr_plot_featureNo(dat_species_bin))
-splnr_plot_featureNo <- function(df, landmass = NA,
-                                 colorPUs = "grey80", showLegend = TRUE,
-                                 paletteName = "YlGnBu",
+splnr_plot_featureNo <- function(df, showLegend = TRUE, paletteName = "YlGnBu",
                                  plotTitle = "Number of Features", legendTitle = "Features") {
   df <- df %>%
     dplyr::as_tibble() %>%
@@ -743,14 +823,7 @@ splnr_plot_featureNo <- function(df, landmass = NA,
     dplyr::select(.data$FeatureSum)
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$FeatureSum), colour = colorPUs, size = 0.1, show.legend = showLegend)
-
-  if (class(landmass)[[1]] == "sf") {
-    gg <- gg +
-      ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
-  }
-
-  gg <- gg +
+    ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$FeatureSum), colour = NA, size = 0.1, show.legend = showLegend) +
     ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
     ggplot2::scale_fill_distiller(
       name = legendTitle,
@@ -761,14 +834,12 @@ splnr_plot_featureNo <- function(df, landmass = NA,
       oob = scales::squish # ,
       # trans = "log10" #produces infinity if cells have 0 features
     ) +
-    ggplot2::theme_bw() +
     ggplot2::labs(subtitle = plotTitle)
 }
 
 #' Plot selection frequency of a planning unit in an array of prioritisations
 #'
 #' @param selFreq An `sf` object containing the selection frequency of a planning unit from an array of solutions
-#' @param landmass An `sf` object of land polygon
 #' @param paletteName A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
@@ -793,18 +864,11 @@ splnr_plot_featureNo <- function(df, landmass = NA,
 #'
 #' selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 #' (splnr_plot_selectionFreq(selFreq))
-#'
-splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
+splnr_plot_selectionFreq <- function(selFreq,
                                      plotTitle = "", paletteName = "Greens",
                                      legendTitle = "Selection \nFrequency") {
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = selFreq, ggplot2::aes(fill = .data$selFreq), colour = NA) +
-    if (class(landmass)[[1]] == "sf") {
-      gg <- gg +
-        ggplot2::geom_sf(data = landmass, colour = "grey20", fill = "grey20", alpha = 0.9, size = 0.1, show.legend = FALSE)
-    }
-
-  gg <- gg +
+    ggplot2::geom_sf(data = selFreq, ggplot2::aes(fill = .data$selFreq), colour = NA)  +
     ggplot2::scale_fill_brewer(
       name = legendTitle,
       palette = paletteName, aesthetics = "fill", # c("colour", "fill"),
@@ -818,7 +882,6 @@ splnr_plot_selectionFreq <- function(selFreq, landmass = NA,
       ylim = c(sf::st_bbox(selFreq)$ymin, sf::st_bbox(selFreq)$ymax),
       expand = TRUE
     ) +
-    ggplot2::theme_bw() +
     ggplot2::theme(
       axis.text.y = ggplot2::element_text(size = 12, colour = "black"),
       axis.text.x = ggplot2::element_text(size = 12, colour = "black"),
@@ -904,8 +967,9 @@ splnr_plot_ImportanceScore <- function(soln, pDat, method = "Ferrier",
       option = colorMap,
       direction = -1, breaks = seq95fs, labels = lab,
       guide = ggplot2::guide_colourbar(
-        title.position = "right", title = legendTitle,
-        barwidth = 2, barheight = 10
+        title = legendTitle,
+       # title.position = "right",
+        #barwidth = 2, barheight = 10
       )
     ) + # , oob=squish)
     ggplot2::coord_sf(
@@ -913,12 +977,11 @@ splnr_plot_ImportanceScore <- function(soln, pDat, method = "Ferrier",
       ylim = c(sf::st_bbox(scored_soln)$ymin, sf::st_bbox(scored_soln)$ymax),
       expand = TRUE
     ) +
-    ggplot2::theme_bw() +
-    ggplot2::theme(
-      legend.title = ggplot2::element_text(angle = -90, hjust = 0.5),
-      text = ggplot2::element_text(size = 20),
-      axis.title = ggplot2::element_blank()
-    ) +
+    # ggplot2::theme(
+    #   legend.title = ggplot2::element_text(angle = -90, hjust = 0.5),
+    #   text = ggplot2::element_text(size = 20),
+    #   axis.title = ggplot2::element_blank()
+    # ) +
     ggplot2::scale_x_continuous(expand = c(0, 0)) +
     ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::labs(title = plotTitle)
