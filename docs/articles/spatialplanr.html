@@ -129,8 +129,30 @@ represents the land mass that should be removed (inverse = FALSE)</p>
 <code class="sourceCode R"><span><span class="va">PUs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_PlanningUnits.html">splnr_get_PlanningUnits</a></span><span class="op">(</span><span class="va">Bndry</span>, <span class="va">landmass</span>, <span class="va">PU_size</span>, <span class="va">Shape</span><span class="op">)</span></span></code></pre></div>
 <p>We can check what the PUs look like</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggPU</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_PUs.html">splnr_plot_PUs</a></span><span class="op">(</span><span class="va">PUs</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span> <span class="co"># Plot Planning Units</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggPU</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_PUs.html">splnr_plot_PUs</a></span><span class="op">(</span><span class="va">PUs</span><span class="op">)</span><span class="op">)</span> <span class="co"># Plot Planning Units</span></span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-9-1.png" width="864"></p>
+<p>If we want to add additional properties to our map, for example
+landmass or the boundary, we can use <code><a href="../reference/gg_add.html">gg_add()</a></code>.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggPU</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_PUs.html">splnr_plot_PUs</a></span><span class="op">(</span><span class="va">PUs</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="st">"Default"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-10-1.png" width="864"></p>
+<p>We can also use a customised <code>ggplpot</code> theme that can be
+passed as a list to <code><a href="../reference/gg_add.html">gg_add()</a></code> and that can then be used for
+all plots. For example:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">splnr_theme</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>                    legend.position <span class="op">=</span> <span class="st">"right"</span>,</span>
+<span>                    legend.direction <span class="op">=</span> <span class="st">"vertical"</span>,</span>
+<span>                    text <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>                    axis.text <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>                    plot.title <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
+<span>                    axis.title <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="op">(</span><span class="va">ggPU</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_PUs.html">splnr_plot_PUs</a></span><span class="op">(</span><span class="va">PUs</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="get-the-features">Get the features<a class="anchor" aria-label="anchor" href="#get-the-features"></a>
@@ -139,7 +161,7 @@ represents the land mass that should be removed (inverse = FALSE)</p>
 species of the Coral Sea to inform the conservation plan. We filtered
 the Aquamaps (Aquamaps.org) species distribution models for our study
 area for the following species:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Dict</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span></span>
 <span>  <span class="op">~</span><span class="va">Common</span>, <span class="op">~</span><span class="va">Scientific</span>, <span class="op">~</span><span class="va">Category</span>, <span class="op">~</span><span class="va">Class</span>,</span>
 <span>  <span class="st">"Green sea turtle"</span>, <span class="st">"Chelonia_mydas"</span>, <span class="st">"Reptiles"</span>, <span class="st">"important"</span>,</span>
@@ -169,7 +191,7 @@ species for the conservation plan.</p>
 <div class="section level4">
 <h4 id="convert-the-probabilities-to-binary-data">Convert the probabilities to binary data<a class="anchor" aria-label="anchor" href="#convert-the-probabilities-to-binary-data"></a>
 </h4>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_species_bin</span> <span class="op">&lt;-</span> <span class="va">spDataFiltered</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span></span>
@@ -185,16 +207,18 @@ species for the conservation plan.</p>
 individually by calling <code><a href="../reference/splnr_plot_binFeature.html">splnr_plot_binFeature()</a></code>, for
 example to see the binary habitat suitability map for Green sea
 turtles:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggFeature1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_binFeature.html">splnr_plot_binFeature</a></span><span class="op">(</span><span class="va">datEx_species_bin</span>, <span class="va">datEx_species_bin</span><span class="op">$</span><span class="va">Chelonia_mydas</span>, PlanUnits <span class="op">=</span> <span class="va">PUs</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-12-1.png" width="864"></p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggFeature1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_binFeature.html">splnr_plot_binFeature</a></span><span class="op">(</span><span class="va">datEx_species_bin</span>, <span class="va">datEx_species_bin</span><span class="op">$</span><span class="va">Chelonia_mydas</span><span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-14-1.png" width="864"></p>
 <p>The suitable habitat for Green sea turtles as predicted by Aquamaps
 is restricted to few cells close to the coast. If we now compare this
 with the predicted suitable habitat for Humpback whales, we can see that
 they are fairly ubiquitous across the whole Coral Sea.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggFeature</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_binFeature.html">splnr_plot_binFeature</a></span><span class="op">(</span><span class="va">datEx_species_bin</span>, <span class="va">datEx_species_bin</span><span class="op">$</span><span class="va">Megaptera_novaeangliae</span>, PlanUnits <span class="op">=</span> <span class="va">PUs</span>, landmass <span class="op">=</span> <span class="va">landmass</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-13-1.png" width="864"></p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggFeature</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_binFeature.html">splnr_plot_binFeature</a></span><span class="op">(</span><span class="va">datEx_species_bin</span>, <span class="va">datEx_species_bin</span><span class="op">$</span><span class="va">Megaptera_novaeangliae</span><span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-15-1.png" width="864"></p>
 <p>In our example, this was the only reason why we classified species as
 either representative if their suitable habitat is wide-ranging within
 the study region or important if they are restricted to a few number of
@@ -202,23 +226,24 @@ cells.</p>
 <p>To get a better idea of the overall distribution of the used
 features, we can also plot the number of features with suitable habitat
 within a planning unit of the study region.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggFeatNo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_featureNo.html">splnr_plot_featureNo</a></span><span class="op">(</span><span class="va">datEx_species_bin</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-14-1.png" width="864"></p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggFeatNo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_FeatureNo.html">splnr_plot_featureNo</a></span><span class="op">(</span><span class="va">datEx_species_bin</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-16-1.png" width="864"></p>
 </div>
 <div class="section level4">
 <h4 id="prepare-data-for-prioritisation">Prepare Data for prioritisation<a class="anchor" aria-label="anchor" href="#prepare-data-for-prioritisation"></a>
 </h4>
 <p>For the downstream spatial prioritization we also need to extract the
 names of our features to pass into <code>prioritizr</code>.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">col_name</span> <span class="op">&lt;-</span> <span class="va">spDataFiltered</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="st">"cellID"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>We also create an <code>sf</code> object that contains all the
 information needed for the prioritization.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_sf</span> <span class="op">&lt;-</span> <span class="va">datEx_species_bin</span></span></code></pre></div>
 <div class="section level5">
 <h5 id="add-cost">Add Cost<a class="anchor" aria-label="anchor" href="#add-cost"></a>
@@ -228,10 +253,11 @@ to minimize the cost whilst meeting all the conservation targets. We add
 an area-based cost to include as little area as possible in the spatial
 plan whilst meeting the conservation targets. For this, all the planning
 units are assigned an equal cost of 1.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_sf</span><span class="op">$</span><span class="va">Cost_None</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span></span>
-<span><span class="op">(</span><span class="va">ggCost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_cost.html">splnr_plot_cost</a></span><span class="op">(</span><span class="va">out_sf</span>, Cost_name <span class="op">=</span> <span class="st">"Cost_None"</span>, plotTitle <span class="op">=</span> <span class="st">"Cost (Area)"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-17-1.png" width="864"></p>
+<span><span class="op">(</span><span class="va">ggCost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_Cost.html">splnr_plot_cost</a></span><span class="op">(</span><span class="va">out_sf</span>, Cost_name <span class="op">=</span> <span class="st">"Cost_None"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-19-1.png" width="864"></p>
 </div>
 <div class="section level5">
 <h5 id="set-targets">Set Targets<a class="anchor" aria-label="anchor" href="#set-targets"></a>
@@ -240,7 +266,7 @@ units are assigned an equal cost of 1.</p>
 reflecting their importance in the planning region. Conservation targets
 are then assigned a target based on their class, in our case 30% of
 suitable habitat of important and 10% of representative features.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">target</span> <span class="op">&lt;-</span> <span class="va">Dict</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>target <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="va">Class</span> <span class="op">==</span> <span class="st">"important"</span>, <span class="fl">30</span> <span class="op">/</span> <span class="fl">100</span>, <span class="fl">10</span> <span class="op">/</span> <span class="fl">100</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><strong>Note:</strong> The assigned classes and targets were not
@@ -251,7 +277,7 @@ purposes.</p>
 <div class="section level4">
 <h4 id="set-up-conservation-problem">Set up conservation problem<a class="anchor" aria-label="anchor" href="#set-up-conservation-problem"></a>
 </h4>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_problem</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">out_sf</span>, <span class="va">col_name</span>, <span class="st">"Cost_None"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">target</span><span class="op">$</span><span class="va">target</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -261,7 +287,7 @@ purposes.</p>
 <div class="section level4">
 <h4 id="solve-the-conservation-problem">Solve the conservation problem<a class="anchor" aria-label="anchor" href="#solve-the-conservation-problem"></a>
 </h4>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_soln</span> <span class="op">&lt;-</span> <span class="va">datEx_problem</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -275,9 +301,10 @@ targets <em>+</em> Visualization of importance scores</p>
 <div class="section level5">
 <h5 id="visualization-of-the-solution">Visualization of the solution<a class="anchor" aria-label="anchor" href="#visualization-of-the-solution"></a>
 </h5>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggSoln</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_Solution.html">splnr_plot_Solution</a></span><span class="op">(</span><span class="va">datEx_soln</span>, <span class="va">PUs</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-21-1.png" width="864"></p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggSoln</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_Solution.html">splnr_plot_Solution</a></span><span class="op">(</span><span class="va">datEx_soln</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-23-1.png" width="864"></p>
 <p>This plot shows the optimal solution for the planning region that
 meets the selected targets for the chosen features for the smallest area
 possible. The categorical map displays, which of the planning units were
@@ -285,9 +312,10 @@ selected as important for meeting the conservation targets (dark blue)
 and which were not selected (light blue). This can also be done with an
 overlay of the cost to show how the solution avoids highly costly
 areas:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggCostOverlay</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_costOverlay.html">splnr_plot_costOverlay</a></span><span class="op">(</span>soln <span class="op">=</span> <span class="va">datEx_soln</span>, Cost <span class="op">=</span> <span class="cn">NA</span>, Cost_name <span class="op">=</span> <span class="st">"Cost_None"</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-22-1.png" width="864"></p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggCostOverlay</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_costOverlay.html">splnr_plot_costOverlay</a></span><span class="op">(</span>soln <span class="op">=</span> <span class="va">datEx_soln</span>, Cost <span class="op">=</span> <span class="cn">NA</span>, Cost_name <span class="op">=</span> <span class="st">"Cost_None"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-24-1.png" width="864"></p>
 <p><strong>Note:</strong> In our example, cost is equal for all planning
 units.</p>
 </div>
@@ -299,7 +327,7 @@ how much suitable habitat of each feature are selected in the spatial
 plan. This also includes potential incidental coverage of feature that
 were not included in the spatial plan but can still be found in the
 planning region.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dfTarget</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_prepTargetData.html">splnr_prepTargetData</a></span><span class="op">(</span><span class="va">datEx_soln</span>, <span class="va">datEx_problem</span>, <span class="va">datEx_species_bin</span>,</span>
 <span>  Dict <span class="op">=</span> <span class="va">Dict</span>, Category <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  dataCol <span class="op">=</span> <span class="st">"Scientific"</span>,</span>
@@ -307,10 +335,10 @@ planning region.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">ggTarget</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_targets.html">splnr_plot_targets</a></span><span class="op">(</span><span class="va">dfTarget</span>, nr <span class="op">=</span> <span class="fl">1</span>, setTarget <span class="op">=</span> <span class="fl">30</span>, plotTitle <span class="op">=</span> <span class="st">"Target: "</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-23-1.png" width="864"></p>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-25-1.png" width="864"></p>
 <p>For a circular bar plot, one additional step of data preparation
 needs to be done.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dfTargetCirc</span> <span class="op">&lt;-</span> <span class="va">dfTarget</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="st">"feature"</span>, <span class="st">"value"</span>, <span class="st">"group"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -322,7 +350,7 @@ needs to be done.</p>
 <span><span class="va">legends</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Important"</span>, <span class="st">"Representative"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">ggCircTarg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_circBplot.html">splnr_plot_circBplot</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">dfTargetCirc</span>, legend_list <span class="op">=</span> <span class="va">legends</span>, legend_color <span class="op">=</span> <span class="va">colors</span>, impTarget <span class="op">=</span> <span class="fl">30</span>, repTarget <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-24-1.png" width="864"></p>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-26-1.png" width="864"></p>
 </div>
 <div class="section level5">
 <h5 id="visualization-of-importance-scores">Visualization of importance scores<a class="anchor" aria-label="anchor" href="#visualization-of-importance-scores"></a>
@@ -332,14 +360,16 @@ individual selected planning unit in the spatial plan (for more
 information, see <a href="https://prioritizr.net/reference/importance.html" class="external-link uri">https://prioritizr.net/reference/importance.html</a>)</p>
 <p>Here, we use two different importance scores, the Ferrier Score and
 Rarity Weighted Richness.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ggFerrier</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_ImportanceScore.html">splnr_plot_ImportanceScore</a></span><span class="op">(</span>soln <span class="op">=</span> <span class="va">datEx_soln</span>, pDat <span class="op">=</span> <span class="va">datEx_problem</span>, method <span class="op">=</span> <span class="st">"Ferrier"</span>, decimals <span class="op">=</span> <span class="fl">4</span>, legendTitle <span class="op">=</span> <span class="st">"Importance Score \n(Ferrier Score)"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ggFerrier</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_ImportanceScore.html">splnr_plot_ImportanceScore</a></span><span class="op">(</span>soln <span class="op">=</span> <span class="va">datEx_soln</span>, pDat <span class="op">=</span> <span class="va">datEx_problem</span>, method <span class="op">=</span> <span class="st">"Ferrier"</span>, decimals <span class="op">=</span> <span class="fl">4</span>, legendTitle <span class="op">=</span> <span class="st">"Importance Score \n(Ferrier Score)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Ferrier Score.</span></span>
-<span><span class="va">ggRWR</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_ImportanceScore.html">splnr_plot_ImportanceScore</a></span><span class="op">(</span>soln <span class="op">=</span> <span class="va">datEx_soln</span>, pDat <span class="op">=</span> <span class="va">datEx_problem</span>, method <span class="op">=</span> <span class="st">"RWR"</span>, decimals <span class="op">=</span> <span class="fl">2</span>, legendTitle <span class="op">=</span> <span class="st">"Importance Score \n(Rarity Weighted Richness)"</span><span class="op">)</span></span>
+<span><span class="va">ggRWR</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_ImportanceScore.html">splnr_plot_ImportanceScore</a></span><span class="op">(</span>soln <span class="op">=</span> <span class="va">datEx_soln</span>, pDat <span class="op">=</span> <span class="va">datEx_problem</span>, method <span class="op">=</span> <span class="st">"RWR"</span>, decimals <span class="op">=</span> <span class="fl">2</span>, legendTitle <span class="op">=</span> <span class="st">"Importance Score \n(Rarity Weighted Richness)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rarity Wighted Richness.</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">ggScores</span> <span class="op">&lt;-</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">ggFerrier</span> <span class="op">+</span> <span class="va">ggRWR</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-25-1.png" width="864"></p>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-27-1.png" width="864"></p>
 <p>In our example, both scores label similar -coastal- planning units as
 most important for the spatial plan.</p>
 </div>
@@ -356,9 +386,10 @@ with the following characteristics: * Status = c(“Designated”,
 “Established”, “Inscribed”) * Designation Type = c(“National”,
 “Regional”, “International”, “Not Applicable”) * IUCN Category = c(“Ia”,
 “Ib”, “II”, “III”, “IV”)</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggMPA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_MPAs.html">splnr_plot_MPAs</a></span><span class="op">(</span><span class="va">MPAsCoralSea</span>, landmass <span class="op">=</span> <span class="va">landmass</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-26-1.png" width="864"></p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggMPA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_MPAs.html">splnr_plot_MPAs</a></span><span class="op">(</span><span class="va">MPAsCoralSea</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-28-1.png" width="864"></p>
 <p>We will also include targets based on IUCN categories to prioritise
 species with an IUCN status of:</p>
 <ul>
@@ -372,7 +403,7 @@ species with an IUCN status of:</p>
 species that do not fall into any of these categories receive an inverse
 area target, so species with a greater area of suitable habitat are
 assigned a lower target.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Species &lt;- gsub("_", " ", col_name) #to transform Aquamaps species names to IUCN species names</span></span>
 <span><span class="co"># dfSpecies &lt;- data.frame(Species)</span></span>
 <span><span class="co">#</span></span>
@@ -395,7 +426,7 @@ environment using
 <div class="section level5">
 <h5 id="set-up-second-conservation-problem">Set up second conservation problem<a class="anchor" aria-label="anchor" href="#set-up-second-conservation-problem"></a>
 </h5>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_problem2</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">out_sf</span>, <span class="va">col_name</span>, <span class="st">"Cost_None"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">Targets</span><span class="op">$</span><span class="va">Target</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -407,24 +438,39 @@ environment using
 <span><span class="va">datEx_soln2</span> <span class="op">&lt;-</span> <span class="va">datEx_problem2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="op">(</span><span class="va">ggSoln2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_Solution.html">splnr_plot_Solution</a></span><span class="op">(</span><span class="va">datEx_soln2</span>, <span class="va">PUs</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-28-1.png" width="864"></p>
+<span><span class="op">(</span><span class="va">ggSoln2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_Solution.html">splnr_plot_Solution</a></span><span class="op">(</span><span class="va">datEx_soln2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-30-1.png" width="864"></p>
+<p>But we locked in areas that were already existing MPAs. If we want to
+show the overlap between the selected planning units and the current
+MPAs, we can can add this to the <code><a href="../reference/gg_add.html">gg_add()</a></code>function.</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span>  <span class="op">(</span><span class="fu"><a href="../reference/splnr_plot_Solution.html">splnr_plot_Solution</a></span><span class="op">(</span><span class="va">datEx_soln2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>      <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, lockedInAreas <span class="op">=</span> <span class="va">MPAsCoralSea</span>, colInterest <span class="op">=</span> <span class="va">MPAsCoralSea</span><span class="op">$</span><span class="va">wdpa</span>, Type <span class="op">=</span> <span class="st">"Full"</span>, colorLI <span class="op">=</span> <span class="st">"lightgrey"</span>, alphaLI <span class="op">=</span> <span class="fl">0.2</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-31-1.png" width="864"></p>
+<p>If we instead only want to see the contours of the locked in areas we
+can set <code>Type = "Contours"</code>in <code><a href="../reference/gg_add.html">gg_add()</a></code>.</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span> <span class="op">(</span><span class="fu"><a href="../reference/splnr_plot_Solution.html">splnr_plot_Solution</a></span><span class="op">(</span><span class="va">datEx_soln2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>lockedInAreas <span class="op">=</span> <span class="va">MPAsCoralSea</span>, colInterest <span class="op">=</span> <span class="va">MPAsCoralSea</span><span class="op">$</span><span class="va">wdpa</span>, Type <span class="op">=</span> <span class="st">"Contours"</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-32-1.png" width="864"></p>
 </div>
 <div class="section level5">
 <h5 id="visualize-comparison">Visualize comparison<a class="anchor" aria-label="anchor" href="#visualize-comparison"></a>
 </h5>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggComp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_comparison.html">splnr_plot_comparison</a></span><span class="op">(</span><span class="va">datEx_soln</span>, <span class="va">datEx_soln2</span>, <span class="va">landmass</span>, PlanUnits <span class="op">=</span> <span class="va">PUs</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-29-1.png" width="864"></p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggComp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_Comparison.html">splnr_plot_comparison</a></span><span class="op">(</span><span class="va">datEx_soln</span>, <span class="va">datEx_soln2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-33-1.png" width="864"></p>
 <p>This plot shows how the first solution (without current MPAs) differs
 from the second solution (including current MPAs. The categorical map
 displays, which of the planning units were selected in solution 2 but
 not in solution 1 (red), in solution 1 but not in solution 2 (blue), or
 selected in both solutions (grey).</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">CorrMat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_prepKappaCorrData.html">splnr_prepKappaCorrData</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">datEx_soln</span>, <span class="va">datEx_soln2</span><span class="op">)</span>, name_sol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"soln1"</span>, <span class="st">"soln2"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">ggCorr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_CorrMat.html">splnr_plot_CorrMat</a></span><span class="op">(</span><span class="va">CorrMat</span>, AxisLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Solution 1"</span>, <span class="st">"Solution 2"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-30-1.png" width="864"></p>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-34-1.png" width="864"></p>
 <p>The correlation matrix shows the similarity as the Cohen’s Kappa
 correlation between solution 1 and solution 2.</p>
 </div>
@@ -437,7 +483,7 @@ interesting in how many times a planning unit is selected across the
 array of solutions. To demonstrate how this can be done using this
 package, we first create an array (= portfolio) of solutions. One
 example of this is by using the portfolio</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_soln_portfolio</span> <span class="op">&lt;-</span> <span class="va">datEx_problem</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_cuts_portfolio.html" class="external-link">add_cuts_portfolio</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># create conservation problem that contains a portfolio of solutions</span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -448,8 +494,9 @@ example of this is by using the portfolio</p>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span>geometry <span class="op">=</span> <span class="va">datEx_soln_portfolio</span><span class="op">$</span><span class="va">geometry</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">selFreq</span><span class="op">)</span></span>
 <span></span>
-<span><span class="op">(</span><span class="va">ggselFreq</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_selectionFreq.html">splnr_plot_selectionFreq</a></span><span class="op">(</span><span class="va">selFreq</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="spatialplanr_files/figure-html/unnamed-chunk-31-1.png" width="864"></p>
+<span><span class="op">(</span><span class="va">ggselFreq</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_selectionFreq.html">splnr_plot_selectionFreq</a></span><span class="op">(</span><span class="va">selFreq</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="spatialplanr_files/figure-html/unnamed-chunk-35-1.png" width="864"></p>
 <div id="section" class="section level34">
 <p class="heading"></p>
 </div>
@@ -458,7 +505,7 @@ example of this is by using the portfolio</p>
 <h4 id="apply-cutoffs">Apply cutoffs<a class="anchor" aria-label="anchor" href="#apply-cutoffs"></a>
 </h4>
 <p>Add geomorphic features to the existing features object.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Cutoffs &lt;- 0.5</span></span>
 <span><span class="co"># AQM_bin &lt;- splnr_Apply_Cutoffs(AQM, Cutoffs)</span></span>
 <span><span class="co">#</span></span>
@@ -468,7 +515,7 @@ example of this is by using the portfolio</p>
 <div class="section level4">
 <h4 id="join-all-features-together-">Join all features together.<a class="anchor" aria-label="anchor" href="#join-all-features-together-"></a>
 </h4>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># features &lt;- GeoMorph_bin %&gt;%</span></span>
 <span><span class="co">#   dplyr::left_join(AQM_bin %&gt;% sf::st_drop_geometry(), by = "cellID")</span></span>
 <span><span class="co">#</span></span>
@@ -480,14 +527,14 @@ example of this is by using the portfolio</p>
 <p>You can also assign a Longhurst Province to each PU and set targets
 individually by province. Here we simply demonstrate this, but do not
 implement it into a spatial plan.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Longhurst &lt;- splnr_Match_Longhurst(PUs)</span></span>
 <span><span class="co"># (ggLong &lt;- splnr_plot_Longhurst(Longhurst, landmass))</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="get-locked-in-areas">Get locked in areas<a class="anchor" aria-label="anchor" href="#get-locked-in-areas"></a>
 </h4>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># LockedIn &lt;- splnr_get_MPAs(PUs, "Australia") %&gt;%</span></span>
 <span><span class="co">#   splnr_Apply_Cutoffs(0.5) %&gt;%</span></span>
 <span><span class="co">#   dplyr::mutate(wdpa = as.logical(wdpa))</span></span>
@@ -497,7 +544,7 @@ implement it into a spatial plan.</p>
 <div class="section level3">
 <h3 id="get-fisheries-cost">Get Fisheries cost<a class="anchor" aria-label="anchor" href="#get-fisheries-cost"></a>
 </h3>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Cost &lt;- splnr_get_FishCost(PUs, group = "all")</span></span>
 <span><span class="co"># (ggCost &lt;- splnr_plot_Cost(Cost, landmass)) # Plot cost</span></span></code></pre></div>
 </div>
@@ -507,14 +554,14 @@ implement it into a spatial plan.</p>
 <div class="section level4">
 <h4 id="identical-fixed-targets">Identical fixed targets<a class="anchor" aria-label="anchor" href="#identical-fixed-targets"></a>
 </h4>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Targets &lt;- data.frame(Target = 0.2)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="inverse-area-targets">Inverse area targets<a class="anchor" aria-label="anchor" href="#inverse-area-targets"></a>
 </h4>
 <p>Set minimum and maximum limits for inverse area targets</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># minTarget = 0.2</span></span>
 <span><span class="co"># maxTarget = 0.5</span></span>
 <span><span class="co">#</span></span>
@@ -525,7 +572,7 @@ implement it into a spatial plan.</p>
 </h4>
 <p>To run this code you will need to sign up for your own IUCN RedList
 token. Start by running <code><a href="https://docs.ropensci.org/rredlist/reference/rl_use_iucn.html" class="external-link">rredlist::rl_use_iucn()</a></code>.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># speciesCol &lt;- "Species"</span></span>
 <span><span class="co"># Targets &lt;- Targets %&gt;%</span></span>
 <span><span class="co">#   splnr_Match_IUCNRedList(speciesCol) %&gt;% # Add RL data to the df</span></span>
@@ -539,7 +586,7 @@ token. Start by running <code><a href="https://docs.ropensci.org/rredlist/refere
 <div class="section level4">
 <h4 id="get-the-list-of-features">Get the list of features<a class="anchor" aria-label="anchor" href="#get-the-list-of-features"></a>
 </h4>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># feature_names &lt;- features %&gt;%</span></span>
 <span><span class="co">#   sf::st_drop_geometry() %&gt;%</span></span>
 <span><span class="co">#   names()</span></span>
@@ -559,13 +606,13 @@ token. Start by running <code><a href="https://docs.ropensci.org/rredlist/refere
 <div class="section level3">
 <h3 id="solve-the-planning-problem">Solve the planning problem<a class="anchor" aria-label="anchor" href="#solve-the-planning-problem"></a>
 </h3>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># s1 &lt;- prioritizr::solve(p1)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
 </h3>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># (ggSol &lt;- splnr_plot_Solution(s1, PUs, landmass)) # Plot Solution</span></span>
 <span></span>
 <span><span class="co"># gg &lt;- patchwork::wrap_plots(list(ggPU, ggMPA, ggCost, ggFeatureNo, ggSol), ncol = 3)</span></span></code></pre></div>
@@ -579,7 +626,7 @@ area set aside.</p>
 <div class="section level4">
 <h4 id="create-the-second-planning-problem">Create the second planning problem<a class="anchor" aria-label="anchor" href="#create-the-second-planning-problem"></a>
 </h4>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># p2 &lt;- prioritizr::problem(out_sf, feature_names, "Cost") %&gt;%</span></span>
 <span><span class="co">#   prioritizr::add_min_set_objective() %&gt;%</span></span>
 <span><span class="co">#   prioritizr::add_relative_targets(0.5) %&gt;%</span></span>
@@ -590,13 +637,13 @@ area set aside.</p>
 <div class="section level4">
 <h4 id="solve-the-planning-problem-1">Solve the planning problem<a class="anchor" aria-label="anchor" href="#solve-the-planning-problem-1"></a>
 </h4>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># s2 &lt;- prioritizr::solve(p2)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="plot-comparison">Plot comparison<a class="anchor" aria-label="anchor" href="#plot-comparison"></a>
 </h4>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># gg &lt;- splnr_plot_Comparison(s1, s2, landmass)</span></span></code></pre></div>
 </div>
 </div>

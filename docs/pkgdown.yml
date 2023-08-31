@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   Climate-smart_Workflow: Climate-smart_Workflow.html
   spatialplanr: spatialplanr.html
-last_built: 2023-08-29T05:50Z
+last_built: 2023-08-31T10:07Z
 urls:
   reference: https://mathmarecol.github.io/spatialplanr/reference
   article: https://mathmarecol.github.io/spatialplanr/articles

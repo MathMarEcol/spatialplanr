@@ -190,7 +190,8 @@ interest (here: the velocity data) <code>metric</code>.</p>
 <p>The climate velocity data can be visualized using the
 <code><a href="../reference/splnr_plot_climData.html">splnr_plot_climData()</a></code> function.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggclim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_climData.html">splnr_plot_climData</a></span><span class="op">(</span><span class="va">metric_df</span>, <span class="va">metric_df</span><span class="op">$</span><span class="va">metric</span>, <span class="va">PUs</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggclim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_climData.html">splnr_plot_climData</a></span><span class="op">(</span><span class="va">metric_df</span>, <span class="st">"metric"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="st">"Default"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Climate-smart_Workflow_files/figure-html/unnamed-chunk-8-1.png" width="864"></p>
 <p>In our case, there were few areas with low climate velocity, which
 are the areas we define as climate refugia in our example. Usually, we
@@ -208,7 +209,8 @@ DATA).</p>
 <span>    metricOG <span class="op">=</span> <span class="va">metric</span>,</span>
 <span>    metric <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">metric</span> <span class="op">&gt;</span> <span class="fl">0.99</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">.</span>, <span class="fl">0.85</span>, <span class="fl">1.0</span><span class="op">)</span>, <span class="va">metric</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="op">(</span><span class="va">ggclim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_climData.html">splnr_plot_climData</a></span><span class="op">(</span><span class="va">metric_df</span>, <span class="va">metric_df</span><span class="op">$</span><span class="va">metric</span>, <span class="va">PUs</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">(</span><span class="va">ggclim</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_climData.html">splnr_plot_climData</a></span><span class="op">(</span><span class="va">metric_df</span>, <span class="st">"metric"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="st">"Default"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Climate-smart_Workflow_files/figure-html/unnamed-chunk-9-1.png" width="864"></p>
 <p>We then use the climate priority area approach
 <code>splnr_climate_PriorityArea()</code> detailed in Buenafe et al
@@ -276,7 +278,8 @@ the same as when running a non-climate-smart spatial prioritization.</p>
 <p>We can look at the resulting plan using
 <code><a href="../reference/splnr_plot_Solution.html">splnr_plot_Solution()</a></code>.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggSoln</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_Solution.html">splnr_plot_Solution</a></span><span class="op">(</span><span class="va">dat_solnClim</span>, <span class="va">PUs</span>, <span class="va">landmass</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggSoln</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_Solution.html">splnr_plot_Solution</a></span><span class="op">(</span><span class="va">dat_solnClim</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/gg_add.html">gg_add</a></span><span class="op">(</span>Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="st">"Default"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Climate-smart_Workflow_files/figure-html/unnamed-chunk-13-1.png" width="864"></p>
 <p>However, we are also interested how climate-smart the selected
 planning units in the solution actually are. For this, we can use a
