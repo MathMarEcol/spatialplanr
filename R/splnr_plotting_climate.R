@@ -10,14 +10,12 @@
 #' @export
 #'
 #' @examples
-#' splnr_plot_climData(dat_clim, dat_clim$metric, dat_PUs)
+#' splnr_plot_climData(df = dat_clim, colInterest = "metric")
 splnr_plot_climData <- function(df, colInterest, colorMap = "C",
                                 plotTitle = " ", legendTitle = "Climate metric") {
-  df <- df %>%
-    dplyr::mutate(metric = colInterest)
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = df %>% sf::st_as_sf(), ggplot2::aes(fill = .data$metric), colour = NA) +
+    ggplot2::geom_sf(data = df %>% sf::st_as_sf(), ggplot2::aes(fill = !!rlang::sym(colInterest)), colour = NA) +
     ggplot2::scale_fill_viridis_c(
       name = legendTitle,
       option = colorMap # ,
@@ -31,6 +29,8 @@ splnr_plot_climData <- function(df, colInterest, colorMap = "C",
     ) +
     ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
     ggplot2::labs(subtitle = plotTitle)
+
+  return(gg)
 }
 
 
