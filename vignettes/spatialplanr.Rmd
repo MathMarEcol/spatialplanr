@@ -75,7 +75,8 @@ PUs <- splnr_get_PlanningUnits(Bndry, landmass, PU_size, Shape)
 
 We can check what the PUs look like
 ```{r, fig.width=9}
-(ggPU <- splnr_plot_PUs(PUs)) # Plot Planning Units
+(ggPU <- splnr_plot_PUs(PUs) +
+   ggplot2::theme_bw()) # Plot Planning Units
 ```
 
 If we want to add additional properties to our map, for example landmass or the boundary, we can use `gg_add()`.
@@ -133,16 +134,7 @@ These species were not chosen based on their importance for this region and only
 
 ```{r}
 datEx_species_bin <- spDataFiltered %>%
-  dplyr::as_tibble() %>%
-  dplyr::mutate(dplyr::across(
-    -dplyr::any_of(c("cellID", "geometry")), # Don't apply to geometry and cellID
-    ~ dplyr::case_when(
-      . >= 0.5 ~ 1,
-      . < 0.5 ~ 0,
-      is.na(.data) ~ 0
-    )
-  )) %>%
-  sf::st_as_sf()
+   splnr_apply_cutoffs(Cutoffs = 0.5)
 ```
 
 We can now look at the feature data used for the spatial plan individually by calling `splnr_plot_binFeature()`, for example to see the binary habitat suitability map for Green sea turtles:
@@ -406,25 +398,6 @@ selFreq <- datEx_soln_portfolio %>% # calculate selection frequency
 
 #################################
 
-### Apply cutoffs
-Add geomorphic features to the existing features object.
-```{r}
-# Cutoffs <- 0.5
-# AQM_bin <- splnr_Apply_Cutoffs(AQM, Cutoffs)
-#
-# Cutoffs <- c(Shelf = 0.01, Ridge = 0.2, Plateau = 0.1, Seamount = 0.3)
-# GeoMorph_bin <- splnr_Apply_Cutoffs(GeoMorph, Cutoffs)
-```
-
-
-
-### Join all features together.
-```{r}
-# features <- GeoMorph_bin %>%
-#   dplyr::left_join(AQM_bin %>% sf::st_drop_geometry(), by = "cellID")
-#
-# (ggFeatureNo <- splnr_plot_FeatureNo(features, landmass)) # Plot Number of features
-```
 
 ### Longhurst Provinces
 You can also assign a Longhurst Province to each PU and set targets individually by province. Here we simply demonstrate this, but do not implement it into a spatial plan.
