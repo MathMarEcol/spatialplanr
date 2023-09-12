@@ -202,6 +202,63 @@ The solution can be plotted using the function `splnr_plot_SolutionZones()` that
 
 We can see that we now how planning units that are not selected, and planning units that have either been selected for zone 1 or zone 2.
 
+### Different features
+
+When using `sf` objects with `zones()`, the input feature names to `zones()` need to have the same length and contain the same features. This means that both zones have the same features, but for some that are not of interest in that specific zone, the target is set to 0. For example, if we want to separate the example data in a zone for reptiles and another zone containing all other taxa that are not reptiles, we can specify the following targets:
+
+```{r}
+targets2b <- Dict %>%
+  dplyr::mutate(targetZ1 = dplyr::if_else(Category == "Reptiles", 30 / 100, 0),
+                targetZ2 = dplyr::if_else(Category != "Reptiles", 10 / 100, 0)) %>%
+  dplyr::select("targetZ1", "targetZ2") %>%
+  as.matrix()
+```
+
+This sets the target for reptiles in the first zone to 30% and the rest to 0%. In the second zone, the targets for non-reptiles is 10% and for reptiles it is 0% because they are not of interest in this zone. Target data has to be given in a matrix when working with zones, so we transform the data frame to a matrix at the end.
+
+We then define the conservation problem in the same way as above and solve it.
+
+```{r}
+p2b <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397), #when giving sf input, we need as many cost columns as we have zones
+                                                              Cost2 = runif(n = dim(.)[[1]])),
+                          z2,
+                          cost_column = c("Cost1", "Cost2"))%>%
+  prioritizr::add_min_set_objective() %>%
+  prioritizr::add_relative_targets(targets2b) %>%
+  prioritizr::add_binary_decisions() %>%
+  prioritizr::add_default_solver(verbose = FALSE)
+
+s2b <- p2b %>%
+  prioritizr::solve.ConservationProblem()
+```
+
+We can then also look at how well these targets are met in each zone (and combined) by using 
+
+```{r}
+r2b <- s2b %>%
+  dplyr::select(tidyselect::starts_with(c("solution"))) %>%
+  sf::st_drop_geometry() %>%
+  tibble::as_tibble() %>%
+  prioritizr::eval_feature_representation_summary(p2b, .)
+print(r2b, n = 45)
+```
+
+We can see that each of the 15 features is listed (as a number) for an overall summary, summary for zone 1 and summary for zone 2. When looking at the `relative_held` column in the `tibble`, we observe that in the summary of zone 1 (from row 16 onwards), some features have >30% targets met, whereas others (such as feature 6 and 7) have a very low percentage of suitable habitat within selected planning units. We can extract the common names of those two features:
+
+```{r}
+Dict[[1]][6]
+Dict[[1]][7]
+```
+
+They are both marine mammals and thus had a target of 0% in zone 1 that was the reptile-specific zone. The percentage of selected suitable habitat is not 0% despite the target of 0 because a proportion of suitable habitat of mammals was selected incidentally when selecting planning units in this zone by meeting the targets for reptiles. The same applies for zone 2. We can also plot the final solution again: 
+
+```{r, fig.width = 9}
+(gg_s2b <- splnr_plot_SolutionZones(s2b) +
+    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+
+```
+
+
 ### Boundary penalty
 
 Similar to "normal" priritisations, zones also allows including a boundary penalty. There are several options how this can be done within zones or between zones. 
