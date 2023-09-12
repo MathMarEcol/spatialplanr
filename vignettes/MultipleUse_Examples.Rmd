@@ -232,7 +232,7 @@ s2b <- p2b %>%
   prioritizr::solve.ConservationProblem()
 ```
 
-We can then also look at how well these targets are met in each zone (and combined) by using 
+We can then also look at how well these targets are met in each zone (and combined).
 
 ```{r}
 r2b <- s2b %>%
@@ -417,3 +417,45 @@ s7 <- p7 %>%
 
 ```
 
+### Alternative: linear constraints
+
+Sometimes a spatial plan might be needed that requires minimising several costs at once, but a binary output (inside the protected area/outside the protected area) is sufficient. In this case, using linear constraints instead of zones might be a simpler and more time-efficient way forward.
+
+Linear constraints make sure that all planning units in the selected area meet the criteria given in the constraint. For example, when using an area-based cost (lowest number of planning units to meet the target), we might also simultaneously want to minimise the cost to fisheries and keep it below a certain threshold. Inversely, we might want to minimise the cost to fisheries but also not select more than 30% of the area. 
+
+In our example, we fill first define our targets and a random cost layer with values ranging from 0 to 1.
+
+```{r}
+target8 <- rep(0.3, nrow(Dict))
+
+costRandom <- datEx_species_bin %>% dplyr::mutate(CostR = runif(n = dim(.)[[1]])) %>%
+  dplyr::select("CostR")
+```
+
+We then define and solve our conservation problem:
+
+```{r}
+p8 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397)),
+                                     col_name,
+                                     "Cost1") %>%
+  prioritizr::add_min_set_objective() %>%
+  prioritizr::add_relative_targets(target8) %>%
+  prioritizr::add_linear_constraints(sum(costRandom$CostR)*0.1, sense = "<=", costRandom$CostR) %>%
+  prioritizr::add_binary_decisions() %>%
+  prioritizr::add_default_solver(verbose = FALSE)
+
+s8 <- p8 %>%
+  prioritizr::solve.ConservationProblem()
+```
+
+Based on the problem definition, we want to meet the targets for our biodiversity features whilst selecting the lowest number of planning units possible. However, the solution also depends on the threshold of the linear constraint specified with `add_linear_constraints()`in the problem. Specifically, the planning units selected in the solution can not exceed 10% of the total cost of all planning units in `costRandom$CostR`. 
+
+We can visualise the solution again:
+
+```{r, fig.width = 9}
+(gg_s8 <- splnr_plot_Solution(s8) +
+    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+```
+
+
+**NOTE:** We can also use multiple linear constraints in the same plan, however, this might require a normalization of the input data to have the constraints in comparable units, and a careful tuning of the threshold, so `prioritizr` is still able to solve the problem.  
