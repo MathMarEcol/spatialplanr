@@ -28,9 +28,9 @@
 #'
 #' @examples
 #' \dontrun{
-#' df <- splnr_convert_2PUs(dat, PlanUnits)
+#' df <- splnr_convert_toPUs(dat, PlanUnits)
 #' }
-splnr_convert_2PUs <- function(dat, PlanUnits) {
+splnr_convert_toPUs <- function(dat, PlanUnits) {
   ## First deal with whether the input is a file or a dataset
 
   ## LOAD FILES IF NEEDED
