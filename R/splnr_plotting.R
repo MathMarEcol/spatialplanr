@@ -35,9 +35,9 @@
 #' dat_soln <- dat_problem %>%
 #'  prioritizr::solve.ConservationProblem()
 #'
-#' splnr_plot_Solution(dat_soln) +
-#'   gg_add(PUs = dat_PUs, ggtheme = TRUE)
-gg_add <- function(PUs = NA, colorPUs = "grey80",
+#' splnr_plot_solution(dat_soln) +
+#'   splnr_gg_add(PUs = dat_PUs, ggtheme = TRUE)
+splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
                    Bndry = NA, colorBndry = "black",
                    land = NA, colorLand = "grey20",
                    contours = NA, cropLand = NA, colorsConts = "black",
@@ -190,8 +190,8 @@ gg_add <- function(PUs = NA, colorPUs = "grey80",
 #'dat_soln <- dat_problem %>%
 #'  prioritizr::solve.ConservationProblem()
 #'
-#' splnr_plot_Solution(dat_soln)
-splnr_plot_Solution <- function(soln, colorVals = c("TRUE" = "#3182bd", "FALSE" = "#c6dbef"),
+#' splnr_plot_solution(dat_soln)
+splnr_plot_solution <- function(soln, colorVals = c("TRUE" = "#3182bd", "FALSE" = "#c6dbef"),
                                  showLegend = TRUE, plotTitle = "Solution", legendTitle = "Planning Units") {
   soln <- soln %>%
     dplyr::select(.data$solution_1) %>%
@@ -431,305 +431,6 @@ splnr_plot_binFeature <- function(df, colInterest,
     ggplot2::labs(subtitle = plotTitle)
 }
 
-#' Plot how well targets are met
-#'
-#' @param df A `df` containing the target information (resulting from the splnr_prepTargetData() function)
-#' @param nr Number of rows of the legend
-#' @param setTarget A number in percent (%) if all the features have the same set target
-#' @param plotTitle A character value for the title of the plot. Can be empty ("").
-#'
-#' @return A ggplot object of the plot
-#' @export
-#'
-#' @examples
-#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
-#'   prioritizr::add_min_set_objective() %>%
-#'   prioritizr::add_relative_targets(0.3) %>%
-#'   prioritizr::add_binary_decisions() %>%
-#'   prioritizr::add_default_solver(verbose = FALSE)
-#'
-#'dat_soln <- dat_problem %>%
-#'  prioritizr::solve.ConservationProblem()
-#'
-#' # not including incidental species coverage
-#' dfNInc <- splnr_prepTargetData(
-#'   soln = dat_soln,
-#'   pDat = dat_problem,
-#'   allDat = dat_species_bin,
-#'   Category = Category_vec,
-#'   solnCol = "solution_1"
-#' )
-#'
-#' (splnr_plot_targets(dfNInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
-#'
-#' # including incidental species coverage
-#' dfInc <- splnr_prepTargetData(
-#'   soln = dat_soln,
-#'   pDat = dat_problem,
-#'   allDat = dat_species_bin2,
-#'   Category = Category_vec2,
-#'   solnCol = "solution_1"
-#' )
-#' (splnr_plot_targets(dfInc, nr = 1, setTarget = 30, plotTitle = "Target: "))
-splnr_plot_targets <- function(df, nr = 1, setTarget = NA,
-                               plotTitle = "") {
-  uniqueCat <- unique(df$category[!is.na(df$category)])
-
-  colr <- tibble::tibble(
-    Category = uniqueCat,
-    Colour = viridis::viridis(length(uniqueCat))
-  ) %>%
-    tibble::deframe()
-
-  df <- df %>%
-    dplyr::filter(.data$feature != "DummyVar")
-
-  gg_target <- ggplot2::ggplot() +
-    ggplot2::geom_bar(data = df, stat = "identity", ggplot2::aes(x = .data$feature, y = .data$value, fill = .data$category), na.rm = TRUE) +
-    ggplot2::geom_bar(data = df, stat = "identity", ggplot2::aes(x = .data$feature, y = .data$incidental_held), na.rm = TRUE, fill = "NA", colour = "black") +
-    ggplot2::labs(title = plotTitle, x = "Feature", y = "Representation of features \nin total selected area (%)") +
-    ggplot2::theme_bw() +
-    ggplot2::scale_y_continuous(limits = c(0, ymax <- max(c(df$value, df$incidental_held), na.rm = TRUE) + 10), expand = c(0, 0)) + # only works for min shortfall without incidental yet
-    ggplot2::scale_fill_manual(
-      values = colr,
-      guide = ggplot2::guide_legend(nrow = nr)
-    ) +
-    ggplot2::theme(
-      axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5, size = 16, colour = "black"),
-      axis.text.y = ggplot2::element_text(size = 16, colour = "black"),
-      axis.title.x = ggplot2::element_blank(),
-      legend.title = ggplot2::element_blank(),
-      legend.text = ggplot2::element_text(size = 16),
-      axis.title.y = ggplot2::element_text(size = 16),
-      title = ggplot2::element_text(size = 16),
-      legend.position = c(0.5, 0.95),
-      legend.direction = "horizontal",
-      legend.background = ggplot2::element_rect(fill = "NA")
-    )
-
-  if (!(is.na(setTarget))) {
-    gg_target <- gg_target +
-      ggplot2::geom_abline(slope = 0, intercept = setTarget, col = "black", lty = 2, size = 1.5) +
-      ggplot2::labs(title = paste0(plotTitle, setTarget, "%"))
-  }
-
-  return(gg_target)
-
-}
-
-#' Plot circular barplot
-# Inputs:
-#' @param df data frame that should have the following column names: feature, value, group
-# feature: individual bars
-# value: value plotted in the y-axis
-# group: grouping factors
-#' @param legend_color vector list of colors; should have the group names and their corresponding colors
-#' @param legend_list list of groups/legends of groups
-#' @param indicateTargets logical on whether to show where the targets were set
-#' @param impTarget target of the important features (in %)
-#' @param repTarget target of the representative features (in %)
-#' @param colTarget string with a colour value for the indicator line
-#'
-#' @return A ggplot object of the plot
-#' @export
-#'
-#' @examples
-#' # DISCLAIMER: THIS SOLUTION IS NOT ACTUALLY RUN WITH THESE TARGETS YET
-#'
-#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
-#'   prioritizr::add_min_set_objective() %>%
-#'   prioritizr::add_relative_targets(0.3) %>%
-#'   prioritizr::add_binary_decisions() %>%
-#'   prioritizr::add_default_solver(verbose = FALSE)
-#'
-#'dat_soln <- dat_problem %>%
-#'  prioritizr::solve.ConservationProblem()
-#'
-#' s1 <- dat_soln %>%
-#'   tibble::as_tibble()
-#'
-#' p1 <- dat_problem
-#'
-#' df_rep_imp <- prioritizr::eval_feature_representation_summary(
-#'   p1,
-#'   s1[, "solution_1"]
-#' ) %>%
-#'   dplyr::select(feature, relative_held) %>%
-#'   dplyr::mutate(relative_held = relative_held * 100)
-#'
-#' imp_layers <- c("Spp1", "Spp3")
-#'
-#' target <- data.frame(feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5")) %>%
-#'   dplyr::mutate(class = dplyr::if_else(.data$feature %in% imp_layers,
-#'     "important", "representative"
-#'   )) %>%
-#'   dplyr::mutate(target = dplyr::if_else(class == "important",
-#'     50 / 100, 30 / 100
-#'   ))
-#'
-#' df <- merge(df_rep_imp, target) %>%
-#'   dplyr::select(-target) %>%
-#'   na.omit() %>%
-#'   dplyr::rename(value = relative_held) %>%
-#'   dplyr::rename(group = class)
-#'
-#' colors <- c(
-#'   "important" = "darkgreen",
-#'   "representative" = "darkred"
-#' )
-#' legends <- c("Important", "Representative")
-#'
-#' (splnr_plot_circBplot(df,
-#'   legend_list = legends,
-#'   legend_color = colors,
-#'   impTarget = 50, repTarget = 30
-#' ))
-splnr_plot_circBplot <- function(df, legend_color, legend_list,
-                                 indicateTargets = TRUE, impTarget = NA,
-                                 repTarget = NA, colTarget = "red") {
-  # Adding rows to each group, creating space between the groups
-  groups <- unique(df$group)
-  NA_rows <- list()
-  for (i in 1:length(groups)) {
-    NA_rows[[i]] <- data.frame(feature = NA, value = 0, group = groups[i])
-  }
-
-  data <- df %>%
-    dplyr::bind_rows(do.call(dplyr::bind_rows, NA_rows)) %>%
-    dplyr::group_by(.data$group) %>%
-    dplyr::arrange(.data$feature)
-
-  # Set a number of 'empty bar' to add at the end of each group
-  empty_bar <- 2
-  to_add <- data.frame(matrix(NA, empty_bar * length(unique(data$group)), ncol(data)))
-  colnames(to_add) <- colnames(data)
-  to_add$group <- rep(levels(as.factor(data$group)), each = empty_bar)
-  data <- rbind(data, to_add)
-  data <- data %>% dplyr::arrange(.data$group)
-  data$id <- seq(1, nrow(data))
-
-  # Labels for each of the bars (features)
-
-  # Get the name and the y position of each label
-  label_data <- data
-  # Calculate the angle of the labels
-  number_of_bar <- nrow(label_data)
-  angle <- 90 - 360 * (label_data$id - 0.5) / number_of_bar # Subtracting 0.5 so the labels are not found in the extreme left or right
-  # Calculate the alignment of labels: right or left
-  # If I am on the left part of the plot, my labels have currently an angle < -90
-  label_data$hjust <- ifelse(angle < -90, 1, 0)
-  # Flip angle BY to make them readable
-  label_data$angle <- ifelse(angle < -90, angle + 180, angle)
-
-  # For the percentage lines
-  grid_data <- data %>%
-    dplyr::group_by(.data$group) %>%
-    dplyr::summarize(start = min(.data$id), end = max(.data$id) - empty_bar) %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(title = mean(c(.data$start, .data$end)))
-  grid_data$end <- grid_data$end[c(nrow(grid_data), 1:nrow(grid_data) - 1)] + 1.5
-  grid_data$start <- grid_data$end - 1
-  grid_data <- grid_data[-1, ]
-
-  # Make the plot
-  p <- ggplot2::ggplot(data, ggplot2::aes(x = as.factor(.data$id), y = .data$value, fill = .data$group)) +
-
-    # plotting the bars
-    ggplot2::geom_bar(ggplot2::aes(x = as.factor(.data$id), y = .data$value, fill = .data$group),
-      stat = "identity",
-      position = "dodge"
-    ) +
-
-    # defining colors of the bars
-    ggplot2::scale_fill_manual(
-      name = "Features",
-      values = legend_color,
-      labels = legend_list
-    ) +
-
-    # Add text showing the value of each 100/75/50/25 lines
-    ggplot2::geom_segment(
-      data = grid_data,
-      ggplot2::aes(x = .data$end, y = 25, xend = .data$start, yend = 25),
-      colour = "grey50",
-      alpha = 1,
-      size = 0.5,
-      inherit.aes = FALSE
-    ) +
-    ggplot2::geom_segment(
-      data = grid_data,
-      ggplot2::aes(x = .data$end, y = 50, xend = .data$start, yend = 50),
-      colour = "grey50",
-      alpha = 1,
-      size = 0.5,
-      inherit.aes = FALSE
-    ) +
-    ggplot2::geom_segment(
-      data = grid_data,
-      ggplot2::aes(x = .data$end, y = 75, xend = .data$start, yend = 75),
-      colour = "grey50",
-      alpha = 1,
-      size = 0.5,
-      inherit.aes = FALSE
-    ) +
-    ggplot2::geom_segment(
-      data = grid_data,
-      ggplot2::aes(x = .data$end, y = 100, xend = .data$start, yend = 100),
-      colour = "grey50",
-      alpha = 1,
-      size = 0.5,
-      inherit.aes = FALSE
-    ) +
-    ggplot2::annotate("text",
-      x = rep(max(data$id - 1), 4),
-      y = c(25, 50, 75, 100),
-      label = c(25, 50, 75, 100),
-      color = "grey50",
-      size = 4,
-      angle = 0, #-5
-      fontface = "bold",
-      hjust = 0.5
-    ) +
-
-    # setting limitations of actual plot
-    ggplot2::ylim(-130, 130) + #-140, 130
-    ggplot2::theme_minimal() +
-    ggplot2::coord_polar() +
-    ggplot2::geom_text(
-      data = label_data, ggplot2::aes(
-        x = .data$id, y = .data$value + 10, label = .data$feature,
-        hjust = .data$hjust
-      ), color = "black",
-      fontface = "bold", alpha = 0.6, size = 2.5, angle = label_data$angle,
-      inherit.aes = FALSE
-    ) +
-
-    # # Defining colors of these lines
-    # ggplot2::scale_color_manual(name = "Features",
-    #                             values = palette) +
-
-    ggplot2::theme(
-      legend.position = "bottom",
-      axis.text = ggplot2::element_blank(),
-      axis.title = ggplot2::element_blank(),
-      panel.grid = ggplot2::element_blank(),
-      plot.margin = ggplot2::unit(rep(0.5, 4), "cm")
-    )
-
-  if (indicateTargets == TRUE) {
-    if (is.na(impTarget) | is.na(repTarget)) {
-      print("Please provide the targets you want to indicate.")
-    }
-    p <- p +
-      ggplot2::geom_abline(slope = 0, intercept = impTarget, col = colTarget, lty = 2) +
-      ggplot2::geom_abline(slope = 0, intercept = repTarget, col = colTarget, lty = 2)
-  }
-}
-
 
 
 #' Plot solution comparison
@@ -862,7 +563,7 @@ splnr_plot_featureNo <- function(df, showLegend = TRUE, paletteName = "YlGnBu",
 #'   prioritizr::add_cuts_portfolio(number_solutions = 5) %>%
 #'   prioritizr::solve.ConservationProblem()
 #'
-#' selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
+#' selFreq <- splnr_get_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 #' (splnr_plot_selectionFreq(selFreq))
 splnr_plot_selectionFreq <- function(selFreq,
                                      plotTitle = "", paletteName = "Greens",
@@ -920,8 +621,8 @@ splnr_plot_selectionFreq <- function(selFreq,
 #' dat_soln <- dat_problem %>%
 #'   prioritizr::solve.ConservationProblem()
 #'
-#' (splnr_plot_ImportanceScore(soln = dat_soln, pDat = dat_problem, method = "Ferrier", decimals = 4))
-splnr_plot_ImportanceScore <- function(soln, pDat, method = "Ferrier",
+#' (splnr_plot_importanceScore(soln = dat_soln, pDat = dat_problem, method = "Ferrier", decimals = 4))
+splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
                                        plotTitle = "", colorMap = "A", decimals = 4,
                                        legendTitle = "Importance Score") {
   soln <- soln %>% tibble::as_tibble()
@@ -1024,10 +725,10 @@ splnr_plot_ImportanceScore <- function(soln, pDat, method = "Ferrier",
 #' dat_soln2 <- dat_problem2 %>%
 #'   prioritizr::solve.ConservationProblem()
 #'
-#' CorrMat <- splnr_prepKappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
+#' CorrMat <- splnr_get_kappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
 #'
-#' (splnr_plot_CorrMat(CorrMat, AxisLabels = c("Solution 1", "Solution 2")))
-splnr_plot_CorrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#4477AA"),
+#' (splnr_plot_corrMat(CorrMat, AxisLabels = c("Solution 1", "Solution 2")))
+splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#4477AA"),
                                legendTitle = "Correlation \ncoefficient",
                                AxisLabels = NULL, plotTitle = "") {
   if ((class(AxisLabels)[[1]] == "character") & (nrow(x) != length(AxisLabels))) {

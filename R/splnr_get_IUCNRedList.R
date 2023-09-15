@@ -38,9 +38,9 @@
 #' @examples
 #' \dontrun{
 #' df <- data.frame(Species = c("Diomedea exulans", "Hippocampus kuda", "Squatina squatina")) %>%
-#'   splnr_match_IUCNRedList()
+#'   splnr_get_IUCNRedList()
 #' }
-splnr_match_IUCNRedList <- function(df, species_col = "Species") {
+splnr_get_IUCNRedList <- function(df, species_col = "Species") {
   # Get all IUCN categories
   cate <- c("DD", "LC", "NT", "VU", "EN", "CR", "EW", "EX", "LRlc", "LRnt", "LRcd")
 

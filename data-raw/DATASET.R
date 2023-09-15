@@ -104,13 +104,13 @@ dat_soln2 <- problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[
   solve.ConservationProblem()
 
 # Add a category tibble for the features
-Category_vec <- tibble::tibble(
+category_df <- tibble::tibble(
   feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
   category = c("Group1", "Group1", "Group1", "Group2", "Group2")
 )
 
 # Add a second category tibble for the features
-Category_vec2 <- tibble::tibble(
+category_df2 <- tibble::tibble(
   feature = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5", "Spp6"),
   category = c("Group1", "Group1", "Group1", "Group2", "Group2", "Group3")
 )
@@ -133,8 +133,8 @@ usethis::use_data(dat_bndry,
   #dat_problem,
   #dat_soln,
   #dat_soln2,
-  Category_vec,
-  Category_vec2,
+  category_df,
+  category_df2,
   dat_clim,
   overwrite = TRUE
 )

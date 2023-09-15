@@ -48,7 +48,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Plot how well targets are met</h1>
       <small class="dont-index">Source: <a href="https://github.com/MathMarEcol/spatialplanr/blob/HEAD/R/splnr_plotting.R" class="external-link"><code>R/splnr_plotting.R</code></a></small>
-      <div class="d-none name"><code>splnr_plot_targets.Rd</code></div>
+      <div class="d-none name"><code>splnr_plot_featureRep.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
@@ -57,13 +57,13 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">splnr_plot_targets</span><span class="op">(</span><span class="va">df</span>, nr <span class="op">=</span> <span class="fl">1</span>, setTarget <span class="op">=</span> <span class="cn">NA</span>, plotTitle <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">splnr_plot_featureRep</span><span class="op">(</span><span class="va">df</span>, nr <span class="op">=</span> <span class="fl">1</span>, setTarget <span class="op">=</span> <span class="cn">NA</span>, plotTitle <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>df</dt>
-<dd><p>A <code>df</code> containing the target information (resulting from the splnr_prepTargetData() function)</p></dd>
+<dd><p>A <code>df</code> containing the target information (resulting from the splnr_get_featureRep() function)</p></dd>
 
 
 <dt>nr</dt>
@@ -99,30 +99,30 @@
 <span class="r-in"><span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># not including incidental species coverage</span></span></span>
-<span class="r-in"><span><span class="va">dfNInc</span> <span class="op">&lt;-</span> <span class="fu"><a href="splnr_prepTargetData.html">splnr_prepTargetData</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">dfNInc</span> <span class="op">&lt;-</span> <span class="fu"><a href="splnr_get_featureRep.html">splnr_get_featureRep</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  soln <span class="op">=</span> <span class="va">dat_soln</span>,</span></span>
 <span class="r-in"><span>  pDat <span class="op">=</span> <span class="va">dat_problem</span>,</span></span>
 <span class="r-in"><span>  allDat <span class="op">=</span> <span class="va">dat_species_bin</span>,</span></span>
-<span class="r-in"><span>  Category <span class="op">=</span> <span class="va">Category_vec</span>,</span></span>
+<span class="r-in"><span>  Category <span class="op">=</span> <span class="va">category_df</span>,</span></span>
 <span class="r-in"><span>  solnCol <span class="op">=</span> <span class="st">"solution_1"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="fu">splnr_plot_targets</span><span class="op">(</span><span class="va">dfNInc</span>, nr <span class="op">=</span> <span class="fl">1</span>, setTarget <span class="op">=</span> <span class="fl">30</span>, plotTitle <span class="op">=</span> <span class="st">"Target: "</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="fu">splnr_plot_featureRep</span><span class="op">(</span><span class="va">dfNInc</span>, nr <span class="op">=</span> <span class="fl">1</span>, setTarget <span class="op">=</span> <span class="fl">30</span>, plotTitle <span class="op">=</span> <span class="st">"Target: "</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 5 rows containing missing values (`position_stack()`).</span>
-<span class="r-plt img"><img src="splnr_plot_targets-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="splnr_plot_featureRep-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># including incidental species coverage</span></span></span>
-<span class="r-in"><span><span class="va">dfInc</span> <span class="op">&lt;-</span> <span class="fu"><a href="splnr_prepTargetData.html">splnr_prepTargetData</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">dfInc</span> <span class="op">&lt;-</span> <span class="fu"><a href="splnr_get_featureRep.html">splnr_get_featureRep</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  soln <span class="op">=</span> <span class="va">dat_soln</span>,</span></span>
 <span class="r-in"><span>  pDat <span class="op">=</span> <span class="va">dat_problem</span>,</span></span>
 <span class="r-in"><span>  allDat <span class="op">=</span> <span class="va">dat_species_bin2</span>,</span></span>
-<span class="r-in"><span>  Category <span class="op">=</span> <span class="va">Category_vec2</span>,</span></span>
+<span class="r-in"><span>  Category <span class="op">=</span> <span class="va">category_df2</span>,</span></span>
 <span class="r-in"><span>  solnCol <span class="op">=</span> <span class="st">"solution_1"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="fu">splnr_plot_targets</span><span class="op">(</span><span class="va">dfInc</span>, nr <span class="op">=</span> <span class="fl">1</span>, setTarget <span class="op">=</span> <span class="fl">30</span>, plotTitle <span class="op">=</span> <span class="st">"Target: "</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="fu">splnr_plot_featureRep</span><span class="op">(</span><span class="va">dfInc</span>, nr <span class="op">=</span> <span class="fl">1</span>, setTarget <span class="op">=</span> <span class="fl">30</span>, plotTitle <span class="op">=</span> <span class="st">"Target: "</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 1 rows containing missing values (`position_stack()`).</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 5 rows containing missing values (`position_stack()`).</span>
-<span class="r-plt img"><img src="splnr_plot_targets-2.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="splnr_plot_featureRep-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
