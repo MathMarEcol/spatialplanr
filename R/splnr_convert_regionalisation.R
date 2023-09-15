@@ -23,7 +23,7 @@ splnr_convert_regionalisation <- function(dat, PUs, cat_name = NA, col_name = NA
 
     col_name <- names(dat) # Name of layer
 
-    out <- splnr_convert_2PUs(terra::as.factor(dat), PUs) %>% # Make categorical first
+    out <- splnr_convert_toPUs(terra::as.factor(dat), PUs) %>% # Make categorical first
       splnr_replace_NAs(col_name) %>% # Remove Na's in variable
       dplyr::mutate(name = cat_name[!!rlang::sym(col_name)]) %>% # Apply categories to data
       tidyr::pivot_wider(names_from = .data$name, values_from = !!rlang::sym(col_name)) %>% # Change to columns
@@ -43,7 +43,7 @@ splnr_convert_regionalisation <- function(dat, PUs, cat_name = NA, col_name = NA
 
     # Run through each regionalisation type to get proportion of PU coverage.
     for (idx in 1:length(cat_name)) {
-      PUs <- splnr_convert_2PUs(
+      PUs <- splnr_convert_toPUs(
         dat %>%
           dplyr::filter(!!rlang::sym(col_name) == cat_name[idx]) %>%
           dplyr::rename(!!cat_name[idx] := col_name),

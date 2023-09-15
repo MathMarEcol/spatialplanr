@@ -37,7 +37,7 @@ splnr_get_MPAs <- function(PlanUnits,
     wdpar::wdpa_dissolve() %>% # Dissolve data to remove overlapping areas.
     dplyr::select("geometry") %>%
     dplyr::mutate(wdpa = 1) %>%
-    splnr_convert_2PUs(PlanUnits)
+    splnr_convert_toPUs(PlanUnits)
 
   return(wdpa_data)
 }
