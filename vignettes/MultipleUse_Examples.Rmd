@@ -385,13 +385,13 @@ The results can the be visualized again:
 ```{r, fig.width = 9}
 (gg_s6 <- splnr_plot_SolutionZones(s6) +
     gg_add(PUs = PUs, Bndry = Bndry,
-           lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, Type = "Full", alphaLI = 0.1, colorLI = "yellow",
-           land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+           lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, Type = "Full",colorLI = "red", alphaLI = 0.2,
+           land = landmass, cropLand = PUs, ggtheme = splnr_theme,labelL = "Current MPAs"))
 ```
 
 ### Objective functions
 
-So far we have only used the minimum set objective function to meet all conservation targets whilst minimizing the cost. However, this is not the only objective function available in `prioritizr`. For example when maximising mangrove ecosystem services, we employed a minimum shortfall objective function instead [Dabalà et al 2022](https://www.researchgate.net/publication/363818810_Priority_areas_to_protect_mangroves_and_maximise_ecosystem_services). For this objective function, we allocate a budget that cannot be exceeded (for example area >30%) whilst still trying to minimise the cost and meeting the targets - but not all targets might be met (shortfall).
+So far we have only used the minimum set objective function to meet all conservation targets whilst minimizing the cost. However, this is not the only objective function available in `prioritizr`. For example when maximising mangrove ecosystem services, we employed a minimum shortfall objective function instead [(Dabalà et al 2022)](https://www.researchgate.net/publication/363818810_Priority_areas_to_protect_mangroves_and_maximise_ecosystem_services). For this objective function, we allocate a budget that cannot be exceeded (for example area >30%) whilst still trying to minimise the cost and meeting the targets - but not all targets might be met (shortfall).
 
 Zones also works with objective functions other than the minimum set objective function.
 
@@ -458,4 +458,26 @@ We can visualise the solution again:
 ```
 
 
-**NOTE:** We can also use multiple linear constraints in the same plan, however, this might require a normalization of the input data to have the constraints in comparable units, and a careful tuning of the threshold, so `prioritizr` is still able to solve the problem.  
+**NOTE:** We can also use multiple linear constraints in the same plan, however, this might require a normalization of the input data to have the constraints in comparable units, and a careful tuning of the thresholds, so `prioritizr` is still able to solve the problem.  
+
+### Next steps
+
+#### Short-term
+* Add linear constraints to individual zones
+* Test for run time of zones compared to a normal prioritisation
+* Communicate zones outcomes effectively (e.g. targets, cost overlay etc.)
+
+#### Longer-term
+* How to deal with overlapping zones (at the moment `prioritizr` allocates a PU to a single zone)
+* How to connect climate-smart workflow to zones
+* How to handle inputs that would benefit from using different objective functions (e.g. ecosystem services vs biodiversity features)
+* Look into some commonly used data sets for multiple use approaches and think about zone-specific costs, constraints, targets etc.
+* Define our (and Waitt's) understanding of what multiple-use is and how we want to implement it (can differ now and in the future)
+  + [EU Horizon 2020 MUSES-project](https://muses-project.com/): multiple use/multi-use is “the joint use of resources in close geographic proximity by either a single user or multiple users. It is an umbrella term that covers a multitude of use combinations in the marine realm and represents a radical change from the concept of exclusive resource rights to the inclusive sharing of resources and space by one or more users.”
+  + [Bonnevie et al. 2019](https://doi.org/10.1016/j.marpol.2019.103533): "multi-use is a specific co-location/coexistence where resources
+are being shared."
+  + [Schupp et al. 2019](https://doi.org/10.3389/fmars.2019.00165): distinguishes between for different types of multi-uses (one of which is co-location)
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, out.width='90%', fig.cap = "Types of multiple use in MSP according to [Schupp et al. 2019](https://doi.org/10.3389/fmars.2019.00165)"}
+knitr::include_graphics(file.path("Schupp2019TypesMultipleUse.png"))
+```
