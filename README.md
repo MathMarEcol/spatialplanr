@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# spatialplanr <a href='https://github.com/MathMarEcol/spatialplanr'><img src='man/figures/spatialplanr.png' style="float:right; height:200px;"></a>
+# spatialplanr <a href='https://github.com/MathMarEcol/spatialplanr'><img src='man/figures/logo.png' style="float:right; height:200px;"></a>
 
 <!-- badges: start -->
 
@@ -18,15 +18,13 @@ planktonr](https://img.shields.io/github/issues/MathMarEcol/spatialplanr)](https
 
 ## Overview
 
-This repository is specific to the work of the [Mathematical Marine
-Ecology Lab](https://mathmarecol.github.io) at the University of
-Queensland. It is not intended to be used by anyone outside the MME Lab
-without the permission of Professor Anthony Richardson.
-
-This code has been written to simplify the process for running a
-*prioritizr* analysis on a given region use the workflows and data of
-the MME Lab. It is still a work in progress so feel free to submit pull
-requests with new features and code improvements.
+This package is designed to assist students and staff in the
+[Mathematical Marine Ecology Lab](https://mathmarecol.github.io) at the
+University of Queensland. It may be useful for others as well. This code
+has been written to simplify the process for running a *prioritizr*
+analysis on a given region use the workflows and data of the MME Lab. It
+is still a work in progress so feel free to submit pull requests with
+new features and code improvements.
 
 ## Installation
 
