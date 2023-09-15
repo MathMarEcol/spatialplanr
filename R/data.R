@@ -135,7 +135,7 @@
 #'
 #' A tibble containing specific grouping of features
 #'
-#' @format `Category_vec`
+#' @format `category_df`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{feature}{all features available for spatial prioritisation}
@@ -143,7 +143,7 @@
 #'   ...
 #' }
 #' @source "Made up data"
-"Category_vec"
+"category_df"
 
 
 # -------------------------------------------------------------------------
@@ -153,7 +153,7 @@
 #'
 #' A tibble containing specific grouping of features
 #'
-#' @format `Category_vec2`
+#' @format `category_df2`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{feature}{all features available for spatial prioritisation}
@@ -161,7 +161,7 @@
 #'   ...
 #' }
 #' @source "Made up data"
-"Category_vec2"
+"category_df2"
 
 
 # -------------------------------------------------------------------------

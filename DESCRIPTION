@@ -1,6 +1,6 @@
 Package: spatialplanr
 Title: Help files for prioritzr Spatial Planning projects
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
     person(
       given = "Jason D.",
@@ -25,6 +25,7 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Suggests: 
+    klippy,
     knitr,
     patchwork,
     prioritizr,
@@ -38,6 +39,7 @@ VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
 Imports: 
+    checkmate,
     dplyr,
     forcats,
     fs,
@@ -58,4 +60,6 @@ Imports:
     tidyr,
     tidyselect,
     rlang
+Remotes: 
+    github::rlesur/klippy
 Config/testthat/edition: 3

@@ -180,7 +180,7 @@ splnr_plot_climKernelDensity_Fancy <- function(solution_list, names,
 #'   setNames(c("feature")) %>%
 #'   dplyr::mutate(target = 0.3)
 #'
-#' CPA <- splnr_climate_PriorityApproach(
+#' CPA <- splnr_climate_priorityApproach(
 #'   featuresDF = dat_species_bin,
 #'   metricDF = dat_clim,
 #'   targetsDF = target,

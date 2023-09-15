@@ -48,7 +48,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Prepare data to plot how well targets are met</h1>
       <small class="dont-index">Source: <a href="https://github.com/MathMarEcol/spatialplanr/blob/HEAD/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
-      <div class="d-none name"><code>splnr_prepTargetData.Rd</code></div>
+      <div class="d-none name"><code>splnr_get_featureRep.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
@@ -57,7 +57,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">splnr_prepTargetData</span><span class="op">(</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">splnr_get_featureRep</span><span class="op">(</span></span>
 <span>  <span class="va">soln</span>,</span>
 <span>  <span class="va">pDat</span>,</span>
 <span>  <span class="va">allDat</span>,</span>
@@ -124,22 +124,22 @@
 <span class="r-in"><span><span class="va">dat_soln</span> <span class="op">&lt;-</span> <span class="va">dat_problem</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">dfNInc</span> <span class="op">&lt;-</span> <span class="fu">splnr_prepTargetData</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">dfNInc</span> <span class="op">&lt;-</span> <span class="fu">splnr_get_featureRep</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  soln <span class="op">=</span> <span class="va">dat_soln</span>,</span></span>
 <span class="r-in"><span>  pDat <span class="op">=</span> <span class="va">dat_problem</span>,</span></span>
 <span class="r-in"><span>  allDat <span class="op">=</span> <span class="va">dat_species_bin</span>,</span></span>
 <span class="r-in"><span>  Dict <span class="op">=</span> <span class="cn">NA</span>,</span></span>
-<span class="r-in"><span>  Category <span class="op">=</span> <span class="va">Category_vec</span>,</span></span>
+<span class="r-in"><span>  Category <span class="op">=</span> <span class="va">category_df</span>,</span></span>
 <span class="r-in"><span>  solnCol <span class="op">=</span> <span class="st">"solution_1"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># including incidental species coverage</span></span></span>
-<span class="r-in"><span><span class="va">dfInc</span> <span class="op">&lt;-</span> <span class="fu">splnr_prepTargetData</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">dfInc</span> <span class="op">&lt;-</span> <span class="fu">splnr_get_featureRep</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  soln <span class="op">=</span> <span class="va">dat_soln</span>,</span></span>
 <span class="r-in"><span>  pDat <span class="op">=</span> <span class="va">dat_problem</span>,</span></span>
 <span class="r-in"><span>  allDat <span class="op">=</span> <span class="va">dat_species_bin2</span>,</span></span>
 <span class="r-in"><span>  Dict <span class="op">=</span> <span class="cn">NA</span>,</span></span>
-<span class="r-in"><span>  Category <span class="op">=</span> <span class="va">Category_vec2</span>,</span></span>
+<span class="r-in"><span>  Category <span class="op">=</span> <span class="va">category_df2</span>,</span></span>
 <span class="r-in"><span>  solnCol <span class="op">=</span> <span class="st">"solution_1"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 </code></pre></div>

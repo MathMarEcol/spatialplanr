@@ -144,13 +144,13 @@ splnr_climate_PriorityArea_splitFeature <- function(featuresDF,
 #'   percentile = 5, metricDF = metric_df, direction = 1
 #' )
 #'
-#' target <- splnr_climate_PriorityApproach_assignTargets (
+#' target <- splnr_climate_priorityApproach_assignTargets (
 #'   featuresDF = Features,
 #'   targetsDF = target,
 #'   climateSmartDF = out_sf,
 #'   refugiaTarget = 1
 #' )
-splnr_climate_PriorityApproach_assignTargets <- function(featuresDF,
+splnr_climate_priorityApproach_assignTargets <- function(featuresDF,
                                                targetsDF,
                                                climateSmartDF,
                                                refugiaTarget = 1) {
@@ -242,11 +242,11 @@ splnr_climate_PriorityApproach_assignTargets <- function(featuresDF,
 #' metric_df <- dat_clim
 #'
 #'
-#' CPA_Approach <- splnr_climate_PriorityApproach(featuresDF = dat_species_bin,
+#' CPA_Approach <- splnr_climate_priorityApproach(featuresDF = dat_species_bin,
 #'                     metricDF = metric_df, targetsDF = target, direction = 1)
 #' out_sf <- CPA_Approach$Features
 #' targets <- CPA_Approach$Targets
-splnr_climate_PriorityApproach <- function(featuresDF,
+splnr_climate_priorityApproach <- function(featuresDF,
                                     metricDF,
                                     targetsDF,
                                     direction,
@@ -257,7 +257,7 @@ splnr_climate_PriorityApproach <- function(featuresDF,
   CPAFeatures <- splnr_climate_PriorityArea_splitFeature(featuresDF = featuresDF, metricDF = metricDF,
                                                          direction = direction, percentile = percentile)
 
-  CPATargets <- splnr_climate_PriorityApproach_assignTargets(featuresDF = featuresDF, targetsDF = targetsDF,
+  CPATargets <- splnr_climate_priorityApproach_assignTargets(featuresDF = featuresDF, targetsDF = targetsDF,
                                                   CPAFeatures, refugiaTarget = refugiaTarget)
   return(list(Features = CPAFeatures, Targets = CPATargets))
 

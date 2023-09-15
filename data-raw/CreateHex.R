@@ -102,8 +102,12 @@ hexSticker::sticker(gg,
                     h_color = "#2e1707", #"grey40",
                     dpi = 1000,
                     asp = 1,
-                    filename = file.path("man", "figures", "spatialplanr.png")
+                    filename = file.path("man", "figures", "logo.png")
 )
+
+# Create favicons for the site
+pkgdown::build_favicons(pkg = ".", overwrite = FALSE)
+
 
 # Original
 
@@ -130,4 +134,4 @@ hexSticker::sticker(gg,
 #                     h_color = "grey20",
 #                     dpi = 1000,
 #                     asp = 1,
-#                     filename = file.path("man", "figures", "spatialplanr.png"))
+#                     filename = file.path("man", "figures", "logo.png"))

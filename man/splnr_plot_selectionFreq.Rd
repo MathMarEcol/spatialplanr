@@ -40,6 +40,6 @@ dat_soln_portfolio <- dat_problem \%>\%
   prioritizr::add_cuts_portfolio(number_solutions = 5) \%>\%
   prioritizr::solve.ConservationProblem()
 
-selFreq <- splnr_prep_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
+selFreq <- splnr_get_selFreq(solnMany = dat_soln_portfolio, type = "portfolio")
 (splnr_plot_selectionFreq(selFreq))
 }
