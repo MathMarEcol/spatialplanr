@@ -1,6 +1,6 @@
 Package: spatialplanr
 Title: Help files for prioritzr Spatial Planning projects
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
     person(
       given = "Jason D.",
@@ -38,6 +38,7 @@ VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
 Imports: 
+    checkmate,
     dplyr,
     forcats,
     fs,
