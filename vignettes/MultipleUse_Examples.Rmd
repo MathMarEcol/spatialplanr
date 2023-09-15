@@ -1,8 +1,8 @@
 ---
-title: "A Basic Spatial Planning With Zones Workflow"
+title: "Spatial Planning With Zones"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{A Basic Spatial Planning With Zones Workflow}
+  %\VignetteIndexEntry{Spatial Planning With Zones}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r klippy, eval=TRUE, echo=FALSE, include=TRUE}
-# klippy::klippy(position = c('top', 'right'))
+  klippy::klippy(position = c('top', 'right'))
 ```
 
 ```{r setup}
@@ -33,7 +33,7 @@ This code has been written to simplify the process for running a _prioritizr_ an
 The workflow shown here was based on the [`prioritizr` introduction to zones](https://prioritizr.net/articles/management_zones_tutorial.html).
 
 ## Set user parameters 
-You can set a region if it is defined in `splnr_get_PlanningUnits`. 
+You can set a region if it is defined in `splnr_get_planningUnits`. 
 ```{r}
 Region <- "Coral Sea" # "Australia"
 Type <- "Oceans" # "EEZ"
@@ -56,7 +56,7 @@ Start your analysis by defining your region and setting up the planning units.
 
 Get the boundary for your chosen region.
 ```{r}
-Bndry <- splnr_get_Boundary(Region, Type, cCRS)
+Bndry <- splnr_get_boundary(Region, Type, cCRS)
 
 landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
   sf::st_transform(cCRS)
@@ -64,10 +64,10 @@ landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>
 
 ## Create Planning Units 
 ```{r}
-PUs <- splnr_get_PlanningUnits(Bndry, landmass, PU_size, Shape)
+PUs <- splnr_get_planningUnits(Bndry, landmass, PU_size, Shape)
 ```
 
-We can also use a customised `ggplpot` theme that can be passed as a list to `gg_add()` and that can then be used for all plots. For example:
+We can also use a customised `ggplot` theme that can be passed as a list to `splnr_gg_add()` and that can then be used for all plots. For example:
 
 ```{r}
 splnr_theme <- list(ggplot2::theme_bw(),
@@ -142,8 +142,8 @@ We then solve the problem and plot the solution.
 s1 <- p1 %>%
   prioritizr::solve.ConservationProblem()
 
-(ggSoln <- splnr_plot_Solution(s1) +
-    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(ggSoln <- splnr_plot_solution(s1) +
+    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 We can also have a look at how well the set target was met.
@@ -193,11 +193,11 @@ s2 <- p2 %>%
 
 ```
 
-The solution can be plotted using the function `splnr_plot_SolutionZones()` that works identical the function `splnr_plot_Solution()` but for the output of a solution generated with zones.
+The solution can be plotted using the function `splnr_plot_solutionZones()` that works identical the function `splnr_plot_solution()` but for the output of a solution generated with zones.
 
 ```{r, fig.width = 9}
-(gg_s2 <- splnr_plot_SolutionZones(s2) +
-    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s2 <- splnr_plot_solutionZones(s2) +
+    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 We can see that we now how planning units that are not selected, and planning units that have either been selected for zone 1 or zone 2.
@@ -253,8 +253,8 @@ Dict[[1]][7]
 They are both marine mammals and thus had a target of 0% in zone 1 that was the reptile-specific zone. The percentage of selected suitable habitat is not 0% despite the target of 0 because a proportion of suitable habitat of mammals was selected incidentally when selecting planning units in this zone by meeting the targets for reptiles. The same applies for zone 2. We can also plot the final solution again: 
 
 ```{r, fig.width = 9}
-(gg_s2b <- splnr_plot_SolutionZones(s2b) +
-    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s2b <- splnr_plot_solutionZones(s2b) +
+    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 
 ```
 
@@ -291,8 +291,8 @@ s3 <- p3 %>%
 With `add_boundary_penalties()` we set a penalty of 0.5 between the zones we defined in `zm1`. For the purpose of this example, we also set a 10 second time limit for the prioritisation. The results show less fragmentation than in the previous solution without penalties:
 
 ```{r, fig.width=9}
-(gg_s3 <- splnr_plot_SolutionZones(s3) +
-    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s3 <- splnr_plot_solutionZones(s3) +
+    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 
 ```
 
@@ -315,8 +315,8 @@ p4 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397
 s4 <- p4 %>%
   prioritizr::solve.ConservationProblem()
 
-(gg_s4 <- splnr_plot_SolutionZones(s4) +
-    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s4 <- splnr_plot_solutionZones(s4) +
+    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
  
 #### Across zones
@@ -342,8 +342,8 @@ p5 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397
 s5 <- p5 %>%
   prioritizr::solve.ConservationProblem()
 
-(gg_s5 <- splnr_plot_SolutionZones(s5) +
-    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s5 <- splnr_plot_solutionZones(s5) +
+    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 
 ```
 
@@ -383,8 +383,8 @@ s6 <- p6 %>%
 The results can the be visualized again:
 
 ```{r, fig.width = 9}
-(gg_s6 <- splnr_plot_SolutionZones(s6) +
-    gg_add(PUs = PUs, Bndry = Bndry,
+(gg_s6 <- splnr_plot_solutionZones(s6) +
+    splnr_gg_add(PUs = PUs, Bndry = Bndry,
            lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, Type = "Full",colorLI = "red", alphaLI = 0.2,
            land = landmass, cropLand = PUs, ggtheme = splnr_theme,labelL = "Current MPAs"))
 ```
@@ -412,8 +412,8 @@ Here we apply `add_min_shortfall_objective()` and provide to separate budgets fo
 s7 <- p7 %>%
   prioritizr::solve.ConservationProblem()
 
-(gg_s7 <- splnr_plot_SolutionZones(s7) +
-    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s7 <- splnr_plot_solutionZones(s7) +
+    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 
 ```
 
@@ -453,8 +453,8 @@ Based on the problem definition, we want to meet the targets for our biodiversit
 We can visualise the solution again:
 
 ```{r, fig.width = 9}
-(gg_s8 <- splnr_plot_Solution(s8) +
-    gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s8 <- splnr_plot_solution(s8) +
+    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 

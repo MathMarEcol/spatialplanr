@@ -38,12 +38,12 @@
 #' splnr_plot_solution(dat_soln) +
 #'   splnr_gg_add(PUs = dat_PUs, ggtheme = TRUE)
 splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
-                   Bndry = NA, colorBndry = "black",
-                   land = NA, colorLand = "grey20",
-                   contours = NA, cropLand = NA, colorsConts = "black",
-                   lockedInAreas = NA, Type = "Full", colInterest = NA,
-                   alphaLI = 0.5, colorLI =  "black", legendL = "", labelL = "MPAs",
-                   ggtheme = "Default" #splnr_theme
+                         Bndry = NA, colorBndry = "black",
+                         land = NA, colorLand = "grey20",
+                         contours = NA, cropLand = NA, colorsConts = "black",
+                         lockedInAreas = NA, Type = "Full", colInterest = NA,
+                         alphaLI = 0.5, colorLI =  "black", legendL = "", labelL = "MPAs",
+                         ggtheme = "Default" #splnr_theme
 ) {
   ggList <- list()
 
@@ -63,83 +63,83 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
     ggList <- c(ggList,
                 ggplot2::geom_sf(data = land, colour = colorLand, fill = colorLand, alpha = 0.9, size = 0.1, show.legend = FALSE))
 
-  if (inherits(contours,"sf")) { #needs a geometry col and one names Category that has the wanted contours and their names
-    namesConts <- unique(contours$Category)
-    contoursRowNum <- length(namesConts)
-    vals <- 1:contoursRowNum
-    if (length(vals) > 6) {
-      cat("Only 6 categories allowed for plotting contours.")
-    } else {
-      ggList <- c(ggList,
-                  list(ggnewscale::new_scale_colour(),
-                       ggplot2::geom_sf(data = contours, colour = colorsConts, fill = NA, ggplot2::aes(linetype = .data$Category), size = 0.5, show.legend = "line"),
-                       ggplot2::scale_linetype_manual(" ",
-                                                      breaks = namesConts,
-                                                      values = vals,
-                                                      guide = ggplot2::guide_legend(
-                                                        override.aes = list(fill = NA),
-                                                        nrow = 2,
-                                                        direction = "horizontal",
-                                                        order = 3,
-                                                        keywidth = grid::unit(0.05, "npc")))))
+    if (inherits(contours,"sf")) { #needs a geometry col and one names Category that has the wanted contours and their names
+      namesConts <- unique(contours$Category)
+      contoursRowNum <- length(namesConts)
+      vals <- 1:contoursRowNum
+      if (length(vals) > 6) {
+        cat("Only 6 categories allowed for plotting contours.")
+      } else {
+        ggList <- c(ggList,
+                    list(ggnewscale::new_scale_colour(),
+                         ggplot2::geom_sf(data = contours, colour = colorsConts, fill = NA, ggplot2::aes(linetype = .data$Category), size = 0.5, show.legend = "line"),
+                         ggplot2::scale_linetype_manual(" ",
+                                                        breaks = namesConts,
+                                                        values = vals,
+                                                        guide = ggplot2::guide_legend(
+                                                          override.aes = list(fill = NA),
+                                                          nrow = 2,
+                                                          direction = "horizontal",
+                                                          order = 3,
+                                                          keywidth = grid::unit(0.05, "npc")))))
+      }
+
     }
 
-  }
+    if (inherits(lockedInAreas, "sf")) {
 
-  if (inherits(lockedInAreas, "sf")) {
+      lockedInAreas <-  lockedInAreas %>%
+        dplyr::mutate(lockedIn = as.logical(colInterest)) %>%
+        dplyr::filter(.data$lockedIn == 1)
 
-    lockedInAreas <-  lockedInAreas %>%
-      dplyr::mutate(lockedIn = as.logical(colInterest)) %>%
-      dplyr::filter(.data$lockedIn == 1)
-
-    if (Type == "Full") {
-      ggList <- c(ggList,
-                  list(
-                    ggnewscale::new_scale_fill(),
-                    ggnewscale::new_scale_colour(),
-                    ggplot2::geom_sf(data = lockedInAreas, ggplot2::aes(fill = .data$lockedIn), alpha = alphaLI),
-                    ggplot2::scale_fill_manual(
-                      name = legendL,
-                      values = c("TRUE" = colorLI),
-                      labels = labelL,
-                      aesthetics =  c("colour", "fill"),
-                      guide = ggplot2::guide_legend(
-                        override.aes = list(linetype = 0),
-                        nrow = 2,
-                        order = 1,
-                        direction = "horizontal",
-                        title.position = "top",
-                        title.hjust = 0.5
+      if (Type == "Full") {
+        ggList <- c(ggList,
+                    list(
+                      ggnewscale::new_scale_fill(),
+                      ggnewscale::new_scale_colour(),
+                      ggplot2::geom_sf(data = lockedInAreas, ggplot2::aes(fill = .data$lockedIn), alpha = alphaLI),
+                      ggplot2::scale_fill_manual(
+                        name = legendL,
+                        values = c("TRUE" = colorLI),
+                        labels = labelL,
+                        aesthetics =  c("colour", "fill"),
+                        guide = ggplot2::guide_legend(
+                          override.aes = list(linetype = 0),
+                          nrow = 2,
+                          order = 1,
+                          direction = "horizontal",
+                          title.position = "top",
+                          title.hjust = 0.5
+                        )
                       )
-                    )
-                  ))
-    } else if (Type == "Contours") {
+                    ))
+      } else if (Type == "Contours") {
 
-      lockedInAreas <- lockedInAreas %>%
-        sf::st_union() %>%
-        sf::st_as_sf() %>%
-        dplyr::rename(geometry = .data$x) %>%
-        dplyr::mutate(lockedIn = 1) %>%
-        dplyr::mutate(lockedIn = as.factor(.data$lockedIn))
+        lockedInAreas <- lockedInAreas %>%
+          sf::st_union() %>%
+          sf::st_as_sf() %>%
+          dplyr::rename(geometry = .data$x) %>%
+          dplyr::mutate(lockedIn = 1) %>%
+          dplyr::mutate(lockedIn = as.factor(.data$lockedIn))
 
-      ggList <- c(ggList,
-                  list(
-                    ggnewscale::new_scale_fill(),
-                    ggnewscale::new_scale_colour(),
-                    ggplot2::geom_sf(data = lockedInAreas, colour = colorLI, fill = NA, ggplot2::aes(linetype = .data$lockedIn), size = 0.5, show.legend = "line"),
-                    ggplot2::scale_linetype_manual("",
-                                                   values = 1,
-                                                   labels = labelL,
-                                                   guide = ggplot2::guide_legend(
-                                                     override.aes = list(fill = NA),
-                                                     #nrow = 2,
-                                                     direction = "horizontal",
-                                                     #order = 3,
-                                                     keywidth = grid::unit(0.05, "npc"))
-                    )
-                  ))
+        ggList <- c(ggList,
+                    list(
+                      ggnewscale::new_scale_fill(),
+                      ggnewscale::new_scale_colour(),
+                      ggplot2::geom_sf(data = lockedInAreas, colour = colorLI, fill = NA, ggplot2::aes(linetype = .data$lockedIn), size = 0.5, show.legend = "line"),
+                      ggplot2::scale_linetype_manual("",
+                                                     values = 1,
+                                                     labels = labelL,
+                                                     guide = ggplot2::guide_legend(
+                                                       override.aes = list(fill = NA),
+                                                       #nrow = 2,
+                                                       direction = "horizontal",
+                                                       #order = 3,
+                                                       keywidth = grid::unit(0.05, "npc"))
+                      )
+                    ))
+      }
     }
-  }
 
     if (inherits(cropLand, "sf")) {
       ggList <- c(ggList,
@@ -192,7 +192,7 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
 #'
 #' splnr_plot_solution(dat_soln)
 splnr_plot_solution <- function(soln, colorVals = c("TRUE" = "#3182bd", "FALSE" = "#c6dbef"),
-                                 showLegend = TRUE, plotTitle = "Solution", legendTitle = "Planning Units") {
+                                showLegend = TRUE, plotTitle = "Solution", legendTitle = "Planning Units") {
   soln <- soln %>%
     dplyr::select(.data$solution_1) %>%
     dplyr::mutate(solution_1 = as.logical(.data$solution_1)) # Making it logical helps with the plotting
@@ -316,7 +316,7 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", legendTitle = "Cost",
       palette = paletteName,
       aesthetics = c("colour", "fill"),
       limits = c(0,
-        as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))
+                 as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))
       ),
       oob = scales::squish
     ) +
@@ -475,9 +475,9 @@ splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compar
   soln <- soln1 %>%
     dplyr::select("solution_1") %>%
     dplyr::bind_cols(soln2 %>%
-      dplyr::as_tibble() %>%
-      dplyr::select(.data$solution_1) %>%
-      dplyr::rename(solution_2 = .data$solution_1)) %>%
+                       dplyr::as_tibble() %>%
+                       dplyr::select(.data$solution_1) %>%
+                       dplyr::rename(solution_2 = .data$solution_1)) %>%
     dplyr::mutate(Combined = .data$solution_1 + .data$solution_2) %>%
     dplyr::mutate(
       Compare = dplyr::case_when(
@@ -491,11 +491,11 @@ splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compar
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$Compare), colour = NA, size = 0.0001) +
-      ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
-      ggplot2::scale_fill_manual(
-        name = legendTitle,
-        values = c("Added (+)" = "Red", "Same" = "ivory3", "Removed (-)" = "Blue"), drop = FALSE
-      )
+    ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
+    ggplot2::scale_fill_manual(
+      name = legendTitle,
+      values = c("Added (+)" = "Red", "Same" = "ivory3", "Removed (-)" = "Blue"), drop = FALSE
+    )
 }
 
 
@@ -669,7 +669,7 @@ splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
       direction = -1, breaks = seq95fs, labels = lab,
       guide = ggplot2::guide_colourbar(
         title = legendTitle,
-       # title.position = "right",
+        # title.position = "right",
         #barwidth = 2, barheight = 10
       )
     ) + # , oob=squish)
@@ -736,8 +736,8 @@ splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#447
   }
 
   gg_cor <- ggcorrplot::ggcorrplot(x,
-    outline.color = "black",
-    lab = TRUE
+                                   outline.color = "black",
+                                   lab = TRUE
   ) +
     ggplot2::scale_fill_gradient2(
       low = colourGradient[3],
@@ -793,8 +793,8 @@ splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#447
 #'
 #' z2 <- prioritizr::zones("zone 1" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
 #' "zone 2" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"))
-#'
-#' p2 <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost1 = runif(n = dim(.)[[1]]), #when giving sf input, we need as many cost columns as we have zones
+#' # when giving sf input, we need as many cost columns as we have zones
+#' p2 <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost1 = runif(n = dim(.)[[1]]),
 #'                                                             Cost2 = runif(n = dim(.)[[1]])),
 #'                           z2,
 #'                          cost_column = c("Cost1", "Cost2"))%>%
@@ -806,8 +806,8 @@ splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#447
 #' s2 <- p2 %>%
 #'  prioritizr::solve.ConservationProblem()
 #'
-#' (splnr_plot_SolutionZones(s2))
-splnr_plot_SolutionZones <- function(soln, colorVals = c("#c6dbef", "#3182bd","black"),
+#' (splnr_plot_solutionZones(s2))
+splnr_plot_solutionZones <- function(soln, colorVals = c("#c6dbef", "#3182bd","black"),
                                      legendLabels = c("Not selected", "Zone 1", "Zone 2"),
                                      showLegend = TRUE, plotTitle = "Solution", legendTitle = "Planning Units") {
   oldName <- soln %>%
@@ -854,4 +854,5 @@ splnr_plot_SolutionZones <- function(soln, colorVals = c("#c6dbef", "#3182bd","b
       )
     ) +
     ggplot2::labs(subtitle = plotTitle)
+
 }
