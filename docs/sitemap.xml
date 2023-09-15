@@ -13,6 +13,9 @@
     <loc>https://mathmarecol.github.io/spatialplanr/articles/Climate-smart_Workflow.html</loc>
   </url>
   <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/articles/MultipleUse_Examples.html</loc>
+  </url>
+  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/articles/index.html</loc>
   </url>
   <url>
@@ -194,6 +197,9 @@
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_selectionFreq.html</loc>
+  </url>
+  <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_solutionZones.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_targets.html</loc>

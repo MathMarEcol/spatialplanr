@@ -1,8 +1,8 @@
 ---
-title: "Climate-Smart Spatial Planning Workflow"
+title: "Climate-Smart Spatial Planning"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Climate-Smart Spatial Planning Workflow}
+  %\VignetteIndexEntry{Climate-Smart Spatial Planning}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
