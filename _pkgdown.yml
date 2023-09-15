@@ -8,15 +8,15 @@ development:
   version_tooltip: "The package is in the early stages of development. Use with caution."
 reference:
 
-- title: Load Data
+- title: Organise Data
   desc:  Functions to get data organised
 - contents:
   - starts_with("splnr_get_")
 
-- title: Match data
-  desc: Retrieve data from external sources
+- title: Assign Targets
+  desc:  Functions to assign targets by various methods
 - contents:
-  - starts_with("splnr_match_")
+  - starts_with("splnr_targets_")
 
 - title: Climate-smart
   desc: Functions to create climate-smart prioritisations
@@ -27,7 +27,7 @@ reference:
   desc: Functions for plotting.
 - contents:
   - starts_with("splnr_plot_")
-  - gg_add
+  - splnr_gg_add
 
 - title: Utilities
   desc: Helper functions.
@@ -39,11 +39,14 @@ reference:
   - starts_with("splnr_replace_NAs")
   - starts_with("splnr_scale_01")
   - starts_with("splnr_prep")
+  - starts_with("splnr_assign")
+  - starts_with("splnr_featureNames")
+  - starts_with("splnr_match_")
 
 - title: Built in datasets
   contents:
-  - Category_vec
-  - Category_vec2
+  - category_df
+  - category_df2
   - dat_bndry
   - dat_clim
   - dat_mpas
