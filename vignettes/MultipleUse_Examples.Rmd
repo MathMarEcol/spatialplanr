@@ -460,6 +460,143 @@ We can visualise the solution again:
 
 **NOTE:** We can also use multiple linear constraints in the same plan, however, this might require a normalization of the input data to have the constraints in comparable units, and a careful tuning of the thresholds, so `prioritizr` is still able to solve the problem.  
 
+### Common targets across zones
+
+Sometimes it might be required to meet a (common) conservation target across multiple zones, so several zones contribute to reaching the target. For this, we need to define a target across zones (here: 30% of all features across zones):
+
+```{r}
+targetAcross <- dplyr::tibble(
+  feature = col_name,
+  zone = list(c("zone1", "zone2"))[rep(1, length(col_name))],
+  target = rep(0.3, length(col_name)),
+  type = rep("relative", length(col_name))
+)
+```
+
+We then need to bring our data in a specific format that requires us to have an individual column for a feature in a specific zone, so if we have `spp1` and two zones (`zone1` an `zone2`), then we have to have two separate columns of the input data: `spp1_zone1` and `spp1_zone2`. The species names and zone names have to be exactly those specified in the `zones()` object and have to separated by a `_`.
+
+```{r}
+datSpecZone1 <- datEx_species_bin %>%
+  sf::st_drop_geometry() %>%
+  dplyr::rename_at(dplyr::vars(-cellID), ~ paste0(.x, "_zone1"))
+
+featuresZone1 <- datSpecZone1 %>%
+  dplyr::select(-"cellID") %>%
+  colnames()
+
+datSpecZone2 <- datEx_species_bin %>%
+  sf::st_drop_geometry() %>%
+  dplyr::rename_at(dplyr::vars(-cellID), ~ paste0(.x, "_zone2"))
+
+featuresZone2 <- datSpecZone2 %>%
+  dplyr::select(-"cellID") %>%
+  colnames()
+```
+
+We also extract the new feature names and then create the `zones` object, before joining the two newly created data frames to an file that will be used in the prioriztisation.
+
+```{r}
+z10 <- prioritizr::zones(
+  featuresZone1,
+  featuresZone2,
+  zone_names = c("zone1", "zone2"),
+  feature_names = col_name
+)
+
+out_sf <- datSpecZone1 %>%
+  dplyr::left_join(datSpecZone2, by = "cellID") %>%
+  dplyr::mutate(geometry = datEx_species_bin$geometry) %>%
+  sf::st_as_sf() %>%
+  dplyr::mutate(Cost1 = runif(n = dim(.)[[1]]) * 100, #when giving sf input, we need as many cost columns as we have zones
+                Cost2 = runif(n = dim(.)[[1]])*300)
+
+```
+
+We can see here that we defined to (random) cost layers with the cost layer for `zone2` being three times as costly as for `zone1`. 
+
+```{r}
+p10 <- prioritizr::problem(out_sf,
+                          z10,
+                          cost_column = c("Cost1", "Cost2"))%>%
+  prioritizr::add_min_set_objective() %>%
+  prioritizr::add_manual_targets(targetAcross) %>%
+  prioritizr::add_binary_decisions() %>%
+  prioritizr::add_default_solver(verbose = FALSE)
+
+s10 <- p10 %>%
+  prioritizr::solve.ConservationProblem()
+```
+
+After setting up and solving the conservation problem, we can have a look at the resulting solution and how well the targets are met. 
+
+```{r}
+s10F <- s10 %>%
+  dplyr::select(tidyselect::starts_with(c("solution"))) %>%
+  sf::st_drop_geometry() %>%
+  tibble::as_tibble()
+
+r10 <- prioritizr::eval_feature_representation_summary(p10, s10F)
+print(r10)
+```
+
+The overall summary shows that every feature's suitable habitat was represented by at least 30% which was the combined target we had set. However, we can see that features from `zone1` were a lot more frequently selected than `zone2` because `zone2` is three times as costly.
+
+```{r, fig.width=9}
+(gg_s10 <- splnr_plot_solutionZones(s10) +
+    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+```
+
+The plot also reflects the observation above that PUs were more frequently selected in `zone1`. What if we wanted to constrain this, so that `zone1` is less often selected and `zone2` more often?
+
+### Targets across zones with linear constraints
+
+We can include linear constraints for `zone1` above, so that its area does not exceed 30% of the whole area. For this we need to create a matrix that contains the data for the constraint that we want to include. Although we only want to put the linear constraint on `zone1`, `prioritizr` still requires the matrix to have as many columns as there are zones. Thus, we set the area cost to `1` for 
+`zone1` where we want to have the constraint and to all `0` in `zone2` where we do not want to introduce a linear constraint. 
+
+```{r}
+CostArea <- out_sf %>%
+  dplyr::mutate(areaCostZone1 = rep(1,397),
+                areaCostZone2= rep(0,397)) %>%
+  sf::st_drop_geometry() %>%
+  dplyr::select("areaCostZone1", "areaCostZone2") %>%
+  as.matrix()
+```
+
+We then define the conservation problem and add a linear constraint for 30% of the area.
+
+```{r}
+p11 <- prioritizr::problem(out_sf,
+                           z10,
+                           cost_column = c("Cost1", "Cost2"))%>%
+  prioritizr::add_min_set_objective() %>%
+  prioritizr::add_linear_constraints(sum(CostArea[,1])*0.3, sense = "<=", CostArea) %>%
+  prioritizr::add_manual_targets(targetAcross) %>%
+  prioritizr::add_binary_decisions() %>%
+  prioritizr::add_default_solver(verbose = FALSE)
+
+s11 <- p11 %>%
+  prioritizr::solve.ConservationProblem()
+```
+
+```{r}
+s11F <- s11 %>%
+  dplyr::select(tidyselect::starts_with(c("solution"))) %>%
+  sf::st_drop_geometry() %>%
+  tibble::as_tibble()
+
+r11 <- prioritizr::eval_feature_representation_summary(p11, s11F)
+print(r11)
+```
+
+The selected planning units are now more equally distributed across zones, which is also observable in the plot:
+
+```{r, fig.width=9}
+(gg_s11 <- splnr_plot_solutionZones(s11) +
+    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+```
+
+However, we also expect the cost for the spatial plan to be higher than the previous one.
+
 ### Next steps
 
 #### Short-term

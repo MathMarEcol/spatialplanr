@@ -816,7 +816,7 @@ splnr_plot_solutionZones <- function(soln, colorVals = c("#c6dbef", "#3182bd","b
     tibble::as_tibble() %>%
     names()
 
-  newName<- gsub('1_zone.','',oldName) #to make data a bit nicer to work with
+  newName<- gsub('1_zone','',oldName) #to make data a bit nicer to work with; BUT: requires zone names to start with "zone"
 
   solnNewNames <- soln %>%
     dplyr::rename_at(dplyr::vars(tidyselect::all_of(oldName)), ~newName) %>%
