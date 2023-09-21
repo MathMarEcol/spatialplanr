@@ -597,10 +597,109 @@ The selected planning units are now more equally distributed across zones, which
 
 However, we also expect the cost for the spatial plan to be higher than the previous one.
 
+### Targets across some (but not all) zones
+
+For this example, we want an target of 30% of all suitable reptile habitat for zone 1 and zone 2. Additionally, we set a target of 20% in zone 2 for marine mammals and a target of 5% for sharks and rays in zone 3.
+
+```{r}
+targetAcrossSome <- Dict %>%
+  dplyr::mutate(target = dplyr::case_when(Category == "Reptiles"~ 30/100,
+                                          Category == "Mammals"~ 10/100,
+                                          Category == "Sharks and rays"~ 5/100,
+                                          TRUE ~ 0),
+                zone = dplyr::case_when(Category == "Reptiles"~ list(c("zone1", "zone2")),
+                                          Category == "Mammals"~ list("zone2"),
+                                          Category == "Sharks and rays"~ list("zone3"),
+                                          TRUE ~ list(c("zone1", "zone2", "zone3"))),
+                type = rep("relative", length(col_name))) %>%
+  dplyr::rename(feature = "Scientific") %>%
+  dplyr::select(-"Category", -"Class", -"Common")
+```
+
+We then create a zones object for three different zones:
+
+```{r}
+datSpecZone1 <- datEx_species_bin %>%
+  sf::st_drop_geometry() %>%
+  dplyr::rename_at(dplyr::vars(-cellID), ~ paste0(.x, "_zone1"))
+
+featuresZone1 <- datSpecZone1 %>%
+  dplyr::select(-"cellID") %>%
+  colnames()
+
+datSpecZone2 <- datEx_species_bin %>%
+  sf::st_drop_geometry() %>%
+  dplyr::rename_at(dplyr::vars(-cellID), ~ paste0(.x, "_zone2"))
+
+featuresZone2 <- datSpecZone2 %>%
+  dplyr::select(-"cellID") %>%
+  colnames()
+
+datSpecZone3 <- datEx_species_bin %>%
+  sf::st_drop_geometry() %>%
+  dplyr::rename_at(dplyr::vars(-cellID), ~ paste0(.x, "_zone3"))
+
+featuresZone3 <- datSpecZone3 %>%
+  dplyr::select(-"cellID") %>%
+  colnames()
+
+z12 <- prioritizr::zones(
+  featuresZone1,
+  featuresZone2,
+  featuresZone3,
+  zone_names = c("zone1", "zone2", "zone3"),
+  feature_names = col_name
+)
+```
+
+We then create a joint `sf` object of all zones and their respective costs.
+
+```{r}
+out_sf <- datSpecZone1 %>%
+  dplyr::left_join(datSpecZone2, by = "cellID") %>%
+  dplyr::left_join(datSpecZone3, by = "cellID") %>%
+  dplyr::mutate(geometry = datEx_species_bin$geometry) %>%
+  sf::st_as_sf() %>%
+  dplyr::mutate(Cost1 = runif(n = dim(.)[[1]]) * 100, #when giving sf input, we need as many cost columns as we have zones
+                Cost2 = runif(n = dim(.)[[1]])*300,
+                Cost3 = runif(n = dim(.)[[1]])*200)
+```
+
+```{r}
+p12 <- prioritizr::problem(out_sf,
+                           z12,
+                           cost_column = c("Cost1", "Cost2", "Cost3"))%>%
+  prioritizr::add_min_set_objective() %>%
+  prioritizr::add_manual_targets(targetAcrossSome) %>%
+  prioritizr::add_binary_decisions() %>%
+  prioritizr::add_default_solver(verbose = FALSE)
+
+s12 <- p12 %>%
+  prioritizr::solve.ConservationProblem()
+```
+
+```{r}
+s12F <- s12 %>%
+  dplyr::select(tidyselect::starts_with(c("solution"))) %>%
+  sf::st_drop_geometry() %>%
+  tibble::as_tibble()
+
+r12 <- prioritizr::eval_feature_representation_summary(p12, s12F)
+print(r12)
+```
+
+```{r}
+(gg_s12 <- splnr_plot_solutionZones(s12, 
+                                    colorVals = c("#c6dbef", "#3182bd", "navyblue","black"),
+                                    legendLabels = c("Not selected", "Zone 1", "Zone 2", "Zone3")) +
+    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+
+```
+
+
 ### Next steps
 
 #### Short-term
-* Add linear constraints to individual zones
 * Test for run time of zones compared to a normal prioritisation
 * Communicate zones outcomes effectively (e.g. targets, cost overlay etc.)
 

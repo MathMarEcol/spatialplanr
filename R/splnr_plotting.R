@@ -826,7 +826,7 @@ splnr_plot_solutionZones <- function(soln, colorVals = c("#c6dbef", "#3182bd","b
     solnNewNames <- solnNewNames %>%
       dplyr::mutate(
         !!rlang::sym(newName[i]) := dplyr::case_when(
-          !!rlang::sym(newName[i]) == 1 ~ 2,
+          !!rlang::sym(newName[i]) == 1 ~ i,
           !!rlang::sym(newName[i]) == 0 ~ 0
         ))
   }
