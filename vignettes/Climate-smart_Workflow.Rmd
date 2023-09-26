@@ -158,7 +158,7 @@ target <- datEx_species_bin %>%
   dplyr::mutate(target = 0.3)
 
 
-CPA_Approach <- splnr_climate_priorityApproach(featuresDF = datEx_species_bin,
+CPA_Approach <- splnr_climatesmart_climatePriorityAreaApproach(featuresDF = datEx_species_bin,
                     metricDF = metric_df, targetsDF = target, direction = -1, refugiaTarget = 1)
 
 out_sf <- CPA_Approach$Features %>% 
