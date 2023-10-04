@@ -13,7 +13,7 @@ splnr_arrangeFeatures(df)
 A sorted sf object with the additionl cellID column
 }
 \description{
-Ensure all features are in the same order.
+\code{splnr_arrangeFeatures()} sorts your data based on longitude and latitude values.
 }
 \examples{
 df <- dat_species_prob \%>\%

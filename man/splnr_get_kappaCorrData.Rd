@@ -15,7 +15,11 @@ splnr_get_kappaCorrData(sol, name_sol)
 \code{matrixOut} matrix
 }
 \description{
-Prepare data to plot Cohen's Kappa correlation matrix
+Conservation planning often requires the comparison of the outputs of the solutions of diferent conservation problems.
+One way to compare solutions is by correlating the solutions using Cohen's Kappa.
+\code{splnr_get_kappaCorrData()} takes a list of \code{prioritizr} solutions to perform the Cohen's Kapp correlation between the solution.
+The resulting correlation matrix is symmetrical along the main diagonal and contains Cohen's Kappa of pairwise correlation between the solutions.
+The main diagonal should always be 1. The correlation matrix obtained from this function can be passed onto \code{splnr_plot_corrMat()}.
 }
 \examples{
 # 30 \% target for problem/solution 1

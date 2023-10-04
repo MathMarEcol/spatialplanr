@@ -4,6 +4,8 @@ utils::globalVariables("where")
 
 #' Function for creating polygon
 #'
+#' `splnr_create_polygon()` allows you to create a polygon based on longitude and latitude coordinates in your input data.
+#'
 #' @param x A named vector of lon/lat coordinates from which to make an `sf` polygon
 #' @param cCRS The CRS to use for the polygon
 #'
@@ -27,6 +29,9 @@ splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
 
 
 #' Remove NAs from spatial data using nearest neighbour
+#'
+#' `splnr_replace_NAs()` allows you to replace NA values in your data with the value of the nearest neighbor.
+#' The nearest neighbor is determined using `st_nearest_feature()` from the `sf` package.
 #'
 #' @param df An `sf` dataframe
 #' @param vari Variable to remove NAs from
@@ -90,6 +95,8 @@ splnr_match_names <- function(dat, nam) {
 
 #' Scale spatial layers to between 0 and 1
 #'
+#' `splnr_scale_01()` allows you to re-scale your data from values that are greater than 1 to values that are between 0 and 1.
+#'
 #' @param dat `sf` dataframe
 #' @param col_name Name of the column to scale
 #'
@@ -123,6 +130,9 @@ splnr_scale_01 <- function(dat, col_name) {
 
 
 #' Returns the feature names
+#'
+#' `splnr_featureNames()` allows you to extract the names of features you want to pass to a `prioritizr` prioritization.
+#' It requires an `sf` object input and returns the column names of the object excluding any columns you specify in the `exclude` argument.
 #'
 #' @param dat sf dataframe of features
 #' @param exclude Character vector of any columes to exclude
@@ -244,6 +254,8 @@ splnr_convert_toPacific <- function(df,
 
 #' Ensure all features are in the same order.
 #'
+#' `splnr_arrangeFeatures()` sorts your data based on longitude and latitude values.
+#'
 #' @param df An sf object to sort by Lon and Lat
 #'
 #' @return A sorted sf object with the additionl cellID column
@@ -265,6 +277,12 @@ splnr_arrangeFeatures <- function(df) {
 
 
 #' Prepare data to plot Cohen's Kappa correlation matrix
+#'
+#' Conservation planning often requires the comparison of the outputs of the solutions of diferent conservation problems.
+#' One way to compare solutions is by correlating the solutions using Cohen's Kappa.
+#' `splnr_get_kappaCorrData()` takes a list of `prioritizr` solutions to perform the Cohen's Kapp correlation between the solution.
+#' The resulting correlation matrix is symmetrical along the main diagonal and contains Cohen's Kappa of pairwise correlation between the solutions.
+#'  The main diagonal should always be 1. The correlation matrix obtained from this function can be passed onto `splnr_plot_corrMat()`.
 #'
 #' @param sol List of `prioritizr` solutions (`sf` objects) with solutions having a column name `solution_1`
 #' @param name_sol Name tags to the different solutions
@@ -345,8 +363,10 @@ splnr_get_kappaCorrData <- function(sol, name_sol) {
 
 #' Prepare data to plot Selection Frequency of planning units
 #'
+#'
+#'
 #' @param solnMany List or portfolio of `prioritizr` solutions
-#' @param type Either "portfolio" (`sf` object) with a portfolop produced using `prioritizr` or "list" with a list of solutions
+#' @param type Either "portfolio" (`sf` object) with a portfolio produced using `prioritizr` or "list" with a list of solutions
 #'
 #' @return `selFreq` `sf` object containing a column with the selection frequency (sum over all solutions).
 #' @export
