@@ -9,7 +9,7 @@ splnr_get_selFreq(solnMany, type = "portfolio")
 \arguments{
 \item{solnMany}{List or portfolio of \code{prioritizr} solutions}
 
-\item{type}{Either "portfolio" (\code{sf} object) with a portfolop produced using \code{prioritizr} or "list" with a list of solutions}
+\item{type}{Either "portfolio" (\code{sf} object) with a portfolio produced using \code{prioritizr} or "list" with a list of solutions}
 }
 \value{
 \code{selFreq} \code{sf} object containing a column with the selection frequency (sum over all solutions).
