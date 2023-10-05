@@ -169,6 +169,8 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
 
 #' Plot prioritizr solution
 #'
+#' `splnr_plot_solution()` allows to plot the solution of a `prioritizr` conservation problem in a customisable way using `ggplot2`. This function requires a solution as an `sf` object with a column called `solution_1` and outputs a `ggobject`. It can be combined with the `spatialplanr` function [gg_add()].
+#'
 #' @param soln The `prioritizr` solution
 #' @param colorVals A `list` object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.
 #' @param showLegend A logical command on whether to show the legend of the solution (Default: TRUE).
@@ -220,6 +222,8 @@ splnr_plot_solution <- function(soln, colorVals = c("TRUE" = "#3182bd", "FALSE" 
 
 #' Plot Planning Units
 #'
+#' `splnr_plot_PUs()` allows to plot the planning units of a planning region (for example created with the `spatialplanr`function [splnr_get_planningUnits()]) in a customisable way using `ggplot2`. This function requires an `sf` object containing the geographic information of PUs in the planning region and outputs a `ggobject`. It can be combined with the `spatialplanr` function [gg_add()].
+#'
 #' @param PlanUnits Planning Units as an `sf` object
 #'
 #' @return A ggplot object of the plot
@@ -236,6 +240,8 @@ splnr_plot_PUs <- function(PlanUnits) {
 
 
 #' Plot MPAs
+#'
+#' `splnr_plot_MPAs()` allows to plot either the outline or the area of MPAs existing in the planning region (for example extracted with the `spatialplanr`function [splnr_get_MPAs()]) in a customisable way using `ggplot2`. This function requires an `sf` object containing the information whether a planning unit in the planning region lies within an MPA or not in a column called `wdpa` and outputs a `ggobject`. It can be combined with the `spatialplanr` function [gg_add()].
 #'
 #' @param df An `sf` object of marine protected areas
 #' @param colorVals A `list` object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.
