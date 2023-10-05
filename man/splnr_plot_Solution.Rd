@@ -27,7 +27,7 @@ splnr_plot_solution(
 A ggplot object of the plot
 }
 \description{
-Plot prioritizr solution
+\code{splnr_plot_solution()} allows to plot the solution of a \code{prioritizr} conservation problem in a customisable way using \code{ggplot2}. This function requires a solution as an \code{sf} object with a column called \code{solution_1} and outputs a \code{ggobject}. It can be combined with the \code{spatialplanr} function \code{\link[=gg_add]{gg_add()}}.
 }
 \examples{
 dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),

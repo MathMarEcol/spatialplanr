@@ -13,7 +13,7 @@ splnr_plot_PUs(PlanUnits)
 A ggplot object of the plot
 }
 \description{
-Plot Planning Units
+\code{splnr_plot_PUs()} allows to plot the planning units of a planning region (for example created with the \code{spatialplanr}function \code{\link[=splnr_get_planningUnits]{splnr_get_planningUnits()}}) in a customisable way using \code{ggplot2}. This function requires an \code{sf} object containing the geographic information of PUs in the planning region and outputs a \code{ggobject}. It can be combined with the \code{spatialplanr} function \code{\link[=gg_add]{gg_add()}}.
 }
 \examples{
 splnr_plot_PUs(dat_PUs)
