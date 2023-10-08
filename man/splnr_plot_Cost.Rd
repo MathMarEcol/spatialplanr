@@ -27,7 +27,7 @@ splnr_plot_cost(
 A ggplot object of the plot
 }
 \description{
-Plot cost
+\code{splnr_plot_cost()} allows to plot cost within each planning units of a planning region in a customisable way using \code{ggplot2}. This function requires an \code{sf} object with a cost column and outputs a \code{ggobject}. It can be combined with the \code{spatialplanr} function \code{\link[=gg_add]{gg_add()}}.
 }
 \examples{
 dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),

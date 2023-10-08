@@ -285,6 +285,8 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
 
 #' Plot cost
 #'
+#' `splnr_plot_cost()` allows to plot cost within each planning units of a planning region in a customisable way using `ggplot2`. This function requires an `sf` object with a cost column and outputs a `ggobject`. It can be combined with the `spatialplanr` function [gg_add()].
+#'
 #' @param Cost An `sf` object of cost for `prioritizr`
 #' @param Cost_name Name of the cost column
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
@@ -330,6 +332,8 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", legendTitle = "Cost",
 }
 
 #' Plot cost overlay
+#'
+#' `splnr_plot_costOverlay()` allows to plot the cost of each planning units of a planning region on top of the solution of a conservation problem created with `prioritizr` in a customisable way using `ggplot2`. This function requires a solution as an `sf` object with a column called `solution_1` as well as a cost column and outputs a `ggobject`. It can be combined with the `spatialplanr` function [gg_add()].
 #'
 #' @param soln The `prioritizr` solution
 #' @param Cost An `sf` object of cost for `prioritizr`.In case `prioritizr`solution does not contain cost, alternative cost object has to be provided here that was used to generate solution (default: NA).
@@ -396,6 +400,8 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
 
 
 #' Plot binary feature
+#'
+#' `splnr_plot_binFeature()` allows to plot presences and absences of a feature in the planning region in a customisable way using `ggplot2`. This function requires an `sf` object with binary information of a feature(`0` for absences and `1` for presences, for example created from continuous data with the `spatialplanr` function [splnr_apply_cutoffs()]). It outputs a `ggobject` and can be combined with the `spatialplanr` function [gg_add()].
 #'
 #' @param df A `data frame` with binary feature information
 #' @param colInterest column of data frame that contains binary information of feature to plot

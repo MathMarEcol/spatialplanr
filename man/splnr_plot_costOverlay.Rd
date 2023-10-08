@@ -27,7 +27,7 @@ splnr_plot_costOverlay(
 A ggplot object of the plot
 }
 \description{
-Plot cost overlay
+\code{splnr_plot_costOverlay()} allows to plot the cost of each planning units of a planning region on top of the solution of a conservation problem created with \code{prioritizr} in a customisable way using \code{ggplot2}. This function requires a solution as an \code{sf} object with a column called \code{solution_1} as well as a cost column and outputs a \code{ggobject}. It can be combined with the \code{spatialplanr} function \code{\link[=gg_add]{gg_add()}}.
 }
 \examples{
 dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),

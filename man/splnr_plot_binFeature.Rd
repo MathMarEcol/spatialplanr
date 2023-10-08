@@ -30,7 +30,7 @@ splnr_plot_binFeature(
 A ggplot object of the plot
 }
 \description{
-Plot binary feature
+\code{splnr_plot_binFeature()} allows to plot presences and absences of a feature in the planning region in a customisable way using \code{ggplot2}. This function requires an \code{sf} object with binary information of a feature(\code{0} for absences and \code{1} for presences, for example created from continuous data with the \code{spatialplanr} function \code{\link[=splnr_apply_cutoffs]{splnr_apply_cutoffs()}}). It outputs a \code{ggobject} and can be combined with the \code{spatialplanr} function \code{\link[=gg_add]{gg_add()}}.
 }
 \examples{
 splnr_plot_binFeature(dat_species_bin, dat_species_bin$Spp1)
