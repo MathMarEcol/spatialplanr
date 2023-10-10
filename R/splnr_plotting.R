@@ -813,6 +813,10 @@ splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
 }
 
 #' Plot correlation matrices
+#'
+#' Conservation planning often requires the comparison of the outputs of the solutions of different conservation problems.
+#' One way to compare solutions is by correlating the solutions using Cohen's Kappa. `splnr_plot_corrMat()` allows to visualize the correlation matrix of the different solutions (for example produced with the `spatialplanr` function [splnr_get_kappaCorrData()]).
+#'
 #' @param x A correlation matrix of `prioritizr` solutions
 #' @param colourGradient A list of three colour values for high positive, no and high negative correlation
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").

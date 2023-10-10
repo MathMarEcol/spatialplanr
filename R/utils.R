@@ -280,7 +280,7 @@ splnr_arrangeFeatures <- function(df) {
 #' One way to compare solutions is by correlating the solutions using Cohen's Kappa.
 #' `splnr_get_kappaCorrData()` takes a list of `prioritizr` solutions to perform the Cohen's Kappa correlation between the solution.
 #' The resulting correlation matrix is symmetrical along the main diagonal and contains Cohen's Kappa of pairwise correlation between the solutions.
-#'  The main diagonal should always be 1. The correlation matrix obtained from this function can be passed onto `splnr_plot_corrMat()`.
+#'  The main diagonal should always be 1. The correlation matrix obtained from this function can be passed onto [splnr_plot_corrMat()].
 #'
 #' @param sol List of `prioritizr` solutions (`sf` objects) with solutions having a column name `solution_1`
 #' @param name_sol Name tags to the different solutions
