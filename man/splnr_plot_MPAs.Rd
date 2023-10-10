@@ -27,7 +27,7 @@ splnr_plot_MPAs(
 A ggplot object of the plot
 }
 \description{
-\code{splnr_plot_MPAs()} allows to plot either the outline or the area of MPAs existing in the planning region (for example extracted with the \code{spatialplanr}function \code{\link[=splnr_get_MPAs]{splnr_get_MPAs()}}) in a customisable way using \code{ggplot2}. This function requires an \code{sf} object containing the information whether a planning unit in the planning region lies within an MPA or not in a column called \code{wdpa} and outputs a \code{ggobject}. It can be combined with the \code{spatialplanr} function \code{\link[=gg_add]{gg_add()}}.
+\code{splnr_plot_MPAs()} allows to plot either the outline or the area of MPAs existing in the planning region (for example extracted with the \code{spatialplanr}function \code{\link[=splnr_get_MPAs]{splnr_get_MPAs()}}) in a customisable way using \code{ggplot2}. This function requires an \code{sf} object containing the information whether a planning unit in the planning region lies within an MPA or not in a column called \code{wdpa} and outputs a \code{ggobject}. It can be combined with the \code{spatialplanr} function \code{\link[=splnr_gg_add]{splnr_gg_add()}}.
 }
 \examples{
 splnr_plot_MPAs(dat_mpas)

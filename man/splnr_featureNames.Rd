@@ -20,5 +20,5 @@ It requires an \code{sf} object input and returns the column names of the object
 }
 \examples{
 df <- dat_species_prob \%>\%
- splnr_featureNames(exclude = c("cellID"))
+  splnr_featureNames(exclude = c("cellID"))
 }

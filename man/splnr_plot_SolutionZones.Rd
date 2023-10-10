@@ -37,20 +37,26 @@ t2 <- matrix(NA, ncol = 2, nrow = 5) # create targets
 t2[, 1] <- 0.1
 t2[, 2] <- 0.05
 
-z2 <- prioritizr::zones("zone 1" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-"zone 2" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"))
+z2 <- prioritizr::zones(
+  "zone 1" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+  "zone 2" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5")
+)
 # when giving sf input, we need as many cost columns as we have zones
-p2 <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost1 = runif(n = dim(.)[[1]]),
-                                                            Cost2 = runif(n = dim(.)[[1]])),
-                          z2,
-                         cost_column = c("Cost1", "Cost2"))\%>\%
+p2 <- prioritizr::problem(
+  dat_species_bin \%>\% dplyr::mutate(
+    Cost1 = runif(n = dim(.)[[1]]),
+    Cost2 = runif(n = dim(.)[[1]])
+  ),
+  z2,
+  cost_column = c("Cost1", "Cost2")
+) \%>\%
   prioritizr::add_min_set_objective() \%>\%
   prioritizr::add_relative_targets(t2) \%>\%
   prioritizr::add_binary_decisions() \%>\%
   prioritizr::add_default_solver(verbose = FALSE)
 
 s2 <- p2 \%>\%
- prioritizr::solve.ConservationProblem()
+  prioritizr::solve.ConservationProblem()
 
 (splnr_plot_solutionZones(s2))
 }

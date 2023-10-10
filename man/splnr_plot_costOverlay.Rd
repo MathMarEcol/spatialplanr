@@ -27,19 +27,20 @@ splnr_plot_costOverlay(
 A ggplot object of the plot
 }
 \description{
-\code{splnr_plot_costOverlay()} allows to plot the cost of each planning units of a planning region on top of the solution of a conservation problem created with \code{prioritizr} in a customisable way using \code{ggplot2}. This function requires a solution as an \code{sf} object with a column called \code{solution_1} as well as a cost column and outputs a \code{ggobject}. It can be combined with the \code{spatialplanr} function \code{\link[=gg_add]{gg_add()}}.
+\code{splnr_plot_costOverlay()} allows to plot the cost of each planning units of a planning region on top of the solution of a conservation problem created with \code{prioritizr} in a customisable way using \code{ggplot2}. This function requires a solution as an \code{sf} object with a column called \code{solution_1} as well as a cost column and outputs a \code{ggobject}. It can be combined with the \code{spatialplanr} function \code{\link[=splnr_gg_add]{splnr_gg_add()}}.
 }
 \examples{
 dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-                                   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-                                   cost_column = "Cost") \%>\%
+  features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+  cost_column = "Cost"
+) \%>\%
   prioritizr::add_min_set_objective() \%>\%
   prioritizr::add_relative_targets(0.3) \%>\%
   prioritizr::add_binary_decisions() \%>\%
   prioritizr::add_default_solver(verbose = FALSE)
 
 dat_soln <- dat_problem \%>\%
- prioritizr::solve.ConservationProblem()
+  prioritizr::solve.ConservationProblem()
 
 splnr_plot_costOverlay(soln = dat_soln)
 }
