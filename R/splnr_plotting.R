@@ -188,13 +188,15 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
 
 #' Plot prioritizr solution
 #'
-#' `splnr_plot_solution()` allows to plot the solution of a `prioritizr` conservation problem in a customisable way using `ggplot2`. This function requires a solution as an `sf` object with a column called `solution_1` and outputs a `ggobject`. It can be combined with the `spatialplanr` function [splnr_gg_add()].
+#' `splnr_plot_solution()` allows to plot the solution of a `prioritizr` conservation problem with our without in a customisable way using `ggplot2`. This function requires a solution as an `sf` object with a column called `solution_1` and outputs a `ggobject`. It can be combined with the `spatialplanr` function [splnr_gg_add()].
 #'
 #' @param soln The `prioritizr` solution
 #' @param colorVals A `list` object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.
 #' @param showLegend A logical command on whether to show the legend of the solution (Default: TRUE).
+#' @param legendLabels Character values (number of zones + 1) of what the legend should be labelled.
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
+#' @param zones A logical value, indicating whether the spatial plan contains zones or not (default = FALSE).
 #'
 #' @return A ggplot object of the plot
 #' @export
@@ -213,23 +215,95 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
 #'   prioritizr::solve.ConservationProblem()
 #'
 #' splnr_plot_solution(dat_soln)
-splnr_plot_solution <- function(soln, colorVals = c("TRUE" = "#3182bd", "FALSE" = "#c6dbef"),
-                                showLegend = TRUE, plotTitle = "Solution", legendTitle = "Planning Units") {
-  soln <- soln %>%
-    dplyr::select(.data$solution_1) %>%
-    dplyr::mutate(solution_1 = as.logical(.data$solution_1)) # Making it logical helps with the plotting
+#' # example 2
+#' #' t2 <- matrix(NA, ncol = 2, nrow = 5) # create targets
+#' t2[, 1] <- 0.1
+#' t2[, 2] <- 0.05
+#'
+#' z2 <- prioritizr::zones(
+#'   "zone 1" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   "zone 2" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5")
+#' )
+#' # when giving sf input, we need as many cost columns as we have zones
+#' p2 <- prioritizr::problem(
+#'   dat_species_bin %>% dplyr::mutate(
+#'     Cost1 = runif(n = dim(.)[[1]]),
+#'     Cost2 = runif(n = dim(.)[[1]])
+#'   ),
+#'   z2,
+#'   cost_column = c("Cost1", "Cost2")
+#' ) %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(t2) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' s2 <- p2 %>%
+#'   prioritizr::solve.ConservationProblem()
+#' (splnr_plot_solution(s2, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"), legendLabels = c("Not selected", "Zone 1", "Zone 2")))
+splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
+                                showLegend = TRUE, legendLabels = c("Not selected", "Selected"),
+                                plotTitle = "Solution", legendTitle = "Planning Units",
+                                zones = FALSE) {
+  if (zones == FALSE) {
+    soln <- soln %>%
+      dplyr::select(.data$solution_1) %>%
+      dplyr::mutate(solution = as.factor(.data$solution_1))
+    nrows <- 2
+  } else if (zones == TRUE) {
+    oldName <- soln %>%
+      dplyr::select(tidyselect::starts_with(c("solution"))) %>%
+      sf::st_drop_geometry() %>%
+      tibble::as_tibble() %>%
+      names()
+
+    newName <- gsub("1_zone.", "", oldName) # to make data a bit nicer to work with
+    nrows <- (length(newName) + 1)
+
+    solnNewNames <- soln %>%
+      dplyr::rename_at(dplyr::vars(tidyselect::all_of(oldName)), ~newName) %>%
+      dplyr::select(tidyselect::starts_with(c("solution")))
+
+    for (i in 2:(length(newName))) {
+      solnNewNames <- solnNewNames %>%
+        dplyr::mutate(
+          !!rlang::sym(newName[i]) := dplyr::case_when(
+            !!rlang::sym(newName[i]) == 1 ~ i,
+            !!rlang::sym(newName[i]) == 0 ~ 0
+          )
+        )
+    }
+
+    soln <- solnNewNames %>%
+      dplyr::rowwise() %>%
+      dplyr::mutate(
+        solution = sum(dplyr::c_across(cols = tidyselect::starts_with("solution_"))),
+        solution = factor(.data$solution, levels = 0:(length(newName)))
+      )
+  } else {
+    cat("The zones attribute requires a logical input. Please set to TRUE or FALSE.")
+  }
+
+  # quick check
+  if (nlevels(soln$solution) != length(colorVals)) {
+    cat("Number of colour values needs to be the same as the number of levels in the solution column.")
+  }
+
+  if (nlevels(soln$solution) != length(legendLabels)) {
+    cat("Number of legend labels needs to be the same as the number of levels in the solution column.")
+  }
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$solution_1), colour = NA, size = 0.1, show.legend = showLegend) +
+    ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$solution), colour = NA, size = 0.1, show.legend = showLegend) +
     ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
     ggplot2::scale_fill_manual(
       name = legendTitle,
       values = colorVals,
-      labels = c("Not Selected", "Selected"),
+      labels = legendLabels,
       aesthetics = c("colour", "fill"),
       guide = ggplot2::guide_legend(
         override.aes = list(linetype = 0),
-        nrow = 2,
+        nrow = nrows,
         order = 1,
         direction = "horizontal",
         title.position = "top",
@@ -238,7 +312,6 @@ splnr_plot_solution <- function(soln, colorVals = c("TRUE" = "#3182bd", "FALSE" 
     ) +
     ggplot2::labs(subtitle = plotTitle)
 }
-
 
 #' Plot Planning Units
 #'
@@ -826,95 +899,4 @@ splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#447
       ) +
       ggplot2::scale_y_discrete(labels = AxisLabels)
   }
-}
-
-#' Plot prioritizr solution with zones
-#'
-#' @param soln The `prioritizr` solution that has several solutions based on zones
-#' @param colorVals A `list` object of named vectors that will match the color value with the according name. Needs to be number of zones + 1 (to also have a colour for planning units that were not selected).
-#' @param legendLabels Character values (number of zones + 1) of what the legend should be labelled.
-#' @param showLegend A logical command on whether to show the legend of the solution (Default: TRUE).
-#' @param plotTitle A character value for the title of the plot. Can be empty ("").
-#' @param legendTitle A character value for the title of the legend. Can be empty ("").
-#'
-#' @return A ggplot object of the plot
-#' @export
-#'
-#' @examples
-#' t2 <- matrix(NA, ncol = 2, nrow = 5) # create targets
-#' t2[, 1] <- 0.1
-#' t2[, 2] <- 0.05
-#'
-#' z2 <- prioritizr::zones(
-#'   "zone 1" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'   "zone 2" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5")
-#' )
-#' # when giving sf input, we need as many cost columns as we have zones
-#' p2 <- prioritizr::problem(
-#'   dat_species_bin %>% dplyr::mutate(
-#'     Cost1 = runif(n = dim(.)[[1]]),
-#'     Cost2 = runif(n = dim(.)[[1]])
-#'   ),
-#'   z2,
-#'   cost_column = c("Cost1", "Cost2")
-#' ) %>%
-#'   prioritizr::add_min_set_objective() %>%
-#'   prioritizr::add_relative_targets(t2) %>%
-#'   prioritizr::add_binary_decisions() %>%
-#'   prioritizr::add_default_solver(verbose = FALSE)
-#'
-#' s2 <- p2 %>%
-#'   prioritizr::solve.ConservationProblem()
-#'
-#' (splnr_plot_solutionZones(s2))
-splnr_plot_solutionZones <- function(soln, colorVals = c("#c6dbef", "#3182bd", "black"),
-                                     legendLabels = c("Not selected", "Zone 1", "Zone 2"),
-                                     showLegend = TRUE, plotTitle = "Solution", legendTitle = "Planning Units") {
-  oldName <- soln %>%
-    dplyr::select(tidyselect::starts_with(c("solution"))) %>%
-    sf::st_drop_geometry() %>%
-    tibble::as_tibble() %>%
-    names()
-
-  newName <- gsub("1_zone.", "", oldName) # to make data a bit nicer to work with
-
-  solnNewNames <- soln %>%
-    dplyr::rename_at(dplyr::vars(tidyselect::all_of(oldName)), ~newName) %>%
-    dplyr::select(tidyselect::starts_with(c("solution")))
-
-  for (i in 2:(length(newName))) {
-    solnNewNames <- solnNewNames %>%
-      dplyr::mutate(
-        !!rlang::sym(newName[i]) := dplyr::case_when(
-          !!rlang::sym(newName[i]) == 1 ~ 2,
-          !!rlang::sym(newName[i]) == 0 ~ 0
-        )
-      )
-  }
-
-  solnSum <- solnNewNames %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(
-      solution = sum(dplyr::c_across(cols = tidyselect::starts_with("solution_"))),
-      solution = factor(.data$solution, levels = 0:(length(newName)))
-    )
-
-  gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = solnSum, ggplot2::aes(fill = .data$solution), colour = NA, size = 0.1, show.legend = TRUE) +
-    ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
-    ggplot2::scale_fill_manual(
-      name = legendTitle,
-      values = colorVals,
-      labels = legendLabels,
-      aesthetics = c("colour", "fill"),
-      guide = ggplot2::guide_legend(
-        override.aes = list(linetype = 0),
-        nrow = (length(newName) + 1),
-        order = 1,
-        direction = "horizontal",
-        title.position = "top",
-        title.hjust = 0.5
-      )
-    ) +
-    ggplot2::labs(subtitle = plotTitle)
 }

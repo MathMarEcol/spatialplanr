@@ -6,10 +6,12 @@
 \usage{
 splnr_plot_solution(
   soln,
-  colorVals = c(`TRUE` = "#3182bd", `FALSE` = "#c6dbef"),
+  colorVals = c("#c6dbef", "#3182bd"),
   showLegend = TRUE,
+  legendLabels = c("Not selected", "Selected"),
   plotTitle = "Solution",
-  legendTitle = "Planning Units"
+  legendTitle = "Planning Units",
+  zones = FALSE
 )
 }
 \arguments{
@@ -19,15 +21,19 @@ splnr_plot_solution(
 
 \item{showLegend}{A logical command on whether to show the legend of the solution (Default: TRUE).}
 
+\item{legendLabels}{Character values (number of zones + 1) of what the legend should be labelled.}
+
 \item{plotTitle}{A character value for the title of the plot. Can be empty ("").}
 
 \item{legendTitle}{A character value for the title of the legend. Can be empty ("").}
+
+\item{zones}{A logical value, indicating whether the spatial plan contains zones or not (default = FALSE).}
 }
 \value{
 A ggplot object of the plot
 }
 \description{
-\code{splnr_plot_solution()} allows to plot the solution of a \code{prioritizr} conservation problem in a customisable way using \code{ggplot2}. This function requires a solution as an \code{sf} object with a column called \code{solution_1} and outputs a \code{ggobject}. It can be combined with the \code{spatialplanr} function \code{\link[=splnr_gg_add]{splnr_gg_add()}}.
+\code{splnr_plot_solution()} allows to plot the solution of a \code{prioritizr} conservation problem with our without in a customisable way using \code{ggplot2}. This function requires a solution as an \code{sf} object with a column called \code{solution_1} and outputs a \code{ggobject}. It can be combined with the \code{spatialplanr} function \code{\link[=splnr_gg_add]{splnr_gg_add()}}.
 }
 \examples{
 dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
