@@ -257,7 +257,7 @@ splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
       tibble::as_tibble() %>%
       names()
 
-    newName <- gsub("1_zone.", "", oldName) # to make data a bit nicer to work with
+    newName <- gsub("1_zone", "", oldName) # to make data a bit nicer to work with
     nrows <- (length(newName) + 1)
 
     solnNewNames <- soln %>%
