@@ -46,8 +46,10 @@ target <- Features \%>\%
 metric_df <- dat_clim
 
 
-Feature_Approach <- splnr_climatesmart_featureApproach(featuresDF = dat_species_bin,
-                    metricDF = metric_df, targetsDF = target, direction = 1)
+Feature_Approach <- splnr_climatesmart_featureApproach(
+  featuresDF = dat_species_bin,
+  metricDF = metric_df, targetsDF = target, direction = 1
+)
 out_sf <- Feature_Approach$Features
 targets <- Feature_Approach$Targets
 }

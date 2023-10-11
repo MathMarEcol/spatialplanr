@@ -25,6 +25,8 @@ This function creates a climate layer by selecting the most climate-smart areas 
 
 metric_df <- dat_clim
 
-featureTest <- splnr_CS_feature_preprocess(featuresDF = dat_species_bin,
-  percentile = 5, metricDF = metric_df, direction = 1)
+featureTest <- splnr_CS_feature_preprocess(
+  featuresDF = dat_species_bin,
+  percentile = 5, metricDF = metric_df, direction = 1
+)
 }

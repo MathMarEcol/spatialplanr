@@ -19,7 +19,7 @@ splnr_plot_importanceScore(
 
 \item{pDat}{The \code{prioritizr} problem}
 
-\item{method}{The method for calcualting importance scores. Can be either "Ferrier" for the Ferrier Score, which can only be used with the minimum set objective function, "RWR" for Rarity Weighted Richness Score, or "RC" for Replacement Cost which takes longer than the other apporaches due to its iterative process.}
+\item{method}{The method for calcualting importance scores. Can be either "Ferrier" for the Ferrier Score, which can only be used with the minimum set objective function, "RWR" for Rarity Weighted Richness Score, or "RC" for Replacement Cost which takes longer than the other approaches due to its iterative process.}
 
 \item{plotTitle}{A character value for the title of the plot. Can be empty ("").}
 
@@ -33,12 +33,14 @@ splnr_plot_importanceScore(
 A ggplot object of the plot
 }
 \description{
-Plot importance score
+[Importance scores]{https://prioritizr.net/reference/importance.html} are a mean to reflect the irreplaceability of a planning unit in the solution of a \code{prioirtizr} conservation problem. Based on the \code{prioritizr} package, \code{splnr_plot_importanceScore()} allows to visualize three different types of importance scores with \code{ggplot2} that should be used based on the conservation problem at hand. The \code{prioritizr} development team generally recommend using the [replacement cost score]{https://prioritizr.net/reference/eval_replacement_importance.html}, however this might be not be feasible for conservation problems with many planning units or features.
+The function outputs a \code{ggobject} and can be combined with the \code{spatialplanr} function \code{\link[=splnr_gg_add]{splnr_gg_add()}}.
 }
 \examples{
 dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-                                   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-                                   cost_column = "Cost") \%>\%
+  features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+  cost_column = "Cost"
+) \%>\%
   prioritizr::add_min_set_objective() \%>\%
   prioritizr::add_relative_targets(0.3) \%>\%
   prioritizr::add_binary_decisions() \%>\%

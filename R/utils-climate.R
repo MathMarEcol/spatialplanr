@@ -24,9 +24,9 @@
 #'   percentile = 5, metricDF = metric_df, direction = 1
 #' )
 splnr_CS_climatePriorityArea_preprocess <- function(featuresDF,
-                                                 percentile,
-                                                 metricDF,
-                                                 direction) {
+                                                    percentile,
+                                                    metricDF,
+                                                    direction) {
   spp <- featuresDF %>%
     dplyr::select(-"geometry", -"cellID") %>%
     sf::st_drop_geometry() %>%
@@ -37,7 +37,6 @@ splnr_CS_climatePriorityArea_preprocess <- function(featuresDF,
 
   imptList <- list() # empty list to fill in with the important features
   for (i in 1:length(spp)) {
-
     df <- featuresDF %>%
       tibble::as_tibble() %>%
       dplyr::select(!!rlang::sym(spp[i]), "cellID") %>% # Select 1 species at a time
@@ -146,15 +145,14 @@ splnr_CS_climatePriorityArea_preprocess <- function(featuresDF,
 #'   percentile = 5, metricDF = metric_df, direction = 1
 #' )
 #'
-#' target <- splnr_CS_climatePriorityArea_assignTargets (
+#' target <- splnr_CS_climatePriorityArea_assignTargets(
 #'   targetsDF = target,
 #'   climateSmartDF = out_sf,
 #'   refugiaTarget = 1
 #' )
-splnr_CS_climatePriorityArea_assignTargets <- function(
-                                               targetsDF,
-                                               climateSmartDF,
-                                               refugiaTarget = 1) {
+splnr_CS_climatePriorityArea_assignTargets <- function(targetsDF,
+                                                       climateSmartDF,
+                                                       refugiaTarget = 1) {
   spp <- targetsDF %>%
     dplyr::select("feature") %>%
     dplyr::pull()
@@ -243,25 +241,28 @@ splnr_CS_climatePriorityArea_assignTargets <- function(
 #' metric_df <- dat_clim
 #'
 #'
-#' CPA_Approach <- splnr_climatesmart_climatePriorityAreaApproach(featuresDF = dat_species_bin,
-#'                     metricDF = metric_df, targetsDF = target, direction = 1)
+#' CPA_Approach <- splnr_climatesmart_climatePriorityAreaApproach(
+#'   featuresDF = dat_species_bin,
+#'   metricDF = metric_df, targetsDF = target, direction = 1
+#' )
 #' out_sf <- CPA_Approach$Features
 #' targets <- CPA_Approach$Targets
 splnr_climatesmart_climatePriorityAreaApproach <- function(featuresDF,
-                                    metricDF,
-                                    targetsDF,
-                                    direction,
-                                    percentile = 5,
-                                    refugiaTarget = 1) {
+                                                           metricDF,
+                                                           targetsDF,
+                                                           direction,
+                                                           percentile = 5,
+                                                           refugiaTarget = 1) {
+  CPAFeatures <- splnr_CS_climatePriorityArea_preprocess(
+    featuresDF = featuresDF, metricDF = metricDF,
+    direction = direction, percentile = percentile
+  )
 
-
-  CPAFeatures <- splnr_CS_climatePriorityArea_preprocess(featuresDF = featuresDF, metricDF = metricDF,
-                                                         direction = direction, percentile = percentile)
-
-  CPATargets <- splnr_CS_climatePriorityArea_assignTargets(targetsDF = targetsDF,
-                                                  CPAFeatures, refugiaTarget = refugiaTarget)
+  CPATargets <- splnr_CS_climatePriorityArea_assignTargets(
+    targetsDF = targetsDF,
+    CPAFeatures, refugiaTarget = refugiaTarget
+  )
   return(list(Features = CPAFeatures, Targets = CPATargets))
-
 }
 
 ##### Feature Approach ####
@@ -284,29 +285,29 @@ splnr_climatesmart_climatePriorityAreaApproach <- function(featuresDF,
 #'
 #' metric_df <- dat_clim
 #'
-#'featureTest <- splnr_CS_feature_preprocess(featuresDF = dat_species_bin,
-#'   percentile = 5, metricDF = metric_df, direction = 1)
+#' featureTest <- splnr_CS_feature_preprocess(
+#'   featuresDF = dat_species_bin,
+#'   percentile = 5, metricDF = metric_df, direction = 1
+#' )
 splnr_CS_feature_preprocess <- function(featuresDF,
-                                percentile,
-                                metricDF,
-                                direction
-) {
-
-  if(any(apply(metricDF, 2, is.na)[, "metric"])){
+                                        percentile,
+                                        metricDF,
+                                        direction) {
+  if (any(apply(metricDF, 2, is.na)[, "metric"])) {
     print("There are some NAs in the metric data. Please check.")
   }
-  prct <- percentile/100
+  prct <- percentile / 100
   qntl <- stats::quantile(metricDF$metric, prct)[[1]] # Get the percentile
-  if(direction == 1) {
+  if (direction == 1) {
     print("Higher values mean more climate-smart areas.")
     df <- metricDF %>%
       dplyr::mutate(climate_layer = ifelse(.data$metric >= qntl, yes = 1, no = 0)) # Create the climate layer
-  } else if(direction == -1) {
+  } else if (direction == -1) {
     print("Lower values mean more climate-smart areas.")
     df <- metricDF %>%
       dplyr::mutate(climate_layer = ifelse(.data$metric <= qntl, yes = 1, no = 0)) # Create the climate layer
   } else {
-    if(direction != 1 & direction != -1) {
+    if (direction != 1 & direction != -1) {
       print("Please enter a valid direction: either 1 or -1.")
       return(NULL)
     }
@@ -314,6 +315,7 @@ splnr_CS_feature_preprocess <- function(featuresDF,
 
   # Get the most climate-smart areas
   climateSmartDF <- df %>%
+    sf::st_drop_geometry() %>%
     tibble::as_tibble() %>%
     dplyr::select("cellID", "climate_layer")
 
@@ -363,11 +365,10 @@ splnr_CS_feature_preprocess <- function(featuresDF,
 #'   refugiaTarget = 1
 #' )
 splnr_CS_feature_assignTargets <- function(climateSmartDF,
-                                   refugiaTarget,
-                                   targetsDF){
-
+                                           refugiaTarget,
+                                           targetsDF) {
   # Calculate the target depending on the # of PUs deemed as "climate-smart"
-  trgt <- refugiaTarget/(sum(climateSmartDF$climate_layer)/nrow(climateSmartDF))
+  trgt <- refugiaTarget / (sum(climateSmartDF$climate_layer) / nrow(climateSmartDF))
 
   climate_layerDF <- tibble::tribble(
     ~feature, ~target,
@@ -376,7 +377,7 @@ splnr_CS_feature_assignTargets <- function(climateSmartDF,
 
   finalDF <- targetsDF %>%
     dplyr::bind_rows(climate_layerDF) %>%
-    dplyr::mutate(target = .data$target/100) # Convert target to proportions
+    dplyr::mutate(target = .data$target / 100) # Convert target to proportions
 
   return(finalDF)
 }
@@ -409,8 +410,10 @@ splnr_CS_feature_assignTargets <- function(climateSmartDF,
 #' metric_df <- dat_clim
 #'
 #'
-#' Feature_Approach <- splnr_climatesmart_featureApproach(featuresDF = dat_species_bin,
-#'                     metricDF = metric_df, targetsDF = target, direction = 1)
+#' Feature_Approach <- splnr_climatesmart_featureApproach(
+#'   featuresDF = dat_species_bin,
+#'   metricDF = metric_df, targetsDF = target, direction = 1
+#' )
 #' out_sf <- Feature_Approach$Features
 #' targets <- Feature_Approach$Targets
 splnr_climatesmart_featureApproach <- function(featuresDF,
@@ -419,15 +422,16 @@ splnr_climatesmart_featureApproach <- function(featuresDF,
                                                direction,
                                                percentile = 5,
                                                refugiaTarget = 1) {
+  featureFeatures <- splnr_CS_feature_preprocess(
+    featuresDF = featuresDF, metricDF = metricDF,
+    direction = direction, percentile = percentile
+  )
 
-
-  featureFeatures <- splnr_CS_feature_preprocess(featuresDF = featuresDF, metricDF = metricDF,
-                                                 direction = direction, percentile = percentile)
-
-  featureTargets <- splnr_CS_feature_assignTargets(targetsDF = targetsDF,
-                                                   featureFeatures, refugiaTarget = refugiaTarget)
+  featureTargets <- splnr_CS_feature_assignTargets(
+    targetsDF = targetsDF,
+    featureFeatures, refugiaTarget = refugiaTarget
+  )
   return(list(Features = featureFeatures, Targets = featureTargets))
-
 }
 
 ##### Percentile Approach ####
@@ -458,14 +462,13 @@ splnr_CS_percentile_preprocess <- function(featuresDF,
                                            percentile,
                                            metricDF,
                                            direction) {
-
-  if(any(apply(metricDF, 2, is.na)[, "metric"])){
+  if (any(apply(metricDF, 2, is.na)[, "metric"])) {
     print("There are some NAs in the metric data. Please check.")
   }
 
   spp <- featuresDF %>% # Get the list of features
     tibble::as_tibble() %>%
-    dplyr::select(-"geometry",-"cellID") %>%
+    dplyr::select(-"geometry", -"cellID") %>%
     names()
 
   metric <- metricDF %>% # Make sure metric df is a data.frame
@@ -474,7 +477,7 @@ splnr_CS_percentile_preprocess <- function(featuresDF,
     tibble::as_tibble()
 
   percentileList <- list()
-  for(i in 1:length(spp)) {
+  for (i in 1:length(spp)) {
     df <- featuresDF %>%
       tibble::as_tibble() %>%
       dplyr::select(!!rlang::sym(spp[i]), "cellID") %>% # Select 1 feature at a time
@@ -484,30 +487,34 @@ splnr_CS_percentile_preprocess <- function(featuresDF,
     filteredDF <- df %>%
       dplyr::filter(!!rlang::sym(spp[i]) == 1) # Select only areas with presences
 
-    prct <- percentile/100 # Convert percentiles to proportions
+    prct <- percentile / 100 # Convert percentiles to proportions
     qntl <- stats::quantile(filteredDF$metric, prct)[[1]] # Get the percentile
-    if(direction == 1) {
-      if(i == 1) {
+    if (direction == 1) {
+      if (i == 1) {
         print("Higher values mean more climate-smart areas.") # Sanity check
       }
       df1 <- df %>%
-        dplyr::mutate(V1 = ifelse(metric >= qntl, yes = 1, no = 0), # Filter areas of the highest xth percentile within feat's distribution
-                      V2 = ifelse(!!rlang::sym(spp[i]) == 1, yes = 1, no = 0)) # Filter areas with the feat present in it
-    } else if(direction == -1) {
-      if(i == 1) {
+        dplyr::mutate(
+          V1 = ifelse(metric >= qntl, yes = 1, no = 0), # Filter areas of the highest xth percentile within feat's distribution
+          V2 = ifelse(!!rlang::sym(spp[i]) == 1, yes = 1, no = 0)
+        ) # Filter areas with the feat present in it
+    } else if (direction == -1) {
+      if (i == 1) {
         print("Lower values mean more climate-smart areas.") # Sanity check
       }
       df1 <- df %>%
-        dplyr::mutate(V1 = ifelse(metric <= qntl, yes = 1, no = 0), # Filter areas of the highest xth percentile within feat's distribution
-                      V2 = ifelse(!!rlang::sym(spp[i]) == 1, yes = 1, no = 0)) # Filter areas with the feat present in it
+        dplyr::mutate(
+          V1 = ifelse(metric <= qntl, yes = 1, no = 0), # Filter areas of the highest xth percentile within feat's distribution
+          V2 = ifelse(!!rlang::sym(spp[i]) == 1, yes = 1, no = 0)
+        ) # Filter areas with the feat present in it
     } else {
-      if(i == 1) {
+      if (i == 1) {
         print("Please enter a valid direction: either 1 or -1.") # Sanity check
       }
     }
 
     percentileList[[i]] <- df1 %>%
-      dplyr::mutate(!!rlang::sym(paste0(spp[i], "_filtered")) := .data$V1*.data$V2) %>% # V1*V2 will be 1 if area is within the xth percentile and if a feat is present in it
+      dplyr::mutate(!!rlang::sym(paste0(spp[i], "_filtered")) := .data$V1 * .data$V2) %>% # V1*V2 will be 1 if area is within the xth percentile and if a feat is present in it
       dplyr::select(!!rlang::sym(paste0(spp[i], "_filtered")))
   }
 
@@ -559,8 +566,7 @@ splnr_CS_percentile_preprocess <- function(featuresDF,
 #' )
 splnr_CS_percentile_assignTargets <- function(featuresDF,
                                               climateSmartDF,
-                                              targetsDF){
-
+                                              targetsDF) {
   spp <- featuresDF %>% # Get the list of features
     tibble::as_tibble() %>%
     dplyr::select(-"cellID", -"geometry") %>%
@@ -583,15 +589,14 @@ splnr_CS_percentile_assignTargets <- function(featuresDF,
 
     df <- df %>%
       dplyr::left_join(df1) %>%
-      dplyr::mutate(proportion = .data$filtered/.data$original) %>% # Calculating proportion of climate-smart areas over areas where feat is present
-      dplyr::mutate(target = .data$target/.data$proportion) %>% # Calculate target based on the set target per feature and the proportion
+      dplyr::mutate(proportion = .data$filtered / .data$original) %>% # Calculating proportion of climate-smart areas over areas where feat is present
+      dplyr::mutate(target = .data$target / .data$proportion) %>% # Calculate target based on the set target per feature and the proportion
       dplyr::select("feature", "target") %>%
-      dplyr::mutate(target = .data$target/100) %>%  # Convert target to proportions
+      dplyr::mutate(target = .data$target / 100) %>% # Convert target to proportions
       dplyr::mutate(target = ifelse(.data$target > 1, 1, .data$target)) # Make sure that 100% is the largest target possible
   })
 
   return(df)
-
 }
 
 #' Function to run the percentile approach
@@ -621,8 +626,10 @@ splnr_CS_percentile_assignTargets <- function(featuresDF,
 #' metric_df <- dat_clim
 #'
 #'
-#' Percentile_Approach <- splnr_climatesmart_percentileApproach(featuresDF = dat_species_bin,
-#'                     metricDF = metric_df, targetsDF = target, direction = 1)
+#' Percentile_Approach <- splnr_climatesmart_percentileApproach(
+#'   featuresDF = dat_species_bin,
+#'   metricDF = metric_df, targetsDF = target, direction = 1
+#' )
 #' out_sf <- Feature_Approach$Features
 #' targets <- Feature_Approach$Targets
 splnr_climatesmart_percentileApproach <- function(featuresDF,
@@ -630,15 +637,16 @@ splnr_climatesmart_percentileApproach <- function(featuresDF,
                                                   targetsDF,
                                                   direction,
                                                   percentile = 5) {
+  percentileFeatures <- splnr_CS_percentile_preprocess(
+    featuresDF = featuresDF, metricDF = metricDF,
+    direction = direction, percentile = percentile
+  )
 
-
-  percentileFeatures <- splnr_CS_percentile_preprocess(featuresDF = featuresDF, metricDF = metricDF,
-                                                       direction = direction, percentile = percentile)
-
-  percentileTargets <- splnr_CS_percentile_assignTargets(featuresDF = featuresDF,
-                                                         targetsDF = targetsDF,
-                                                         percentileFeatures)
+  percentileTargets <- splnr_CS_percentile_assignTargets(
+    featuresDF = featuresDF,
+    targetsDF = targetsDF,
+    percentileFeatures
+  )
   return(list(Features = percentileFeatures, Targets = percentileTargets))
-
 }
 ##### Penalty Approach #####
