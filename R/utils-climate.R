@@ -315,13 +315,15 @@ splnr_CS_feature_preprocess <- function(featuresDF,
 
   # Get the most climate-smart areas
   climateSmartDF <- df %>%
-    sf::st_drop_geometry() %>%
-    tibble::as_tibble() %>%
-    dplyr::select("cellID", "climate_layer")
+    dplyr::select("cellID", "climate_layer") %>%
+    tibble::as_tibble()
 
   # Attach "climate_layer" to the features df and have this as the output
   featuresDF <- featuresDF %>%
-    dplyr::left_join(climateSmartDF, by = "cellID")
+    sf::st_drop_geometry() %>%
+    tibble::as_tibble() %>%
+    dplyr::left_join(climateSmartDF, by = "cellID") %>%
+    sf::st_as_sf(geometry = featuresDF$geometry)
 
   return(featuresDF)
 }
@@ -630,8 +632,8 @@ splnr_CS_percentile_assignTargets <- function(featuresDF,
 #'   featuresDF = dat_species_bin,
 #'   metricDF = metric_df, targetsDF = target, direction = 1
 #' )
-#' out_sf <- Feature_Approach$Features
-#' targets <- Feature_Approach$Targets
+#' out_sf <- Percentile_Approach$Features
+#' targets <- Percentile_Approach$Targets
 splnr_climatesmart_percentileApproach <- function(featuresDF,
                                                   metricDF,
                                                   targetsDF,

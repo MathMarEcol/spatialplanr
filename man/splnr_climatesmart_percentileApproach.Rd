@@ -47,6 +47,6 @@ Percentile_Approach <- splnr_climatesmart_percentileApproach(
   featuresDF = dat_species_bin,
   metricDF = metric_df, targetsDF = target, direction = 1
 )
-out_sf <- Feature_Approach$Features
-targets <- Feature_Approach$Targets
+out_sf <- Percentile_Approach$Features
+targets <- Percentile_Approach$Targets
 }
