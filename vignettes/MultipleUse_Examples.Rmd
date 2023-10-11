@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r klippy, eval=TRUE, echo=FALSE, include=TRUE}
-  klippy::klippy(position = c('top', 'right'))
+klippy::klippy(position = c("top", "right"))
 ```
 
 ```{r setup}
@@ -70,14 +70,17 @@ PUs <- splnr_get_planningUnits(Bndry, landmass, PU_size, Shape)
 We can also use a customised `ggplot` theme that can be passed as a list to `splnr_gg_add()` and that can then be used for all plots. For example:
 
 ```{r}
-splnr_theme <- list(ggplot2::theme_bw(),
-                  ggplot2::theme(
-                    legend.position = "right",
-                    legend.direction = "vertical",
-                    text = ggplot2::element_text(size = 9, colour = "black"),
-                    axis.text = ggplot2::element_text(size = 9, colour = "black"),
-                    plot.title = ggplot2::element_text(size = 9),
-                    axis.title = ggplot2::element_blank()))
+splnr_theme <- list(
+  ggplot2::theme_bw(),
+  ggplot2::theme(
+    legend.position = "right",
+    legend.direction = "vertical",
+    text = ggplot2::element_text(size = 9, colour = "black"),
+    axis.text = ggplot2::element_text(size = 9, colour = "black"),
+    plot.title = ggplot2::element_text(size = 9),
+    axis.title = ggplot2::element_blank()
+  )
+)
 ```
 
 ## Get the features 
@@ -112,7 +115,7 @@ These species were not chosen based on their importance for this region and only
 
 ```{r}
 datEx_species_bin <- spDataFiltered %>%
-   splnr_apply_cutoffs(Cutoffs = 0.5)
+  splnr_apply_cutoffs(Cutoffs = 0.5)
 
 col_name <- spDataFiltered %>%
   sf::st_drop_geometry() %>%
@@ -127,9 +130,11 @@ So far, all steps were exactly the same as in a spatial plan that does not inclu
 ```{r}
 target <- rep(0.3, nrow(Dict))
 
-p1 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397)),
-                                     col_name,
-                                     "Cost1") %>%
+p1 <- prioritizr::problem(
+  datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397)),
+  col_name,
+  "Cost1"
+) %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_relative_targets(target) %>%
   prioritizr::add_binary_decisions() %>%
@@ -143,7 +148,7 @@ s1 <- p1 %>%
   prioritizr::solve.ConservationProblem()
 
 (ggSoln <- splnr_plot_solution(s1) +
-    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 We can also have a look at how well the set target was met.
@@ -179,10 +184,14 @@ z2 <- prioritizr::zones("zone 1" = col_name, "zone 2" = col_name)
 Both zones need a specified cost and targets. We use one area-based cost and one cost layer that uses random numbers, the pre-defined targets and pass the `zones`object to the problem formulation before solving the conservation problem.
 
 ```{r}
-p2 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397), #when giving sf input, we need as many cost columns as we have zones
-                                                            Cost2 = runif(n = dim(.)[[1]])),
-                          z2,
-                          cost_column = c("Cost1", "Cost2"))%>%
+p2 <- prioritizr::problem(
+  datEx_species_bin %>% dplyr::mutate(
+    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    Cost2 = runif(n = dim(.)[[1]])
+  ),
+  z2,
+  cost_column = c("Cost1", "Cost2")
+) %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_relative_targets(target2) %>%
   prioritizr::add_binary_decisions() %>%
@@ -190,14 +199,13 @@ p2 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397
 
 s2 <- p2 %>%
   prioritizr::solve.ConservationProblem()
-
 ```
 
 The solution can be plotted using the function `splnr_plot_solutionZones()` that works identical the function `splnr_plot_solution()` but for the output of a solution generated with zones.
 
 ```{r, fig.width = 9}
 (gg_s2 <- splnr_plot_solutionZones(s2) +
-    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 We can see that we now how planning units that are not selected, and planning units that have either been selected for zone 1 or zone 2.
@@ -208,8 +216,10 @@ When using `sf` objects with `zones()`, the input feature names to `zones()` nee
 
 ```{r}
 targets2b <- Dict %>%
-  dplyr::mutate(targetZ1 = dplyr::if_else(Category == "Reptiles", 30 / 100, 0),
-                targetZ2 = dplyr::if_else(Category != "Reptiles", 10 / 100, 0)) %>%
+  dplyr::mutate(
+    targetZ1 = dplyr::if_else(Category == "Reptiles", 30 / 100, 0),
+    targetZ2 = dplyr::if_else(Category != "Reptiles", 10 / 100, 0)
+  ) %>%
   dplyr::select("targetZ1", "targetZ2") %>%
   as.matrix()
 ```
@@ -219,10 +229,14 @@ This sets the target for reptiles in the first zone to 30% and the rest to 0%. I
 We then define the conservation problem in the same way as above and solve it.
 
 ```{r}
-p2b <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397), #when giving sf input, we need as many cost columns as we have zones
-                                                              Cost2 = runif(n = dim(.)[[1]])),
-                          z2,
-                          cost_column = c("Cost1", "Cost2"))%>%
+p2b <- prioritizr::problem(
+  datEx_species_bin %>% dplyr::mutate(
+    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    Cost2 = runif(n = dim(.)[[1]])
+  ),
+  z2,
+  cost_column = c("Cost1", "Cost2")
+) %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_relative_targets(targets2b) %>%
   prioritizr::add_binary_decisions() %>%
@@ -254,8 +268,7 @@ They are both marine mammals and thus had a target of 0% in zone 1 that was the 
 
 ```{r, fig.width = 9}
 (gg_s2b <- splnr_plot_solutionZones(s2b) +
-    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
-
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 
@@ -266,17 +279,21 @@ Similar to "normal" priritisations, zones also allows including a boundary penal
 #### Within the same zone
 
 ```{r}
-zm1 <- diag(2) 
+zm1 <- diag(2)
 print(zm1)
 ```
 
 The zeros in this matrix denote that there is no penalty between zones, whereas ones introduce a boundary penalty when we define the conservation problem. Here, we only introduce penalties within zone 1 AND zone 2 respectively.
 
 ```{r}
-p3 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397), #when giving sf input, we need as many cost columns as we have zones
-                                                              Cost2 = runif(n = dim(.)[[1]])),
-                          z2,
-                          cost_column = c("Cost1", "Cost2"))%>%
+p3 <- prioritizr::problem(
+  datEx_species_bin %>% dplyr::mutate(
+    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    Cost2 = runif(n = dim(.)[[1]])
+  ),
+  z2,
+  cost_column = c("Cost1", "Cost2")
+) %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_boundary_penalties(0.5, zone = zm1) %>%
   prioritizr::add_relative_targets(target2) %>%
@@ -285,27 +302,29 @@ p3 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397
 
 s3 <- p3 %>%
   prioritizr::solve.ConservationProblem()
-
 ```
 
 With `add_boundary_penalties()` we set a penalty of 0.5 between the zones we defined in `zm1`. For the purpose of this example, we also set a 10 second time limit for the prioritisation. The results show less fragmentation than in the previous solution without penalties:
 
 ```{r, fig.width=9}
 (gg_s3 <- splnr_plot_solutionZones(s3) +
-    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
-
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 A boundary penalty can also be introduced to only one zone:
 
 ```{r, fig.width=9}
 zm2 <- zm1
-zm2[2,2] = 0
+zm2[2, 2] <- 0
 
-p4 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397), #when giving sf input, we need as many cost columns as we have zones
-                                                              Cost2 = runif(n = dim(.)[[1]])),
-                          z2,
-                          cost_column = c("Cost1", "Cost2"))%>%
+p4 <- prioritizr::problem(
+  datEx_species_bin %>% dplyr::mutate(
+    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    Cost2 = runif(n = dim(.)[[1]])
+  ),
+  z2,
+  cost_column = c("Cost1", "Cost2")
+) %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_boundary_penalties(0.5, zone = zm2) %>%
   prioritizr::add_relative_targets(target2) %>%
@@ -316,7 +335,7 @@ s4 <- p4 %>%
   prioritizr::solve.ConservationProblem()
 
 (gg_s4 <- splnr_plot_solutionZones(s4) +
-    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
  
 #### Across zones
@@ -324,15 +343,19 @@ s4 <- p4 %>%
 Similarly, penalties can be applied between zones if specified in the problem.
 
 ```{r}
-zm3 <-  matrix(1, ncol = 2, nrow = 2)
+zm3 <- matrix(1, ncol = 2, nrow = 2)
 print(zm3)
 ```
 
 ```{r, fig.width=9}
-p5 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397), #when giving sf input, we need as many cost columns as we have zones
-                                                              Cost2 = runif(n = dim(.)[[1]])),
-                          z2,
-                          cost_column = c("Cost1", "Cost2"))%>%
+p5 <- prioritizr::problem(
+  datEx_species_bin %>% dplyr::mutate(
+    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    Cost2 = runif(n = dim(.)[[1]])
+  ),
+  z2,
+  cost_column = c("Cost1", "Cost2")
+) %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_boundary_penalties(0.5, zone = zm3) %>%
   prioritizr::add_relative_targets(target2) %>%
@@ -343,8 +366,7 @@ s5 <- p5 %>%
   prioritizr::solve.ConservationProblem()
 
 (gg_s5 <- splnr_plot_solutionZones(s5) +
-    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
-
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 ### Adding constraints
@@ -356,8 +378,10 @@ When using zones with constraints, we use the `prioritizr` function `add_manual_
 ```{r}
 mpas <- MPAsCoralSea %>%
   dplyr::mutate(zone = "zone 1") %>%
-  dplyr::rename(pu = cellID,
-                status = wdpa) %>%
+  dplyr::rename(
+    pu = cellID,
+    status = wdpa
+  ) %>%
   sf::st_drop_geometry() %>%
   tibble::tibble() %>%
   dplyr::filter(status == 1)
@@ -366,10 +390,14 @@ mpas <- MPAsCoralSea %>%
 We need to specify which zone the constraint should be applied to, give information on the planning unit identifier, rename the column of interest to "status" and filter out only the planning units that should be locked in.
 
 ```{r}
-p6 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397), #when giving sf input, we need as many cost columns as we have zones
-                                                              Cost2 = runif(n = dim(.)[[1]])),
-                          z2,
-                          cost_column = c("Cost1", "Cost2"))%>%
+p6 <- prioritizr::problem(
+  datEx_species_bin %>% dplyr::mutate(
+    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    Cost2 = runif(n = dim(.)[[1]])
+  ),
+  z2,
+  cost_column = c("Cost1", "Cost2")
+) %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_manual_locked_constraints(mpas) %>%
   prioritizr::add_relative_targets(target2) %>%
@@ -384,9 +412,11 @@ The results can the be visualized again:
 
 ```{r, fig.width = 9}
 (gg_s6 <- splnr_plot_solutionZones(s6) +
-    splnr_gg_add(PUs = PUs, Bndry = Bndry,
-           lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, Type = "Full",colorLI = "red", alphaLI = 0.2,
-           land = landmass, cropLand = PUs, ggtheme = splnr_theme,labelL = "Current MPAs"))
+  splnr_gg_add(
+    PUs = PUs, Bndry = Bndry,
+    lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, Type = "Full", colorLI = "red", alphaLI = 0.2,
+    land = landmass, cropLand = PUs, ggtheme = splnr_theme, labelL = "Current MPAs"
+  ))
 ```
 
 ### Objective functions
@@ -396,10 +426,14 @@ So far we have only used the minimum set objective function to meet all conserva
 Zones also works with objective functions other than the minimum set objective function.
 
 ```{r}
-p7 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397), #when giving sf input, we need as many cost columns as we have zones
-                                                              Cost2 = runif(n = dim(.)[[1]])),
-                          z2,
-                          cost_column = c("Cost1", "Cost2"))%>%
+p7 <- prioritizr::problem(
+  datEx_species_bin %>% dplyr::mutate(
+    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    Cost2 = runif(n = dim(.)[[1]])
+  ),
+  z2,
+  cost_column = c("Cost1", "Cost2")
+) %>%
   prioritizr::add_min_shortfall_objective(c(8, 0.3)) %>%
   prioritizr::add_relative_targets(target2) %>%
   prioritizr::add_binary_decisions() %>%
@@ -413,8 +447,7 @@ s7 <- p7 %>%
   prioritizr::solve.ConservationProblem()
 
 (gg_s7 <- splnr_plot_solutionZones(s7) +
-    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
-
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 ### Alternative: linear constraints
@@ -428,19 +461,22 @@ In our example, we fill first define our targets and a random cost layer with va
 ```{r}
 target8 <- rep(0.3, nrow(Dict))
 
-costRandom <- datEx_species_bin %>% dplyr::mutate(CostR = runif(n = dim(.)[[1]])) %>%
+costRandom <- datEx_species_bin %>%
+  dplyr::mutate(CostR = runif(n = dim(.)[[1]])) %>%
   dplyr::select("CostR")
 ```
 
 We then define and solve our conservation problem:
 
 ```{r}
-p8 <- prioritizr::problem(datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397)),
-                                     col_name,
-                                     "Cost1") %>%
+p8 <- prioritizr::problem(
+  datEx_species_bin %>% dplyr::mutate(Cost1 = rep(1, 397)),
+  col_name,
+  "Cost1"
+) %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_relative_targets(target8) %>%
-  prioritizr::add_linear_constraints(sum(costRandom$CostR)*0.1, sense = "<=", costRandom$CostR) %>%
+  prioritizr::add_linear_constraints(sum(costRandom$CostR) * 0.1, sense = "<=", costRandom$CostR) %>%
   prioritizr::add_binary_decisions() %>%
   prioritizr::add_default_solver(verbose = FALSE)
 
@@ -454,7 +490,7 @@ We can visualise the solution again:
 
 ```{r, fig.width = 9}
 (gg_s8 <- splnr_plot_solution(s8) +
-    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 
@@ -507,17 +543,19 @@ out_sf <- datSpecZone1 %>%
   dplyr::left_join(datSpecZone2, by = "cellID") %>%
   dplyr::mutate(geometry = datEx_species_bin$geometry) %>%
   sf::st_as_sf() %>%
-  dplyr::mutate(Cost1 = runif(n = dim(.)[[1]]) * 100, #when giving sf input, we need as many cost columns as we have zones
-                Cost2 = runif(n = dim(.)[[1]])*300)
-
+  dplyr::mutate(
+    Cost1 = runif(n = dim(.)[[1]]) * 100, # when giving sf input, we need as many cost columns as we have zones
+    Cost2 = runif(n = dim(.)[[1]]) * 300
+  )
 ```
 
 We can see here that we defined to (random) cost layers with the cost layer for `zone2` being three times as costly as for `zone1`. 
 
 ```{r}
 p10 <- prioritizr::problem(out_sf,
-                          z10,
-                          cost_column = c("Cost1", "Cost2"))%>%
+  z10,
+  cost_column = c("Cost1", "Cost2")
+) %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_manual_targets(targetAcross) %>%
   prioritizr::add_binary_decisions() %>%
@@ -543,7 +581,7 @@ The overall summary shows that every feature's suitable habitat was represented 
 
 ```{r, fig.width=9}
 (gg_s10 <- splnr_plot_solutionZones(s10) +
-    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 The plot also reflects the observation above that PUs were more frequently selected in `zone1`. What if we wanted to constrain this, so that `zone1` is less often selected and `zone2` more often?
@@ -555,8 +593,10 @@ We can include linear constraints for `zone1` above, so that its area does not e
 
 ```{r}
 CostArea <- out_sf %>%
-  dplyr::mutate(areaCostZone1 = rep(1,397),
-                areaCostZone2= rep(0,397)) %>%
+  dplyr::mutate(
+    areaCostZone1 = rep(1, 397),
+    areaCostZone2 = rep(0, 397)
+  ) %>%
   sf::st_drop_geometry() %>%
   dplyr::select("areaCostZone1", "areaCostZone2") %>%
   as.matrix()
@@ -566,10 +606,11 @@ We then define the conservation problem and add a linear constraint for 30% of t
 
 ```{r}
 p11 <- prioritizr::problem(out_sf,
-                           z10,
-                           cost_column = c("Cost1", "Cost2"))%>%
+  z10,
+  cost_column = c("Cost1", "Cost2")
+) %>%
   prioritizr::add_min_set_objective() %>%
-  prioritizr::add_linear_constraints(sum(CostArea[,1])*0.3, sense = "<=", CostArea) %>%
+  prioritizr::add_linear_constraints(sum(CostArea[, 1]) * 0.3, sense = "<=", CostArea) %>%
   prioritizr::add_manual_targets(targetAcross) %>%
   prioritizr::add_binary_decisions() %>%
   prioritizr::add_default_solver(verbose = FALSE)
@@ -592,7 +633,7 @@ The selected planning units are now more equally distributed across zones, which
 
 ```{r, fig.width=9}
 (gg_s11 <- splnr_plot_solutionZones(s11) +
-    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 However, we also expect the cost for the spatial plan to be higher than the previous one.
@@ -603,15 +644,21 @@ For this example, we want an target of 30% of all suitable reptile habitat for z
 
 ```{r}
 targetAcrossSome <- Dict %>%
-  dplyr::mutate(target = dplyr::case_when(Category == "Reptiles"~ 30/100,
-                                          Category == "Mammals"~ 10/100,
-                                          Category == "Sharks and rays"~ 5/100,
-                                          TRUE ~ 0),
-                zone = dplyr::case_when(Category == "Reptiles"~ list(c("zone1", "zone2")),
-                                          Category == "Mammals"~ list("zone2"),
-                                          Category == "Sharks and rays"~ list("zone3"),
-                                          TRUE ~ list(c("zone1", "zone2", "zone3"))),
-                type = rep("relative", length(col_name))) %>%
+  dplyr::mutate(
+    target = dplyr::case_when(
+      Category == "Reptiles" ~ 30 / 100,
+      Category == "Mammals" ~ 10 / 100,
+      Category == "Sharks and rays" ~ 5 / 100,
+      TRUE ~ 0
+    ),
+    zone = dplyr::case_when(
+      Category == "Reptiles" ~ list(c("zone1", "zone2")),
+      Category == "Mammals" ~ list("zone2"),
+      Category == "Sharks and rays" ~ list("zone3"),
+      TRUE ~ list(c("zone1", "zone2", "zone3"))
+    ),
+    type = rep("relative", length(col_name))
+  ) %>%
   dplyr::rename(feature = "Scientific") %>%
   dplyr::select(-"Category", -"Class", -"Common")
 ```
@@ -660,15 +707,18 @@ out_sf <- datSpecZone1 %>%
   dplyr::left_join(datSpecZone3, by = "cellID") %>%
   dplyr::mutate(geometry = datEx_species_bin$geometry) %>%
   sf::st_as_sf() %>%
-  dplyr::mutate(Cost1 = runif(n = dim(.)[[1]]) * 100, #when giving sf input, we need as many cost columns as we have zones
-                Cost2 = runif(n = dim(.)[[1]])*300,
-                Cost3 = runif(n = dim(.)[[1]])*200)
+  dplyr::mutate(
+    Cost1 = runif(n = dim(.)[[1]]) * 100, # when giving sf input, we need as many cost columns as we have zones
+    Cost2 = runif(n = dim(.)[[1]]) * 300,
+    Cost3 = runif(n = dim(.)[[1]]) * 200
+  )
 ```
 
 ```{r}
 p12 <- prioritizr::problem(out_sf,
-                           z12,
-                           cost_column = c("Cost1", "Cost2", "Cost3"))%>%
+  z12,
+  cost_column = c("Cost1", "Cost2", "Cost3")
+) %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_manual_targets(targetAcrossSome) %>%
   prioritizr::add_binary_decisions() %>%
@@ -689,11 +739,11 @@ print(r12)
 ```
 
 ```{r}
-(gg_s12 <- splnr_plot_solutionZones(s12, 
-                                    colorVals = c("#c6dbef", "#3182bd", "navyblue","black"),
-                                    legendLabels = c("Not selected", "Zone 1", "Zone 2", "Zone3")) +
-    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
-
+(gg_s12 <- splnr_plot_solutionZones(s12,
+  colorVals = c("#c6dbef", "#3182bd", "navyblue", "black"),
+  legendLabels = c("Not selected", "Zone 1", "Zone 2", "Zone3")
+) +
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 
