@@ -50,7 +50,7 @@ dat_soln <- dat_problem \%>\%
 
 splnr_plot_solution(dat_soln)
 # example 2
-#' t2 <- matrix(NA, ncol = 2, nrow = 5) # create targets
+t2 <- matrix(NA, ncol = 2, nrow = 5) # create targets
 t2[, 1] <- 0.1
 t2[, 2] <- 0.05
 
