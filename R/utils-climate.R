@@ -243,7 +243,7 @@ splnr_CS_climatePriorityArea_assignTargets <- function(targetsDF,
 #'
 #' CPA_Approach <- splnr_climatesmart_climatePriorityAreaApproach(
 #'   featuresDF = dat_species_bin,
-#'   metricDF = metric_df, targetsDF = target, direction = 1
+#'   metricDF = metric_df, targetsDF = target, direction = -1
 #' )
 #' out_sf <- CPA_Approach$Features
 #' targets <- CPA_Approach$Targets
@@ -576,16 +576,20 @@ splnr_CS_percentile_assignTargets <- function(featuresDF,
 
   suppressMessages({
     df <- featuresDF %>%
+      sf::st_drop_geometry() %>%
+      dplyr::mutate_all(~ifelse(is.na(.), 0, .)) %>%
       tibble::as_tibble() %>%
-      dplyr::select(-"cellID", -"geometry") %>%
+      dplyr::select(-"cellID") %>%
       dplyr::summarize(dplyr::across(dplyr::everything(), sum)) %>% # Get the # of planning units where feature is present
       tidyr::pivot_longer(tidyselect::everything(), names_to = "feature", values_to = "original") %>%
       dplyr::left_join(targetsDF) %>%
       dplyr::mutate(feature = paste0(.data$feature, "_filtered")) # Change names
 
     df1 <- climateSmartDF %>%
+      sf::st_drop_geometry() %>%
+      dplyr::mutate_all(~ifelse(is.na(.), 0, .)) %>%
       tibble::as_tibble() %>%
-      dplyr::select(-"cellID", -"geometry") %>%
+      dplyr::select(-"cellID") %>%
       dplyr::summarize(dplyr::across(dplyr::everything(), sum)) %>% # Get the # of planning units selected using the climate-smart approach
       tidyr::pivot_longer(tidyselect::everything(), names_to = "feature", values_to = "filtered")
 
@@ -638,7 +642,7 @@ splnr_climatesmart_percentileApproach <- function(featuresDF,
                                                   metricDF,
                                                   targetsDF,
                                                   direction,
-                                                  percentile = 5) {
+                                                  percentile = 35) {
   percentileFeatures <- splnr_CS_percentile_preprocess(
     featuresDF = featuresDF, metricDF = metricDF,
     direction = direction, percentile = percentile

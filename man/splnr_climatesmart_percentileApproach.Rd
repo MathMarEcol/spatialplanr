@@ -9,7 +9,7 @@ splnr_climatesmart_percentileApproach(
   metricDF,
   targetsDF,
   direction,
-  percentile = 5
+  percentile = 35
 )
 }
 \arguments{

@@ -42,6 +42,22 @@ PU_size <- 10000 # km2
 cCRS <- "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs" # Mollweide
 ```
 
+We can also use a customised `ggplot` theme that can be passed as a list to `splnr_gg_add()` and that can then be used for all plots. For example:
+
+```{r}
+splnr_theme <- list(
+  ggplot2::theme_bw(),
+  ggplot2::theme(
+    legend.position = "right",
+    legend.direction = "vertical",
+    text = ggplot2::element_text(size = 9, colour = "black"),
+    axis.text = ggplot2::element_text(size = 9, colour = "black"),
+    plot.title = ggplot2::element_text(size = 9),
+    axis.title = ggplot2::element_blank()
+  )
+)
+```
+
 ## Analysis Region
 
 Start your analysis by defining your region and setting up the planning units.
@@ -115,40 +131,39 @@ So far, all steps were exactly the same as in a spatial plan that does not inclu
 We will use climate velocity data obtained from x, y and z models using SSP5-8.5. For downstream analysis, we rename the column of interest (here: the velocity data) `metric`.
 
 ```{r}
-metric_df = CoralSeaVelocity %>%
-  dplyr::rename(metric = voccMag_transformed) 
+metric_df <- CoralSeaVelocity %>%
+  dplyr::rename(metric = voccMag_transformed)
 ```
 
 The climate velocity data can be visualized using the `splnr_plot_climData()` function.
 
-```{r}
+```{r, fig.width = 9}
 (ggclim <- splnr_plot_climData(metric_df, "metric") +
-    splnr_gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = "Default"))
+  splnr_gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 In our case, there were few areas with low climate velocity, which are the areas we define as climate refugia in our example. Usually, we would combine several metrics (e.g. exposure, velocity etc.) of multiple SSP scenarios to get more robust climate refugia. For our example, we randomly set areas with very high velocity to a value between `0.85-1` to visualize the output (CHANGE THIS LATER TO BETTER DATA).
 
-```{r}
+```{r, fig.width = 9}
 set.seed(5)
 
-metric_df = CoralSeaVelocity %>%
+metric_df <- CoralSeaVelocity %>%
   dplyr::rename(metric = voccMag_transformed) %>%
   dplyr::mutate(
     metricOG = metric,
-    metric = ifelse(metric > 0.99, runif(., 0.85, 1.0), metric))
+    metric = ifelse(metric > 0.99, runif(., 0.85, 1.0), metric)
+  )
 
 (ggclim <- splnr_plot_climData(metric_df, "metric") +
-    splnr_gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = "Default"))
-
+  splnr_gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
-We then use the climate priority area approach `splnr_climate_PriorityArea()` detailed in Buenafe et al (2023) to determine climate refugia. Briefly, this approach selects a percentile (in our case 5%) of the suitable habitat of each feature that is considered the most climate-smart. It also requires a `direction` input indicating at which side of the metric range the more climate-smart areas can be found. In our case, lower climate velocity denotes more climate-smart (`direction = -1`), but in other cases a higher value might represent the more climate-smart planning units (`direction = 1`). 
+We then use the climate priority area approach `splnr_climatesmart_climatePriorityAreaApproach()` detailed in [Buenafe et al (2023)](https://doi.org/10.1002/eap.2852) to determine climate refugia. Briefly, this approach selects a percentile (in our case 5%) of the suitable habitat of each feature that is considered the most climate-smart. It also requires a `direction` input indicating at which side of the metric range the more climate-smart areas can be found. In our case, lower climate velocity denotes more climate-smart (`direction = -1`), but in other cases a higher value might represent the more climate-smart planning units (`direction = 1`). 
 
 Using this approach also requires an adaptation of the targets, since 5% of the suitable habitat of each species is already protected in the climate-smart areas. We can decide how much of the 5% of the most climate-smart areas is supposed to be included in the spatial plan (here: `refugiaTarget = 1` to protect 100% of the 5% most climate-smart areas).
 
 
 ```{r}
-
 target <- datEx_species_bin %>%
   sf::st_drop_geometry() %>%
   dplyr::select(-"cellID") %>%
@@ -158,15 +173,17 @@ target <- datEx_species_bin %>%
   dplyr::mutate(target = 0.3)
 
 
-CPA_Approach <- splnr_climatesmart_climatePriorityAreaApproach(featuresDF = datEx_species_bin,
-                    metricDF = metric_df, targetsDF = target, direction = -1, refugiaTarget = 1)
+CPA_Approach <- splnr_climatesmart_climatePriorityAreaApproach(
+  featuresDF = datEx_species_bin,
+  metricDF = metric_df, targetsDF = target, direction = -1, refugiaTarget = 1
+)
 
-out_sf <- CPA_Approach$Features %>% 
-  dplyr::left_join(datEx_species_bin %>% 
-                     sf::st_drop_geometry() %>%
-                     dplyr::select("cellID", tidyselect::starts_with("Cost_")), by = "cellID") %>%
+out_sf <- CPA_Approach$Features %>%
+  dplyr::left_join(datEx_species_bin %>%
+    sf::st_drop_geometry() %>%
+    dplyr::select("cellID", tidyselect::starts_with("Cost_")), by = "cellID") %>%
   dplyr::left_join(metric_df %>%
-                     sf::st_drop_geometry(), by = "cellID")
+    sf::st_drop_geometry(), by = "cellID")
 
 targets <- CPA_Approach$Targets
 ```
@@ -199,14 +216,136 @@ dat_solnClim <- prioritizr::solve.ConservationProblem(p1)
 
 We can look at the resulting plan using `splnr_plot_solution()`.
 
-```{r}
+```{r, fig.width = 9}
 (ggSoln <- splnr_plot_solution(dat_solnClim) +
-    splnr_gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = "Default"))
+  splnr_gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 However, we are also interested how climate-smart the selected planning units in the solution actually are. For this, we can use a kernel density plot 
 
 
-```{r}
+```{r, fig.width = 9}
 (ggClimDens <- splnr_plot_climKernelDensity(soln = list(dat_solnClim), names = c("Input 1"), type = "Normal", legendTitle = "Climate velocity (add unit)", xAxisLab = "Climate velocity"))
+```
+
+## Alternative Approaches
+
+### Percentile Approach
+
+```{r}
+target <- datEx_species_bin %>%
+  sf::st_drop_geometry() %>%
+  dplyr::select(-"cellID") %>%
+  colnames() %>%
+  data.frame() %>%
+  setNames(c("feature")) %>%
+  dplyr::mutate(target = 30)
+
+Percentile_Approach <- splnr_climatesmart_percentileApproach(
+  featuresDF = datEx_species_bin,
+  metricDF = metric_df, targetsDF = target, direction = -1, percentile = 35
+)
+
+out_sf <- Percentile_Approach$Features %>%
+  dplyr::left_join(datEx_species_bin %>%
+    sf::st_drop_geometry() %>%
+    dplyr::select("cellID", tidyselect::starts_with("Cost_")), by = "cellID") %>%
+  dplyr::left_join(metric_df %>%
+    sf::st_drop_geometry(), by = "cellID")
+
+targets <- Percentile_Approach$Targets
+```
+
+
+We now add other information required to perform the spatial planning, such as the cost, and extract the names of all used features to then run a prioritisation.
+
+```{r, warning=FALSE}
+out_sf$Cost_None <- rep(1, 397)
+
+usedFeatures <- out_sf %>%
+  sf::st_drop_geometry() %>%
+  dplyr::select(-tidyselect::starts_with("Cost_"), -"cellID", -tidyselect::starts_with("metric")) %>%
+  names()
+
+p2 <- prioritizr::problem(out_sf, usedFeatures, "Cost_None") %>%
+  prioritizr::add_min_set_objective() %>%
+  prioritizr::add_relative_targets(targets$target) %>%
+  prioritizr::add_binary_decisions() %>%
+  prioritizr::add_default_solver(verbose = FALSE)
+
+dat_solnClimPercentile <- prioritizr::solve.ConservationProblem(p2,
+  force = TRUE
+)
+```
+
+We can look at the resulting plan using `splnr_plot_solution()`.
+
+```{r, fig.width = 9}
+(ggSoln <- splnr_plot_solution(dat_solnClimPercentile) +
+  splnr_gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+```
+
+However, we are also interested how climate-smart the selected planning units in the solution actually are. For this, we can use a kernel density plot 
+
+
+```{r, fig.width = 9}
+(ggClimDens <- splnr_plot_climKernelDensity(soln = list(dat_solnClimPercentile), names = c("Input 1"), type = "Normal", legendTitle = "Climate velocity (add unit)", xAxisLab = "Climate velocity"))
+```
+
+### Feature Approach
+
+```{r}
+target <- datEx_species_bin %>%
+  sf::st_drop_geometry() %>%
+  dplyr::select(-"cellID") %>%
+  colnames() %>%
+  data.frame() %>%
+  setNames(c("feature")) %>%
+  dplyr::mutate(target = 30)
+
+Feature_Approach <- splnr_climatesmart_featureApproach(
+   featuresDF = datEx_species_bin,
+   metricDF = metric_df, targetsDF = target, direction = 1
+)
+
+out_sf <- Feature_Approach$Features %>%
+  dplyr::left_join(datEx_species_bin %>%
+    sf::st_drop_geometry() %>%
+    dplyr::select("cellID", tidyselect::starts_with("Cost_")), by = "cellID") %>%
+  dplyr::left_join(metric_df %>%
+    sf::st_drop_geometry(), by = "cellID")
+
+targets <- Feature_Approach$Targets
+```
+
+
+We now add other information required to perform the spatial planning, such as the cost, and extract the names of all used features to then run a prioritisation.
+
+```{r}
+out_sf$Cost_None <- rep(1, 397)
+
+usedFeatures <- out_sf %>%
+  sf::st_drop_geometry() %>%
+  dplyr::select(-tidyselect::starts_with("Cost_"), -"cellID", -tidyselect::starts_with("metric")) %>%
+  names()
+
+p3 <- prioritizr::problem(out_sf, usedFeatures, "Cost_None") %>%
+  prioritizr::add_min_set_objective() %>%
+  prioritizr::add_relative_targets(targets$target) %>%
+  prioritizr::add_binary_decisions() %>%
+  prioritizr::add_default_solver(verbose = FALSE)
+
+dat_solnClimFeature <- prioritizr::solve.ConservationProblem(p3)
+```
+
+```{r, fig.width = 9}
+(ggSoln <- splnr_plot_solution(dat_solnClimFeature) +
+  splnr_gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+```
+
+However, we are also interested how climate-smart the selected planning units in the solution actually are. For this, we can use a kernel density plot 
+
+
+```{r, fig.width = 9}
+(ggClimDens <- splnr_plot_climKernelDensity(soln = list(dat_solnClimFeature), names = c("Input 1"), type = "Normal", legendTitle = "Climate velocity (add unit)", xAxisLab = "Climate velocity"))
 ```

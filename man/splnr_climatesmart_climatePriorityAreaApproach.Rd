@@ -48,7 +48,7 @@ metric_df <- dat_clim
 
 CPA_Approach <- splnr_climatesmart_climatePriorityAreaApproach(
   featuresDF = dat_species_bin,
-  metricDF = metric_df, targetsDF = target, direction = 1
+  metricDF = metric_df, targetsDF = target, direction = -1
 )
 out_sf <- CPA_Approach$Features
 targets <- CPA_Approach$Targets
