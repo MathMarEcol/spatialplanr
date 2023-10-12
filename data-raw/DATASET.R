@@ -116,7 +116,7 @@ category_df2 <- tibble::tibble(
 )
 
 # create random climate metric example
-climVec <- unlist(rep(seq(0,1,length.out = 30), 26))
+climVec <- unlist(rep(seq(0, 1, length.out = 30), 26))
 
 dat_clim <- dat_PUs %>%
   sf::st_sf() %>%
@@ -130,9 +130,9 @@ usethis::use_data(dat_bndry,
   dat_species_bin,
   dat_species_bin2,
   dat_mpas,
-  #dat_problem,
-  #dat_soln,
-  #dat_soln2,
+  # dat_problem,
+  # dat_soln,
+  # dat_soln2,
   category_df,
   category_df2,
   dat_clim,

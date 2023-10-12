@@ -40,7 +40,6 @@ splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
 #' df <- dat_species_prob %>%
 #'   splnr_replace_NAs("Spp2")
 splnr_replace_NAs <- function(df, vari) {
-
   if (sum(is.na(dplyr::pull(df, !!rlang::sym(vari)))) > 0) { # Check if there are NAs
 
     gp <- df %>%
@@ -132,10 +131,9 @@ splnr_scale_01 <- function(dat, col_name) {
 #'
 #' @examples
 #' df <- dat_species_prob %>%
-#'  splnr_featureNames(exclude = c("cellID"))
-splnr_featureNames <- function(dat, exclude = NA){
-
-  if (is.na(exclude)){
+#'   splnr_featureNames(exclude = c("cellID"))
+splnr_featureNames <- function(dat, exclude = NA) {
+  if (is.na(exclude)) {
     exclude <- c("Cost_", "cellID")
   } else {
     exclude <- c("Cost_", "cellID", exclude)
@@ -168,8 +166,8 @@ splnr_featureNames <- function(dat, exclude = NA){
 #' df_rob <- rnaturalearth::ne_coastline(returnclass = "sf") %>%
 #'   splnr_convert_toPacific()
 splnr_convert_toPacific <- function(df,
-                                  buff = 0,
-                                  cCRS = "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") {
+                                    buff = 0,
+                                    cCRS = "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") {
   # TODO add a warning if df doesn't cross the pacific dateline
 
   longlat <- "EPSG:4326"
@@ -277,8 +275,9 @@ splnr_arrangeFeatures <- function(df) {
 #' @examples
 #' # 30 % target for problem/solution 1
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
@@ -288,10 +287,12 @@ splnr_arrangeFeatures <- function(df) {
 #'   prioritizr::solve.ConservationProblem()
 #'
 #' # 50 % target for problem/solution 2
-#' dat_problem2 <- prioritizr::problem(dat_species_bin %>%
-#'                                       dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#' dat_problem2 <- prioritizr::problem(
+#'   dat_species_bin %>%
+#'     dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.5) %>%
 #'   prioritizr::add_binary_decisions() %>%
@@ -355,8 +356,9 @@ splnr_get_kappaCorrData <- function(sol, name_sol) {
 #'
 #' @examples
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%

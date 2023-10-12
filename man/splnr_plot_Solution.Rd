@@ -74,6 +74,8 @@ p2 <- prioritizr::problem(
 
 s2 <- p2 \%>\%
   prioritizr::solve.ConservationProblem()
-(splnr_plot_solution(s2, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"),
-                          legendLabels = c("Not selected", "Zone 1", "Zone 2")))
+(splnr_plot_solution(s2,
+  zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"),
+  legendLabels = c("Not selected", "Zone 1", "Zone 2")
+))
 }

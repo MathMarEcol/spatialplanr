@@ -19,5 +19,5 @@ Returns the feature names
 }
 \examples{
 df <- dat_species_prob \%>\%
- splnr_featureNames(exclude = c("cellID"))
+  splnr_featureNames(exclude = c("cellID"))
 }
