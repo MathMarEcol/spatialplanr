@@ -46,8 +46,10 @@ target <- Features \%>\%
 metric_df <- dat_clim
 
 
-CPA_Approach <- splnr_climate_priorityApproach(featuresDF = dat_species_bin,
-                    metricDF = metric_df, targetsDF = target, direction = 1)
+CPA_Approach <- splnr_climate_priorityApproach(
+  featuresDF = dat_species_bin,
+  metricDF = metric_df, targetsDF = target, direction = 1
+)
 out_sf <- CPA_Approach$Features
 targets <- CPA_Approach$Targets
 }

@@ -27,13 +27,15 @@ splnr_plot_corrMat(
 A ggplot object of the plot
 }
 \description{
-Plot correlation matrices
+Conservation planning often requires the comparison of the outputs of the solutions of different conservation problems.
+One way to compare solutions is by correlating the solutions using Cohen's Kappa. \code{splnr_plot_corrMat()} allows to visualize the correlation matrix of the different solutions (for example produced with the \code{spatialplanr} function \code{\link[=splnr_get_kappaCorrData]{splnr_get_kappaCorrData()}}).
 }
 \examples{
 # 30 \% target for problem/solution 1
 dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-                                   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-                                   cost_column = "Cost") \%>\%
+  features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+  cost_column = "Cost"
+) \%>\%
   prioritizr::add_min_set_objective() \%>\%
   prioritizr::add_relative_targets(0.3) \%>\%
   prioritizr::add_binary_decisions() \%>\%
@@ -43,10 +45,12 @@ dat_soln <- dat_problem \%>\%
   prioritizr::solve.ConservationProblem()
 
 # 50 \% target for problem/solution 2
-dat_problem2 <- prioritizr::problem(dat_species_bin \%>\%
-                                      dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-                                   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-                                   cost_column = "Cost") \%>\%
+dat_problem2 <- prioritizr::problem(
+  dat_species_bin \%>\%
+    dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+  features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+  cost_column = "Cost"
+) \%>\%
   prioritizr::add_min_set_objective() \%>\%
   prioritizr::add_relative_targets(0.5) \%>\%
   prioritizr::add_binary_decisions() \%>\%

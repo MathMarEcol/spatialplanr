@@ -27,7 +27,8 @@ splnr_plot_featureNo(
 A ggplot object of the plot
 }
 \description{
-Plot number of features
+\code{splnr_plot_featureNo()} allows you to use \code{ggplot2} to visually inspect the number of features per planning unit that are used as inputs in the conservation problem. When all features are species, this map can be seen as a visualisation of species richness in the planning region.
+This function requires an \code{sf} object with binary information of all features you want to include in the richness plot (\code{0} for absences and \code{1} for presences, for example created from continuous data with the \code{spatialplanr} function \code{\link[=splnr_apply_cutoffs]{splnr_apply_cutoffs()}}). It outputs a \code{ggobject} and can be combined with the \code{spatialplanr} function \code{\link[=splnr_gg_add]{splnr_gg_add()}}.
 }
 \examples{
 (splnr_plot_featureNo(dat_species_bin))

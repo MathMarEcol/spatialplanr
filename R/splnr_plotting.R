@@ -25,15 +25,16 @@
 #'
 #' @examples
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
 #' dat_soln <- dat_problem %>%
-#'  prioritizr::solve.ConservationProblem()
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' splnr_plot_solution(dat_soln) +
 #'   splnr_gg_add(PUs = dat_PUs, ggtheme = TRUE)
@@ -42,79 +43,90 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
                          land = NA, colorLand = "grey20",
                          contours = NA, cropLand = NA, colorsConts = "black",
                          lockedInAreas = NA, Type = "Full", colInterest = NA,
-                         alphaLI = 0.5, colorLI =  "black", legendL = "", labelL = "MPAs",
-                         ggtheme = "Default" #splnr_theme
+                         alphaLI = 0.5, colorLI = "black", legendL = "", labelL = "MPAs",
+                         ggtheme = "Default" # splnr_theme
 ) {
   ggList <- list()
 
-  if (inherits(PUs,"sf")) {
-    ggList <- c(ggList,
-                ggplot2::geom_sf(data = PUs, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE),
-                ggplot2::coord_sf(xlim = sf::st_bbox(PUs)$xlim, ylim = sf::st_bbox(PUs)$ylim))
+  if (inherits(PUs, "sf")) {
+    ggList <- c(
+      ggList,
+      ggplot2::geom_sf(data = PUs, colour = colorPUs, fill = NA, size = 0.1, show.legend = FALSE),
+      ggplot2::coord_sf(xlim = sf::st_bbox(PUs)$xlim, ylim = sf::st_bbox(PUs)$ylim)
+    )
   }
 
-  if (inherits(Bndry,"sf")) {
-    ggList <- c(ggList,
-                ggplot2::geom_sf(data = Bndry, colour = colorBndry, size = 0.4, fill = NA, show.legend = FALSE),
-                ggplot2::coord_sf(xlim = sf::st_bbox(Bndry)$xlim, ylim = sf::st_bbox(Bndry)$ylim))
+  if (inherits(Bndry, "sf")) {
+    ggList <- c(
+      ggList,
+      ggplot2::geom_sf(data = Bndry, colour = colorBndry, size = 0.4, fill = NA, show.legend = FALSE),
+      ggplot2::coord_sf(xlim = sf::st_bbox(Bndry)$xlim, ylim = sf::st_bbox(Bndry)$ylim)
+    )
   }
 
-  if (inherits(land,"sf")) {
-    ggList <- c(ggList,
-                ggplot2::geom_sf(data = land, colour = colorLand, fill = colorLand, alpha = 0.9, size = 0.1, show.legend = FALSE))
+  if (inherits(land, "sf")) {
+    ggList <- c(
+      ggList,
+      ggplot2::geom_sf(data = land, colour = colorLand, fill = colorLand, alpha = 0.9, size = 0.1, show.legend = FALSE)
+    )
 
-    if (inherits(contours,"sf")) { #needs a geometry col and one names Category that has the wanted contours and their names
+    if (inherits(contours, "sf")) { # needs a geometry col and one names Category that has the wanted contours and their names
       namesConts <- unique(contours$Category)
       contoursRowNum <- length(namesConts)
       vals <- 1:contoursRowNum
       if (length(vals) > 6) {
         cat("Only 6 categories allowed for plotting contours.")
       } else {
-        ggList <- c(ggList,
-                    list(ggnewscale::new_scale_colour(),
-                         ggplot2::geom_sf(data = contours, colour = colorsConts, fill = NA, ggplot2::aes(linetype = .data$Category), size = 0.5, show.legend = "line"),
-                         ggplot2::scale_linetype_manual(" ",
-                                                        breaks = namesConts,
-                                                        values = vals,
-                                                        guide = ggplot2::guide_legend(
-                                                          override.aes = list(fill = NA),
-                                                          nrow = 2,
-                                                          direction = "horizontal",
-                                                          order = 3,
-                                                          keywidth = grid::unit(0.05, "npc")))))
+        ggList <- c(
+          ggList,
+          list(
+            ggnewscale::new_scale_colour(),
+            ggplot2::geom_sf(data = contours, colour = colorsConts, fill = NA, ggplot2::aes(linetype = .data$Category), size = 0.5, show.legend = "line"),
+            ggplot2::scale_linetype_manual(" ",
+              breaks = namesConts,
+              values = vals,
+              guide = ggplot2::guide_legend(
+                override.aes = list(fill = NA),
+                nrow = 2,
+                direction = "horizontal",
+                order = 3,
+                keywidth = grid::unit(0.05, "npc")
+              )
+            )
+          )
+        )
       }
-
     }
 
     if (inherits(lockedInAreas, "sf")) {
-
-      lockedInAreas <-  lockedInAreas %>%
+      lockedInAreas <- lockedInAreas %>%
         dplyr::mutate(lockedIn = as.logical(colInterest)) %>%
         dplyr::filter(.data$lockedIn == 1)
 
       if (Type == "Full") {
-        ggList <- c(ggList,
-                    list(
-                      ggnewscale::new_scale_fill(),
-                      ggnewscale::new_scale_colour(),
-                      ggplot2::geom_sf(data = lockedInAreas, ggplot2::aes(fill = .data$lockedIn), alpha = alphaLI),
-                      ggplot2::scale_fill_manual(
-                        name = legendL,
-                        values = c("TRUE" = colorLI),
-                        labels = labelL,
-                        aesthetics =  c("colour", "fill"),
-                        guide = ggplot2::guide_legend(
-                          override.aes = list(linetype = 0),
-                          nrow = 2,
-                          order = 1,
-                          direction = "horizontal",
-                          title.position = "top",
-                          title.hjust = 0.5
-                        )
-                      )
-                    ))
+        ggList <- c(
+          ggList,
+          list(
+            ggnewscale::new_scale_fill(),
+            ggnewscale::new_scale_colour(),
+            ggplot2::geom_sf(data = lockedInAreas, ggplot2::aes(fill = .data$lockedIn), alpha = alphaLI),
+            ggplot2::scale_fill_manual(
+              name = legendL,
+              values = c("TRUE" = colorLI),
+              labels = labelL,
+              aesthetics = c("colour", "fill"),
+              guide = ggplot2::guide_legend(
+                override.aes = list(linetype = 0),
+                nrow = 2,
+                order = 1,
+                direction = "horizontal",
+                title.position = "top",
+                title.hjust = 0.5
+              )
+            )
+          )
+        )
       } else if (Type == "Contours") {
-
         lockedInAreas <- lockedInAreas %>%
           sf::st_union() %>%
           sf::st_as_sf() %>%
@@ -122,92 +134,179 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
           dplyr::mutate(lockedIn = 1) %>%
           dplyr::mutate(lockedIn = as.factor(.data$lockedIn))
 
-        ggList <- c(ggList,
-                    list(
-                      ggnewscale::new_scale_fill(),
-                      ggnewscale::new_scale_colour(),
-                      ggplot2::geom_sf(data = lockedInAreas, colour = colorLI, fill = NA, ggplot2::aes(linetype = .data$lockedIn), size = 0.5, show.legend = "line"),
-                      ggplot2::scale_linetype_manual("",
-                                                     values = 1,
-                                                     labels = labelL,
-                                                     guide = ggplot2::guide_legend(
-                                                       override.aes = list(fill = NA),
-                                                       #nrow = 2,
-                                                       direction = "horizontal",
-                                                       #order = 3,
-                                                       keywidth = grid::unit(0.05, "npc"))
-                      )
-                    ))
+        ggList <- c(
+          ggList,
+          list(
+            ggnewscale::new_scale_fill(),
+            ggnewscale::new_scale_colour(),
+            ggplot2::geom_sf(data = lockedInAreas, colour = colorLI, fill = NA, ggplot2::aes(linetype = .data$lockedIn), size = 0.5, show.legend = "line"),
+            ggplot2::scale_linetype_manual("",
+              values = 1,
+              labels = labelL,
+              guide = ggplot2::guide_legend(
+                override.aes = list(fill = NA),
+                # nrow = 2,
+                direction = "horizontal",
+                # order = 3,
+                keywidth = grid::unit(0.05, "npc")
+              )
+            )
+          )
+        )
       }
     }
 
     if (inherits(cropLand, "sf")) {
-      ggList <- c(ggList,
-                  ggplot2::coord_sf(xlim = sf::st_bbox(cropLand)$xlim, ylim = sf::st_bbox(cropLand)$ylim))
-
+      ggList <- c(
+        ggList,
+        ggplot2::coord_sf(xlim = sf::st_bbox(cropLand)$xlim, ylim = sf::st_bbox(cropLand)$ylim)
+      )
     }
   }
 
-  if (inherits(ggtheme, "character")){
-    ggList <- c(ggList,
-                list( ggplot2::theme_bw(),
-                      ggplot2::theme(
-                        legend.position = "bottom",
-                        legend.direction = "horizontal",
-                        text = ggplot2::element_text(size = 20, colour = "black"),
-                        axis.text = ggplot2::element_text(size = 16, colour = "black"),
-                        plot.title = ggplot2::element_text(size = 16),
-                        axis.title = ggplot2::element_blank()))
+  if (inherits(ggtheme, "character")) {
+    ggList <- c(
+      ggList,
+      list(
+        ggplot2::theme_bw(),
+        ggplot2::theme(
+          legend.position = "bottom",
+          legend.direction = "horizontal",
+          text = ggplot2::element_text(size = 20, colour = "black"),
+          axis.text = ggplot2::element_text(size = 16, colour = "black"),
+          plot.title = ggplot2::element_text(size = 16),
+          axis.title = ggplot2::element_blank()
+        )
+      )
     )
-  } else if (inherits(ggtheme,"list")) {
+  } else if (inherits(ggtheme, "list")) {
     ggList <- c(ggList, ggtheme)
-  } else if (inherits(ggtheme,"logical")) {
+  } else if (inherits(ggtheme, "logical")) {
     ggList <- ggList
   }
-
 }
 
 #' Plot prioritizr solution
 #'
+#' `splnr_plot_solution()` allows to plot the solution of a `prioritizr` conservation problem with our without in a customisable way using `ggplot2`. This function requires a solution as an `sf` object with a column called `solution_1` and outputs a `ggobject`. It can be combined with the `spatialplanr` function [splnr_gg_add()].
+#'
 #' @param soln The `prioritizr` solution
 #' @param colorVals A `list` object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.
 #' @param showLegend A logical command on whether to show the legend of the solution (Default: TRUE).
+#' @param legendLabels Character values (number of zones + 1) of what the legend should be labelled.
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
+#' @param zones A logical value, indicating whether the spatial plan contains zones or not (default = FALSE).
 #'
 #' @return A ggplot object of the plot
 #' @export
 #'
 #' @examples
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
-#'dat_soln <- dat_problem %>%
-#'  prioritizr::solve.ConservationProblem()
+#' dat_soln <- dat_problem %>%
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' splnr_plot_solution(dat_soln)
-splnr_plot_solution <- function(soln, colorVals = c("TRUE" = "#3182bd", "FALSE" = "#c6dbef"),
-                                showLegend = TRUE, plotTitle = "Solution", legendTitle = "Planning Units") {
-  soln <- soln %>%
-    dplyr::select(.data$solution_1) %>%
-    dplyr::mutate(solution_1 = as.logical(.data$solution_1)) # Making it logical helps with the plotting
+#' # example 2
+#' t2 <- matrix(NA, ncol = 2, nrow = 5) # create targets
+#' t2[, 1] <- 0.1
+#' t2[, 2] <- 0.05
+#'
+#' z2 <- prioritizr::zones(
+#'   "zone 1" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   "zone 2" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5")
+#' )
+#' # when giving sf input, we need as many cost columns as we have zones
+#' p2 <- prioritizr::problem(
+#'   dat_species_bin %>% dplyr::mutate(
+#'     Cost1 = runif(n = dim(.)[[1]]),
+#'     Cost2 = runif(n = dim(.)[[1]])
+#'   ),
+#'   z2,
+#'   cost_column = c("Cost1", "Cost2")
+#' ) %>%
+#'   prioritizr::add_min_set_objective() %>%
+#'   prioritizr::add_relative_targets(t2) %>%
+#'   prioritizr::add_binary_decisions() %>%
+#'   prioritizr::add_default_solver(verbose = FALSE)
+#'
+#' s2 <- p2 %>%
+#'   prioritizr::solve.ConservationProblem()
+#' (splnr_plot_solution(s2,
+#'   zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"),
+#'   legendLabels = c("Not selected", "Zone 1", "Zone 2")
+#' ))
+splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
+                                showLegend = TRUE, legendLabels = c("Not selected", "Selected"),
+                                plotTitle = "Solution", legendTitle = "Planning Units",
+                                zones = FALSE) {
+  if (zones == FALSE) {
+    soln <- soln %>%
+      dplyr::select(.data$solution_1) %>%
+      dplyr::mutate(solution = as.factor(.data$solution_1))
+    nrows <- 2
+  } else if (zones == TRUE) {
+    oldName <- soln %>%
+      dplyr::select(tidyselect::starts_with(c("solution"))) %>%
+      sf::st_drop_geometry() %>%
+      tibble::as_tibble() %>%
+      names()
+
+    newName <- gsub("1_zone", "", oldName) # to make data a bit nicer to work with
+    nrows <- (length(newName) + 1)
+
+    solnNewNames <- soln %>%
+      dplyr::rename_at(dplyr::vars(tidyselect::all_of(oldName)), ~newName) %>%
+      dplyr::select(tidyselect::starts_with(c("solution")))
+
+    for (i in 2:(length(newName))) {
+      solnNewNames <- solnNewNames %>%
+        dplyr::mutate(
+          !!rlang::sym(newName[i]) := dplyr::case_when(
+            !!rlang::sym(newName[i]) == 1 ~ i,
+            !!rlang::sym(newName[i]) == 0 ~ 0
+          )
+        )
+    }
+
+    soln <- solnNewNames %>%
+      dplyr::rowwise() %>%
+      dplyr::mutate(
+        solution = sum(dplyr::c_across(cols = tidyselect::starts_with("solution_"))),
+        solution = factor(.data$solution, levels = 0:(length(newName)))
+      )
+  } else {
+    cat("The zones attribute requires a logical input. Please set to TRUE or FALSE.")
+  }
+
+  # quick check
+  if (nlevels(soln$solution) != length(colorVals)) {
+    cat("Number of colour values needs to be the same as the number of levels in the solution column.")
+  }
+
+  if (nlevels(soln$solution) != length(legendLabels)) {
+    cat("Number of legend labels needs to be the same as the number of levels in the solution column.")
+  }
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$solution_1), colour = NA, size = 0.1, show.legend = showLegend) +
+    ggplot2::geom_sf(data = soln, ggplot2::aes(fill = .data$solution), colour = NA, size = 0.1, show.legend = showLegend) +
     ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
     ggplot2::scale_fill_manual(
       name = legendTitle,
       values = colorVals,
-      labels = c("Not Selected", "Selected"),
+      labels = legendLabels,
       aesthetics = c("colour", "fill"),
       guide = ggplot2::guide_legend(
         override.aes = list(linetype = 0),
-        nrow = 2,
+        nrow = nrows,
         order = 1,
         direction = "horizontal",
         title.position = "top",
@@ -217,8 +316,9 @@ splnr_plot_solution <- function(soln, colorVals = c("TRUE" = "#3182bd", "FALSE" 
     ggplot2::labs(subtitle = plotTitle)
 }
 
-
 #' Plot Planning Units
+#'
+#' `splnr_plot_PUs()` allows to plot the planning units of a planning region (for example created with the `spatialplanr`function [splnr_get_planningUnits()]) in a customisable way using `ggplot2`. This function requires an `sf` object containing the geographic information of PUs in the planning region and outputs a `ggobject`. It can be combined with the `spatialplanr` function [splnr_gg_add()].
 #'
 #' @param PlanUnits Planning Units as an `sf` object
 #'
@@ -229,13 +329,15 @@ splnr_plot_solution <- function(soln, colorVals = c("TRUE" = "#3182bd", "FALSE" 
 #' splnr_plot_PUs(dat_PUs)
 splnr_plot_PUs <- function(PlanUnits) {
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = PlanUnits, colour = "grey80", fill = NA, size = 0.1, show.legend = FALSE)+
+    ggplot2::geom_sf(data = PlanUnits, colour = "grey80", fill = NA, size = 0.1, show.legend = FALSE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
     ggplot2::labs(subtitle = "Planning Units")
 }
 
 
 #' Plot MPAs
+#'
+#' `splnr_plot_MPAs()` allows to plot either the outline or the area of MPAs existing in the planning region (for example extracted with the `spatialplanr`function [splnr_get_MPAs()]) in a customisable way using `ggplot2`. This function requires an `sf` object containing the information whether a planning unit in the planning region lies within an MPA or not in a column called `wdpa` and outputs a `ggobject`. It can be combined with the `spatialplanr` function [splnr_gg_add()].
 #'
 #' @param df An `sf` object of marine protected areas
 #' @param colorVals A `list` object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.
@@ -250,7 +352,6 @@ splnr_plot_PUs <- function(PlanUnits) {
 #' splnr_plot_MPAs(dat_mpas)
 splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"),
                             showLegend = TRUE, plotTitle = "Locked In Areas", legendTitle = "") {
-
   if (isa(df$wdpa, "logical") == FALSE) {
     df <- df %>%
       dplyr::mutate(wdpa = as.logical(.data$wdpa))
@@ -262,7 +363,7 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
       name = legendTitle,
       values = colorVals,
       labels = c("No MPA", "MPA"),
-      aesthetics =  c("colour", "fill"),
+      aesthetics = c("colour", "fill"),
       guide = ggplot2::guide_legend(
         override.aes = list(linetype = 0),
         nrow = 2,
@@ -279,6 +380,8 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
 
 #' Plot cost
 #'
+#' `splnr_plot_cost()` allows to plot cost within each planning units of a planning region in a customisable way using `ggplot2`. This function requires an `sf` object with a cost column and outputs a `ggobject`. It can be combined with the `spatialplanr` function [splnr_gg_add()].
+#'
 #' @param Cost An `sf` object of cost for `prioritizr`
 #' @param Cost_name Name of the cost column
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
@@ -290,15 +393,16 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
 #'
 #' @examples
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
-#'dat_soln <- dat_problem %>%
-#'  prioritizr::solve.ConservationProblem()
+#' dat_soln <- dat_problem %>%
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' dat_cost <- dat_soln %>%
 #'   dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
@@ -312,18 +416,21 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", legendTitle = "Cost",
     ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), colour = "grey80", size = 0.1, show.legend = TRUE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
     ggplot2::scale_fill_distiller(
-      #name = legendTitle,
+      # name = legendTitle,
       palette = paletteName,
       aesthetics = c("colour", "fill"),
-      limits = c(0,
-                 as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))
+      limits = c(
+        0,
+        as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))
       ),
       oob = scales::squish
     ) +
-    ggplot2::labs(subtitle = plotTitle, fill=legendTitle)
+    ggplot2::labs(subtitle = plotTitle, fill = legendTitle)
 }
 
 #' Plot cost overlay
+#'
+#' `splnr_plot_costOverlay()` allows to plot the cost of each planning units of a planning region on top of the solution of a conservation problem created with `prioritizr` in a customisable way using `ggplot2`. This function requires a solution as an `sf` object with a column called `solution_1` as well as a cost column and outputs a `ggobject`. It can be combined with the `spatialplanr` function [splnr_gg_add()].
 #'
 #' @param soln The `prioritizr` solution
 #' @param Cost An `sf` object of cost for `prioritizr`.In case `prioritizr`solution does not contain cost, alternative cost object has to be provided here that was used to generate solution (default: NA).
@@ -336,15 +443,16 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", legendTitle = "Cost",
 #'
 #' @examples
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
-#'dat_soln <- dat_problem %>%
-#'  prioritizr::solve.ConservationProblem()
+#' dat_soln <- dat_problem %>%
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' splnr_plot_costOverlay(soln = dat_soln)
 splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
@@ -391,6 +499,8 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
 
 #' Plot binary feature
 #'
+#' `splnr_plot_binFeature()` allows to plot presences and absences of a feature in the planning region in a customisable way using `ggplot2`. This function requires an `sf` object with binary information of a feature(`0` for absences and `1` for presences, for example created from continuous data with the `spatialplanr` function [splnr_apply_cutoffs()]). It outputs a `ggobject` and can be combined with the `spatialplanr` function [splnr_gg_add()].
+#'
 #' @param df A `data frame` with binary feature information
 #' @param colInterest column of data frame that contains binary information of feature to plot
 #' @param colorVals A `list` object of named vectors that will match the color value with the according name. "TRUE" stands for selected planning units.
@@ -435,6 +545,9 @@ splnr_plot_binFeature <- function(df, colInterest,
 
 #' Plot solution comparison
 #'
+#' Conservation planning often requires the comparison of the outputs of the solutions of different conservation problems. One way to compare solutions is by spatially visualising the different planning units that were selected in two separate solutions to conservation problems.
+#' `splnr_plot_comparison()` allows to map the differences of two solutions in customisable way using `ggplot2`. This function requires two separate `sf` objects each containing a `solution_1` column indicating the binary solution (selected vs not selected) of a `prioritizr` conservation problem. It outputs a `ggobject` and can be combined with the `spatialplanr` function [splnr_gg_add()].
+#'
 #' @param soln1 The first `prioritizr` solution
 #' @param soln2 The second `prioritizr` solution
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
@@ -446,8 +559,9 @@ splnr_plot_binFeature <- function(df, colInterest,
 #' @examples
 #' # 30 % target for problem/solution 1
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
@@ -457,10 +571,12 @@ splnr_plot_binFeature <- function(df, colInterest,
 #'   prioritizr::solve.ConservationProblem()
 #'
 #' # 50 % target for problem/solution 2
-#' dat_problem2 <- prioritizr::problem(dat_species_bin %>%
-#'                                       dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#' dat_problem2 <- prioritizr::problem(
+#'   dat_species_bin %>%
+#'     dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.5) %>%
 #'   prioritizr::add_binary_decisions() %>%
@@ -475,9 +591,9 @@ splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compar
   soln <- soln1 %>%
     dplyr::select("solution_1") %>%
     dplyr::bind_cols(soln2 %>%
-                       dplyr::as_tibble() %>%
-                       dplyr::select(.data$solution_1) %>%
-                       dplyr::rename(solution_2 = .data$solution_1)) %>%
+      dplyr::as_tibble() %>%
+      dplyr::select(.data$solution_1) %>%
+      dplyr::rename(solution_2 = .data$solution_1)) %>%
     dplyr::mutate(Combined = .data$solution_1 + .data$solution_2) %>%
     dplyr::mutate(
       Compare = dplyr::case_when(
@@ -500,6 +616,9 @@ splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compar
 
 
 #' Plot number of features
+#'
+#' `splnr_plot_featureNo()` allows you to use `ggplot2` to visually inspect the number of features per planning unit that are used as inputs in the conservation problem. When all features are species, this map can be seen as a visualisation of species richness in the planning region.
+#' This function requires an `sf` object with binary information of all features you want to include in the richness plot (`0` for absences and `1` for presences, for example created from continuous data with the `spatialplanr` function [splnr_apply_cutoffs()]). It outputs a `ggobject` and can be combined with the `spatialplanr` function [splnr_gg_add()].
 #'
 #' @param df An `sf` object of features
 #' @param paletteName A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.
@@ -540,6 +659,9 @@ splnr_plot_featureNo <- function(df, showLegend = TRUE, paletteName = "YlGnBu",
 
 #' Plot selection frequency of a planning unit in an array of prioritisations
 #'
+#' Sometimes when multiple spatial plans are generated, we are interested in how many times a planning unit is selected across an array of solutions. This array can either be made up of the solutions to slightly different conservation problems or generated through a [portfolio approach]{https://prioritizr.net/reference/portfolios.html} with `prioritizr`.
+#' Either way, this function requires an `sf` object input that contains a column (`selFreq`) with the selection frequency of each planning unit. `splnr_plot_selectionFreq()` allows to visualize this selection frequency using `ggplot2`. It outputs a `ggobject` and can be combined with the `spatialplanr` function [splnr_gg_add()].
+#'
 #' @param selFreq An `sf` object containing the selection frequency of a planning unit from an array of solutions
 #' @param paletteName A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
@@ -551,8 +673,9 @@ splnr_plot_featureNo <- function(df, showLegend = TRUE, paletteName = "YlGnBu",
 #' @importFrom rlang .data
 #' @examples
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
@@ -569,7 +692,7 @@ splnr_plot_selectionFreq <- function(selFreq,
                                      plotTitle = "", paletteName = "Greens",
                                      legendTitle = "Selection \nFrequency") {
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = selFreq, ggplot2::aes(fill = .data$selFreq), colour = NA)  +
+    ggplot2::geom_sf(data = selFreq, ggplot2::aes(fill = .data$selFreq), colour = NA) +
     ggplot2::scale_fill_brewer(
       name = legendTitle,
       palette = paletteName, aesthetics = "fill", # c("colour", "fill"),
@@ -597,9 +720,13 @@ splnr_plot_selectionFreq <- function(selFreq,
 }
 
 #' Plot importance score
+#'
+#' [Importance scores]{https://prioritizr.net/reference/importance.html} are a mean to reflect the irreplaceability of a planning unit in the solution of a `prioirtizr` conservation problem. Based on the `prioritizr` package, `splnr_plot_importanceScore()` allows to visualize three different types of importance scores with `ggplot2` that should be used based on the conservation problem at hand. The `prioritizr` development team generally recommend using the [replacement cost score]{https://prioritizr.net/reference/eval_replacement_importance.html}, however this might be not be feasible for conservation problems with many planning units or features.
+#' The function outputs a `ggobject` and can be combined with the `spatialplanr` function [splnr_gg_add()].
+#'
 #' @param soln The `prioritizr` solution
 #' @param pDat The `prioritizr` problem
-#' @param method The method for calcualting importance scores. Can be either "Ferrier" for the Ferrier Score, which can only be used with the minimum set objective function, "RWR" for Rarity Weighted Richness Score, or "RC" for Replacement Cost which takes longer than the other apporaches due to its iterative process.
+#' @param method The method for calcualting importance scores. Can be either "Ferrier" for the Ferrier Score, which can only be used with the minimum set objective function, "RWR" for Rarity Weighted Richness Score, or "RC" for Replacement Cost which takes longer than the other approaches due to its iterative process.
 #' @param colorMap A character string indicating the color map to use (see https://ggplot2.tidyverse.org/reference/scale_viridis.html for all options)
 #' @param decimals The number of decimals shown in the plot. Ferrier Score often requires a higher number of decimals (>4) than the other two approaches (2) for this analysis to work.
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
@@ -611,8 +738,9 @@ splnr_plot_selectionFreq <- function(selFreq,
 #' @importFrom rlang .data
 #' @examples
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
@@ -627,7 +755,7 @@ splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
                                        legendTitle = "Importance Score") {
   soln <- soln %>% tibble::as_tibble()
 
-  if (method == "Ferrier"){
+  if (method == "Ferrier") {
     cat("Ferrier Score.")
     scored_soln <- prioritizr::eval_ferrier_importance(pDat, soln[, "solution_1"])
 
@@ -636,14 +764,13 @@ splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
       dplyr::mutate(geometry = soln$geometry) %>%
       dplyr::rename(score = "total") %>%
       sf::st_as_sf()
-
-  } else if (method == "RWR"){
+  } else if (method == "RWR") {
     cat("Rarity Wighted Richness.")
     scored_soln <- prioritizr::eval_rare_richness_importance(pDat, soln[, "solution_1"]) %>%
       dplyr::mutate(geometry = soln$geometry) %>%
       dplyr::rename(score = "rwr") %>%
       sf::st_as_sf()
-  } else if (method == "RC"){
+  } else if (method == "RC") {
     cat("Replacement cost.")
     scored_soln <- prioritizr::eval_replacement_importance(pDat, soln[, "solution_1"]) %>%
       dplyr::mutate(geometry = soln$geometry) %>%
@@ -670,7 +797,7 @@ splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
       guide = ggplot2::guide_colourbar(
         title = legendTitle,
         # title.position = "right",
-        #barwidth = 2, barheight = 10
+        # barwidth = 2, barheight = 10
       )
     ) + # , oob=squish)
     ggplot2::coord_sf(
@@ -689,6 +816,10 @@ splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
 }
 
 #' Plot correlation matrices
+#'
+#' Conservation planning often requires the comparison of the outputs of the solutions of different conservation problems.
+#' One way to compare solutions is by correlating the solutions using Cohen's Kappa. `splnr_plot_corrMat()` allows to visualize the correlation matrix of the different solutions (for example produced with the `spatialplanr` function [splnr_get_kappaCorrData()]).
+#'
 #' @param x A correlation matrix of `prioritizr` solutions
 #' @param colourGradient A list of three colour values for high positive, no and high negative correlation
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
@@ -702,8 +833,9 @@ splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
 #' @examples
 #' # 30 % target for problem/solution 1
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
@@ -713,10 +845,12 @@ splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
 #'   prioritizr::solve.ConservationProblem()
 #'
 #' # 50 % target for problem/solution 2
-#' dat_problem2 <- prioritizr::problem(dat_species_bin %>%
-#'                                       dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#' dat_problem2 <- prioritizr::problem(
+#'   dat_species_bin %>%
+#'     dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.5) %>%
 #'   prioritizr::add_binary_decisions() %>%
@@ -736,8 +870,8 @@ splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#447
   }
 
   gg_cor <- ggcorrplot::ggcorrplot(x,
-                                   outline.color = "black",
-                                   lab = TRUE
+    outline.color = "black",
+    lab = TRUE
   ) +
     ggplot2::scale_fill_gradient2(
       low = colourGradient[3],
@@ -772,87 +906,4 @@ splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#447
       ) +
       ggplot2::scale_y_discrete(labels = AxisLabels)
   }
-}
-
-#' Plot prioritizr solution with zones
-#'
-#' @param soln The `prioritizr` solution that has several solutions based on zones
-#' @param colorVals A `list` object of named vectors that will match the color value with the according name. Needs to be number of zones + 1 (to also have a colour for planning units that were not selected).
-#' @param legendLabels Character values (number of zones + 1) of what the legend should be labelled.
-#' @param showLegend A logical command on whether to show the legend of the solution (Default: TRUE).
-#' @param plotTitle A character value for the title of the plot. Can be empty ("").
-#' @param legendTitle A character value for the title of the legend. Can be empty ("").
-#'
-#' @return A ggplot object of the plot
-#' @export
-#'
-#' @examples
-#' t2 <- matrix(NA, ncol = 2, nrow = 5) # create targets
-#' t2[, 1] <- 0.1
-#' t2[, 2] <- 0.05
-#'
-#' z2 <- prioritizr::zones("zone 1" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#' "zone 2" = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"))
-#' # when giving sf input, we need as many cost columns as we have zones
-#' p2 <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost1 = runif(n = dim(.)[[1]]),
-#'                                                             Cost2 = runif(n = dim(.)[[1]])),
-#'                           z2,
-#'                          cost_column = c("Cost1", "Cost2"))%>%
-#'   prioritizr::add_min_set_objective() %>%
-#'   prioritizr::add_relative_targets(t2) %>%
-#'   prioritizr::add_binary_decisions() %>%
-#'   prioritizr::add_default_solver(verbose = FALSE)
-#'
-#' s2 <- p2 %>%
-#'  prioritizr::solve.ConservationProblem()
-#'
-#' (splnr_plot_solutionZones(s2))
-splnr_plot_solutionZones <- function(soln, colorVals = c("#c6dbef", "#3182bd","black"),
-                                     legendLabels = c("Not selected", "Zone 1", "Zone 2"),
-                                     showLegend = TRUE, plotTitle = "Solution", legendTitle = "Planning Units") {
-  oldName <- soln %>%
-    dplyr::select(tidyselect::starts_with(c("solution"))) %>%
-    sf::st_drop_geometry() %>%
-    tibble::as_tibble() %>%
-    names()
-
-  newName<- gsub('1_zone.','',oldName) #to make data a bit nicer to work with
-
-  solnNewNames <- soln %>%
-    dplyr::rename_at(dplyr::vars(tidyselect::all_of(oldName)), ~newName) %>%
-    dplyr::select(tidyselect::starts_with(c("solution")))
-
-  for (i in 2:(length(newName))) {
-    solnNewNames <- solnNewNames %>%
-      dplyr::mutate(
-        !!rlang::sym(newName[i]) := dplyr::case_when(
-          !!rlang::sym(newName[i]) == 1 ~ 2,
-          !!rlang::sym(newName[i]) == 0 ~ 0
-        ))
-  }
-
-  solnSum <- solnNewNames %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(solution = sum(dplyr::c_across(cols = tidyselect::starts_with('solution_'))),
-                  solution = factor(.data$solution, levels = 0:(length(newName))))
-
-  gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = solnSum, ggplot2::aes(fill = .data$solution), colour = NA, size = 0.1, show.legend = TRUE) +
-    ggplot2::coord_sf(xlim = sf::st_bbox(soln)$xlim, ylim = sf::st_bbox(soln)$ylim) +
-    ggplot2::scale_fill_manual(
-      name = legendTitle,
-      values = colorVals,
-      labels = legendLabels,
-      aesthetics = c("colour", "fill"),
-      guide = ggplot2::guide_legend(
-        override.aes = list(linetype = 0),
-        nrow = (length(newName)+1),
-        order = 1,
-        direction = "horizontal",
-        title.position = "top",
-        title.hjust = 0.5
-      )
-    ) +
-    ggplot2::labs(subtitle = plotTitle)
-
 }
