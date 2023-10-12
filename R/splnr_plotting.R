@@ -216,7 +216,7 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
 #'
 #' splnr_plot_solution(dat_soln)
 #' # example 2
-#' #' t2 <- matrix(NA, ncol = 2, nrow = 5) # create targets
+#' t2 <- matrix(NA, ncol = 2, nrow = 5) # create targets
 #' t2[, 1] <- 0.1
 #' t2[, 2] <- 0.05
 #'
@@ -240,7 +240,8 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
 #'
 #' s2 <- p2 %>%
 #'   prioritizr::solve.ConservationProblem()
-#' (splnr_plot_solution(s2, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"), legendLabels = c("Not selected", "Zone 1", "Zone 2")))
+#' (splnr_plot_solution(s2, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"),
+#' legendLabels = c("Not selected", "Zone 1", "Zone 2")))
 splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
                                 showLegend = TRUE, legendLabels = c("Not selected", "Selected"),
                                 plotTitle = "Solution", legendTitle = "Planning Units",
