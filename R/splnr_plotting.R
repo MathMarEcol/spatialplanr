@@ -83,15 +83,15 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
             ggnewscale::new_scale_colour(),
             ggplot2::geom_sf(data = contours, colour = colorsConts, fill = NA, ggplot2::aes(linetype = .data$Category), size = 0.5, show.legend = "line"),
             ggplot2::scale_linetype_manual(" ",
-                                           breaks = namesConts,
-                                           values = vals,
-                                           guide = ggplot2::guide_legend(
-                                             override.aes = list(fill = NA),
-                                             nrow = 2,
-                                             direction = "horizontal",
-                                             order = 3,
-                                             keywidth = grid::unit(0.05, "npc")
-                                           )
+              breaks = namesConts,
+              values = vals,
+              guide = ggplot2::guide_legend(
+                override.aes = list(fill = NA),
+                nrow = 2,
+                direction = "horizontal",
+                order = 3,
+                keywidth = grid::unit(0.05, "npc")
+              )
             )
           )
         )
@@ -141,15 +141,15 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
             ggnewscale::new_scale_colour(),
             ggplot2::geom_sf(data = lockedInAreas, colour = colorLI, fill = NA, ggplot2::aes(linetype = .data$lockedIn), size = 0.5, show.legend = "line"),
             ggplot2::scale_linetype_manual("",
-                                           values = 1,
-                                           labels = labelL,
-                                           guide = ggplot2::guide_legend(
-                                             override.aes = list(fill = NA),
-                                             # nrow = 2,
-                                             direction = "horizontal",
-                                             # order = 3,
-                                             keywidth = grid::unit(0.05, "npc")
-                                           )
+              values = 1,
+              labels = labelL,
+              guide = ggplot2::guide_legend(
+                override.aes = list(fill = NA),
+                # nrow = 2,
+                direction = "horizontal",
+                # order = 3,
+                keywidth = grid::unit(0.05, "npc")
+              )
             )
           )
         )
@@ -240,7 +240,10 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
 #'
 #' s2 <- p2 %>%
 #'   prioritizr::solve.ConservationProblem()
-#' (splnr_plot_solution(s2, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"), legendLabels = c("Not selected", "Zone 1", "Zone 2")))
+#' (splnr_plot_solution(s2,
+#'   zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"),
+#'   legendLabels = c("Not selected", "Zone 1", "Zone 2")
+#' ))
 splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
                                 showLegend = TRUE, legendLabels = c("Not selected", "Selected"),
                                 plotTitle = "Solution", legendTitle = "Planning Units",
@@ -588,9 +591,9 @@ splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compar
   soln <- soln1 %>%
     dplyr::select("solution_1") %>%
     dplyr::bind_cols(soln2 %>%
-                       dplyr::as_tibble() %>%
-                       dplyr::select(.data$solution_1) %>%
-                       dplyr::rename(solution_2 = .data$solution_1)) %>%
+      dplyr::as_tibble() %>%
+      dplyr::select(.data$solution_1) %>%
+      dplyr::rename(solution_2 = .data$solution_1)) %>%
     dplyr::mutate(Combined = .data$solution_1 + .data$solution_2) %>%
     dplyr::mutate(
       Compare = dplyr::case_when(
@@ -867,8 +870,8 @@ splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#447
   }
 
   gg_cor <- ggcorrplot::ggcorrplot(x,
-                                   outline.color = "black",
-                                   lab = TRUE
+    outline.color = "black",
+    lab = TRUE
   ) +
     ggplot2::scale_fill_gradient2(
       low = colourGradient[3],

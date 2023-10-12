@@ -9,8 +9,8 @@ splnr_plot_climKernelDensity(
   names = NA,
   type = "Normal",
   colorMap = "C",
-  legendTitle = expression("Δ °C y"^"-1" * ""),
-  xAxisLab = expression("Climate warming (Δ °C y"^"-1" * ")")
+  legendTitle = expression(" °C y"^"-1" * ""),
+  xAxisLab = expression("Climate warming ( °C y"^"-1" * ")")
 )
 }
 \arguments{
@@ -49,7 +49,7 @@ CPA <- splnr_climatesmart_climatePriorityAreaApproach(
   refugiaTarget = 1
 )
 
-out_sf <- CPA$Features  \%>\%
+out_sf <- CPA$Features \%>\%
   dplyr::mutate(Cost_None = rep(1, 780)) \%>\%
   dplyr::left_join(dat_clim \%>\%
     sf::st_drop_geometry(), by = "cellID")
@@ -67,5 +67,5 @@ p1 <- prioritizr::problem(out_sf, usedFeatures, "Cost_None") \%>\%
 
 dat_solnClim <- prioritizr::solve.ConservationProblem(p1)
 splnr_plot_climKernelDensity(dat_solnClim, type = "Basic")
-splnr_plot_climKernelDensity(soln = list(dat_solnClim),  names = c("Input 1"), type = "Normal")
+splnr_plot_climKernelDensity(soln = list(dat_solnClim), names = c("Input 1"), type = "Normal")
 }

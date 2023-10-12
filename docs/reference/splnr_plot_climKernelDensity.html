@@ -63,8 +63,8 @@
 <span>  names <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"Normal"</span>,</span>
 <span>  colorMap <span class="op">=</span> <span class="st">"C"</span>,</span>
-<span>  legendTitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="st">"Δ °C y"</span><span class="op">^</span><span class="st">"-1"</span> <span class="op">*</span> <span class="st">""</span><span class="op">)</span>,</span>
-<span>  xAxisLab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="st">"Climate warming (Δ °C y"</span><span class="op">^</span><span class="st">"-1"</span> <span class="op">*</span> <span class="st">")"</span><span class="op">)</span></span>
+<span>  legendTitle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="st">" °C y"</span><span class="op">^</span><span class="st">"-1"</span> <span class="op">*</span> <span class="st">""</span><span class="op">)</span>,</span>
+<span>  xAxisLab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="st">"Climate warming ( °C y"</span><span class="op">^</span><span class="st">"-1"</span> <span class="op">*</span> <span class="st">")"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -119,7 +119,7 @@
 <span class="r-in"><span>  refugiaTarget <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">out_sf</span> <span class="op">&lt;-</span> <span class="va">CPA</span><span class="op">$</span><span class="va">Features</span>  <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="va">out_sf</span> <span class="op">&lt;-</span> <span class="va">CPA</span><span class="op">$</span><span class="va">Features</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost_None <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">780</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">dat_clim</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>    <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"cellID"</span><span class="op">)</span></span></span>
@@ -137,7 +137,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">dat_solnClim</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="va">p1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">splnr_plot_climKernelDensity</span><span class="op">(</span><span class="va">dat_solnClim</span>, type <span class="op">=</span> <span class="st">"Basic"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">splnr_plot_climKernelDensity</span><span class="op">(</span>soln <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">dat_solnClim</span><span class="op">)</span>,  names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Input 1"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"Normal"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">splnr_plot_climKernelDensity</span><span class="op">(</span>soln <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">dat_solnClim</span><span class="op">)</span>, names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Input 1"</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"Normal"</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

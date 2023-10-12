@@ -28,12 +28,6 @@
     <loc>https://mathmarecol.github.io/spatialplanr/index.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/Category_vec.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/Category_vec2.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/CoralSeaVelocity.html</loc>
   </url>
   <url>
@@ -73,9 +67,6 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/dat_species_prob.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/gg_add.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/index.html</loc>
   </url>
   <url>
@@ -91,19 +82,7 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_arrangeFeatures.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_assign_TargetsCat.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_assign_TargetsIA.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_climate_PriorityApproach.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_convert2Pacific.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_convert_2PUs.html</loc>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_climate_priorityApproach.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_convert_regionalisation.html</loc>
@@ -121,19 +100,13 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_featureNames.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_Boundary.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_IUCNRedList.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_MPAs.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_PlanningUnits.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_TargetsIA.html</loc>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_boundary.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_featureRep.html</loc>
@@ -142,31 +115,22 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_kappaCorrData.html</loc>
   </url>
   <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_planningUnits.html</loc>
+  </url>
+  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_selFreq.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_gg_add.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_match_IUCNRedList.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_match_names.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_CorrMat.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_ImportanceScore.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_MPAs.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_PUs.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_Solution.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_binFeature.html</loc>
@@ -184,6 +148,9 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_comparison.html</loc>
   </url>
   <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_corrMat.html</loc>
+  </url>
+  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_cost.html</loc>
   </url>
   <url>
@@ -196,22 +163,13 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_featureRep.html</loc>
   </url>
   <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_importanceScore.html</loc>
+  </url>
+  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_selectionFreq.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_solutionZones.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_targets.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_prepKappaCorrData.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_prepTargetData.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_prep_selFreq.html</loc>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_solution.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_replace_NAs.html</loc>

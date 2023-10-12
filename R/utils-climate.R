@@ -254,6 +254,7 @@ splnr_climatesmart_climatePriorityAreaApproach <- function(featuresDF,
                                                            percentile = 5,
                                                            refugiaTarget = 1) {
   CPAFeatures <- splnr_CS_climatePriorityArea_preprocess(
+
     featuresDF = featuresDF, metricDF = metricDF,
     direction = direction, percentile = percentile
   )

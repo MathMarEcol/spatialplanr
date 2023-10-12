@@ -116,8 +116,10 @@
 <span class="r-in"><span><span class="va">metric_df</span> <span class="op">&lt;-</span> <span class="va">dat_clim</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">CPA_Approach</span> <span class="op">&lt;-</span> <span class="fu">splnr_climate_priorityApproach</span><span class="op">(</span>featuresDF <span class="op">=</span> <span class="va">dat_species_bin</span>,</span></span>
-<span class="r-in"><span>                    metricDF <span class="op">=</span> <span class="va">metric_df</span>, targetsDF <span class="op">=</span> <span class="va">target</span>, direction <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">CPA_Approach</span> <span class="op">&lt;-</span> <span class="fu">splnr_climate_priorityApproach</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  featuresDF <span class="op">=</span> <span class="va">dat_species_bin</span>,</span></span>
+<span class="r-in"><span>  metricDF <span class="op">=</span> <span class="va">metric_df</span>, targetsDF <span class="op">=</span> <span class="va">target</span>, direction <span class="op">=</span> <span class="fl">1</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">out_sf</span> <span class="op">&lt;-</span> <span class="va">CPA_Approach</span><span class="op">$</span><span class="va">Features</span></span></span>
 <span class="r-in"><span><span class="va">targets</span> <span class="op">&lt;-</span> <span class="va">CPA_Approach</span><span class="op">$</span><span class="va">Targets</span></span></span>
 </code></pre></div>

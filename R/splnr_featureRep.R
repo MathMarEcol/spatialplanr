@@ -1,4 +1,3 @@
-
 #' Prepare data to plot how well targets are met
 #'
 #' @param soln The `prioritizr` solution
@@ -13,8 +12,9 @@
 #'
 #' @examples
 #' pDat <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
@@ -29,21 +29,21 @@
 #' )
 splnr_get_featureRep <- function(soln, pDat,
                                  climsmart = FALSE, solnCol = "solution_1") {
-
   s_cols <- pDat$data$features[[1]]
 
   # Get data for features not chosen
   not_selected <- soln %>%
-    dplyr::select(-tidyselect::starts_with(c("Cost", "solution_")),
-                  -tidyselect::any_of(c("metric", "cellID")),
-                  -tidyselect::any_of(s_cols)) %>%
+    dplyr::select(
+      -tidyselect::starts_with(c("Cost", "solution_")),
+      -tidyselect::any_of(c("metric", "cellID")),
+      -tidyselect::any_of(s_cols)
+    ) %>%
     sf::st_drop_geometry()
 
   ns_cols <- not_selected %>%
     colnames()
 
   if (length(ns_cols) > 0) {
-
     ns1 <- not_selected %>%
       dplyr::select(c(tidyselect::all_of(ns_cols))) %>%
       dplyr::mutate(solution = dplyr::pull(soln, !!rlang::sym(solnCol)))
@@ -62,10 +62,10 @@ splnr_get_featureRep <- function(soln, pDat,
       dplyr::summarise(absolute_held = sum(.data$absolute_held))
 
     ns1 <- dplyr::left_join(area_feature, selected_feature, by = "feature") %>%
-      dplyr::mutate(relative_held = (.data$absolute_held / .data$total_amount),
-                    incidental = TRUE)
-
-
+      dplyr::mutate(
+        relative_held = (.data$absolute_held / .data$total_amount),
+        incidental = TRUE
+      )
   } else {
     ns1 <- tibble::tibble(
       feature = "DummyVar",
@@ -103,8 +103,10 @@ splnr_get_featureRep <- function(soln, pDat,
   }
 
   s1 <- s1 %>%
-    dplyr::mutate(relative_held = .data$relative_held,
-                  incidental = FALSE) %>%
+    dplyr::mutate(
+      relative_held = .data$relative_held,
+      incidental = FALSE
+    ) %>%
     stats::na.omit()
 
   # Add targets to df
@@ -113,7 +115,7 @@ splnr_get_featureRep <- function(soln, pDat,
     dplyr::select(-"type")
 
   # Now join the selected and non-selected values
-  if ((length(ns_cols) > 0)){ # Only if there are values in ns1
+  if ((length(ns_cols) > 0)) { # Only if there are values in ns1
     df <- dplyr::bind_rows(s1, ns1)
   } else {
     df <- s1
@@ -142,37 +144,40 @@ splnr_get_featureRep <- function(soln, pDat,
 #'
 #' @examples
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
-#'dat_soln <- dat_problem %>%
-#'  prioritizr::solve.ConservationProblem()
+#' dat_soln <- dat_problem %>%
+#'   prioritizr::solve.ConservationProblem()
 #'
 #'
 #' # including incidental species coverage
 #' df <- splnr_get_featureRep(
 #'   soln = dat_soln,
-#'   pDat = dat_problem)
+#'   pDat = dat_problem
+#' )
 #'
 #' (splnr_plot_featureRep(df, category = category_df))
 #'
 splnr_plot_featureRep <- function(df, category = NA,
                                   nr = 1, showTarget = NA,
                                   plotTitle = "") {
-
-  if (is.data.frame(category)){
+  if (is.data.frame(category)) {
     df <- df %>%
       dplyr::left_join(category, by = "feature")
   }
 
-  if(max(df$relative_held < 1)) {
+  if (max(df$relative_held < 1)) {
     df <- df %>%
-      dplyr::mutate(relative_held = .data$relative_held * 100,
-                    target = .data$target * 100)
+      dplyr::mutate(
+        relative_held = .data$relative_held * 100,
+        target = .data$target * 100
+      )
   }
 
   uniqueCat <- unique(df$category[!is.na(df$category)])
@@ -212,7 +217,6 @@ splnr_plot_featureRep <- function(df, category = NA,
   }
 
   return(gg_target)
-
 }
 
 
@@ -241,15 +245,16 @@ splnr_plot_featureRep <- function(df, category = NA,
 #' # DISCLAIMER: THIS SOLUTION IS NOT ACTUALLY RUN WITH THESE TARGETS YET
 #'
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
-#'dat_soln <- dat_problem %>%
-#'  prioritizr::solve.ConservationProblem()
+#' dat_soln <- dat_problem %>%
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' s1 <- dat_soln %>%
 #'   tibble::as_tibble()
@@ -342,8 +347,8 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
 
     # plotting the bars
     ggplot2::geom_bar(ggplot2::aes(x = as.factor(.data$id), y = .data$value, fill = .data$group),
-                      stat = "identity",
-                      position = "dodge"
+      stat = "identity",
+      position = "dodge"
     ) +
 
     # defining colors of the bars
@@ -387,14 +392,14 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
       inherit.aes = FALSE
     ) +
     ggplot2::annotate("text",
-                      x = rep(max(data$id - 1), 4),
-                      y = c(25, 50, 75, 100),
-                      label = c(25, 50, 75, 100),
-                      color = "grey50",
-                      size = 4,
-                      angle = 0, #-5
-                      fontface = "bold",
-                      hjust = 0.5
+      x = rep(max(data$id - 1), 4),
+      y = c(25, 50, 75, 100),
+      label = c(25, 50, 75, 100),
+      color = "grey50",
+      size = 4,
+      angle = 0, #-5
+      fontface = "bold",
+      hjust = 0.5
     ) +
 
     # setting limitations of actual plot
