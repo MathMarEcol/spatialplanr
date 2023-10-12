@@ -48,15 +48,17 @@ splnr_targets_byInverseArea <- function(df, target_min, target_max) {
 #' @export
 #'
 #' @examples
-#' dat <- splnr_targets_byCategory(dat = category_df,
-#'                                catTarg = c("Group1" = 0.5, "Group2" = 0.2),
-#'                                catName = "category")
-splnr_targets_byCategory <- function(dat, catTarg, catName = "Category"){
-
+#' dat <- splnr_targets_byCategory(
+#'   dat = category_df,
+#'   catTarg = c("Group1" = 0.5, "Group2" = 0.2),
+#'   catName = "category"
+#' )
+splnr_targets_byCategory <- function(dat, catTarg, catName = "Category") {
   dat <- dat %>%
     dplyr::left_join(
       tibble::enframe(catTarg),
-      by = dplyr::join_by(!!catName == "name")) %>%
+      by = dplyr::join_by(!!catName == "name")
+    ) %>%
     dplyr::rename(target = "value")
 
   return(dat)
@@ -80,31 +82,27 @@ splnr_targets_byCategory <- function(dat, catTarg, catName = "Category"){
 #' dat <- data.frame(IUCN_Category = c("EW", "EX", NA), target = c(0.3, 0.3, 0.3))
 #' IUCN_target <- c("EX" = 0.8, "EW" = 0.6)
 #' dat <- splnr_targets_byIUCN(dat, IUCN_target)
-splnr_targets_byIUCN <- function(dat, IUCN_target, IUCN_col = "IUCN_Category"){
-
-  if ("target" %in% colnames(dat) == FALSE){
+splnr_targets_byIUCN <- function(dat, IUCN_target, IUCN_col = "IUCN_Category") {
+  if ("target" %in% colnames(dat) == FALSE) {
     dat$target <- NA
   }
 
 
-  if (checkmate::test_numeric(IUCN_target, names = "named")){
+  if (checkmate::test_numeric(IUCN_target, names = "named")) {
     # If the target is a named vector, apply the relevent targets
 
     dat <- dat %>%
       dplyr::left_join(data.frame(IUCN_target, col1 = names(IUCN_target)), by = dplyr::join_by(!!rlang::sym(IUCN_col) == "col1")) %>%
       dplyr::mutate(target = dplyr::coalesce(IUCN_target, .data$target)) %>%
       dplyr::select(-IUCN_target)
-
-
-  } else if (checkmate::test_numeric(IUCN_target, max.len = 1)){
+  } else if (checkmate::test_numeric(IUCN_target, max.len = 1)) {
     # If the target is a single numeric, apply to all IUCN categories.
 
     dat <- dat %>%
-      dplyr::mutate(target = dplyr::case_when(!!rlang::sym(IUCN_col) %in% c("EX","EW","CR","EN","VU") ~ IUCN_target,
-                                              TRUE ~ dat$target))
+      dplyr::mutate(target = dplyr::case_when(
+        !!rlang::sym(IUCN_col) %in% c("EX", "EW", "CR", "EN", "VU") ~ IUCN_target,
+        TRUE ~ dat$target
+      ))
   }
   return(dat)
-
 }
-
-

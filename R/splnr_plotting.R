@@ -240,8 +240,10 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
 #'
 #' s2 <- p2 %>%
 #'   prioritizr::solve.ConservationProblem()
-#' (splnr_plot_solution(s2, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"),
-#' legendLabels = c("Not selected", "Zone 1", "Zone 2")))
+#' (splnr_plot_solution(s2,
+#'   zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"),
+#'   legendLabels = c("Not selected", "Zone 1", "Zone 2")
+#' ))
 splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
                                 showLegend = TRUE, legendLabels = c("Not selected", "Selected"),
                                 plotTitle = "Solution", legendTitle = "Planning Units",
