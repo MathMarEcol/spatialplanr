@@ -158,7 +158,7 @@ metric_df <- CoralSeaVelocity %>%
   splnr_gg_add(Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
-We then use the climate priority area approach `splnr_climatesmart_climatePriorityAreaApproach()` detailed in [Buenafe et al (2023)](https://doi.org/10.1002/eap.2852) to determine climate refugia. Briefly, this approach selects a percentile (in our case 5%) of the suitable habitat of each feature that is considered the most climate-smart. It also requires a `direction` input indicating at which side of the metric range the more climate-smart areas can be found. In our case, lower climate velocity denotes more climate-smart (`direction = -1`), but in other cases a higher value might represent the more climate-smart planning units (`direction = 1`). 
+We then use the climate priority area approach `splnr_climate_priorityAreaApproach()` detailed in [Buenafe et al (2023)](https://doi.org/10.1002/eap.2852) to determine climate refugia. Briefly, this approach selects a percentile (in our case 5%) of the suitable habitat of each feature that is considered the most climate-smart. It also requires a `direction` input indicating at which side of the metric range the more climate-smart areas can be found. In our case, lower climate velocity denotes more climate-smart (`direction = -1`), but in other cases a higher value might represent the more climate-smart planning units (`direction = 1`). 
 
 Using this approach also requires an adaptation of the targets, since 5% of the suitable habitat of each species is already protected in the climate-smart areas. We can decide how much of the 5% of the most climate-smart areas is supposed to be included in the spatial plan (here: `refugiaTarget = 1` to protect 100% of the 5% most climate-smart areas).
 
@@ -173,7 +173,7 @@ target <- datEx_species_bin %>%
   dplyr::mutate(target = 0.3)
 
 
-CPA_Approach <- splnr_climatesmart_climatePriorityAreaApproach(
+CPA_Approach <- splnr_climate_priorityAreaApproach(
   featuresDF = datEx_species_bin,
   metricDF = metric_df, targetsDF = target, direction = -1, refugiaTarget = 1
 )
@@ -241,7 +241,7 @@ target <- datEx_species_bin %>%
   setNames(c("feature")) %>%
   dplyr::mutate(target = 30)
 
-Percentile_Approach <- splnr_climatesmart_percentileApproach(
+Percentile_Approach <- splnr_climate_percentileApproach(
   featuresDF = datEx_species_bin,
   metricDF = metric_df, targetsDF = target, direction = -1, percentile = 35
 )
@@ -303,7 +303,7 @@ target <- datEx_species_bin %>%
   setNames(c("feature")) %>%
   dplyr::mutate(target = 30)
 
-Feature_Approach <- splnr_climatesmart_featureApproach(
+Feature_Approach <- splnr_climate_featureApproach(
    featuresDF = datEx_species_bin,
    metricDF = metric_df, targetsDF = target, direction = 1
 )

@@ -204,7 +204,9 @@ s2 <- p2 %>%
 The solution can be plotted using the function `splnr_plot_solution()` with the argument `zones` set to `TRUE`.
 
 ```{r, fig.width = 9}
-(gg_s2 <- splnr_plot_solution(s2, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"), legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
+(gg_s2 <- splnr_plot_solution(s2, zones = TRUE, 
+                              colorVals = c("#c6dbef", "#3182bd", "black"),
+                              legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
   splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
@@ -267,7 +269,9 @@ Dict[[1]][7]
 They are both marine mammals and thus had a target of 0% in zone 1 that was the reptile-specific zone. The percentage of selected suitable habitat is not 0% despite the target of 0 because a proportion of suitable habitat of mammals was selected incidentally when selecting planning units in this zone by meeting the targets for reptiles. The same applies for zone 2. We can also plot the final solution again: 
 
 ```{r, fig.width = 9}
-(gg_s2b <- splnr_plot_solution(s2b, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"), legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
+(gg_s2b <- splnr_plot_solution(s2b, zones = TRUE, 
+                               colorVals = c("#c6dbef", "#3182bd", "black"), 
+                               legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
   splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
@@ -307,7 +311,9 @@ s3 <- p3 %>%
 With `add_boundary_penalties()` we set a penalty of 0.5 between the zones we defined in `zm1`. For the purpose of this example, we also set a 10 second time limit for the prioritisation. The results show less fragmentation than in the previous solution without penalties:
 
 ```{r, fig.width=9}
-(gg_s3 <- splnr_plot_solution(s3, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"), legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
+(gg_s3 <- splnr_plot_solution(s3, zones = TRUE, 
+                              colorVals = c("#c6dbef", "#3182bd", "black"), 
+                              legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
   splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
@@ -334,7 +340,9 @@ p4 <- prioritizr::problem(
 s4 <- p4 %>%
   prioritizr::solve.ConservationProblem()
 
-(gg_s4 <- splnr_plot_solution(s4, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"), legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
+(gg_s4 <- splnr_plot_solution(s4, zones = TRUE, 
+                              colorVals = c("#c6dbef", "#3182bd", "black"), 
+                              legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
   splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
  
@@ -365,7 +373,9 @@ p5 <- prioritizr::problem(
 s5 <- p5 %>%
   prioritizr::solve.ConservationProblem()
 
-(gg_s5 <- splnr_plot_solution(s5, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"), legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
+(gg_s5 <- splnr_plot_solution(s5, zones = TRUE, 
+                              colorVals = c("#c6dbef", "#3182bd", "black"), 
+                              legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
   splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
@@ -411,10 +421,13 @@ s6 <- p6 %>%
 The results can the be visualized again:
 
 ```{r, fig.width = 9}
-(gg_s6 <- splnr_plot_solution(s6, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"), legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
+(gg_s6 <- splnr_plot_solution(s6, zones = TRUE, 
+                              colorVals = c("#c6dbef", "#3182bd", "black"), 
+                              legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry,
-    lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, Type = "Full", colorLI = "red", alphaLI = 0.2,
+    lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, 
+    Type = "Full", colorLI = "red", alphaLI = 0.2,
     land = landmass, cropLand = PUs, ggtheme = splnr_theme, labelL = "Current MPAs"
   ))
 ```
@@ -446,7 +459,9 @@ Here we apply `add_min_shortfall_objective()` and provide to separate budgets fo
 s7 <- p7 %>%
   prioritizr::solve.ConservationProblem()
 
-(gg_s7 <- splnr_plot_solution(s7, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"), legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
+(gg_s7 <- splnr_plot_solution(s7, zones = TRUE, 
+                              colorVals = c("#c6dbef", "#3182bd", "black"), 
+                              legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
   splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
@@ -580,7 +595,9 @@ print(r10)
 The overall summary shows that every feature's suitable habitat was represented by at least 30% which was the combined target we had set. However, we can see that features from `zone1` were a lot more frequently selected than `zone2` because `zone2` is three times as costly.
 
 ```{r, fig.width=9}
- (gg_s10 <- splnr_plot_solution(s10, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"), legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
+ (gg_s10 <- splnr_plot_solution(s10, zones = TRUE, 
+                                colorVals = c("#c6dbef", "#3182bd", "black"), 
+                                legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
    splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
@@ -632,7 +649,9 @@ print(r11)
 The selected planning units are now more equally distributed across zones, which is also observable in the plot:
 
 ```{r, fig.width=9}
-(gg_s11 <- splnr_plot_solution(s11, zones = TRUE, colorVals = c("#c6dbef", "#3182bd", "black"), legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
+(gg_s11 <- splnr_plot_solution(s11, zones = TRUE, 
+                               colorVals = c("#c6dbef", "#3182bd", "black"),
+                               legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
   splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 

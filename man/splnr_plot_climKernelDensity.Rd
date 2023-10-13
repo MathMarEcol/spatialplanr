@@ -41,7 +41,7 @@ target <- dat_species_bin \%>\%
   setNames(c("feature")) \%>\%
   dplyr::mutate(target = 0.3)
 
-CPA <- splnr_climatesmart_climatePriorityAreaApproach(
+CPA <- splnr_climate_priorityAreaApproach(
   featuresDF = dat_species_bin,
   metricDF = dat_clim,
   targetsDF = target,

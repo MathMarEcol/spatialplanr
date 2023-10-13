@@ -3,13 +3,12 @@
 \docType{data}
 \name{spDataFiltered}
 \alias{spDataFiltered}
-\title{Example....}
+\title{Example data}
 \format{
-\subsection{\code{spDataFiltered}}{
-
-A data frame with .....
+\code{spDataFiltered}
+A data frame with sample species data
 \describe{
-}
+\item{Species}{Species names}
 }
 }
 \source{
@@ -19,6 +18,6 @@ A data frame with .....
 spDataFiltered
 }
 \description{
-Example....
+Example data
 }
 \keyword{datasets}
