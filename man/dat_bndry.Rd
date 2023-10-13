@@ -12,28 +12,14 @@ A data frame with XXXX rows and XXX columns:
 \item{geometry}{sf geometry column}
 ...
 }
-
-\code{dat_bndry}
-A data frame with XXXX rows and XXX columns:
-\describe{
-\item{cellID}{ID number for each row (or cell) of the dataset}
-\item{geometry}{sf geometry column}
-...
-}
 }
 \source{
-"Made up data"
-
 "Made up data"
 }
 \usage{
 dat_bndry
-
-dat_bndry
 }
 \description{
-An sf dataframe of planning units for spatial prioritisation
-
 An sf dataframe of planning units for spatial prioritisation
 }
 \keyword{datasets}

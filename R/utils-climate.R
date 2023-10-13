@@ -279,6 +279,8 @@ splnr_climate_priorityAreaApproach <- function(featuresDF,
 #'
 #' @return A `list` with two components: 1. is the data frame passed to `prioritizr` when creating a conservation problem containing the binary information per planning unit per feature. 2. are the targets for the features in the conservation problem when the CPA approach is used.
 #'
+#' @noRd
+#' @keywords internal
 #' @importFrom rlang .data
 #'
 #' @examples
