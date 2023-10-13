@@ -162,7 +162,7 @@ splnr_get_featureRep <- function(soln, pDat,
 #'   pDat = dat_problem
 #' )
 #'
-#' (splnr_plot_featureRep(df, category = category_df))
+#' (splnr_plot_featureRep(df, category = dat_category))
 #'
 splnr_plot_featureRep <- function(df, category = NA,
                                   nr = 1, showTarget = NA,
