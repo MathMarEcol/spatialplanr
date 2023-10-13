@@ -114,20 +114,6 @@
 #' @source "Made up data"
 "dat_mpas"
 
-#' Boundary of planning units
-#'
-#' An sf dataframe of planning units for spatial prioritisation
-#'
-#' @format `dat_bndry`
-#' A data frame with XXXX rows and XXX columns:
-#' \describe{
-#'   \item{cellID}{ID number for each row (or cell) of the dataset}
-#'   \item{geometry}{sf geometry column}
-#'   ...
-#' }
-#' @source "Made up data"
-"dat_bndry"
-
 # -------------------------------------------------------------------------
 
 
@@ -135,7 +121,7 @@
 #'
 #' A tibble containing specific grouping of features
 #'
-#' @format `category_df`
+#' @format `dat_category`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{feature}{all features available for spatial prioritisation}
@@ -143,7 +129,7 @@
 #'   ...
 #' }
 #' @source "Made up data"
-"category_df"
+"dat_category"
 
 
 # -------------------------------------------------------------------------
@@ -153,7 +139,7 @@
 #'
 #' A tibble containing specific grouping of features
 #'
-#' @format `category_df2`
+#' @format `dat_category2`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
 #'   \item{feature}{all features available for spatial prioritisation}
@@ -161,7 +147,7 @@
 #'   ...
 #' }
 #' @source "Made up data"
-"category_df2"
+"dat_category2"
 
 
 # -------------------------------------------------------------------------
@@ -244,7 +230,7 @@
 #'
 #' tsf file containing climate velocity (SSP5-8.5) of the coral sea
 #'
-#' @format ## `CoralSeaVelocity`
+#' @format `CoralSeaVelocity`
 #' A data frame with 397 rows and 3 columns:
 #' \describe{
 #'   \item{cellID}{cell ID of the planning units}
@@ -256,13 +242,14 @@
 "CoralSeaVelocity"
 
 
-#' Example....
+#' Example data
 #'
+#' Example data
 #'
-#'
-#' @format ## `spDataFiltered`
-#' A data frame with .....
+#' @format `spDataFiltered`
+#' A data frame with sample species data
 #' \describe{
+#' \item{Species}{Species names}
 #' }
 #' @source "Made up data"
 "spDataFiltered"

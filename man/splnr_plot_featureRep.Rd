@@ -49,6 +49,6 @@ df <- splnr_get_featureRep(
   pDat = dat_problem
 )
 
-(splnr_plot_featureRep(df, category = category_df))
+(splnr_plot_featureRep(df, category = dat_category))
 
 }

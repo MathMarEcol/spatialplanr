@@ -49,7 +49,7 @@ splnr_targets_byInverseArea <- function(df, target_min, target_max) {
 #'
 #' @examples
 #' dat <- splnr_targets_byCategory(
-#'   dat = category_df,
+#'   dat = dat_category,
 #'   catTarg = c("Group1" = 0.5, "Group2" = 0.2),
 #'   catName = "category"
 #' )
