@@ -21,7 +21,7 @@ Assign targets to all features by category
 }
 \examples{
 dat <- splnr_targets_byCategory(
-  dat = category_df,
+  dat = dat_category,
   catTarg = c("Group1" = 0.5, "Group2" = 0.2),
   catName = "category"
 )

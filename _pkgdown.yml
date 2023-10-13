@@ -45,8 +45,8 @@ reference:
 
 - title: Built in datasets
   contents:
-  - category_df
-  - category_df2
+  - dat_category
+  - dat_category2
   - dat_bndry
   - dat_clim
   - dat_mpas

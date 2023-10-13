@@ -5,15 +5,13 @@
 \alias{CoralSeaVelocity}
 \title{Example climate velocity for the example region of the coral sea}
 \format{
-\subsection{\code{CoralSeaVelocity}}{
-
+\code{CoralSeaVelocity}
 A data frame with 397 rows and 3 columns:
 \describe{
 \item{cellID}{cell ID of the planning units}
 \item{vocMagg_transformed}{Climate velocity column}
 \item{geometry}{Geometry column of sf object}
 ...
-}
 }
 }
 \source{
