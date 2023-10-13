@@ -20,10 +20,12 @@ knitr::opts_chunk$set(
 ```
 
 ```{r klippy, eval=TRUE, echo=FALSE, include=TRUE}
+print("klippy")
  klippy::klippy(position = c('top', 'right'))
 ```
 
 ```{r setup}
+print("library")
 library(spatialplanr)
 ```
 
@@ -34,6 +36,7 @@ This code has been written to simplify the process for running a _prioritizr_ an
 ## Set user parameters 
 You can set a region if it is defined in `splnr_get_planningUnits`. 
 ```{r}
+print("parameters")
 Region <- "Coral Sea" # "Australia"
 Type <- "Oceans" # "EEZ"
 Shape <- "Hexagon" # "Shape of PUs
@@ -64,6 +67,9 @@ Start your analysis by defining your region and setting up the planning units.
 
 Get the boundary for your chosen region.
 ```{r}
+
+print("boundary")
+
 Bndry <- splnr_get_boundary(Region, Type, cCRS)
 
 landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
@@ -106,6 +112,7 @@ These species were not chosen based on their importance for this region and only
 ### Convert the probabilities to binary data
 
 ```{r}
+print("binary")
 datEx_species_bin <- spDataFiltered %>%
   dplyr::as_tibble() %>%
   dplyr::mutate(dplyr::across(
@@ -164,6 +171,8 @@ Using this approach also requires an adaptation of the targets, since 5% of the 
 
 
 ```{r}
+
+print("ClimatePriority")
 target <- datEx_species_bin %>%
   sf::st_drop_geometry() %>%
   dplyr::select(-"cellID") %>%
