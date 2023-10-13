@@ -1,6 +1,6 @@
 #' Add-ons for plotting
 #'
-#' This function allows to customise plots in a simple and reproducible way, by giving the option for several inputs that can be included in maps produced with the other functions of this package.
+#' This function allows to customise plots in a simple and reproducible way, by giving the option for several inputs that can be included in maps produced with the other functions of this package.It can be combined with the `spatialplanr` spatial plotting functions (e.g. [splnr_plot_MPAs()], [splnr_plot_PUs()], [splnr_plot_solution()], [splnr_plot_binFeature()]).
 #'
 #' @param PUs Planning Units as an `sf` object
 #' @param colorPUs A color value for the outline of planning units.
@@ -37,7 +37,7 @@
 #'   prioritizr::solve.ConservationProblem()
 #'
 #' splnr_plot_solution(dat_soln) +
-#'   splnr_gg_add(PUs = dat_PUs, ggtheme = TRUE)
+#'   splnr_gg_add(PUs = dat_PUs, ggtheme = "Default")
 splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
                          Bndry = NA, colorBndry = "black",
                          land = NA, colorLand = "grey20",
@@ -659,8 +659,8 @@ splnr_plot_featureNo <- function(df, showLegend = TRUE, paletteName = "YlGnBu",
 
 #' Plot selection frequency of a planning unit in an array of prioritisations
 #'
-#' Sometimes when multiple spatial plans are generated, we are interested in how many times a planning unit is selected across an array of solutions. This array can either be made up of the solutions to slightly different conservation problems or generated through a [portfolio approach]{https://prioritizr.net/reference/portfolios.html} with `prioritizr`.
-#' Either way, this function requires an `sf` object input that contains a column (`selFreq`) with the selection frequency of each planning unit. `splnr_plot_selectionFreq()` allows to visualize this selection frequency using `ggplot2`. It outputs a `ggobject` and can be combined with the `spatialplanr` function [splnr_gg_add()].
+#' When multiple spatial plans are generated, we are often interested in how many times a planning unit is selected across an array of solutions. This array can either be made up of the solutions to different conservation problems or generated through a [portfolio approach]{https://prioritizr.net/reference/portfolios.html} with `prioritizr`.
+#' Either way, this function requires an `sf` object input that contains a column (`selFreq`) with the selection frequency of each planning unit that can be generated with the `spatialplanr`function [splnr_get_selFreq]. `splnr_plot_selectionFreq()` allows to visualize this selection frequency using `ggplot2`. It outputs a `ggobject` and can be combined with the `spatialplanr` function [splnr_gg_add()].
 #'
 #' @param selFreq An `sf` object containing the selection frequency of a planning unit from an array of solutions
 #' @param paletteName A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.

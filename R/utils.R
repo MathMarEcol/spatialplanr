@@ -364,7 +364,8 @@ splnr_get_kappaCorrData <- function(sol, name_sol) {
 
 #' Prepare data to plot Selection Frequency of planning units
 #'
-#'
+#' When multiple spatial plans are generated, we are often interested in how many times a planning unit is selected across an array of solutions. This array can either be a `list` of the solutions of different conservation problems or generated through a [portfolio approach]{https://prioritizr.net/reference/portfolios.html} with `prioritizr`.
+#' `splnr_get_selFreq()` allows you to calculate the selection frequency of each planning unit of either a `list` or a `portfolio` of solutions. The resulting `sf` object can be passed for visualization to the `spatialplanr` function [splnr_plot_selectionFreq()].
 #'
 #' @param solnMany List or portfolio of `prioritizr` solutions
 #' @param type Either "portfolio" (`sf` object) with a portfolio produced using `prioritizr` or "list" with a list of solutions

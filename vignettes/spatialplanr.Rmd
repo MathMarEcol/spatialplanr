@@ -362,14 +362,14 @@ But we locked in areas that were already existing MPAs. If we want to show the o
 
 ```{r}
 (splnr_plot_solution(datEx_soln2) +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, Type = "Full", colorLI = "lightgrey", alphaLI = 0.2, land = landmass, cropLand = PUs))
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, Type = "Full", colorLI = "lightgrey", alphaLI = 0.2, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 If we instead only want to see the contours of the locked in areas we can set `Type = "Contours"`in `splnr_gg_add()`.
 
 ```{r}
 (splnr_plot_solution(datEx_soln2) +
-  splnr_gg_add(lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, Type = "Contours", land = landmass, cropLand = PUs))
+  splnr_gg_add(lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, Type = "Contours", land = landmass, cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 #### Visualize comparison
