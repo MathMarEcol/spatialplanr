@@ -15,7 +15,7 @@ splnr_scale_01(dat, col_name)
 \code{sf} dataframe
 }
 \description{
-Scale spatial layers to between 0 and 1
+\code{splnr_scale_01()} allows you to re-scale your data from values that are greater than 1 to values that are between 0 and 1.
 }
 \examples{
 df <- dat_species_prob \%>\%

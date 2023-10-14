@@ -17,7 +17,8 @@ splnr_targets_byIUCN(dat, IUCN_target, IUCN_col = "IUCN_Category")
 dataframe or sf object
 }
 \description{
-Assign targets bu IUCN Red List categories
+\code{splnr_targets_byIUCN()} allows to assign targets for species used in conservation planning based on IUCN categories. Species can be extracted based on IUCN categories with the \code{spatoalplnr}function \code{splnr_get_IUCNRedList()}.
+Accessing the IUCN database requires a login token from \code{rl_use_iucn()} that needs to be added to the environment using \code{Sys.setenv(IUCN_REDLIST_KEY = "[Your Token]")}. You can start by running \code{rredlist::rl_use_iucn()}.
 }
 \examples{
 dat <- data.frame(IUCN_Category = c("EW", "EX", NA), target = c(0.3, 0.3, 0.3))

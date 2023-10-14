@@ -24,8 +24,8 @@ splnr_plot_selectionFreq(
 A ggplot object of the plot
 }
 \description{
-Sometimes when multiple spatial plans are generated, we are interested in how many times a planning unit is selected across an array of solutions. This array can either be made up of the solutions to slightly different conservation problems or generated through a [portfolio approach]{https://prioritizr.net/reference/portfolios.html} with \code{prioritizr}.
-Either way, this function requires an \code{sf} object input that contains a column (\code{selFreq}) with the selection frequency of each planning unit. \code{splnr_plot_selectionFreq()} allows to visualize this selection frequency using \code{ggplot2}. It outputs a \code{ggobject} and can be combined with the \code{spatialplanr} function \code{\link[=splnr_gg_add]{splnr_gg_add()}}.
+When multiple spatial plans are generated, we are often interested in how many times a planning unit is selected across an array of solutions. This array can either be made up of the solutions to different conservation problems or generated through a [portfolio approach]{https://prioritizr.net/reference/portfolios.html} with \code{prioritizr}.
+Either way, this function requires an \code{sf} object input that contains a column (\code{selFreq}) with the selection frequency of each planning unit that can be generated with the \code{spatialplanr}function \link{splnr_get_selFreq}. \code{splnr_plot_selectionFreq()} allows to visualize this selection frequency using \code{ggplot2}. It outputs a \code{ggobject} and can be combined with the \code{spatialplanr} function \code{\link[=splnr_gg_add]{splnr_gg_add()}}.
 }
 \examples{
 dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),

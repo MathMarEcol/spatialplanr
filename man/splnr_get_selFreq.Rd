@@ -9,13 +9,14 @@ splnr_get_selFreq(solnMany, type = "portfolio")
 \arguments{
 \item{solnMany}{List or portfolio of \code{prioritizr} solutions}
 
-\item{type}{Either "portfolio" (\code{sf} object) with a portfolop produced using \code{prioritizr} or "list" with a list of solutions}
+\item{type}{Either "portfolio" (\code{sf} object) with a portfolio produced using \code{prioritizr} or "list" with a list of solutions}
 }
 \value{
 \code{selFreq} \code{sf} object containing a column with the selection frequency (sum over all solutions).
 }
 \description{
-Prepare data to plot Selection Frequency of planning units
+When multiple spatial plans are generated, we are often interested in how many times a planning unit is selected across an array of solutions. This array can either be a \code{list} of the solutions of different conservation problems or generated through a [portfolio approach]{https://prioritizr.net/reference/portfolios.html} with \code{prioritizr}.
+\code{splnr_get_selFreq()} allows you to calculate the selection frequency of each planning unit of either a \code{list} or a \code{portfolio} of solutions. The resulting \code{sf} object can be passed for visualization to the \code{spatialplanr} function \code{\link[=splnr_plot_selectionFreq]{splnr_plot_selectionFreq()}}.
 }
 \examples{
 dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),

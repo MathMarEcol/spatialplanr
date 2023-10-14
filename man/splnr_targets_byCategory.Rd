@@ -11,13 +11,13 @@ splnr_targets_byCategory(dat, catTarg, catName = "Category")
 
 \item{catTarg}{A named character vector with categories and target}
 
-\item{catName}{An optional argument for the name of the category coolumn in dat}
+\item{catName}{An optional argument for the name of the category column in dat}
 }
 \value{
 An sf object with targets added
 }
 \description{
-Assign targets to all features by category
+\code{splnr_targets_byCategory()} allows to assign targets for conservation planning based on species categories.
 }
 \examples{
 dat <- splnr_targets_byCategory(

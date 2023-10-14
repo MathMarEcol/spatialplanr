@@ -38,9 +38,11 @@ splnr_targets_byInverseArea <- function(df, target_min, target_max) {
 
 #' Assign targets to all features by category
 #'
+#' `splnr_targets_byCategory()` allows to assign targets for conservation planning based on species categories.
+#'
 #' @param dat A sf object with the features and categories
 #' @param catTarg A named character vector with categories and target
-#' @param catName An optional argument for the name of the category coolumn in dat
+#' @param catName An optional argument for the name of the category column in dat
 #'
 #' @return An sf object with targets added
 #' @export
@@ -65,6 +67,9 @@ splnr_targets_byCategory <- function(dat, catTarg, catName = "Category") {
 
 
 #' Assign targets bu IUCN Red List categories
+#'
+#'`splnr_targets_byIUCN()` allows to assign targets for species used in conservation planning based on IUCN categories. Species can be extracted based on IUCN categories with the `spatoalplnr`function `splnr_get_IUCNRedList()`.
+#' Accessing the IUCN database requires a login token from `rl_use_iucn()` that needs to be added to the environment using `Sys.setenv(IUCN_REDLIST_KEY = "[Your Token]")`. You can start by running `rredlist::rl_use_iucn()`.
 #'
 #' @param dat A dataframe or sf object with IUCN categories
 #' @param IUCN_target Either a numeric or named numeric of targets to apply to IUCN categories
