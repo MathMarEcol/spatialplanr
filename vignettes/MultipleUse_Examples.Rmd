@@ -476,6 +476,8 @@ In our example, we fill first define our targets and a random cost layer with va
 ```{r}
 target8 <- rep(0.3, nrow(Dict))
 
+set.seed <- 10 # Add seed so the problem below solves each time
+
 costRandom <- datEx_species_bin %>%
   dplyr::mutate(CostR = runif(n = dim(.)[[1]])) %>%
   dplyr::select("CostR")
