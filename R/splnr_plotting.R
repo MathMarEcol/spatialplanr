@@ -332,6 +332,8 @@ splnr_plot_PUs <- function(PlanUnits) {
     ggplot2::geom_sf(data = PlanUnits, colour = "grey80", fill = NA, size = 0.1, show.legend = FALSE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
     ggplot2::labs(subtitle = "Planning Units")
+
+  return(gg)
 }
 
 
@@ -375,6 +377,8 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
     ) +
     ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
     ggplot2::labs(subtitle = plotTitle)
+
+  return(gg)
 }
 
 
@@ -426,6 +430,8 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", legendTitle = "Cost",
       oob = scales::squish
     ) +
     ggplot2::labs(subtitle = plotTitle, fill = legendTitle)
+
+  return(gg)
 }
 
 #' Plot cost overlay
@@ -494,7 +500,10 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
     ) +
     ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
     ggplot2::labs(subtitle = plotTitle)
+
+  return(gg)
 }
+
 
 
 #' Plot binary feature
@@ -539,6 +548,8 @@ splnr_plot_binFeature <- function(df, colInterest,
       )
     ) +
     ggplot2::labs(subtitle = plotTitle)
+
+  return(gg)
 }
 
 
@@ -612,6 +623,8 @@ splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compar
       name = legendTitle,
       values = c("Added (+)" = "Red", "Same" = "ivory3", "Removed (-)" = "Blue"), drop = FALSE
     )
+
+  return(gg)
 }
 
 
@@ -655,6 +668,8 @@ splnr_plot_featureNo <- function(df, showLegend = TRUE, paletteName = "YlGnBu",
       # trans = "log10" #produces infinity if cells have 0 features
     ) +
     ggplot2::labs(subtitle = plotTitle)
+
+  return(gg)
 }
 
 #' Plot selection frequency of a planning unit in an array of prioritisations
@@ -717,6 +732,8 @@ splnr_plot_selectionFreq <- function(selFreq,
     ggplot2::scale_x_continuous(expand = c(0, 0)) +
     ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::labs(title = plotTitle)
+
+  return(gg)
 }
 
 #' Plot importance score
@@ -789,7 +806,7 @@ splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
 
   scored_soln$score[scored_soln$score >= quant95fs] <- quant95fs
 
-  gg_fs <- ggplot2::ggplot() +
+  gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = scored_soln, ggplot2::aes(fill = .data$score), colour = NA) +
     ggplot2::scale_fill_viridis_c(
       option = colorMap,
@@ -813,6 +830,8 @@ splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
     ggplot2::scale_x_continuous(expand = c(0, 0)) +
     ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::labs(title = plotTitle)
+
+  return(gg)
 }
 
 #' Plot correlation matrices
@@ -869,7 +888,7 @@ splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#447
     print("Not enough labels for the length of the matrix. Please check your labels.")
   }
 
-  gg_cor <- ggcorrplot::ggcorrplot(x,
+  gg <- ggcorrplot::ggcorrplot(x,
     outline.color = "black",
     lab = TRUE
   ) +
@@ -899,11 +918,13 @@ splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#447
     ggplot2::labs(title = plotTitle)
 
   if (class(AxisLabels)[[1]] == "character") {
-    gg_cor <- gg_cor +
+    gg <- gg +
       ggplot2::scale_x_discrete(
         guide = ggplot2::guide_axis(angle = 45),
         labels = AxisLabels
       ) +
       ggplot2::scale_y_discrete(labels = AxisLabels)
   }
+
+  return(gg)
 }
