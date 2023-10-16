@@ -45,9 +45,10 @@ Shape <- "Hexagon" # "Shape of PUs
 PU_size <- 10000 # km2
 ```
 
-Choose CRS for analysis
+Choose CRS for analysis. Here we use Mollweide
 ```{r}
-cCRS <- "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs" # Mollweide
+cCRS <-
+  "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"
 ```
 
 ## Analysis Region
@@ -58,7 +59,10 @@ Get the boundary for your chosen region.
 ```{r}
 Bndry <- splnr_get_boundary(Region, Type, cCRS)
 
-landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
+landmass <- rnaturalearth::ne_countries(
+  scale = "medium",
+  returnclass = "sf"
+) %>%
   sf::st_transform(cCRS)
 ```
 
@@ -204,10 +208,16 @@ s2 <- p2 %>%
 The solution can be plotted using the function `splnr_plot_solution()` with the argument `zones` set to `TRUE`.
 
 ```{r, fig.width = 9}
-(gg_s2 <- splnr_plot_solution(s2, zones = TRUE, 
-                              colorVals = c("#c6dbef", "#3182bd", "black"),
-                              legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s2 <- splnr_plot_solution(
+  s2,
+  zones = TRUE,
+  colorVals = c("#c6dbef", "#3182bd", "black"),
+  legendLabels = c("Not selected", "Zone 1", "Zone 2")
+) +
+  splnr_gg_add(
+    PUs = PUs, Bndry = Bndry, land = landmass,
+    cropLand = PUs, ggtheme = splnr_theme
+  ))
 ```
 
 We can see that we now how planning units that are not selected, and planning units that have either been selected for zone 1 or zone 2.
@@ -231,9 +241,10 @@ This sets the target for reptiles in the first zone to 30% and the rest to 0%. I
 We then define the conservation problem in the same way as above and solve it.
 
 ```{r}
+# NOTE: when using sf input, we need as many cost columns as we have zones
 p2b <- prioritizr::problem(
   datEx_species_bin %>% dplyr::mutate(
-    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    Cost1 = rep(1, 397),
     Cost2 = runif(n = dim(.)[[1]])
   ),
   z2,
@@ -269,10 +280,16 @@ Dict[[1]][7]
 They are both marine mammals and thus had a target of 0% in zone 1 that was the reptile-specific zone. The percentage of selected suitable habitat is not 0% despite the target of 0 because a proportion of suitable habitat of mammals was selected incidentally when selecting planning units in this zone by meeting the targets for reptiles. The same applies for zone 2. We can also plot the final solution again: 
 
 ```{r, fig.width = 9}
-(gg_s2b <- splnr_plot_solution(s2b, zones = TRUE, 
-                               colorVals = c("#c6dbef", "#3182bd", "black"), 
-                               legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s2b <- splnr_plot_solution(
+  s2b,
+  zones = TRUE,
+  colorVals = c("#c6dbef", "#3182bd", "black"),
+  legendLabels = c("Not selected", "Zone 1", "Zone 2")
+) +
+  splnr_gg_add(
+    PUs = PUs, Bndry = Bndry, land = landmass,
+    cropLand = PUs, ggtheme = splnr_theme
+  ))
 ```
 
 
@@ -311,10 +328,16 @@ s3 <- p3 %>%
 With `add_boundary_penalties()` we set a penalty of 0.5 between the zones we defined in `zm1`. For the purpose of this example, we also set a 10 second time limit for the prioritisation. The results show less fragmentation than in the previous solution without penalties:
 
 ```{r, fig.width=9}
-(gg_s3 <- splnr_plot_solution(s3, zones = TRUE, 
-                              colorVals = c("#c6dbef", "#3182bd", "black"), 
-                              legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s3 <- splnr_plot_solution(
+  s3,
+  zones = TRUE,
+  colorVals = c("#c6dbef", "#3182bd", "black"),
+  legendLabels = c("Not selected", "Zone 1", "Zone 2")
+) +
+  splnr_gg_add(
+    PUs = PUs, Bndry = Bndry, land = landmass,
+    cropLand = PUs, ggtheme = splnr_theme
+  ))
 ```
 
 A boundary penalty can also be introduced to only one zone:
@@ -323,9 +346,10 @@ A boundary penalty can also be introduced to only one zone:
 zm2 <- zm1
 zm2[2, 2] <- 0
 
+# NOTE: When using sf input, we need as many cost columns as we have zones
 p4 <- prioritizr::problem(
   datEx_species_bin %>% dplyr::mutate(
-    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    Cost1 = rep(1, 397),
     Cost2 = runif(n = dim(.)[[1]])
   ),
   z2,
@@ -340,12 +364,18 @@ p4 <- prioritizr::problem(
 s4 <- p4 %>%
   prioritizr::solve.ConservationProblem()
 
-(gg_s4 <- splnr_plot_solution(s4, zones = TRUE, 
-                              colorVals = c("#c6dbef", "#3182bd", "black"), 
-                              legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s4 <- splnr_plot_solution(
+  s4,
+  zones = TRUE,
+  colorVals = c("#c6dbef", "#3182bd", "black"),
+  legendLabels = c("Not selected", "Zone 1", "Zone 2")
+) +
+  splnr_gg_add(
+    PUs = PUs, Bndry = Bndry, land = landmass,
+    cropLand = PUs, ggtheme = splnr_theme
+  ))
 ```
- 
+
 #### Across zones
 
 Similarly, penalties can be applied between zones if specified in the problem.
@@ -373,10 +403,16 @@ p5 <- prioritizr::problem(
 s5 <- p5 %>%
   prioritizr::solve.ConservationProblem()
 
-(gg_s5 <- splnr_plot_solution(s5, zones = TRUE, 
-                              colorVals = c("#c6dbef", "#3182bd", "black"), 
-                              legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s5 <- splnr_plot_solution(
+  s5,
+  zones = TRUE,
+  colorVals = c("#c6dbef", "#3182bd", "black"),
+  legendLabels = c("Not selected", "Zone 1", "Zone 2")
+) +
+  splnr_gg_add(
+    PUs = PUs, Bndry = Bndry, land = landmass,
+    cropLand = PUs, ggtheme = splnr_theme
+  ))
 ```
 
 ### Adding constraints
@@ -400,9 +436,10 @@ mpas <- MPAsCoralSea %>%
 We need to specify which zone the constraint should be applied to, give information on the planning unit identifier, rename the column of interest to "status" and filter out only the planning units that should be locked in.
 
 ```{r}
+# NOTE: When using sf input, we need as many cost columns as we have zones
 p6 <- prioritizr::problem(
   datEx_species_bin %>% dplyr::mutate(
-    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    Cost1 = rep(1, 397),
     Cost2 = runif(n = dim(.)[[1]])
   ),
   z2,
@@ -421,14 +458,17 @@ s6 <- p6 %>%
 The results can the be visualized again:
 
 ```{r, fig.width = 9}
-(gg_s6 <- splnr_plot_solution(s6, zones = TRUE, 
-                              colorVals = c("#c6dbef", "#3182bd", "black"), 
-                              legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
+(gg_s6 <- splnr_plot_solution(
+  s6,
+  zones = TRUE,
+  colorVals = c("#c6dbef", "#3182bd", "black"),
+  legendLabels = c("Not selected", "Zone 1", "Zone 2")
+) +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry,
-    lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa, 
-    Type = "Full", colorLI = "red", alphaLI = 0.2,
-    land = landmass, cropLand = PUs, ggtheme = splnr_theme, labelL = "Current MPAs"
+    lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa,
+    Type = "Full", colorLI = "red", alphaLI = 0.2, land = landmass,
+    cropLand = PUs, ggtheme = splnr_theme, labelL = "Current MPAs"
   ))
 ```
 
@@ -439,9 +479,10 @@ So far we have only used the minimum set objective function to meet all conserva
 Zones also works with objective functions other than the minimum set objective function.
 
 ```{r}
+# NOTE: When using sf input, we need as many cost columns as we have zones
 p7 <- prioritizr::problem(
   datEx_species_bin %>% dplyr::mutate(
-    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    Cost1 = rep(1, 397),
     Cost2 = runif(n = dim(.)[[1]])
   ),
   z2,
@@ -459,10 +500,16 @@ Here we apply `add_min_shortfall_objective()` and provide to separate budgets fo
 s7 <- p7 %>%
   prioritizr::solve.ConservationProblem()
 
-(gg_s7 <- splnr_plot_solution(s7, zones = TRUE, 
-                              colorVals = c("#c6dbef", "#3182bd", "black"), 
-                              legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s7 <- splnr_plot_solution(
+  s7,
+  zones = TRUE,
+  colorVals = c("#c6dbef", "#3182bd", "black"),
+  legendLabels = c("Not selected", "Zone 1", "Zone 2")
+) +
+  splnr_gg_add(
+    PUs = PUs, Bndry = Bndry, land = landmass,
+    cropLand = PUs, ggtheme = splnr_theme
+  ))
 ```
 
 ### Alternative: linear constraints
@@ -475,6 +522,8 @@ In our example, we fill first define our targets and a random cost layer with va
 
 ```{r}
 target8 <- rep(0.3, nrow(Dict))
+
+set.seed <- 10 # Add seed so the problem below solves each time
 
 costRandom <- datEx_species_bin %>%
   dplyr::mutate(CostR = runif(n = dim(.)[[1]])) %>%
@@ -491,7 +540,9 @@ p8 <- prioritizr::problem(
 ) %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_relative_targets(target8) %>%
-  prioritizr::add_linear_constraints(sum(costRandom$CostR) * 0.1, sense = "<=", costRandom$CostR) %>%
+  prioritizr::add_linear_constraints(sum(costRandom$CostR) * 0.1,
+    sense = "<=", costRandom$CostR
+  ) %>%
   prioritizr::add_binary_decisions() %>%
   prioritizr::add_default_solver(verbose = FALSE)
 
@@ -559,7 +610,7 @@ out_sf <- datSpecZone1 %>%
   dplyr::mutate(geometry = datEx_species_bin$geometry) %>%
   sf::st_as_sf() %>%
   dplyr::mutate(
-    Cost1 = runif(n = dim(.)[[1]]) * 100, # when giving sf input, we need as many cost columns as we have zones
+    Cost1 = runif(n = dim(.)[[1]]) * 100,
     Cost2 = runif(n = dim(.)[[1]]) * 300
   )
 ```
@@ -595,10 +646,15 @@ print(r10)
 The overall summary shows that every feature's suitable habitat was represented by at least 30% which was the combined target we had set. However, we can see that features from `zone1` were a lot more frequently selected than `zone2` because `zone2` is three times as costly.
 
 ```{r, fig.width=9}
- (gg_s10 <- splnr_plot_solution(s10, zones = TRUE, 
-                                colorVals = c("#c6dbef", "#3182bd", "black"), 
-                                legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
-   splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s10 <- splnr_plot_solution(s10,
+  zones = TRUE,
+  colorVals = c("#c6dbef", "#3182bd", "black"),
+  legendLabels = c("Not selected", "Zone 1", "Zone 2")
+) +
+  splnr_gg_add(
+    PUs = PUs, Bndry = Bndry, land = landmass,
+    cropLand = PUs, ggtheme = splnr_theme
+  ))
 ```
 
 The plot also reflects the observation above that PUs were more frequently selected in `zone1`. What if we wanted to constrain this, so that `zone1` is less often selected and `zone2` more often?
@@ -627,7 +683,9 @@ p11 <- prioritizr::problem(out_sf,
   cost_column = c("Cost1", "Cost2")
 ) %>%
   prioritizr::add_min_set_objective() %>%
-  prioritizr::add_linear_constraints(sum(CostArea[, 1]) * 0.3, sense = "<=", CostArea) %>%
+  prioritizr::add_linear_constraints(sum(CostArea[, 1]) * 0.3,
+    sense = "<=", CostArea
+  ) %>%
   prioritizr::add_manual_targets(targetAcross) %>%
   prioritizr::add_binary_decisions() %>%
   prioritizr::add_default_solver(verbose = FALSE)
@@ -649,10 +707,16 @@ print(r11)
 The selected planning units are now more equally distributed across zones, which is also observable in the plot:
 
 ```{r, fig.width=9}
-(gg_s11 <- splnr_plot_solution(s11, zones = TRUE, 
-                               colorVals = c("#c6dbef", "#3182bd", "black"),
-                               legendLabels = c("Not selected", "Zone 1", "Zone 2")) +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+(gg_s11 <- splnr_plot_solution(
+  s11,
+  zones = TRUE,
+  colorVals = c("#c6dbef", "#3182bd", "black"),
+  legendLabels = c("Not selected", "Zone 1", "Zone 2")
+) +
+  splnr_gg_add(
+    PUs = PUs, Bndry = Bndry, land = landmass,
+    cropLand = PUs, ggtheme = splnr_theme
+  ))
 ```
 
 However, we also expect the cost for the spatial plan to be higher than the previous one.
@@ -721,13 +785,14 @@ z12 <- prioritizr::zones(
 We then create a joint `sf` object of all zones and their respective costs.
 
 ```{r}
+# NOTE: When using sf input, we need as many cost columns as we have zones
 out_sf <- datSpecZone1 %>%
   dplyr::left_join(datSpecZone2, by = "cellID") %>%
   dplyr::left_join(datSpecZone3, by = "cellID") %>%
   dplyr::mutate(geometry = datEx_species_bin$geometry) %>%
   sf::st_as_sf() %>%
   dplyr::mutate(
-    Cost1 = runif(n = dim(.)[[1]]) * 100, # when giving sf input, we need as many cost columns as we have zones
+    Cost1 = runif(n = dim(.)[[1]]) * 100,
     Cost2 = runif(n = dim(.)[[1]]) * 300,
     Cost3 = runif(n = dim(.)[[1]]) * 200
   )
@@ -758,11 +823,16 @@ print(r12)
 ```
 
 ```{r, fig.width=9}
-(gg_s12 <- splnr_plot_solution(s12, zones = TRUE,
+(gg_s12 <- splnr_plot_solution(
+  s12,
+  zones = TRUE,
   colorVals = c("#c6dbef", "#3182bd", "navyblue", "black"),
   legendLabels = c("Not selected", "Zone 1", "Zone 2", "Zone3")
 ) +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+  splnr_gg_add(
+    PUs = PUs, Bndry = Bndry, land = landmass,
+    cropLand = PUs, ggtheme = splnr_theme
+  ))
 ```
 
 
@@ -778,10 +848,10 @@ print(r12)
 * How to handle inputs that would benefit from using different objective functions (e.g. ecosystem services vs biodiversity features)
 * Look into some commonly used data sets for multiple use approaches and think about zone-specific costs, constraints, targets etc.
 * Define our (and Waitt's) understanding of what multiple-use is and how we want to implement it (can differ now and in the future)
-  + [EU Horizon 2020 MUSES-project](https://muses-project.com/): multiple use/multi-use is “the joint use of resources in close geographic proximity by either a single user or multiple users. It is an umbrella term that covers a multitude of use combinations in the marine realm and represents a radical change from the concept of exclusive resource rights to the inclusive sharing of resources and space by one or more users.”
-  + [Bonnevie et al. 2019](https://doi.org/10.1016/j.marpol.2019.103533): "multi-use is a specific co-location/coexistence where resources
++ [EU Horizon 2020 MUSES-project](https://muses-project.com/): multiple use/multi-use is “the joint use of resources in close geographic proximity by either a single user or multiple users. It is an umbrella term that covers a multitude of use combinations in the marine realm and represents a radical change from the concept of exclusive resource rights to the inclusive sharing of resources and space by one or more users.”
++ [Bonnevie et al. 2019](https://doi.org/10.1016/j.marpol.2019.103533): "multi-use is a specific co-location/coexistence where resources
 are being shared."
-  + [Schupp et al. 2019](https://doi.org/10.3389/fmars.2019.00165): distinguishes between for different types of multi-uses (one of which is co-location)
++ [Schupp et al. 2019](https://doi.org/10.3389/fmars.2019.00165): distinguishes between for different types of multi-uses (one of which is co-location)
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, out.width='90%', fig.cap = "Types of multiple use in MSP according to [Schupp et al. 2019](https://doi.org/10.3389/fmars.2019.00165)"}
 knitr::include_graphics(file.path("Schupp2019TypesMultipleUse.png"))

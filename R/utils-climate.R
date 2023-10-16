@@ -24,9 +24,9 @@
 #'   percentile = 5, metricDF = metric_df, direction = 1
 #' )
 splnr_climate_priorityArea_preprocess <- function(featuresDF,
-                                                    percentile,
-                                                    metricDF,
-                                                    direction) {
+                                                  percentile,
+                                                  metricDF,
+                                                  direction) {
   spp <- featuresDF %>%
     dplyr::select(-"geometry", -"cellID") %>%
     sf::st_drop_geometry() %>%
@@ -151,8 +151,8 @@ splnr_climate_priorityArea_preprocess <- function(featuresDF,
 #'   refugiaTarget = 1
 #' )
 splnr_climate_priorityArea_assignTargets <- function(targetsDF,
-                                                       climateSmartDF,
-                                                       refugiaTarget = 1) {
+                                                     climateSmartDF,
+                                                     refugiaTarget = 1) {
   spp <- targetsDF %>%
     dplyr::select("feature") %>%
     dplyr::pull()
@@ -248,13 +248,12 @@ splnr_climate_priorityArea_assignTargets <- function(targetsDF,
 #' out_sf <- CPA_Approach$Features
 #' targets <- CPA_Approach$Targets
 splnr_climate_priorityAreaApproach <- function(featuresDF,
-                                                           metricDF,
-                                                           targetsDF,
-                                                           direction,
-                                                           percentile = 5,
-                                                           refugiaTarget = 1) {
+                                               metricDF,
+                                               targetsDF,
+                                               direction,
+                                               percentile = 5,
+                                               refugiaTarget = 1) {
   CPAFeatures <- splnr_climate_priorityArea_preprocess(
-
     featuresDF = featuresDF, metricDF = metricDF,
     direction = direction, percentile = percentile
   )
@@ -292,9 +291,9 @@ splnr_climate_priorityAreaApproach <- function(featuresDF,
 #'   percentile = 5, metricDF = metric_df, direction = 1
 #' )
 splnr_climate_feature_preprocess <- function(featuresDF,
-                                        percentile,
-                                        metricDF,
-                                        direction) {
+                                             percentile,
+                                             metricDF,
+                                             direction) {
   if (any(apply(metricDF, 2, is.na)[, "metric"])) {
     print("There are some NAs in the metric data. Please check.")
   }
@@ -369,8 +368,8 @@ splnr_climate_feature_preprocess <- function(featuresDF,
 #'   refugiaTarget = 1
 #' )
 splnr_climate_feature_assignTargets <- function(climateSmartDF,
-                                           refugiaTarget,
-                                           targetsDF) {
+                                                refugiaTarget,
+                                                targetsDF) {
   # Calculate the target depending on the # of PUs deemed as "climate-smart"
   trgt <- refugiaTarget / (sum(climateSmartDF$climate_layer) / nrow(climateSmartDF))
 
@@ -421,11 +420,11 @@ splnr_climate_feature_assignTargets <- function(climateSmartDF,
 #' out_sf <- Feature_Approach$Features
 #' targets <- Feature_Approach$Targets
 splnr_climate_featureApproach <- function(featuresDF,
-                                               metricDF,
-                                               targetsDF,
-                                               direction,
-                                               percentile = 5,
-                                               refugiaTarget = 1) {
+                                          metricDF,
+                                          targetsDF,
+                                          direction,
+                                          percentile = 5,
+                                          refugiaTarget = 1) {
   featureFeatures <- splnr_climate_feature_preprocess(
     featuresDF = featuresDF, metricDF = metricDF,
     direction = direction, percentile = percentile
@@ -463,9 +462,9 @@ splnr_climate_featureApproach <- function(featuresDF,
 #'   percentile = 5, metricDF = metric_df, direction = 1
 #' )
 splnr_climate_percentile_preprocess <- function(featuresDF,
-                                           percentile,
-                                           metricDF,
-                                           direction) {
+                                                percentile,
+                                                metricDF,
+                                                direction) {
   if (any(apply(metricDF, 2, is.na)[, "metric"])) {
     print("There are some NAs in the metric data. Please check.")
   }
@@ -569,8 +568,8 @@ splnr_climate_percentile_preprocess <- function(featuresDF,
 #'   climateSmartDF = out_sf
 #' )
 splnr_climate_percentile_assignTargets <- function(featuresDF,
-                                              climateSmartDF,
-                                              targetsDF) {
+                                                   climateSmartDF,
+                                                   targetsDF) {
   spp <- featuresDF %>% # Get the list of features
     tibble::as_tibble() %>%
     dplyr::select(-"cellID", -"geometry") %>%
@@ -579,7 +578,7 @@ splnr_climate_percentile_assignTargets <- function(featuresDF,
   suppressMessages({
     df <- featuresDF %>%
       sf::st_drop_geometry() %>%
-      dplyr::mutate_all(~ifelse(is.na(.), 0, .)) %>%
+      dplyr::mutate_all(~ ifelse(is.na(.), 0, .)) %>%
       tibble::as_tibble() %>%
       dplyr::select(-"cellID") %>%
       dplyr::summarize(dplyr::across(dplyr::everything(), sum)) %>% # Get the # of planning units where feature is present
@@ -589,7 +588,7 @@ splnr_climate_percentile_assignTargets <- function(featuresDF,
 
     df1 <- climateSmartDF %>%
       sf::st_drop_geometry() %>%
-      dplyr::mutate_all(~ifelse(is.na(.), 0, .)) %>%
+      dplyr::mutate_all(~ ifelse(is.na(.), 0, .)) %>%
       tibble::as_tibble() %>%
       dplyr::select(-"cellID") %>%
       dplyr::summarize(dplyr::across(dplyr::everything(), sum)) %>% # Get the # of planning units selected using the climate-smart approach
@@ -641,10 +640,10 @@ splnr_climate_percentile_assignTargets <- function(featuresDF,
 #' out_sf <- Percentile_Approach$Features
 #' targets <- Percentile_Approach$Targets
 splnr_climate_percentileApproach <- function(featuresDF,
-                                                  metricDF,
-                                                  targetsDF,
-                                                  direction,
-                                                  percentile = 35) {
+                                             metricDF,
+                                             targetsDF,
+                                             direction,
+                                             percentile = 35) {
   percentileFeatures <- splnr_climate_percentile_preprocess(
     featuresDF = featuresDF, metricDF = metricDF,
     direction = direction, percentile = percentile
