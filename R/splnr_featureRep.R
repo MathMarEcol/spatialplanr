@@ -169,7 +169,9 @@ splnr_plot_featureRep <- function(df, category = NA,
                                   plotTitle = "") {
   if (is.data.frame(category)) {
     df <- df %>%
-      dplyr::left_join(category, by = "feature")
+      dplyr::left_join(category, by = "feature") %>%
+      dplyr::arrange(.data$category, .data$feature) %>%
+      dplyr::mutate(feature = factor(.data$feature, levels = .data$feature))
   }
 
   if (max(df$relative_held < 1)) {
