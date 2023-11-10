@@ -73,9 +73,9 @@ splnr_plot_climKernelDensity_Basic <- function(soln) {
     ) +
     ggplot2::theme_bw() +
     ggplot2::theme(
-      axis.ticks = ggplot2::element_line(color = "black", size = 1),
+      axis.ticks = ggplot2::element_line(color = "black", linewidth = 1),
       text = ggplot2::element_text(size = 20),
-      axis.line = ggplot2::element_line(colour = "black", size = 1),
+      axis.line = ggplot2::element_line(colour = "black", linewidth = 1),
       axis.text.y = ggplot2::element_blank(),
       axis.text.x = ggplot2::element_text(size = 20),
       axis.title = ggplot2::element_text(size = 20),
@@ -116,7 +116,7 @@ splnr_plot_climKernelDensity_Fancy <- function(solution_list, names,
     list_sol[[i]] <- solution_list[[i]] %>%
       tibble::as_tibble() %>%
       dplyr::select("solution_1", "metric") %>%
-      dplyr::rename(!!rlang::sym(names[i]) := .data$metric) %>%
+      dplyr::rename(!!rlang::sym(names[i]) := "metric") %>%
       tidyr::pivot_longer(!!rlang::sym(names[i]), names_to = group_name, values_to = "metric")
   }
 
@@ -146,8 +146,8 @@ splnr_plot_climKernelDensity_Fancy <- function(solution_list, names,
     ggplot2::labs(x = xAxisLab) +
     ggplot2::theme_bw() +
     ggplot2::theme(
-      axis.ticks = ggplot2::element_line(color = "black", size = 1),
-      axis.line = ggplot2::element_line(colour = "black", size = 1),
+      axis.ticks = ggplot2::element_line(color = "black", linewidth = 1),
+      axis.line = ggplot2::element_line(colour = "black", linewidth = 1),
       axis.text = ggplot2::element_text(color = "black", size = 14),
       axis.title.x = ggplot2::element_text(size = 14),
       axis.title.y = ggplot2::element_blank(),

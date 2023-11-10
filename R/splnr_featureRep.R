@@ -366,7 +366,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
       ggplot2::aes(x = .data$end, y = 25, xend = .data$start, yend = 25),
       colour = "grey50",
       alpha = 1,
-      size = 0.5,
+      linewidth = 0.5,
       inherit.aes = FALSE
     ) +
     ggplot2::geom_segment(
@@ -374,7 +374,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
       ggplot2::aes(x = .data$end, y = 50, xend = .data$start, yend = 50),
       colour = "grey50",
       alpha = 1,
-      size = 0.5,
+      linewidth = 0.5,
       inherit.aes = FALSE
     ) +
     ggplot2::geom_segment(
@@ -382,7 +382,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
       ggplot2::aes(x = .data$end, y = 75, xend = .data$start, yend = 75),
       colour = "grey50",
       alpha = 1,
-      size = 0.5,
+      linewidth = 0.5,
       inherit.aes = FALSE
     ) +
     ggplot2::geom_segment(
@@ -390,7 +390,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
       ggplot2::aes(x = .data$end, y = 100, xend = .data$start, yend = 100),
       colour = "grey50",
       alpha = 1,
-      size = 0.5,
+      linewidth = 0.5,
       inherit.aes = FALSE
     ) +
     ggplot2::annotate("text",
