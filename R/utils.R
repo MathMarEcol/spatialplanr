@@ -330,7 +330,7 @@ splnr_arrangeFeatures <- function(df) {
 splnr_get_kappaCorrData <- function(sol, name_sol) {
   s_list <- lapply(seq_along(sol), function(x) {
     sol[[x]] %>%
-      tibble::as_tibble() %>%
+      tibble::as_tibble(.name_repair = "unique") %>%
       dplyr::select("solution_1") %>%
       stats::setNames(name_sol[[x]])
   })
@@ -348,17 +348,17 @@ splnr_get_kappaCorrData <- function(sol, name_sol) {
   }
 
   s_matrix_all <- do.call(rbind, s_matrix) %>%
-    tibble::as_tibble()
+    tibble::as_tibble(.name_repair = "unique")
   colnames(s_matrix_all)[1:2] <- c("plan1", "plan2")
 
   matrix_final <- s_matrix_all %>%
-    tibble::as_tibble() %>%
+    tibble::as_tibble(.name_repair = "unique") %>%
     dplyr::select(-kappa_pvalue) %>%
-    tidyr::pivot_wider(names_from = .data$plan2, values_from = kappa_corrvalue) %>%
+    tidyr::pivot_wider(names_from = "plan2", values_from = kappa_corrvalue) %>%
     as.matrix()
 
   matrix_x <- s_matrix_all %>%
-    tibble::as_tibble()
+    tibble::as_tibble(.name_repair = "unique")
 
   # creating corrplot
   rownames(matrix_final) <- matrix_final[, 1]

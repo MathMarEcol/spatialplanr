@@ -250,7 +250,7 @@ splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
                                 zones = FALSE) {
   if (zones == FALSE) {
     soln <- soln %>%
-      dplyr::select(.data$solution_1) %>%
+      dplyr::select("solution_1") %>%
       dplyr::mutate(solution = as.factor(.data$solution_1))
     nrows <- 2
   } else if (zones == TRUE) {
@@ -417,7 +417,7 @@ splnr_plot_cost <- function(Cost, Cost_name = "Cost", legendTitle = "Cost",
   # col_name = stringr::str_subset(colnames(Cost), "geometry", negate = TRUE)
 
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), colour = "grey80", size = 0.1, show.legend = TRUE) +
+    ggplot2::geom_sf(data = Cost, ggplot2::aes(fill = !!rlang::sym(Cost_name)), colour = "grey80", size = 0.1, show.legend = TRUE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
     ggplot2::scale_fill_distiller(
       # name = legendTitle,
@@ -479,7 +479,7 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = soln, fill = "black", colour = NA, size = 0.0001) +
-    ggplot2::geom_sf(data = Cost, ggplot2::aes_string(fill = Cost_name), alpha = 0.5, colour = NA, size = 0.0001) +
+    ggplot2::geom_sf(data = Cost, ggplot2::aes(fill = !!rlang::sym(Cost_name)), alpha = 0.5, colour = NA, size = 0.0001) +
     ggplot2::scale_fill_gradient(
       name = legendTitle,
       # palette = "Oranges",
@@ -603,8 +603,8 @@ splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compar
     dplyr::select("solution_1") %>%
     dplyr::bind_cols(soln2 %>%
       dplyr::as_tibble() %>%
-      dplyr::select(.data$solution_1) %>%
-      dplyr::rename(solution_2 = .data$solution_1)) %>%
+      dplyr::select("solution_1") %>%
+      dplyr::rename(solution_2 = "solution_1")) %>%
     dplyr::mutate(Combined = .data$solution_1 + .data$solution_2) %>%
     dplyr::mutate(
       Compare = dplyr::case_when(
@@ -653,7 +653,7 @@ splnr_plot_featureNo <- function(df, showLegend = TRUE, paletteName = "YlGnBu",
     # NOTE I have changed tidyselect:::where() to where. I think I added it as a global function somewhere else so it shouldn't be needed here....
     dplyr::mutate(FeatureSum = rowSums(dplyr::across(where(is.numeric)), na.rm = TRUE)) %>%
     sf::st_as_sf(sf_column_name = "geometry") %>%
-    dplyr::select(.data$FeatureSum)
+    dplyr::select("FeatureSum")
 
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$FeatureSum), colour = NA, size = 0.1, show.legend = showLegend) +
