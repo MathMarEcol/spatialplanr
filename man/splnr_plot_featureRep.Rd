@@ -30,7 +30,7 @@ A ggplot object of the plot
 Plot how well targets are met
 }
 \examples{
-dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+pDat <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
   cost_column = "Cost"
 ) \%>\%
@@ -39,14 +39,14 @@ dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = ru
   prioritizr::add_binary_decisions() \%>\%
   prioritizr::add_default_solver(verbose = FALSE)
 
-dat_soln <- dat_problem \%>\%
+soln <- pDat \%>\%
   prioritizr::solve.ConservationProblem()
 
 
 # including incidental species coverage
 df <- splnr_get_featureRep(
-  soln = dat_soln,
-  pDat = dat_problem
+  soln = soln,
+  pDat = pDat
 )
 
 (splnr_plot_featureRep(df, category = dat_category))

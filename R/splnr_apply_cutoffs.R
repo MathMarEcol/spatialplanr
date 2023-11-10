@@ -32,10 +32,6 @@ splnr_apply_cutoffs <- function(features, Cutoffs, inverse = FALSE) {
     }
   } else if (length(Cutoffs) == length(names(Cutoffs))) { # Named vector with values for each column
 
-    # nm <- features %>%
-    #   dplyr::as_tibble() %>%
-    #   dplyr::select(-c(.data$cellID, .data$geometry)) %>%
-    #   names()
 
     nm <- names(Cutoffs) # Testing - We should only be operating on the columns in the Cutoffs vector
 
