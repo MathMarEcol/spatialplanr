@@ -87,7 +87,6 @@ splnr_targets_byIUCN <- function(dat, IUCN_target, IUCN_col = "IUCN_Category") {
     dat$target <- NA
   }
 
-
   if (checkmate::test_numeric(IUCN_target, names = "named")) {
     # If the target is a named vector, apply the relevent targets
 

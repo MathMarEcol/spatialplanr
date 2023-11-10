@@ -190,7 +190,8 @@ Both zones need a specified cost and targets. We use one area-based cost and one
 ```{r}
 p2 <- prioritizr::problem(
   datEx_species_bin %>% dplyr::mutate(
-    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+     # when giving sf input, we need as many cost columns as we have zones
+    Cost1 = rep(1, 397),
     Cost2 = runif(n = dim(.)[[1]])
   ),
   z2,
@@ -309,7 +310,8 @@ The zeros in this matrix denote that there is no penalty between zones, whereas 
 ```{r}
 p3 <- prioritizr::problem(
   datEx_species_bin %>% dplyr::mutate(
-    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    # when giving sf input, we need as many cost columns as we have zones
+    Cost1 = rep(1, 397), 
     Cost2 = runif(n = dim(.)[[1]])
   ),
   z2,
@@ -388,7 +390,8 @@ print(zm3)
 ```{r, fig.width=9}
 p5 <- prioritizr::problem(
   datEx_species_bin %>% dplyr::mutate(
-    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
+    # when giving sf input, we need as many cost columns as we have zones
+    Cost1 = rep(1, 397),
     Cost2 = runif(n = dim(.)[[1]])
   ),
   z2,
@@ -556,7 +559,8 @@ We can visualise the solution again:
 
 ```{r, fig.width = 9}
 (gg_s8 <- splnr_plot_solution(s8) +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, 
+               cropLand = PUs, ggtheme = splnr_theme))
 ```
 
 

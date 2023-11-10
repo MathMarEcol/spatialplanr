@@ -20,12 +20,10 @@ knitr::opts_chunk$set(
 ```
 
 ```{r klippy, eval=TRUE, echo=FALSE, include=TRUE}
-print("klippy")
 klippy::klippy(position = c("top", "right"))
 ```
 
 ```{r setup}
-print("library")
 library(spatialplanr)
 ```
 
@@ -36,13 +34,14 @@ This code has been written to simplify the process for running a _prioritizr_ an
 ## Set user parameters 
 You can set a region if it is defined in `splnr_get_planningUnits`. 
 ```{r}
-print("parameters")
 Region <- "Coral Sea" # "Australia"
 Type <- "Oceans" # "EEZ"
 Shape <- "Hexagon" # "Shape of PUs
 PU_size <- 10000 # km2
 
-cCRS <- "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs" # Mollweide
+# Mollweide
+cCRS <- 
+  "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs" 
 ```
 
 We can also use a customised `ggplot` theme that can be passed as a list to `splnr_gg_add()` and that can then be used for all plots. For example:
@@ -69,7 +68,8 @@ Get the boundary for your chosen region.
 ```{r}
 Bndry <- splnr_get_boundary(Region, Type, cCRS)
 
-landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
+landmass <- rnaturalearth::ne_countries(scale = "medium", 
+                                        returnclass = "sf") %>%
   sf::st_transform(cCRS)
 ```
 

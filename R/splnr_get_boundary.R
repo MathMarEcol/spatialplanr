@@ -60,7 +60,8 @@ splnr_get_boundary <- function(Limits,
     ) %>%
       dplyr::filter(.data$name %in% Limits) %>%
       sf::st_union() %>%
-      sf::st_transform(cCRS)
+      sf::st_transform(cCRS) %>%
+      sf::st_sf()
     return(Bndry)
   }
 }

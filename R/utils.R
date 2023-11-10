@@ -23,7 +23,8 @@ splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
     list() %>%
     sf::st_polygon() %>%
     sf::st_sfc(crs = "EPSG:4326") %>%
-    sf::st_transform(crs = cCRS)
+    sf::st_transform(crs = cCRS) %>%
+    sf::st_sf()
 }
 
 
@@ -198,12 +199,14 @@ splnr_convert_toPacific <- function(df,
 
   # Modify world dataset to remove overlapping portions with world's polygons
   # TODO add a warning if the input df is not unprojected
-  df_proj <- df %>%
-    sf::st_transform(longlat) %>% # The input needs to be unprojected.
-    sf::st_make_valid() %>% # Just in case....
-    sf::st_difference(polygon) %>%
-    sf::st_transform(crs = cCRS) # Perform transformation on modified version of polygons
-  rm(polygon)
+  suppressWarnings({
+    df_proj <- df %>%
+      sf::st_transform(longlat) %>% # The input needs to be unprojected.
+      sf::st_make_valid() %>% # Just in case....
+      sf::st_difference(polygon) %>%
+      sf::st_transform(crs = cCRS) # Perform transformation on modified version of polygons
+    rm(polygon)
+  })
 
   # # notice that there is a line in the middle of Antarctica. This is because we have
   # # split the map after reprojection. We need to fix this:
@@ -263,8 +266,12 @@ splnr_convert_toPacific <- function(df,
 #' df <- dat_species_prob %>%
 #'   splnr_arrangeFeatures()
 splnr_arrangeFeatures <- function(df) {
+
+
   # Sort rows to ensure all features are in the same order.
-  xy <- sf::st_coordinates(sf::st_centroid(df))
+  suppressWarnings(
+    xy <- sf::st_coordinates(sf::st_centroid(df))
+  )
   df <- df[order(xy[, "X"], xy[, "Y"]), ]
 
   df <- df %>%

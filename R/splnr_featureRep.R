@@ -143,7 +143,7 @@ splnr_get_featureRep <- function(soln, pDat,
 #' @export
 #'
 #' @examples
-#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#' pDat <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
 #'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
 #'   cost_column = "Cost"
 #' ) %>%
@@ -152,14 +152,14 @@ splnr_get_featureRep <- function(soln, pDat,
 #'   prioritizr::add_binary_decisions() %>%
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
-#' dat_soln <- dat_problem %>%
+#' soln <- pDat %>%
 #'   prioritizr::solve.ConservationProblem()
 #'
 #'
 #' # including incidental species coverage
 #' df <- splnr_get_featureRep(
-#'   soln = dat_soln,
-#'   pDat = dat_problem
+#'   soln = soln,
+#'   pDat = pDat
 #' )
 #'
 #' (splnr_plot_featureRep(df, category = dat_category))
@@ -169,7 +169,9 @@ splnr_plot_featureRep <- function(df, category = NA,
                                   plotTitle = "") {
   if (is.data.frame(category)) {
     df <- df %>%
-      dplyr::left_join(category, by = "feature")
+      dplyr::left_join(category, by = "feature") %>%
+      dplyr::arrange(.data$category, .data$feature) %>%
+      dplyr::mutate(feature = factor(.data$feature, levels = .data$feature))
   }
 
   if (max(df$relative_held < 1)) {
