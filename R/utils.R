@@ -23,7 +23,8 @@ splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
     list() %>%
     sf::st_polygon() %>%
     sf::st_sfc(crs = "EPSG:4326") %>%
-    sf::st_transform(crs = cCRS)
+    sf::st_transform(crs = cCRS) %>%
+    sf::st_sf()
 }
 
 
