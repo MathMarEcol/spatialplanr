@@ -88,7 +88,7 @@ splnr_climate_priorityArea_preprocess <- function(featuresDF,
   for (i in 1:length(spp)) {
     df1 <- featuresDF %>%
       tibble::as_tibble() %>%
-      dplyr::select(!!rlang::sym(spp[i]), .data$cellID) %>% # Select 1 species at a time
+      dplyr::select(!!rlang::sym(spp[i]), "cellID") %>% # Select 1 species at a time
       dplyr::left_join(metricDF, by = "cellID")
 
     df2 <- imptList %>%
@@ -140,7 +140,7 @@ splnr_climate_priorityArea_preprocess <- function(featuresDF,
 #' dat_species_binDF <- dat_species_bin %>%
 #'   sf::st_drop_geometry()
 #'
-#' out_sf <- splnr_CS_climatePriorityArea_splitFeature(
+#' out_sf <- splnr_climate_priorityArea_preprocess (
 #'   featuresDF = dat_species_bin,
 #'   percentile = 5, metricDF = metric_df, direction = 1
 #' )
