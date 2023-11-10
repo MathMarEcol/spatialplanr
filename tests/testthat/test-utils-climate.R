@@ -37,6 +37,7 @@ testthat::test_that("Correct function output", {
   )
 })
 
+
 testthat::test_that("Correct function output", {
   expect_true(
     rlang::is_list(
