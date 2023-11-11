@@ -22,5 +22,7 @@ The boundary of the planning region
 \code{splnr_get_boundary()} allows to create an \code{sf} object of your planning region either based on specific coordinate information, or \code{rnaturalearth} inputs such as ocean data. Creating a boundary is often the first step in conservation planning and a requirement for downstream function sin \code{spatialplanr}.
 }
 \examples{
-Bndry <- splnr_get_boundary("North Atlantic Ocean", "Ocean")
+Bndry <- splnr_get_boundary(Limits = "North Atlantic Ocean", Type = "Ocean")
+Bndry <- splnr_get_boundary(Limits = "Global")
+Bndry <- splnr_get_boundary(Limits = c("xmin" = 150, "xmax" = 170, "ymin" = -40, "ymax" = -20))
 }

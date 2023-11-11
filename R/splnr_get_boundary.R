@@ -13,7 +13,9 @@
 #' @importFrom rlang .data
 #'
 #' @examples
-#' Bndry <- splnr_get_boundary("North Atlantic Ocean", "Ocean")
+#' Bndry <- splnr_get_boundary(Limits = "North Atlantic Ocean", Type = "Ocean")
+#' Bndry <- splnr_get_boundary(Limits = "Global")
+#' Bndry <- splnr_get_boundary(Limits = c("xmin" = 150, "xmax" = 170, "ymin" = -40, "ymax" = -20))
 splnr_get_boundary <- function(Limits,
                                Type,
                                res = 1,

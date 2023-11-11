@@ -11,7 +11,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![MacOS](https://github.com/MathMarEcol/spatialplanr/actions/workflows/MacOS.yaml/badge.svg)](https://github.com/MathMarEcol/spatialplanr/actions/workflows/MacOS.yaml)
 [![Windows](https://github.com/MathMarEcol/spatialplanr/actions/workflows/Windows.yaml/badge.svg)](https://github.com/MathMarEcol/spatialplanr/actions/workflows/Windows.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/MathMarEcol/spatialplanr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/MathMarEcol/spatialplanr?branch=main)
+coverage](https://codecov.io/gh/MathMarEcol/spatialplanr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/MathMarEcol/spatialplanr/tree/main)
 [![issues -
 planktonr](https://img.shields.io/github/issues/MathMarEcol/spatialplanr)](https://github.com/MathMarEcol/spatialplanr/issues)
 <!-- badges: end -->
