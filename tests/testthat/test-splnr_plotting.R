@@ -162,6 +162,19 @@ testthat::test_that("Correct function output", {
 })
 
 
+testthat::test_that("Correct function output", {
+  expect_s3_class(
+    splnr_plot_importanceScore(soln = soln1, pDat = pDat1, method = "RWR", decimals = 4)
+    , "gg"
+  )
+})
+
+testthat::test_that("Correct function output", {
+  expect_s3_class(
+    splnr_plot_importanceScore(soln = soln1, pDat = pDat1, method = "RC", decimals = 4)
+    , "gg"
+  )
+})
 
 testthat::test_that("Correct function output", {
   expect_s3_class(
