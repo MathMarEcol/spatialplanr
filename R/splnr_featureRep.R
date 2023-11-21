@@ -2,7 +2,9 @@
 #'
 #' @param soln The `prioritizr` solution
 #' @param pDat The `prioritizr` problem
+#' @param targetsDF `data.frame`with list of features under "feature" column and their corresponding targets under "target" column
 #' @param climsmart logical denoting whether spatial planning was done climate-smart (and targets have to be calculated differently)
+#' @param climsmartApproach either 0,1,2 or 3 depending on the climate-smart approach used (0 = None; 1 = Climate Priority Area; 2 = Feature; 3 = Percentile).
 #' @param solnCol Name of the column with the solution
 #'
 #' @return `tbl_df` dataframe
