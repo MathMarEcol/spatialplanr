@@ -4,7 +4,14 @@
 \alias{splnr_get_featureRep}
 \title{Prepare data to plot how well targets are met}
 \usage{
-splnr_get_featureRep(soln, pDat, climsmart = FALSE, solnCol = "solution_1")
+splnr_get_featureRep(
+  soln,
+  pDat,
+  targetsDF = NA,
+  climsmart = FALSE,
+  climsmartApproach = 0,
+  solnCol = "solution_1"
+)
 }
 \arguments{
 \item{soln}{The \code{prioritizr} solution}

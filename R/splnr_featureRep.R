@@ -27,8 +27,8 @@
 #'   soln = soln,
 #'   pDat = pDat
 #' )
-splnr_get_featureRep <- function(soln, pDat,
-                                 climsmart = FALSE, solnCol = "solution_1") {
+splnr_get_featureRep <- function(soln, pDat, targetsDF = NA,
+                                 climsmart = FALSE, climsmartApproach = 0, solnCol = "solution_1") {
   s_cols <- pDat$data$features[[1]]
 
   # Get data for features not chosen
@@ -85,7 +85,7 @@ splnr_get_featureRep <- function(soln, pDat,
   s1 <- prioritizr::eval_feature_representation_summary(pDat, s1[, "solution"]) %>%
     dplyr::select(-"summary")
 
-  if (climsmart == TRUE) {
+  if (climsmart == TRUE & climsmartApproach == 1) {
     s1 <- s1 %>%
       dplyr::select(-.data$relative_held) %>%
       dplyr::mutate(
@@ -99,7 +99,20 @@ splnr_get_featureRep <- function(soln, pDat,
       ) %>%
       dplyr::ungroup() %>%
       dplyr::mutate(relative_held = .data$absolute_held / .data$total_amount) %>% # Calculate proportion
-      dplyr::select(-.data$total_amount, -.data$absolute_held) # Remove extra columns
+      dplyr::select(-"total_amount", -"absolute_held") %>% # Remove extra columns
+      dplyr::left_join(targetsDF, by = "feature") #%>% # Add targets to df
+    # dplyr::select(-"type")
+
+  } else if (climsmart == TRUE & climsmartApproach == 3) {
+
+    s1 <- s1 %>%
+      dplyr::left_join(targetsDF, by = "feature")
+
+  } else {
+    # Add targets to df
+    s1 <- s1 %>%
+      dplyr::left_join(pDat$targets$data[["targets"]], by = "feature") %>%
+      dplyr::select(-"type")
   }
 
   s1 <- s1 %>%
@@ -109,10 +122,6 @@ splnr_get_featureRep <- function(soln, pDat,
     ) %>%
     stats::na.omit()
 
-  # Add targets to df
-  s1 <- s1 %>%
-    dplyr::left_join(pDat$targets$data[["targets"]], by = "feature") %>%
-    dplyr::select(-"type")
 
   # Now join the selected and non-selected values
   if ((length(ns_cols) > 0)) { # Only if there are values in ns1

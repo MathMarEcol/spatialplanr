@@ -9,8 +9,8 @@ splnr_climate_featureApproach(
   metricDF,
   targetsDF,
   direction,
-  percentile = 5,
-  refugiaTarget = 1
+  percentile = 35,
+  refugiaTarget = 0.3
 )
 }
 \arguments{

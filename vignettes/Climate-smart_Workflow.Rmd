@@ -266,7 +266,7 @@ target <- datEx_species_bin %>%
   colnames() %>%
   data.frame() %>%
   setNames(c("feature")) %>%
-  dplyr::mutate(target = 30)
+  dplyr::mutate(target = 0.3)
 
 Percentile_Approach <- splnr_climate_percentileApproach(
   featuresDF = datEx_species_bin,
@@ -346,7 +346,7 @@ target <- datEx_species_bin %>%
   colnames() %>%
   data.frame() %>%
   setNames(c("feature")) %>%
-  dplyr::mutate(target = 30)
+  dplyr::mutate(target = 0.3)
 
 Feature_Approach <- splnr_climate_featureApproach(
   featuresDF = datEx_species_bin,
