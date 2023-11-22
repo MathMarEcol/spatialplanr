@@ -523,7 +523,7 @@ splnr_climate_percentile_preprocess <- function(featuresDF,
 
 
   resultDF <- do.call(dplyr::bind_cols, percentileList) %>% # Create sf object as output
-    dplyr::rename_all(~stringr::str_sub(.x, end = -10)) %>%
+    dplyr::rename_all(~ stringr::str_sub(.x, end = -10)) %>%
     dplyr::bind_cols(featuresDF %>% dplyr::select("cellID", "geometry")) %>%
     dplyr::select("cellID", tidyselect::everything()) %>%
     sf::st_as_sf(sf_column_name = "geometry")
@@ -585,8 +585,8 @@ splnr_climate_percentile_assignTargets <- function(featuresDF,
       dplyr::select(-"cellID") %>%
       dplyr::summarize(dplyr::across(dplyr::everything(), sum)) %>% # Get the # of planning units where feature is present
       tidyr::pivot_longer(tidyselect::everything(), names_to = "feature", values_to = "original") %>%
-      dplyr::left_join(targetsDF)# %>%
-     # dplyr::mutate(feature = paste0(.data$feature, "_filtered")) # Change names
+      dplyr::left_join(targetsDF) # %>%
+    # dplyr::mutate(feature = paste0(.data$feature, "_filtered")) # Change names
 
     df1 <- climateSmartDF %>%
       sf::st_drop_geometry() %>%
