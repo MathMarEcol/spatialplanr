@@ -89,8 +89,8 @@ If we want to add additional properties to our map, for example landmass or the 
 ```{r}
 (ggPU <- splnr_plot_PUs(PUs) +
   splnr_gg_add(
-    Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = "Default"
+    Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = "Default"
   ))
 ```
 
@@ -111,8 +111,8 @@ splnr_theme <- list(
 
 (ggPU <- splnr_plot_PUs(PUs) +
   splnr_gg_add(
-    Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -122,29 +122,30 @@ splnr_theme <- list(
 For our example, we will use a small subset of charismatic megafauna species of the Coral Sea to inform the conservation plan. We filtered the Aquamaps (Aquamaps.org) species distribution models for our study area for the following species: 
 ```{r}
 Dict <- tibble::tribble(
-  ~Common, ~Scientific, ~TaxGroup, ~Category,
-  "Green sea turtle", "Chelonia_mydas", "Reptiles", "important",
-  "Loggerhead sea turtle", "Caretta_caretta", "Reptiles", "important",
-  "Hawksbill sea turtle", "Eretmochelys_imbricata", "Reptiles", "important",
-  "Olive ridley sea turtle", "Lepidochelys_olivacea", "Reptiles", "important",
-  "Saltwater crocodile", "Crocodylus_porosus", "Reptiles", "important",
-  "Humpback whale", "Megaptera_novaeangliae", "Mammals", "representative",
+  ~nameCommon, ~nameVariable, ~category, 
+  "Green sea turtle", "Chelonia_mydas", "Reptiles", 
+  "Loggerhead sea turtle", "Caretta_caretta", "Reptiles", 
+  "Hawksbill sea turtle", "Eretmochelys_imbricata", "Reptiles", 
+  "Olive ridley sea turtle", "Lepidochelys_olivacea", "Reptiles", 
+  "Saltwater crocodile", "Crocodylus_porosus", "Reptiles", 
+  "Humpback whale", "Megaptera_novaeangliae", "Mammals", 
   "Common Minke whale", "Balaenoptera_acutorostrata",
-  "Mammals", "representative", "Dugong", "Dugong_dugon", "Mammals", "important",
-  "Grey nurse shark", "Carcharias_taurus", "Sharks and rays", "important",
-  "Tiger shark", "Galeocerdo_cuvier", "Sharks and rays", "important",
+  "Mammals", 
+  "Dugong", "Dugong_dugon", "Mammals", 
+  "Grey nurse shark", "Carcharias_taurus", "Sharks and rays", 
+  "Tiger shark", "Galeocerdo_cuvier", "Sharks and rays", 
   "Great hammerhead shark", "Sphyrna_mokarran",
-  "Sharks and rays", "representative",
-  "Giant oceanic manta ray", "Mobula_birostris", "Sharks and rays", "important",
-  "Reef manta ray", "Mobula_alfredi", "Sharks and rays", "important",
-  "Whitetip reef shark", "Triaenodon_obesus", "Sharks and rays", "important",
-  "Red-footed booby", "Sula_sula", "Birds", "important"
+  "Sharks and rays", 
+  "Giant oceanic manta ray", "Mobula_birostris", "Sharks and rays", 
+  "Reef manta ray", "Mobula_alfredi", "Sharks and rays", 
+  "Whitetip reef shark", "Triaenodon_obesus", "Sharks and rays",
+  "Red-footed booby", "Sula_sula", "Birds"
 )
 ```
 
 These species were not chosen based on their importance for this region and only represent an example for visualization purposes. 
 
-**Note:** The structure of the `tribble`above is required for some of the downstream plotting. *Common* denotes the common name of a species, *Scientific* the scientific name in the format used by Aquamaps, *TaxGroup* is the taxonomic grouping that a species belongs to and *Category* represents the importance of the species for the conservation plan.
+**Note:** The structure of the `tribble`above is required for some of the downstream plotting. *Common* denotes the common name of a species, *nameVariable* the scientific name in the format used by Aquamaps, *TaxGroup* is the taxonomic grouping that a species belongs to and *Category* represents the importance of the species for the conservation plan.
 
 ### Convert the probabilities to binary data
 
@@ -160,8 +161,8 @@ We can now look at the feature data used for the spatial plan individually by ca
   datEx_species_bin$Chelonia_mydas
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -173,8 +174,8 @@ The suitable habitat for Green sea turtles as predicted by Aquamaps is restricte
   datEx_species_bin$Megaptera_novaeangliae
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -185,8 +186,8 @@ To get a better idea of the overall distribution of the used features, we can al
 ```{r}
 (ggFeatNo <- splnr_plot_featureNo(datEx_species_bin) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -211,8 +212,8 @@ In our example, we use a minimum set objective function, which aims to minimize 
 out_sf$Cost_None <- 1
 (ggCost <- splnr_plot_cost(out_sf, Cost_name = "Cost_None") +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -221,10 +222,10 @@ out_sf$Cost_None <- 1
 As shown previously, we assigned the conservation features a class reflecting their importance in the planning region. Conservation targets are then assigned a target based on their class, in our case 30% of suitable habitat of important and 10% of representative features.
 
 ```{r}
-catTarg <- c("important" = 0.3, "representative" = 0.1)
+catTarg <- c("Reptiles" = 0.3, "Mammals" = 0.1, "Sharks and rays" = 0.2, "Birds" = 0.3)
 
 target <- Dict %>%
-  splnr_targets_byCategory(catTarg, catName = "Category")
+  splnr_targets_byCategory(catTarg, catName = "category")
 ```
 
 **Note:** The assigned classes and targets were not based on any ecological information and only chosen for visualization purposes. 
@@ -258,8 +259,8 @@ There are different ways to visualize the output of the prioritization that can 
 ```{r}
 (ggSoln <- splnr_plot_solution(datEx_soln) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -272,8 +273,8 @@ This plot shows the optimal solution for the planning region that meets the sele
   Cost_name = "Cost_None"
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -289,8 +290,7 @@ dfTarget <- splnr_get_featureRep(datEx_soln, datEx_problem,
 )
 
 category <- Dict %>%
-  dplyr::select("Scientific", "TaxGroup") %>%
-  dplyr::rename(feature = "Scientific", category = "TaxGroup")
+  dplyr::rename(feature = "nameVariable")
 
 
 (ggTarget <- splnr_plot_featureRep(dfTarget,
@@ -330,8 +330,8 @@ ggFerrier <- splnr_plot_importanceScore(
   legendTitle = "Importance Score \n(Ferrier Score)"
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   )
 
 ggRWR <- splnr_plot_importanceScore(
@@ -342,8 +342,8 @@ ggRWR <- splnr_plot_importanceScore(
   legendTitle = "Importance Score \n(Rarity Weighted Richness)"
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   )
 
 (ggScores <- patchwork::wrap_plots(ggFerrier + ggRWR))
@@ -371,8 +371,8 @@ LockedIn <- splnr_get_MPAs(PUs, "Australia") %>%
 ```{r}
 (ggMPA <- splnr_plot_MPAs(MPAsCoralSea) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -423,8 +423,8 @@ datEx_soln2 <- datEx_problem2 %>%
 
 (ggSoln2 <- splnr_plot_solution(datEx_soln2) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -435,8 +435,8 @@ But we locked in areas that were already existing MPAs. If we want to show the o
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, lockedInAreas = MPAsCoralSea,
     colInterest = MPAsCoralSea$wdpa, Type = "Full",
-    colorLI = "lightgrey", alphaLI = 0.2, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    colorLI = "lightgrey", alphaLI = 0.2, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -446,8 +446,8 @@ If we instead only want to see the contours of the locked in areas we can set `T
 (splnr_plot_solution(datEx_soln2) +
   splnr_gg_add(
     lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa,
-    Type = "Contours", land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    Type = "Contours", overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -456,8 +456,8 @@ If we instead only want to see the contours of the locked in areas we can set `T
 ```{r}
 (ggComp <- splnr_plot_comparison(datEx_soln, datEx_soln2) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -494,7 +494,7 @@ selFreq <- datEx_soln_portfolio %>% # calculate selection frequency
 
 (ggselFreq <- splnr_plot_selectionFreq(selFreq) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
