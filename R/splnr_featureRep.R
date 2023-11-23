@@ -147,7 +147,10 @@ splnr_get_featureRep <- function(soln, pDat, targetsDF = NA,
 #' @param df A `df` containing the target information (resulting from the splnr_get_featureRep() function)
 #' @param nr Number of rows of the legend
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
-#' @param category A named charcter vector of feature and category for grouping the plot output
+#' @param category A named data frame of feature and category for grouping the plot output
+#' @param categoryFeatureCol A character with the column containing the feature infromation to be plotted if the category data frame does not contain a column named 'feature' that can be matched with the 'df' infromation.
+#' @param renameFeatures A logical on whether variable names should be used or they should be replaced with common names
+#' @param namesToReplace A data frame containing the variable name ('nameVariable') and a common name ('nameCommon').
 #' @param showTarget `logical` Should the targets be shown on the bar plot
 #'
 #' @return A ggplot object of the plot
@@ -176,9 +179,34 @@ splnr_get_featureRep <- function(soln, pDat, targetsDF = NA,
 #' (splnr_plot_featureRep(df, category = dat_category))
 #'
 splnr_plot_featureRep <- function(df, category = NA,
+                                  categoryFeatureCol = NA,
+                                  renameFeatures = FALSE,
+                                  namesToReplace = NA,
                                   nr = 1, showTarget = NA,
                                   plotTitle = "") {
-  if (is.data.frame(category)) {
+
+  if (renameFeatures == TRUE) {
+
+    assertthat::assert_that(is.data.frame(namesToReplace)) #sanity check
+
+    rpl <- namesToReplace %>%
+      dplyr::filter(.data$nameVariable %in% df$feature) %>%
+      dplyr::select("nameVariable", "nameCommon") %>%
+      tibble::deframe()
+
+    df <- df %>%
+      dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl))
+  }
+
+  if(inherits(category, c("df", "tbl_df")) & !("feature" %in% colnames(category))) {
+    if (!(inherits(categoryFeatureCol, "character"))) {
+      cat("There is no column called 'feature' in your category data frame. Please provide a column name that should be renamed to 'feature'.");
+    } else {
+    category <- category %>%
+      dplyr::rename(feature = categoryFeatureCol)
+  }}
+
+  if (inherits(category, c("df", "tbl_df")) & ("feature" %in% colnames(category))) {
     df <- df %>%
       dplyr::left_join(category, by = "feature") %>%
       dplyr::arrange(.data$category, .data$feature) %>%

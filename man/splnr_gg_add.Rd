@@ -9,10 +9,10 @@ splnr_gg_add(
   colorPUs = "grey80",
   Bndry = NA,
   colorBndry = "black",
-  land = NA,
-  colorLand = "grey20",
+  overlay = NA,
+  colorOverlay = "grey20",
   contours = NA,
-  cropLand = NA,
+  cropOverlay = NA,
   colorsConts = "black",
   lockedInAreas = NA,
   Type = "Full",
@@ -33,13 +33,13 @@ splnr_gg_add(
 
 \item{colorBndry}{A color value for the outline of the boundary.}
 
-\item{land}{An \code{sf} object of land polygon.}
+\item{overlay}{An \code{sf} object of overlay polygon.}
 
-\item{colorLand}{A color value for landmass.}
+\item{colorOverlay}{A color value for overlaymass.}
 
 \item{contours}{An \code{sf} object of contours that are important to visualise (e.g. outline of sea mounts, ridges; can be produced with terra::as.contour()); up to 6 different contours possible.}
 
-\item{cropLand}{An \code{sf} object with the boundary box used for cropping the land object.}
+\item{cropOverlay}{An \code{sf} object with the boundary box used for cropping the overlay object.}
 
 \item{colorsConts}{A color value for contours.}
 

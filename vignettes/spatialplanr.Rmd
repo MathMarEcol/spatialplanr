@@ -222,7 +222,7 @@ out_sf$Cost_None <- 1
 As shown previously, we assigned the conservation features a class reflecting their importance in the planning region. Conservation targets are then assigned a target based on their class, in our case 30% of suitable habitat of important and 10% of representative features.
 
 ```{r}
-catTarg <- c("Reptiles" = 0.3, "Mammals" = 0.1, "Sharks and rays" = 0.2, "Birds" = 0.3)
+catTarg <- c("Reptiles" = 0.3, "Mammals" = 0.1, "Sharks and rays" = 0.1, "Birds" = 0.1)
 
 target <- Dict %>%
   splnr_targets_byCategory(catTarg, catName = "category")
@@ -293,8 +293,8 @@ category <- Dict %>%
   dplyr::rename(feature = "nameVariable")
 
 
-(ggTarget <- splnr_plot_featureRep(dfTarget,
-  category = category,
+(ggTarget <- splnr_plot_featureRep(dfTarget, category = Dict, renameFeatures = TRUE,
+                                   namesToReplace = Dict, categoryFeatureCol = "nameCommon",
   nr = 1, showTarget = TRUE,
 ))
 ```
