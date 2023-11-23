@@ -7,8 +7,12 @@
 #' @param Bndry The planning region boundaries as an `sf` object
 #' @param colorBndry A color value for the outline of the boundary.
 #' @param overlay An `sf` object of overlay polygon.
+#' @param colorOverlay A color value for overlay.
+#' @param overlay2 An `sf` object of overlay polygon.
+#' @param colorOverlay2 A color value for overlay.
+#' @param overlay3 An `sf` object of overlay polygon.
+#' @param colorOverlay3 A color value for overlay.
 #' @param cropOverlay An `sf` object with the boundary box used for cropping the overlay object.
-#' @param colorOverlay A color value for overlaymass.
 #' @param contours An `sf` object of contours that are important to visualise (e.g. outline of sea mounts, ridges; can be produced with terra::as.contour()); up to 6 different contours possible.
 #' @param colorsConts A color value for contours.
 #' @param lockedInAreas An `sf` object with binary data of locked in areas in the prioritisation (e.g. MPAs).
@@ -41,7 +45,9 @@
 splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
                          Bndry = NA, colorBndry = "black",
                          overlay = NA, colorOverlay = "grey20",
-                         contours = NA, cropOverlay = NA, colorsConts = "black",
+                         overlay2 = NA, colorOverlay2 = "grey30",
+                         overlay3 = NA, colorOverlay3 = "grey40",
+                         contours = NA, colorsConts = "black", cropOverlay = NA,
                          lockedInAreas = NA, Type = "Full", colInterest = NA,
                          alphaLI = 0.5, colorLI = "black", legendL = "", labelL = "MPAs",
                          ggtheme = "Default" # splnr_theme
@@ -68,7 +74,20 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
     ggList <- c(
       ggList,
       ggplot2::geom_sf(data = overlay, colour = colorOverlay, fill = colorOverlay, alpha = 0.9, size = 0.1, show.legend = FALSE)
-    )
+    )}
+
+  if (inherits(overlay2, "sf")) {
+    ggList <- c(
+      ggList,
+      ggplot2::geom_sf(data = overlay2, colour = colorOverlay2, fill = colorOverlay2, alpha = 0.9, size = 0.1, show.legend = FALSE)
+    )}
+
+  if (inherits(overlay3, "sf")) {
+    ggList <- c(
+      ggList,
+      ggplot2::geom_sf(data = overlay3, colour = colorOverlay3, fill = colorOverlay3, alpha = 0.9, size = 0.1, show.legend = FALSE)
+    )}
+
 
     if (inherits(contours, "sf")) { # needs a geometry col and one names Category that has the wanted contours and their names
       namesConts <- unique(contours$Category)
@@ -162,7 +181,7 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
         ggplot2::coord_sf(xlim = sf::st_bbox(cropOverlay)$xlim, ylim = sf::st_bbox(cropOverlay)$ylim)
       )
     }
-  }
+
 
   if (inherits(ggtheme, "character")) {
     ggList <- c(
