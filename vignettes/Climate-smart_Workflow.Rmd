@@ -83,22 +83,24 @@ PUs <- splnr_get_planningUnits(Bndry, landmass, PU_size, Shape)
 For our example, we will use a small subset of charismatic megafauna species of the Coral Sea to inform the conservation plan. We filtered the Aquamaps (Aquamaps.org) species distribution models for our study area for the following species: 
 ```{r}
 Dict <- tibble::tribble(
-  ~Common, ~Scientific, ~Category, ~Class,
-  "Green sea turtle", "Chelonia_mydas", "Reptiles", "important",
-  "Loggerhead sea turtle", "Caretta_caretta", "Reptiles", "important",
-  "Hawksbill sea turtle", "Eretmochelys_imbricata", "Reptiles", "important",
-  "Olive ridley sea turtle", "Lepidochelys_olivacea", "Reptiles", "important",
-  "Saltwater crocodile", "Crocodylus_porosus", "Reptiles", "important",
-  "Humpback whale", "Megaptera_novaeangliae", "Mammals", "representative",
-  "Common Minke whale", "Balaenoptera_acutorostrata", "Mammals", "representative",
-  "Dugong", "Dugong_dugon", "Mammals", "important",
-  "Grey nurse shark", "Carcharias_taurus", "Sharks and rays", "important",
-  "Tiger shark", "Galeocerdo_cuvier", "Sharks and rays", "important",
-  "Great hammerhead shark", "Sphyrna_mokarran", "Sharks and rays", "representative",
-  "Giant oceanic manta ray", "Mobula_birostris", "Sharks and rays", "important",
-  "Reef manta ray", "Mobula_alfredi", "Sharks and rays", "important",
-  "Whitetip reef shark", "Triaenodon_obesus", "Sharks and rays", "important",
-  "Red-footed booby", "Sula_sula", "Birds", "important"
+  ~nameCommon, ~nameVariable, ~category, 
+  "Green sea turtle", "Chelonia_mydas", "Reptiles", 
+  "Loggerhead sea turtle", "Caretta_caretta", "Reptiles", 
+  "Hawksbill sea turtle", "Eretmochelys_imbricata", "Reptiles", 
+  "Olive ridley sea turtle", "Lepidochelys_olivacea", "Reptiles", 
+  "Saltwater crocodile", "Crocodylus_porosus", "Reptiles", 
+  "Humpback whale", "Megaptera_novaeangliae", "Mammals", 
+  "Common Minke whale", "Balaenoptera_acutorostrata",
+  "Mammals", 
+  "Dugong", "Dugong_dugon", "Mammals", 
+  "Grey nurse shark", "Carcharias_taurus", "Sharks and rays", 
+  "Tiger shark", "Galeocerdo_cuvier", "Sharks and rays", 
+  "Great hammerhead shark", "Sphyrna_mokarran",
+  "Sharks and rays", 
+  "Giant oceanic manta ray", "Mobula_birostris", "Sharks and rays", 
+  "Reef manta ray", "Mobula_alfredi", "Sharks and rays", 
+  "Whitetip reef shark", "Triaenodon_obesus", "Sharks and rays",
+  "Red-footed booby", "Sula_sula", "Birds"
 )
 ```
 
