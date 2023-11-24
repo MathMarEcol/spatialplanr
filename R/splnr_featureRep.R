@@ -185,6 +185,14 @@ splnr_plot_featureRep <- function(df, category = NA,
                                   nr = 1, showTarget = NA,
                                   plotTitle = "") {
 
+  if(inherits(category, c("df", "tbl_df")) & !("feature" %in% colnames(category))) {
+    if (!(inherits(categoryFeatureCol, "character"))) {
+      cat("There is no column called 'feature' in your category data frame. Please provide a column name that should be renamed to 'feature'.");
+    } else {
+      category <- category %>%
+        dplyr::rename(feature = categoryFeatureCol)
+    }}
+
   if (renameFeatures == TRUE) {
 
     assertthat::assert_that(is.data.frame(namesToReplace)) #sanity check
@@ -196,15 +204,12 @@ splnr_plot_featureRep <- function(df, category = NA,
 
     df <- df %>%
       dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl))
+
+    category <- category %>%
+      dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl))
+
   }
 
-  if(inherits(category, c("df", "tbl_df")) & !("feature" %in% colnames(category))) {
-    if (!(inherits(categoryFeatureCol, "character"))) {
-      cat("There is no column called 'feature' in your category data frame. Please provide a column name that should be renamed to 'feature'.");
-    } else {
-    category <- category %>%
-      dplyr::rename(feature = categoryFeatureCol)
-  }}
 
   if (inherits(category, c("df", "tbl_df")) & ("feature" %in% colnames(category))) {
     df <- df %>%

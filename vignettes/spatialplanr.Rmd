@@ -289,9 +289,6 @@ dfTarget <- splnr_get_featureRep(datEx_soln, datEx_problem,
   climsmart = FALSE, solnCol = "solution_1"
 )
 
-category <- Dict %>%
-  dplyr::rename(feature = "nameVariable")
-
 
 (ggTarget <- splnr_plot_featureRep(dfTarget, category = Dict, renameFeatures = TRUE,
                                    namesToReplace = Dict, categoryFeatureCol = "nameCommon",
