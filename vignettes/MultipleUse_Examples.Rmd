@@ -24,6 +24,7 @@ klippy::klippy(position = c("top", "right"))
 
 ```{r setup}
 library(spatialplanr)
+set.seed(100)
 ```
 
 # Overview
