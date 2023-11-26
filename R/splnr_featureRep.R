@@ -2,7 +2,9 @@
 #'
 #' @param soln The `prioritizr` solution
 #' @param pDat The `prioritizr` problem
+#' @param targetsDF `data.frame`with list of features under "feature" column and their corresponding targets under "target" column
 #' @param climsmart logical denoting whether spatial planning was done climate-smart (and targets have to be calculated differently)
+#' @param climsmartApproach either 0,1,2 or 3 depending on the climate-smart approach used (0 = None; 1 = Climate Priority Area; 2 = Feature; 3 = Percentile).
 #' @param solnCol Name of the column with the solution
 #'
 #' @return `tbl_df` dataframe
@@ -27,8 +29,8 @@
 #'   soln = soln,
 #'   pDat = pDat
 #' )
-splnr_get_featureRep <- function(soln, pDat,
-                                 climsmart = FALSE, solnCol = "solution_1") {
+splnr_get_featureRep <- function(soln, pDat, targetsDF = NA,
+                                 climsmart = FALSE, climsmartApproach = 0, solnCol = "solution_1") {
   s_cols <- pDat$data$features[[1]]
 
   # Get data for features not chosen
@@ -85,7 +87,7 @@ splnr_get_featureRep <- function(soln, pDat,
   s1 <- prioritizr::eval_feature_representation_summary(pDat, s1[, "solution"]) %>%
     dplyr::select(-"summary")
 
-  if (climsmart == TRUE) {
+  if (climsmart == TRUE & climsmartApproach == 1) {
     s1 <- s1 %>%
       dplyr::select(-.data$relative_held) %>%
       dplyr::mutate(
@@ -99,7 +101,20 @@ splnr_get_featureRep <- function(soln, pDat,
       ) %>%
       dplyr::ungroup() %>%
       dplyr::mutate(relative_held = .data$absolute_held / .data$total_amount) %>% # Calculate proportion
-      dplyr::select(-.data$total_amount, -.data$absolute_held) # Remove extra columns
+      dplyr::select(-"total_amount", -"absolute_held") %>% # Remove extra columns
+      dplyr::left_join(targetsDF, by = "feature") #%>% # Add targets to df
+    # dplyr::select(-"type")
+
+  } else if (climsmart == TRUE & climsmartApproach == 3) {
+
+    s1 <- s1 %>%
+      dplyr::left_join(targetsDF, by = "feature")
+
+  } else {
+    # Add targets to df
+    s1 <- s1 %>%
+      dplyr::left_join(pDat$targets$data[["targets"]], by = "feature") %>%
+      dplyr::select(-"type")
   }
 
   s1 <- s1 %>%
@@ -109,10 +124,6 @@ splnr_get_featureRep <- function(soln, pDat,
     ) %>%
     stats::na.omit()
 
-  # Add targets to df
-  s1 <- s1 %>%
-    dplyr::left_join(pDat$targets$data[["targets"]], by = "feature") %>%
-    dplyr::select(-"type")
 
   # Now join the selected and non-selected values
   if ((length(ns_cols) > 0)) { # Only if there are values in ns1
@@ -136,7 +147,10 @@ splnr_get_featureRep <- function(soln, pDat,
 #' @param df A `df` containing the target information (resulting from the splnr_get_featureRep() function)
 #' @param nr Number of rows of the legend
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
-#' @param category A named charcter vector of feature and category for grouping the plot output
+#' @param category A named data frame of feature and category for grouping the plot output
+#' @param categoryFeatureCol A character with the column containing the feature infromation to be plotted if the category data frame does not contain a column named 'feature' that can be matched with the 'df' infromation.
+#' @param renameFeatures A logical on whether variable names should be used or they should be replaced with common names
+#' @param namesToReplace A data frame containing the variable name ('nameVariable') and a common name ('nameCommon').
 #' @param showTarget `logical` Should the targets be shown on the bar plot
 #'
 #' @return A ggplot object of the plot
@@ -165,9 +179,39 @@ splnr_get_featureRep <- function(soln, pDat,
 #' (splnr_plot_featureRep(df, category = dat_category))
 #'
 splnr_plot_featureRep <- function(df, category = NA,
+                                  categoryFeatureCol = NA,
+                                  renameFeatures = FALSE,
+                                  namesToReplace = NA,
                                   nr = 1, showTarget = NA,
                                   plotTitle = "") {
-  if (is.data.frame(category)) {
+
+  if(inherits(category, c("df", "tbl_df")) & !("feature" %in% colnames(category))) {
+    if (!(inherits(categoryFeatureCol, "character"))) {
+      cat("There is no column called 'feature' in your category data frame. Please provide a column name that should be renamed to 'feature'.");
+    } else {
+      category <- category %>%
+        dplyr::rename(feature = categoryFeatureCol)
+    }}
+
+  if (renameFeatures == TRUE) {
+
+    assertthat::assert_that(is.data.frame(namesToReplace)) #sanity check
+
+    rpl <- namesToReplace %>%
+      dplyr::filter(.data$nameVariable %in% df$feature) %>%
+      dplyr::select("nameVariable", "nameCommon") %>%
+      tibble::deframe()
+
+    df <- df %>%
+      dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl))
+
+    category <- category %>%
+      dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl))
+
+  }
+
+
+  if (inherits(category, c("df", "tbl_df")) & ("feature" %in% colnames(category))) {
     df <- df %>%
       dplyr::left_join(category, by = "feature") %>%
       dplyr::arrange(.data$category, .data$feature) %>%

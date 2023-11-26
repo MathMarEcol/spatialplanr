@@ -24,6 +24,7 @@ klippy::klippy(position = c("top", "right"))
 
 ```{r setup}
 library(spatialplanr)
+set.seed(100)
 ```
 
 # Overview
@@ -92,22 +93,24 @@ splnr_theme <- list(
 For our example, we will use a small subset of charismatic megafauna species of the Coral Sea to inform the conservation plan. We filtered the Aquamaps (Aquamaps.org) species distribution models for our study area for the following species: 
 ```{r}
 Dict <- tibble::tribble(
-  ~Common, ~Scientific, ~Category, ~Class,
-  "Green sea turtle", "Chelonia_mydas", "Reptiles", "important",
-  "Loggerhead sea turtle", "Caretta_caretta", "Reptiles", "important",
-  "Hawksbill sea turtle", "Eretmochelys_imbricata", "Reptiles", "important",
-  "Olive ridley sea turtle", "Lepidochelys_olivacea", "Reptiles", "important",
-  "Saltwater crocodile", "Crocodylus_porosus", "Reptiles", "important",
-  "Humpback whale", "Megaptera_novaeangliae", "Mammals", "representative",
-  "Common Minke whale", "Balaenoptera_acutorostrata", "Mammals", "representative",
-  "Dugong", "Dugong_dugon", "Mammals", "important",
-  "Grey nurse shark", "Carcharias_taurus", "Sharks and rays", "important",
-  "Tiger shark", "Galeocerdo_cuvier", "Sharks and rays", "important",
-  "Great hammerhead shark", "Sphyrna_mokarran", "Sharks and rays", "representative",
-  "Giant oceanic manta ray", "Mobula_birostris", "Sharks and rays", "important",
-  "Reef manta ray", "Mobula_alfredi", "Sharks and rays", "important",
-  "Whitetip reef shark", "Triaenodon_obesus", "Sharks and rays", "important",
-  "Red-footed booby", "Sula_sula", "Birds", "important"
+  ~nameCommon, ~nameVariable, ~category, 
+  "Green sea turtle", "Chelonia_mydas", "Reptiles", 
+  "Loggerhead sea turtle", "Caretta_caretta", "Reptiles", 
+  "Hawksbill sea turtle", "Eretmochelys_imbricata", "Reptiles", 
+  "Olive ridley sea turtle", "Lepidochelys_olivacea", "Reptiles", 
+  "Saltwater crocodile", "Crocodylus_porosus", "Reptiles", 
+  "Humpback whale", "Megaptera_novaeangliae", "Mammals", 
+  "Common Minke whale", "Balaenoptera_acutorostrata",
+  "Mammals", 
+  "Dugong", "Dugong_dugon", "Mammals", 
+  "Grey nurse shark", "Carcharias_taurus", "Sharks and rays", 
+  "Tiger shark", "Galeocerdo_cuvier", "Sharks and rays", 
+  "Great hammerhead shark", "Sphyrna_mokarran",
+  "Sharks and rays", 
+  "Giant oceanic manta ray", "Mobula_birostris", "Sharks and rays", 
+  "Reef manta ray", "Mobula_alfredi", "Sharks and rays", 
+  "Whitetip reef shark", "Triaenodon_obesus", "Sharks and rays",
+  "Red-footed booby", "Sula_sula", "Birds"
 )
 ```
 
@@ -152,7 +155,7 @@ s1 <- p1 %>%
   prioritizr::solve.ConservationProblem()
 
 (ggSoln <- splnr_plot_solution(s1) +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, cropLand = PUs, ggtheme = splnr_theme))
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass, cropOverlay = PUs, ggtheme = splnr_theme))
 ```
 
 We can also have a look at how well the set target was met.
@@ -190,8 +193,7 @@ Both zones need a specified cost and targets. We use one area-based cost and one
 ```{r}
 p2 <- prioritizr::problem(
   datEx_species_bin %>% dplyr::mutate(
-     # when giving sf input, we need as many cost columns as we have zones
-    Cost1 = rep(1, 397),
+    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
     Cost2 = runif(n = dim(.)[[1]])
   ),
   z2,
@@ -216,8 +218,8 @@ The solution can be plotted using the function `splnr_plot_solution()` with the 
   legendLabels = c("Not selected", "Zone 1", "Zone 2")
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -230,8 +232,8 @@ When using `sf` objects with `zones()`, the input feature names to `zones()` nee
 ```{r}
 targets2b <- Dict %>%
   dplyr::mutate(
-    targetZ1 = dplyr::if_else(Category == "Reptiles", 30 / 100, 0),
-    targetZ2 = dplyr::if_else(Category != "Reptiles", 10 / 100, 0)
+    targetZ1 = dplyr::if_else(category == "Reptiles", 30 / 100, 0),
+    targetZ2 = dplyr::if_else(category != "Reptiles", 10 / 100, 0)
   ) %>%
   dplyr::select("targetZ1", "targetZ2") %>%
   as.matrix()
@@ -288,8 +290,8 @@ They are both marine mammals and thus had a target of 0% in zone 1 that was the 
   legendLabels = c("Not selected", "Zone 1", "Zone 2")
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -310,8 +312,7 @@ The zeros in this matrix denote that there is no penalty between zones, whereas 
 ```{r}
 p3 <- prioritizr::problem(
   datEx_species_bin %>% dplyr::mutate(
-    # when giving sf input, we need as many cost columns as we have zones
-    Cost1 = rep(1, 397), 
+    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
     Cost2 = runif(n = dim(.)[[1]])
   ),
   z2,
@@ -337,8 +338,8 @@ With `add_boundary_penalties()` we set a penalty of 0.5 between the zones we def
   legendLabels = c("Not selected", "Zone 1", "Zone 2")
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -373,8 +374,8 @@ s4 <- p4 %>%
   legendLabels = c("Not selected", "Zone 1", "Zone 2")
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -390,8 +391,7 @@ print(zm3)
 ```{r, fig.width=9}
 p5 <- prioritizr::problem(
   datEx_species_bin %>% dplyr::mutate(
-    # when giving sf input, we need as many cost columns as we have zones
-    Cost1 = rep(1, 397),
+    Cost1 = rep(1, 397), # when giving sf input, we need as many cost columns as we have zones
     Cost2 = runif(n = dim(.)[[1]])
   ),
   z2,
@@ -413,8 +413,8 @@ s5 <- p5 %>%
   legendLabels = c("Not selected", "Zone 1", "Zone 2")
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -470,8 +470,8 @@ The results can the be visualized again:
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry,
     lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa,
-    Type = "Full", colorLI = "red", alphaLI = 0.2, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme, labelL = "Current MPAs"
+    Type = "Full", colorLI = "red", alphaLI = 0.2, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme, labelL = "Current MPAs"
   ))
 ```
 
@@ -510,8 +510,8 @@ s7 <- p7 %>%
   legendLabels = c("Not selected", "Zone 1", "Zone 2")
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -559,8 +559,7 @@ We can visualise the solution again:
 
 ```{r, fig.width = 9}
 (gg_s8 <- splnr_plot_solution(s8) +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, land = landmass, 
-               cropLand = PUs, ggtheme = splnr_theme))
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass, cropOverlay = PUs, ggtheme = splnr_theme))
 ```
 
 
@@ -656,8 +655,8 @@ The overall summary shows that every feature's suitable habitat was represented 
   legendLabels = c("Not selected", "Zone 1", "Zone 2")
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -718,8 +717,8 @@ The selected planning units are now more equally distributed across zones, which
   legendLabels = c("Not selected", "Zone 1", "Zone 2")
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -733,21 +732,21 @@ For this example, we want an target of 30% of all suitable reptile habitat for z
 targetAcrossSome <- Dict %>%
   dplyr::mutate(
     target = dplyr::case_when(
-      Category == "Reptiles" ~ 30 / 100,
-      Category == "Mammals" ~ 10 / 100,
-      Category == "Sharks and rays" ~ 5 / 100,
+      category == "Reptiles" ~ 30 / 100,
+      category == "Mammals" ~ 10 / 100,
+      category == "Sharks and rays" ~ 5 / 100,
       TRUE ~ 0
     ),
     zone = dplyr::case_when(
-      Category == "Reptiles" ~ list(c("zone1", "zone2")),
-      Category == "Mammals" ~ list("zone2"),
-      Category == "Sharks and rays" ~ list("zone3"),
+      category == "Reptiles" ~ list(c("zone1", "zone2")),
+      category == "Mammals" ~ list("zone2"),
+      category == "Sharks and rays" ~ list("zone3"),
       TRUE ~ list(c("zone1", "zone2", "zone3"))
     ),
     type = rep("relative", length(col_name))
   ) %>%
-  dplyr::rename(feature = "Scientific") %>%
-  dplyr::select(-"Category", -"Class", -"Common")
+  dplyr::rename(feature = "nameVariable") %>%
+  dplyr::select(-"category", -"nameCommon")
 ```
 
 We then create a zones object for three different zones:
@@ -834,8 +833,8 @@ print(r12)
   legendLabels = c("Not selected", "Zone 1", "Zone 2", "Zone3")
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 

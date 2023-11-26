@@ -9,11 +9,15 @@ splnr_gg_add(
   colorPUs = "grey80",
   Bndry = NA,
   colorBndry = "black",
-  land = NA,
-  colorLand = "grey20",
+  overlay = NA,
+  colorOverlay = "grey20",
+  overlay2 = NA,
+  colorOverlay2 = "grey30",
+  overlay3 = NA,
+  colorOverlay3 = "grey40",
   contours = NA,
-  cropLand = NA,
   colorsConts = "black",
+  cropOverlay = NA,
   lockedInAreas = NA,
   Type = "Full",
   colInterest = NA,
@@ -33,15 +37,23 @@ splnr_gg_add(
 
 \item{colorBndry}{A color value for the outline of the boundary.}
 
-\item{land}{An \code{sf} object of land polygon.}
+\item{overlay}{An \code{sf} object of overlay polygon.}
 
-\item{colorLand}{A color value for landmass.}
+\item{colorOverlay}{A color value for overlay.}
+
+\item{overlay2}{An \code{sf} object of overlay polygon.}
+
+\item{colorOverlay2}{A color value for overlay.}
+
+\item{overlay3}{An \code{sf} object of overlay polygon.}
+
+\item{colorOverlay3}{A color value for overlay.}
 
 \item{contours}{An \code{sf} object of contours that are important to visualise (e.g. outline of sea mounts, ridges; can be produced with terra::as.contour()); up to 6 different contours possible.}
 
-\item{cropLand}{An \code{sf} object with the boundary box used for cropping the land object.}
-
 \item{colorsConts}{A color value for contours.}
+
+\item{cropOverlay}{An \code{sf} object with the boundary box used for cropping the overlay object.}
 
 \item{lockedInAreas}{An \code{sf} object with binary data of locked in areas in the prioritisation (e.g. MPAs).}
 

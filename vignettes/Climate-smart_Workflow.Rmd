@@ -20,10 +20,12 @@ knitr::opts_chunk$set(
 ```
 
 ```{r klippy, eval=TRUE, echo=FALSE, include=TRUE}
+print("klippy")
 klippy::klippy(position = c("top", "right"))
 ```
 
 ```{r setup}
+print("library")
 library(spatialplanr)
 ```
 
@@ -34,14 +36,13 @@ This code has been written to simplify the process for running a _prioritizr_ an
 ## Set user parameters 
 You can set a region if it is defined in `splnr_get_planningUnits`. 
 ```{r}
+print("parameters")
 Region <- "Coral Sea" # "Australia"
 Type <- "Oceans" # "EEZ"
 Shape <- "Hexagon" # "Shape of PUs
 PU_size <- 10000 # km2
 
-# Mollweide
-cCRS <- 
-  "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs" 
+cCRS <- "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs" # Mollweide
 ```
 
 We can also use a customised `ggplot` theme that can be passed as a list to `splnr_gg_add()` and that can then be used for all plots. For example:
@@ -68,8 +69,7 @@ Get the boundary for your chosen region.
 ```{r}
 Bndry <- splnr_get_boundary(Region, Type, cCRS)
 
-landmass <- rnaturalearth::ne_countries(scale = "medium", 
-                                        returnclass = "sf") %>%
+landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
   sf::st_transform(cCRS)
 ```
 
@@ -83,22 +83,24 @@ PUs <- splnr_get_planningUnits(Bndry, landmass, PU_size, Shape)
 For our example, we will use a small subset of charismatic megafauna species of the Coral Sea to inform the conservation plan. We filtered the Aquamaps (Aquamaps.org) species distribution models for our study area for the following species: 
 ```{r}
 Dict <- tibble::tribble(
-  ~Common, ~Scientific, ~Category, ~Class,
-  "Green sea turtle", "Chelonia_mydas", "Reptiles", "important",
-  "Loggerhead sea turtle", "Caretta_caretta", "Reptiles", "important",
-  "Hawksbill sea turtle", "Eretmochelys_imbricata", "Reptiles", "important",
-  "Olive ridley sea turtle", "Lepidochelys_olivacea", "Reptiles", "important",
-  "Saltwater crocodile", "Crocodylus_porosus", "Reptiles", "important",
-  "Humpback whale", "Megaptera_novaeangliae", "Mammals", "representative",
-  "Common Minke whale", "Balaenoptera_acutorostrata", "Mammals", "representative",
-  "Dugong", "Dugong_dugon", "Mammals", "important",
-  "Grey nurse shark", "Carcharias_taurus", "Sharks and rays", "important",
-  "Tiger shark", "Galeocerdo_cuvier", "Sharks and rays", "important",
-  "Great hammerhead shark", "Sphyrna_mokarran", "Sharks and rays", "representative",
-  "Giant oceanic manta ray", "Mobula_birostris", "Sharks and rays", "important",
-  "Reef manta ray", "Mobula_alfredi", "Sharks and rays", "important",
-  "Whitetip reef shark", "Triaenodon_obesus", "Sharks and rays", "important",
-  "Red-footed booby", "Sula_sula", "Birds", "important"
+  ~nameCommon, ~nameVariable, ~category, 
+  "Green sea turtle", "Chelonia_mydas", "Reptiles", 
+  "Loggerhead sea turtle", "Caretta_caretta", "Reptiles", 
+  "Hawksbill sea turtle", "Eretmochelys_imbricata", "Reptiles", 
+  "Olive ridley sea turtle", "Lepidochelys_olivacea", "Reptiles", 
+  "Saltwater crocodile", "Crocodylus_porosus", "Reptiles", 
+  "Humpback whale", "Megaptera_novaeangliae", "Mammals", 
+  "Common Minke whale", "Balaenoptera_acutorostrata",
+  "Mammals", 
+  "Dugong", "Dugong_dugon", "Mammals", 
+  "Grey nurse shark", "Carcharias_taurus", "Sharks and rays", 
+  "Tiger shark", "Galeocerdo_cuvier", "Sharks and rays", 
+  "Great hammerhead shark", "Sphyrna_mokarran",
+  "Sharks and rays", 
+  "Giant oceanic manta ray", "Mobula_birostris", "Sharks and rays", 
+  "Reef manta ray", "Mobula_alfredi", "Sharks and rays", 
+  "Whitetip reef shark", "Triaenodon_obesus", "Sharks and rays",
+  "Red-footed booby", "Sula_sula", "Birds"
 )
 ```
 
@@ -143,8 +145,8 @@ The climate velocity data can be visualized using the `splnr_plot_climData()` fu
 ```{r, fig.width = 9}
 (ggclim <- splnr_plot_climData(metric_df, "metric") +
   splnr_gg_add(
-    Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -162,8 +164,8 @@ metric_df <- CoralSeaVelocity %>%
 
 (ggclim <- splnr_plot_climData(metric_df, "metric") +
   splnr_gg_add(
-    Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -238,8 +240,8 @@ We can look at the resulting plan using `splnr_plot_solution()`.
 ```{r, fig.width = 9}
 (ggSoln <- splnr_plot_solution(dat_solnClim) +
   splnr_gg_add(
-    Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -320,8 +322,8 @@ We can look at the resulting plan using `splnr_plot_solution()`.
 ```{r, fig.width = 9}
 (ggSoln <- splnr_plot_solution(dat_solnClimPercentile) +
   splnr_gg_add(
-    Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
@@ -346,7 +348,7 @@ target <- datEx_species_bin %>%
   colnames() %>%
   data.frame() %>%
   setNames(c("feature")) %>%
-  dplyr::mutate(target = 30)
+  dplyr::mutate(target = 0.3)
 
 Feature_Approach <- splnr_climate_featureApproach(
   featuresDF = datEx_species_bin,
@@ -396,8 +398,8 @@ dat_solnClimFeature <- prioritizr::solve.ConservationProblem(p3)
 ```{r, fig.width = 9}
 (ggSoln <- splnr_plot_solution(dat_solnClimFeature) +
   splnr_gg_add(
-    Bndry = Bndry, land = landmass,
-    cropLand = PUs, ggtheme = splnr_theme
+    Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
