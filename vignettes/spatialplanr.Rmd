@@ -59,6 +59,7 @@ cCRS <-
 
 Start your analysis by defining your region and setting up the planning units.
 
+Get the boundary for your chosen region.
 ```{r}
 Bndry <- splnr_get_boundary(Region, Type, cCRS)
 ```
@@ -250,7 +251,7 @@ datEx_soln <- datEx_problem %>%
 
 There are different ways to visualize the output of the prioritization that can be loosely grouped into three categories:
 *+* Visualization of the solution
-*+* Visualization of targets
+<!-- *+* Visualization of targets -->
 *+* Visualization of importance scores
 
 #### Visualization of the solution
@@ -397,7 +398,6 @@ IUCN_IA_Targets <- splnr_targets_byInverseArea(
 ) # inverse area target
 ```
 
-
 ```{r, eval = FALSE}
 IUCN_IA_Targets <- Targets %>%
   splnr_get_IUCNRedList(species_col = "Species") %>% # Add RL data to the df
@@ -411,7 +411,7 @@ IUCN_IA_Targets <- Targets %>%
 ```{r}
 datEx_problem2 <- prioritizr::problem(out_sf, feature_names, "Cost_None") %>%
   prioritizr::add_min_set_objective() %>%
-  prioritizr::add_relative_targets(IUCN_IA_Targets$Target) %>%
+  prioritizr::add_relative_targets(IUCN_IA_Targets$target) %>%
   prioritizr::add_locked_in_constraints(as.logical(MPAsCoralSea$wdpa)) %>%
   prioritizr::add_binary_decisions() %>%
   prioritizr::add_default_solver(verbose = FALSE)
