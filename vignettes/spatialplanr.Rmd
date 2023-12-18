@@ -251,7 +251,7 @@ datEx_soln <- datEx_problem %>%
 
 There are different ways to visualize the output of the prioritization that can be loosely grouped into three categories:
 *+* Visualization of the solution
-<!-- *+* Visualization of targets -->
+*+* Visualization of targets
 *+* Visualization of importance scores
 
 #### Visualization of the solution
