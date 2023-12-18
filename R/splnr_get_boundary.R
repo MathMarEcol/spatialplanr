@@ -3,7 +3,7 @@
 #' `splnr_get_boundary()` allows to create an `sf` object of your planning region either based on specific coordinate information, or `rnaturalearth` inputs such as ocean data. Creating a boundary is often the first step in conservation planning and a requirement for downstream function sin `spatialplanr`.
 #'
 #' @param Limits The limits of the boundary. This can either be a 4 element numeric named vector (c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)), a vector of ocean/sea names, or a vector of EEZs.,
-#' @param Type The type of Limits being provided. Options are "Ocean" or "EEZ". (not required if numeric or "Global" limits are provided)
+#' @param Type The type of Limits being provided. Options are "Ocean" or "EEZ"
 #' @param res The resolution (in degrees) from which to create the boundary polygon if numeric limits are provided.
 #' @param cCRS The CRS the boundary is to be returned in
 #'

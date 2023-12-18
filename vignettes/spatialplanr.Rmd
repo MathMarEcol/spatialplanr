@@ -252,7 +252,7 @@ datEx_soln <- datEx_problem %>%
 
 There are different ways to visualize the output of the prioritization that can be loosely grouped into three categories:
 *+* Visualization of the solution
-<!-- *+* Visualization of targets -->
+*+* Visualization of targets
 *+* Visualization of importance scores
 
 #### Visualization of the solution
@@ -384,7 +384,7 @@ We will also include targets based on IUCN categories to prioritise species with
 
 We assign a 30% target to species within these categories. All species that do not fall into any of these categories receive an inverse area target, so species with a greater area of suitable habitat are assigned a lower target.
 
-```{r}
+```{r, eval = FALSE}
 # to transform Aquamaps species names to IUCN species names
 Species <- gsub("_", " ", Dict$nameVariable)
 dfSpecies <- data.frame(Species)
@@ -397,9 +397,7 @@ IUCN_IA_Targets <- splnr_targets_byInverseArea(
   minTarget,
   maxTarget
 ) # inverse area target
-```
 
-```{r, eval = FALSE}
 IUCN_IA_Targets <- Targets %>%
   splnr_get_IUCNRedList(species_col = "Species") %>% # Add RL data to the df
   splnr_targets_byIUCN(IUCN_target = 0.3)
@@ -412,7 +410,7 @@ IUCN_IA_Targets <- Targets %>%
 ```{r}
 datEx_problem2 <- prioritizr::problem(out_sf, feature_names, "Cost_None") %>%
   prioritizr::add_min_set_objective() %>%
-  prioritizr::add_relative_targets(IUCN_IA_Targets$target) %>%
+  prioritizr::add_relative_targets(IUCN_IA_Targets$Target) %>%
   prioritizr::add_locked_in_constraints(as.logical(MPAsCoralSea$wdpa)) %>%
   prioritizr::add_binary_decisions() %>%
   prioritizr::add_default_solver(verbose = FALSE)
