@@ -16,7 +16,9 @@
 #' @examples
 #' # Example 1
 #' crs <- "ESRI:54009" #Mollweide projection
-#' grid <- st_sf(geometry = st_sfc(st_polygon(list(rbind(c(0, 0), c(1, 0), c(1, 1), c(0, 1), c(0, 0)))))) %>%
+#' grid <- sf::st_sf(geometry = sf::st_sfc(
+#'     sf::st_polygon(list(rbind(
+#'     c(0, 0), c(1, 0), c(1, 1), c(0, 1), c(0, 0)))))) %>%
 #'   sf::st_set_crs(crs) %>%
 #'   sf::st_cast("POLYGON")
 #' splnr_get_distCoast(grid)
@@ -33,18 +35,18 @@ splnr_get_distCoast <- function(dat_sf) {
 
   # Class object check
   if (!inherits(dat_sf, "sf")) {
-    stop("Input 'grid' should be an 'sf' spatial object.")
+    stop("Input data should be an 'sf' spatial object.")
   }
 
   # CRS check
-  if (is.null(st_crs(dat_sf))) {
-    stop("The grid object must have a defined CRS.")
+  if (is.null(sf::st_crs(dat_sf))) {
+    stop("The sf spatial object must have a defined CRS.")
   }
 
   # Load coast
   coast <- rnaturalearth::ne_coastline(scale = 'large') %>%
     sf::st_as_sf() %>%
-    sf::st_transform(crs = st_crs(dat_sf))
+    sf::st_transform(crs = sf::st_crs(dat_sf))
 
   # Convert grid to points (centroids)
   grid_centroid <- sf::st_centroid(dat_sf)
