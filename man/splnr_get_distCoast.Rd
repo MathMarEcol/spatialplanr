@@ -25,17 +25,18 @@ Updated: December 2023
 \examples{
 # Example 1
 crs <- "ESRI:54009" #Mollweide projection
-grid <- st_sf(geometry = st_sfc(st_polygon(list(rbind(c(0, 0), c(1, 0), c(1, 1), c(0, 1), c(0, 0)))))) \%>\% 
-st_set_crs(crs) \%>\%
-st_cast("POLYGON") \%>\%
-mutate(cellID = row_number())
+grid <- sf::st_sf(geometry = sf::st_sfc(
+    sf::st_polygon(list(rbind(
+    c(0, 0), c(1, 0), c(1, 1), c(0, 1), c(0, 0)))))) \%>\%
+  sf::st_set_crs(crs) \%>\%
+  sf::st_cast("POLYGON")
 splnr_get_distCoast(grid)
 
 # Example 2
-crs_2 <- st_crs("+proj=longlat +datum=WGS84 +no_defs")
-bbox <- st_bbox(c(xmin = 0, ymin = 0, xmax = 3, ymax = 3))
-grid_2 <- st_make_grid(bbox, n = c(3, 3), what = "polygons") 
-grid_2 <- st_sf(cellID = 1:length(grid_2), geometry = grid_2) \%>\%
-st_set_crs(crs_2)
+crs_2 <- sf::st_crs("+proj=longlat +datum=WGS84 +no_defs")
+bbox <- sf::st_bbox(c(xmin = 0, ymin = 0, xmax = 3, ymax = 3))
+grid_2 <- sf::st_make_grid(bbox, n = c(3, 3), what = "polygons")
+grid_2 <- sf::st_sf(geometry = grid_2) \%>\%
+  sf::st_set_crs(crs_2)
 splnr_get_distCoast(grid_2)
 }
