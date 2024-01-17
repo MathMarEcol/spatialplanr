@@ -4,10 +4,12 @@
 \alias{splnr_get_distCoast}
 \title{Function to compute distances to nearest coastline for each centroid of each planning unit in the 'sf' object provided.}
 \usage{
-splnr_get_distCoast(dat_sf)
+splnr_get_distCoast(dat_sf, custom_coast = NULL)
 }
 \arguments{
 \item{dat_sf}{An sf object.}
+
+\item{custom_coast}{An sf coastline object (optional)}
 }
 \value{
 An \code{sf} object with distances to the nearest coast

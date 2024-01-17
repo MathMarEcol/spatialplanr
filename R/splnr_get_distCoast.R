@@ -9,6 +9,7 @@
 #' Updated: December 2023
 #'
 #' @param dat_sf An sf object.
+#' @param custom_coast An sf coastline object (optional)
 #'
 #' @return An `sf` object with distances to the nearest coast
 #' @export
@@ -21,17 +22,17 @@
 #'   sf::st_set_crs(crs)
 #' splnr_get_distCoast(grid)
 splnr_get_distCoast <- function(dat_sf, custom_coast = NULL) {
-  
+
   # Class object check
   if (!inherits(dat_sf, "sf")) {
     stop("Input data should be an 'sf' spatial object.")
   }
-  
+
   # CRS check
   if (is.null(sf::st_crs(dat_sf))) {
     stop("The sf spatial object must have a defined CRS.")
   }
-  
+
   # Load coast
   if (is.null(custom_coast)) {
     coast <- rnaturalearth::ne_coastline(scale = 'medium') %>%
@@ -41,16 +42,18 @@ splnr_get_distCoast <- function(dat_sf, custom_coast = NULL) {
     coast <- custom_coast %>%
       sf::st_transform(crs = sf::st_crs(dat_sf))
   }
-  
+
   # Convert grid to points (centroids)
   grid_centroid <- sf::st_centroid(dat_sf)
-  
-  # Find the nearest coast for all the grid cells centroids
-  nearest <- sf::st_nearest_feature(grid_centroid, coast)
-  
-  # Assign distances to dat_sf directly
-  dat_sf$coastDistance <- sf::st_distance(grid_centroid, coast[nearest, ])
-  
+
+  # Get distance matrix
+  dist_mat <- sf::st_distance(grid_centroid, coast) %>%
+    units::set_units("km") %>% # Convert to km
+    units::drop_units() # Remove units (include in header below)
+
+  # Find min distance for each row and convert to km.
+  dat_sf$coastDistance_km <- do.call(pmin, as.data.frame(dist_mat))
+
   return(dat_sf)
 }
 

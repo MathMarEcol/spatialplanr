@@ -34,6 +34,7 @@ Suggests:
     rnaturalearthdata,
     rredlist,
     testthat (>= 3.0.0),
+    units,
     viridis,
     wdpar
 VignetteBuilder: knitr
