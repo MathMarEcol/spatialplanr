@@ -20,32 +20,38 @@
 #' grid <- sf::st_sf(geometry = grid) %>%
 #'   sf::st_set_crs(crs)
 #' splnr_get_distCoast(grid)
-splnr_get_distCoast <- function(dat_sf) {
-
+splnr_get_distCoast <- function(dat_sf, custom_coast = NULL) {
+  
   # Class object check
   if (!inherits(dat_sf, "sf")) {
     stop("Input data should be an 'sf' spatial object.")
   }
-
+  
   # CRS check
   if (is.null(sf::st_crs(dat_sf))) {
     stop("The sf spatial object must have a defined CRS.")
   }
-
+  
   # Load coast
-  coast <- rnaturalearth::ne_coastline(scale = 'medium') %>%
-    sf::st_as_sf() %>%
-    sf::st_transform(crs = sf::st_crs(dat_sf))
-
+  if (is.null(custom_coast)) {
+    coast <- rnaturalearth::ne_coastline(scale = 'medium') %>%
+      sf::st_as_sf() %>%
+      sf::st_transform(crs = sf::st_crs(dat_sf))
+  } else {
+    coast <- custom_coast %>%
+      sf::st_transform(crs = sf::st_crs(dat_sf))
+  }
+  
   # Convert grid to points (centroids)
   grid_centroid <- sf::st_centroid(dat_sf)
-
+  
   # Find the nearest coast for all the grid cells centroids
   nearest <- sf::st_nearest_feature(grid_centroid, coast)
-
+  
   # Assign distances to dat_sf directly
   dat_sf$coastDistance <- sf::st_distance(grid_centroid, coast[nearest, ])
-
+  
   return(dat_sf)
 }
+
 
