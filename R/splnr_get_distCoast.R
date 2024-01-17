@@ -14,23 +14,12 @@
 #' @export
 #'
 #' @examples
-#' # Example 1
-#' crs <- "ESRI:54009" #Mollweide projection
-#' grid <- sf::st_sf(geometry = sf::st_sfc(
-#'     sf::st_polygon(list(rbind(
-#'     c(0, 0), c(1, 0), c(1, 1), c(0, 1), c(0, 0)))))) %>%
-#'   sf::st_set_crs(crs) %>%
-#'   sf::st_cast("POLYGON")
-#' splnr_get_distCoast(grid)
-#'
-#' # Example 2
-#' crs_2 <- sf::st_crs("+proj=longlat +datum=WGS84 +no_defs")
+#' crs <- sf::st_crs("+proj=longlat +datum=WGS84 +no_defs")
 #' bbox <- sf::st_bbox(c(xmin = 0, ymin = 0, xmax = 3, ymax = 3))
-#' grid_2 <- sf::st_make_grid(bbox, n = c(3, 3), what = "polygons")
-#' grid_2 <- sf::st_sf(geometry = grid_2) %>%
-#'   sf::st_set_crs(crs_2)
-#' splnr_get_distCoast(grid_2)
-
+#' grid <- sf::st_make_grid(bbox, n = c(3, 3), what = "polygons")
+#' grid <- sf::st_sf(geometry = grid) %>%
+#'   sf::st_set_crs(crs)
+#' splnr_get_distCoast(grid)
 splnr_get_distCoast <- function(dat_sf) {
 
   # Class object check
@@ -44,7 +33,7 @@ splnr_get_distCoast <- function(dat_sf) {
   }
 
   # Load coast
-  coast <- rnaturalearth::ne_coastline(scale = 'large') %>%
+  coast <- rnaturalearth::ne_coastline(scale = 'medium') %>%
     sf::st_as_sf() %>%
     sf::st_transform(crs = sf::st_crs(dat_sf))
 
