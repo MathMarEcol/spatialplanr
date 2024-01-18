@@ -21,6 +21,25 @@
 #' grid <- sf::st_sf(geometry = grid) %>%
 #'   sf::st_set_crs(crs)
 #' splnr_get_distCoast(grid)
+#'
+#' cCRS <- "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"
+#'
+#' Bndry <- splnr_get_boundary(Limits = "Coral Sea",
+#'                             Type = "Oceans",
+#'                             cCRS = cCRS)
+#'
+#' landmass <- rnaturalearth::ne_countries(
+#'   scale = "medium",
+#'   returnclass = "sf"
+#' ) %>%
+#'   sf::st_transform(cCRS)
+#'
+#' dat_sf <- splnr_get_planningUnits(Bndry = Bndry,
+#'                                   InnerB = landmass,
+#'                                   CellArea = 10000,
+#'                                   Shape = "Hexagon") %>%
+#'   splnr_get_distCoast()
+
 splnr_get_distCoast <- function(dat_sf, custom_coast = NULL) {
 
   # Class object check
