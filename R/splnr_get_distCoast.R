@@ -10,6 +10,7 @@
 #'
 #' @param dat_sf An sf object.
 #' @param custom_coast An sf coastline object (optional)
+#' @param res Allow user to choose resolution (`small`, `medium`, `large`) of `rnaturalearth` data used for coastline.
 #'
 #' @return An `sf` object with distances to the nearest coast
 #' @export
@@ -38,9 +39,9 @@
 #'                                   InnerB = landmass,
 #'                                   CellArea = 10000,
 #'                                   Shape = "Hexagon") %>%
-#'   splnr_get_distCoast()
+#'   splnr_get_distCoast(res = "medium")
 
-splnr_get_distCoast <- function(dat_sf, custom_coast = NULL) {
+splnr_get_distCoast <- function(dat_sf, custom_coast = NULL, res = NULL) {
 
   # Class object check
   if (!inherits(dat_sf, "sf")) {
@@ -52,9 +53,11 @@ splnr_get_distCoast <- function(dat_sf, custom_coast = NULL) {
     stop("The sf spatial object must have a defined CRS.")
   }
 
+
   # Load coast
   if (is.null(custom_coast)) {
-    coast <- rnaturalearth::ne_coastline(scale = 'medium') %>%
+    if (is.null(res)) {res <- "medium"}
+    coast <- rnaturalearth::ne_coastline(scale = res) %>%
       sf::st_as_sf() %>%
       sf::st_transform(crs = sf::st_crs(dat_sf))
   } else {

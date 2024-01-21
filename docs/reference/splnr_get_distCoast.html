@@ -61,7 +61,7 @@ The output inherits the crs from this sf object so ensure it is in the correct p
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">splnr_get_distCoast</span><span class="op">(</span><span class="va">dat_sf</span>, custom_coast <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">splnr_get_distCoast</span><span class="op">(</span><span class="va">dat_sf</span>, custom_coast <span class="op">=</span> <span class="cn">NULL</span>, res <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -72,6 +72,10 @@ The output inherits the crs from this sf object so ensure it is in the correct p
 
 <dt>custom_coast</dt>
 <dd><p>An sf coastline object (optional)</p></dd>
+
+
+<dt>res</dt>
+<dd><p>Allow user to choose resolution (<code>small</code>, <code>medium</code>, <code>large</code>) of <code>rnaturalearth</code> data used for coastline.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -118,7 +122,7 @@ Updated: December 2023</p>
 <span class="r-in"><span>                            Type <span class="op">=</span> <span class="st">"Oceans"</span>,</span></span>
 <span class="r-in"><span>                            cCRS <span class="op">=</span> <span class="va">cCRS</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `ne_10m_geography_marine_polys' from data source </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/RtmpVrsyWT/ne_10m_geography_marine_polys.shp' </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/Rtmps5bCpB/ne_10m_geography_marine_polys.shp' </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   using driver `ESRI Shapefile'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 306 features and 37 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
@@ -136,7 +140,7 @@ Updated: December 2023</p>
 <span class="r-in"><span>                                  InnerB <span class="op">=</span> <span class="va">landmass</span>,</span></span>
 <span class="r-in"><span>                                  CellArea <span class="op">=</span> <span class="fl">10000</span>,</span></span>
 <span class="r-in"><span>                                  Shape <span class="op">=</span> <span class="st">"Hexagon"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">splnr_get_distCoast</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">splnr_get_distCoast</span><span class="op">(</span>res <span class="op">=</span> <span class="st">"medium"</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>st_centroid assumes attributes are constant over geometries</span>
 </code></pre></div>
     </div>
