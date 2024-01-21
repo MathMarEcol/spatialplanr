@@ -4,12 +4,14 @@
 \alias{splnr_get_distCoast}
 \title{Function to compute distances to nearest coastline for each centroid of each planning unit in the 'sf' object provided.}
 \usage{
-splnr_get_distCoast(dat_sf, custom_coast = NULL)
+splnr_get_distCoast(dat_sf, custom_coast = NULL, res = NULL)
 }
 \arguments{
 \item{dat_sf}{An sf object.}
 
 \item{custom_coast}{An sf coastline object (optional)}
+
+\item{res}{Allow user to choose resolution (\code{small}, \code{medium}, \code{large}) of \code{rnaturalearth} data used for coastline.}
 }
 \value{
 An \code{sf} object with distances to the nearest coast
@@ -48,5 +50,5 @@ dat_sf <- splnr_get_planningUnits(Bndry = Bndry,
                                   InnerB = landmass,
                                   CellArea = 10000,
                                   Shape = "Hexagon") \%>\%
-  splnr_get_distCoast()
+  splnr_get_distCoast(res = "medium")
 }
