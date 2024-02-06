@@ -405,8 +405,8 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
 #'
 #' `splnr_plot_cost()` allows to plot cost within each planning units of a planning region in a customisable way using `ggplot2`. This function requires an `sf` object with a cost column and outputs a `ggobject`. It can be combined with the `spatialplanr` function [splnr_gg_add()].
 #'
-#' @param Cost An `sf` object of cost for `prioritizr`
-#' @param Cost_name Name of the cost column
+#' @param df An `sf` object of cost for `prioritizr`
+#' @param col_name Name of the cost column
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
 #' @param paletteName A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
@@ -415,41 +415,53 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
 #' @export
 #'
 #' @examples
-#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'   cost_column = "Cost"
-#' ) %>%
-#'   prioritizr::add_min_set_objective() %>%
-#'   prioritizr::add_relative_targets(0.3) %>%
-#'   prioritizr::add_binary_decisions() %>%
-#'   prioritizr::add_default_solver(verbose = FALSE)
-#'
-#' dat_soln <- dat_problem %>%
-#'   prioritizr::solve.ConservationProblem()
-#'
-#' dat_cost <- dat_soln %>%
-#'   dplyr::mutate(Cost = runif(n = dim(.)[[1]]))
-#'
-#' (splnr_plot_cost(dat_cost))
-splnr_plot_cost <- function(Cost, Cost_name = "Cost", legendTitle = "Cost",
-                            paletteName = "YlGnBu", plotTitle = "") {
-  # col_name = stringr::str_subset(colnames(Cost), "geometry", negate = TRUE)
-
+#' bathymetry_cont <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE, classify_bathymetry = FALSE)
+#' splnr_plot_cost(df = bathymetry_cont, col_names = "bathymetry", legendTitle = "bathymetry", paletteName = , plotTitle = "bathymetry") +
+#'   splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass, cropOverlay = PUs, ggtheme = splnr_theme) 
+#'        
+#' bathymetry_bin <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE)
+#' splnr_plot_cost_4(df = bathymetry_bin, col_names = c("epipelagic","hadopelagic","abyssopelagic"), legendTitle = "bathymetry levels", plotTitle = "bathymetry") + 
+#'   splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass,  cropOverlay = PUs, ggtheme = splnr_theme)
+#'    
+splnr_plot_cost <- function(df, col_names = NULL, 
+                              legendTitle = "Cost", 
+                              plotTitle = "",
+                              paletteName = "YlGnBu") {
+  
+  
   gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = Cost, ggplot2::aes(fill = !!rlang::sym(Cost_name)), colour = "grey80", size = 0.1, show.legend = TRUE) +
-    ggplot2::coord_sf(xlim = sf::st_bbox(Cost)$xlim, ylim = sf::st_bbox(Cost)$ylim) +
-    ggplot2::scale_fill_distiller(
-      # name = legendTitle,
-      palette = paletteName,
-      aesthetics = c("colour", "fill"),
-      limits = c(
-        0,
-        as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))
-      ),
-      oob = scales::squish
-    ) +
+    ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
     ggplot2::labs(subtitle = plotTitle, fill = legendTitle)
-
+  
+  # If col_names is NULL, use all columns in the data
+  if (is.null(col_names)) {
+    stop("Please specify the column(s) of data to display.")
+  }
+  
+  # Replace NA with 0 in selected columns for binary data verification
+  df <- dplyr::mutate_all(df, ~replace_na(.,0))
+  is_binary <- all(sapply(col_names, function(col_name) all(df[[col_name]] %in% c(0, 1))))
+  
+  
+  if (is_binary) {
+    df$UnionColumn <- apply(df[, col_names, drop = FALSE], 1, function(x) as.numeric(any(x == 1, na.rm = TRUE)))
+    
+    gg <- gg +
+      ggplot2::geom_sf(data = df, ggplot2::aes(fill = UnionColumn),
+                       colour = "grey80", size = 0.1, show.legend = TRUE) +
+      ggplot2::scale_fill_gradient(low = "#c6dbef", high = "#3182bd", limits = c(0, 1))
+  } else {
+    for (col_name in col_names) {
+      gg <- gg +
+        ggplot2::geom_sf(data = df, ggplot2::aes(fill = !!rlang::sym(col_name)),
+                         colour = "grey80", size = 0.1, show.legend = TRUE) +
+        ggplot2::scale_fill_gradientn(
+          colors = rev(RColorBrewer::brewer.pal(100, paletteName)),
+          limits = NULL
+        ) 
+    }
+  }
+  
   return(gg)
 }
 
