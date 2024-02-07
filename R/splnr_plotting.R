@@ -420,7 +420,7 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
 #'   splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass, cropOverlay = PUs, ggtheme = splnr_theme) 
 #'        
 #' bathymetry_bin <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE)
-#' splnr_plot_cost_4(df = bathymetry_bin, col_names = c("epipelagic","hadopelagic","abyssopelagic"), legendTitle = "bathymetry levels", plotTitle = "bathymetry") + 
+#' splnr_plot_cost(df = bathymetry_bin, col_names = c("epipelagic","hadopelagic","abyssopelagic"), legendTitle = "bathymetry levels", plotTitle = "bathymetry") + 
 #'   splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass,  cropOverlay = PUs, ggtheme = splnr_theme)
 #'    
 splnr_plot_cost <- function(df, col_names = NULL, 
@@ -439,7 +439,7 @@ splnr_plot_cost <- function(df, col_names = NULL,
   }
   
   # Replace NA with 0 in selected columns for binary data verification
-  df <- dplyr::mutate_all(df, ~replace_na(.,0))
+  df <- dplyr::mutate_all(df, ~tidyr::replace_na(.,0))
   is_binary <- all(sapply(col_names, function(col_name) all(df[[col_name]] %in% c(0, 1))))
   
   
