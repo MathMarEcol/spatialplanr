@@ -15,13 +15,13 @@ splnr_plot_cost(
 \arguments{
 \item{df}{An \code{sf} object of cost for \code{prioritizr}}
 
+\item{col_names}{Name of the cost column(s)}
+
 \item{legendTitle}{A character value for the title of the legend. Can be empty ("").}
 
 \item{plotTitle}{A character value for the title of the plot. Can be empty ("").}
 
 \item{paletteName}{A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.}
-
-\item{col_name}{Name of the cost column}
 }
 \value{
 A ggplot object of the plot
