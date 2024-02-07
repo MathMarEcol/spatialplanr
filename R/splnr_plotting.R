@@ -406,7 +406,7 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
 #' `splnr_plot_cost()` allows to plot cost within each planning units of a planning region in a customisable way using `ggplot2`. This function requires an `sf` object with a cost column and outputs a `ggobject`. It can be combined with the `spatialplanr` function [splnr_gg_add()].
 #'
 #' @param df An `sf` object of cost for `prioritizr`
-#' @param col_name Name of the cost column
+#' @param col_names Name of the cost column(s)
 #' @param legendTitle A character value for the title of the legend. Can be empty ("").
 #' @param paletteName A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
@@ -444,6 +444,7 @@ splnr_plot_cost <- function(df, col_names = NULL,
   
   
   if (is_binary) {
+    # @suppress NOTE
     df$UnionColumn <- apply(df[, col_names, drop = FALSE], 1, function(x) as.numeric(any(x == 1, na.rm = TRUE)))
     
     gg <- gg +
