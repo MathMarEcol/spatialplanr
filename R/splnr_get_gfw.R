@@ -41,10 +41,10 @@
 #' gfw_data <- gfwr::splnr_get_gfw('Australia', "2022-01-01", "2022-12-31", "yearly", cCRS = cCRS, compress = TRUE)
 #'
 splnr_get_gfw <- function(region, start_date, end_date, temp_res,
-                        spat_res = "low",
-                        key = gfwr::gfw_auth(),
-                        cCRS = "EPSG:4326",
-                        compress = FALSE) {
+                          spat_res = "low",
+                          key = gfwr::gfw_auth(),
+                          cCRS = "EPSG:4326",
+                          compress = FALSE) {
 
   region_id <- gfwr::get_region_id(region_name = region, region_source = 'eez', key = key)$id[1]
 
@@ -77,17 +77,16 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
   } else {
     # If not, divide the date range into 366-day chunks and obtain the data for each chunk.
     date_chunks <- seq(start_date, end_date, by = "366 days")
-    data_df <- purrr::map(date_chunks, ~ get_data_for_range(.x, min(.x + 365, end_date)))
+    data_df <- purrr::map_dfr(date_chunks, ~ get_data_for_range(.x, min(.x + 365, end_date)))
   }
 
   if (isTRUE(compress)){
     # GFW data will always be "EPSG:4326". No need to have CRS as an option here
 
     data_df <- data_df %>%
-      purrr::map_dfr(bind_rows) %>%
       dplyr::select("Lon", "Lat", "Apparent Fishing Hours") %>%
       dplyr::group_by(Lon, Lat) %>%
-      dplyr::summarise("Apparent Fishing Hours" = sum(`Apparent Fishing Hours`, na.rm = T)) %>%
+      dplyr::summarise("Apparent Fishing Hours" = sum(`Apparent Fishing Hours`, na.rm = TRUE)) %>%
       dplyr::ungroup()
 
     data_sf <- data_df %>%
@@ -129,4 +128,3 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
   }
 
   return(data_sf)
-}

@@ -264,6 +264,53 @@ out_sf$Cost_None <- 1
   ))
 ```
 
+
+##### Other features
+###### Fishing effort
+
+The gfwr package allows us to recover data from fisheries across the world,
+we set here the parameter `compress` as `TRUE` to recover the 
+`Apparent fishing hours` per coordinates.
+```{r}
+gfw_data <- get_gfwData('Australia', "2022-01-01", "2022-12-31", "yearly", cCRS = cCRS, compress = TRUE) %>%
+  sf::st_interpolate_aw(PUs, extensive = TRUE)
+
+out_sf$Apparent.Fishing.Hours <- 0 # Add column to PUs
+out_sf$Apparent.Fishing.Hours[as.numeric(rownames(gfw_PU))] <- gfw_data$Apparent.Fishing.Hours # Put corresponding data in PUs
+ 
+
+(ggCost <- splnr_plot_cost(out_sf, col_names = "Apparent.Fishing.Hours", legendTitle = "Fishing Effort") +
+  splnr_gg_add(
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
+    ))
+```
+
+###### Other features
+
+Many features can be taken into account as cost layers before the 
+prioritization, we provide here different features from the `oceandatr`package.
+
+```{r}
+bathymetry <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE, classify_bathymetry = FALSE)
+geomorphology <- oceandatr::get_geomorphology(planning_grid = PUs)
+knolls <- oceandatr::get_knolls(planning_grid = PUs)
+seamounts <- oceandatr::get_seamounts_buffered(planning_grid = PUs, buffer = 30000)
+coral_habitat <- oceandatr::get_coral_habitat(planning_grid = PUs)
+enviro_regions <- oceandatr::get_enviro_regions(planning_grid = PUs, max_num_clusters = 5)
+```
+
+
+```{r}
+splnr_plot_cost(df = bathymetry_cont, col_names = "bathymetry", legendTitle = "bathymetry", paletteName = , plotTitle = "bathymetry") + 
+  splnr_gg_add(
+    PUs = PUs, Bndry = Bndry, overlay = landmass,
+    cropOverlay = PUs, ggtheme = splnr_theme
+  ) 
+```
+
+
+
 #### Set Targets
 
 As shown previously, we assigned the conservation features a class
