@@ -257,7 +257,7 @@ units are assigned an equal cost of 1.
 
 ```{r}
 out_sf$Cost_None <- 1
-(ggCost <- splnr_plot_cost(out_sf, col_names = "Cost_None") +
+(ggCost <- splnr_plot_cost(out_sf, Cost_name = "Cost_None") +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,
     cropOverlay = PUs, ggtheme = splnr_theme
@@ -291,7 +291,7 @@ out_sf$Apparent.Fishing.Hours[as.numeric(rownames(gfw_PU))] <- gfw_data$Apparent
 Many features can be taken into account as cost layers before the 
 prioritization, we provide here different features from the `oceandatr`package.
 
-```{r}
+```{r, eval=FALSE, echo=FALSE}
 bathymetry <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE, classify_bathymetry = FALSE)
 geomorphology <- oceandatr::get_geomorphology(planning_grid = PUs)
 knolls <- oceandatr::get_knolls(planning_grid = PUs)
@@ -301,8 +301,8 @@ enviro_regions <- oceandatr::get_enviro_regions(planning_grid = PUs, max_num_clu
 ```
 
 
-```{r}
-splnr_plot_cost(df = bathymetry_cont, col_names = "bathymetry", legendTitle = "bathymetry", paletteName = , plotTitle = "bathymetry") + 
+```{r, eval=FALSE, echo=FALSE}
+splnr_plot_cost(df = bathymetry, col_names = "bathymetry", legendTitle = "bathymetry", paletteName = , plotTitle = "bathymetry") + 
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,
     cropOverlay = PUs, ggtheme = splnr_theme
