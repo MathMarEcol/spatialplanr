@@ -61,7 +61,8 @@ splnr_plot <- function(df,
         aesthetics = c("fill"),
         oob = scales::squish
       ) +
-      ggplot2::labs(subtitle = "Number of Features")
+      ggplot2::labs(subtitle = "Number of Features") +
+      ggplot2::guides(fill = ggplot2::guide_colourbar(order = -1))
 
     return(gg)
   }
@@ -78,6 +79,10 @@ splnr_plot <- function(df,
     is_binary <- all(sapply(col_names, function(col_name) all(df[[col_name]] %in% c(0, 1))))
 
     if (is_binary) {
+      # We build a new column that add a 1 if a 1 is already present in one of the selected columns.
+      # ex : col1 = 1, col2 = 1, col3 = 1, UnionColumn = 1
+      # ex : col1 = 0, col2 = 0, col3 = 0, UnionColumn = 0
+      # ex : col1 = 1, col2 = 0, col3 = 1, UnionColumn = 1
       df$UnionColumn <- apply(df[, col_names, drop = FALSE], 1, function(x) as.numeric(any(x == 1, na.rm = TRUE)))
 
       gg <- gg +
@@ -91,7 +96,8 @@ splnr_plot <- function(df,
       for (col_name in col_names) {
         gg <- gg +
           ggplot2::geom_sf(data = df, ggplot2::aes(fill = !!rlang::sym(col_name)), colour = "grey80", size = 0.1) +
-          ggplot2::scale_fill_gradientn(colors = rev(RColorBrewer::brewer.pal(9, paletteName)), limits = NULL)
+          ggplot2::scale_fill_gradientn(colors = rev(RColorBrewer::brewer.pal(9, paletteName)), limits = NULL) +
+          ggplot2::guides(fill = ggplot2::guide_colourbar(order = 1))
       }
     }
   } else if (!showFeatureSum) {

@@ -128,3 +128,4 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
   }
 
   return(data_sf)
+}
