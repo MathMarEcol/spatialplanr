@@ -199,7 +199,7 @@ get_gfwData <- function(region, start_date, end_date, temp_res,
 
 
 ```{r, message=FALSE}
-data_sf_combined <- get_gfwData('Australie', "2019-01-01", "2023-12-31", "yearly", "low", key = key, compress = FALSE)
+data_sf_combined <- get_gfwData('Australia', "2019-01-01", "2023-12-31", "yearly", "low", key = key, compress = FALSE)
 ```
 
 
@@ -218,7 +218,7 @@ coast_clipped <- rnaturalearth::ne_coastline(scale = 'large') %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
 
 # Load EEZ polygons
-eezs <- sf::st_read(dsn = '~/2024_Research_A_UQ/World_EEZ_v12_20231025/') %>%
+eezs <- oceandatr::get_area(area_name = "Australia") %>%
   sf::st_transform(crs = sf::st_crs(data_sf_combined)) %>%
   sf::st_make_valid() %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
@@ -291,7 +291,7 @@ We may need to compare different timeframes, such as seasons, to see if there ar
 __Note :__ As more vessels have adopted AIS (mainly in economically developed countries) since the deployment of these technologies, the rise in activities must be seen in the context of this increase and not necessarily of more intense fishing activity.
 ```{r, message=FALSE}
 #We need to change the temporal range according to our need group by it to display the total fishing hours. <br>
-data_sf_combined <- get_gfwData('Australie', "2019-01-01", "2023-12-31", "monthly") %>%
+data_sf_combined <- get_gfwData('Australia', "2019-01-01", "2023-12-31", "monthly") %>%
   dplyr::group_by(Year, Month) %>%
   dplyr::summarize(Total_Fishing_Hours = sum(`Apparent Fishing Hours`))
 ```
@@ -320,7 +320,7 @@ coast_clipped <- rnaturalearth::ne_coastline(scale = 'large') %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
 
 # Load EEZ polygons
-eezs <- sf::st_read(dsn = '~/2024_Research_A_UQ/World_EEZ_v12_20231025/') %>%
+eezs <- oceandatr::get_area(area_name = "Micronesia") %>%
   sf::st_transform(crs = sf::st_crs(data_sf_combined)) %>%
   sf::st_make_valid() %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
@@ -348,7 +348,7 @@ coast_clipped <- rnaturalearth::ne_coastline(scale = 'large') %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
 
 # Load EEZ polygons
-eezs <- sf::st_read(dsn = '~/2024_Research_A_UQ/World_EEZ_v12_20231025/') %>%
+eezs <- oceandatr::get_area(area_name = "Papua New Guinea") %>% 
   sf::st_transform(crs = sf::st_crs(data_sf_combined)) %>%
   sf::st_make_valid() %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
@@ -373,6 +373,6 @@ The fishing detection model was trained on AIS data from 503 vessels and identif
 
 
 ###### Hierarchy of vessels gear types :
-<img src="C:/Users/Kilian/Documents/2024_Research_A_UQ/fishing_classification_hierarchy.jpg" alt="Description de l'image" width="750" height="500"/> <br>
+<!-- <img src="fishing_classification_hierarchy.jpg" alt="Fishing Classification Hierarchy" width="750" height="500"/> <br> -->
 
 _Source : https://globalfishingwatch.org/datasets-and-code-vessel-identity/ _
