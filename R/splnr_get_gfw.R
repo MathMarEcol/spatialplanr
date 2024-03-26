@@ -78,7 +78,13 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
   } else {
     # If not, divide the date range into 366-day chunks and obtain the data for each chunk.
     date_chunks <- seq(start_date, end_date, by = "366 days")
-    data_df <- purrr::map_dfr(date_chunks, ~ get_data_for_range(.x, min(.x + 365, end_date)))
+    data_df <- purrr::map(date_chunks, ~ get_data_for_range(.x, min(.x + 365, end_date)))
+
+    data_df <- vctrs::list_drop_empty(data_df)
+
+    if(rlang::is_empty(data_df)){
+      stop(paste0("No data found at all for the requested area of ", region, " between ", start_date, " and ", end_date))
+    }
   }
 
   if (isTRUE(compress)){
