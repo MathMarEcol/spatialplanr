@@ -38,7 +38,7 @@ remotes::install_github("GlobalFishingWatch/gfwr")
 ```{r, message=FALSE}
 library(gfwr)
 library(ggplot2)
-library(tidyverse)
+library(dplyr)
 library(sf)
 ```
 
