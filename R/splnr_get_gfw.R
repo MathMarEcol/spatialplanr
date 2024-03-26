@@ -88,12 +88,11 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
   }
 
   if (isTRUE(compress)){
-    # GFW data will always be "EPSG:4326". No need to have CRS as an option here
 
     data_df <- data_df %>%
       dplyr::select("Lon", "Lat", "Apparent Fishing Hours") %>%
-      dplyr::group_by(Lon, Lat) %>%
-      dplyr::summarise("Apparent Fishing Hours" = sum(`Apparent Fishing Hours`, na.rm = TRUE)) %>%
+      dplyr::group_by(.data$Lon, .data$Lat) %>%
+      dplyr::summarise("Apparent Fishing Hours" = sum(.data$`Apparent Fishing Hours`, na.rm = TRUE)) %>%
       dplyr::ungroup()
 
     data_sf <- data_df %>%
@@ -107,12 +106,12 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
   } else if (isFALSE(compress)){
 
     # Combine data frames in the list into one data frame
-    data_df <- bind_rows(data_df)
+    data_df <- dplyr::bind_rows(data_df)
 
     # Separate the "Time Range" column based on the specified temp_res
     if (temp_res == "yearly") {
       data_sf <- data_df %>%
-        dplyr::mutate(Year = `Time Range`) %>%
+        dplyr::mutate(Year = .data$`Time Range`) %>%
         sf::st_as_sf(coords = c("Lon", "Lat"), crs ="EPSG:4326")
     } else {
       # Sinon, séparer la colonne "Time Range" selon le temp_res spécifié

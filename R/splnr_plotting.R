@@ -455,7 +455,7 @@ splnr_plot_cost <- function(df, col_names = NULL,
     df$UnionColumn <- apply(df[, col_names, drop = FALSE], 1, function(x) as.numeric(any(x == 1, na.rm = TRUE)))
 
     gg <- gg +
-      ggplot2::geom_sf(data = df, ggplot2::aes(fill = UnionColumn),
+      ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$UnionColumn),
                        colour = "grey80", size = 0.1, show.legend = TRUE) +
       ggplot2::scale_fill_gradient(low = "#c6dbef", high = "#3182bd", limits = c(0, 1))
   } else {

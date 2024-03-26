@@ -252,7 +252,7 @@ splnr_plot_featureRep <- function(df, category = NA,
       legend.text = ggplot2::element_text(size = 16),
       axis.title.y = ggplot2::element_text(size = 16),
       title = ggplot2::element_text(size = 16),
-      legend.position = c(0.5, 0.95),
+      legend.position.inside = c(0.5, 0.95),
       legend.direction = "horizontal",
       legend.background = ggplot2::element_rect(fill = "NA")
     )
