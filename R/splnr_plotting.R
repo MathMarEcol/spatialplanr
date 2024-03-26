@@ -415,38 +415,45 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
 #' @export
 #'
 #' @examples
-#' bathymetry_cont <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE, classify_bathymetry = FALSE)
-#' splnr_plot_cost(df = bathymetry_cont, col_names = "bathymetry", legendTitle = "bathymetry", paletteName = , plotTitle = "bathymetry") +
-#'   splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass, cropOverlay = PUs, ggtheme = splnr_theme) 
-#'        
-#' bathymetry_bin <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE)
-#' splnr_plot_cost(df = bathymetry_bin, col_names = c("epipelagic","hadopelagic","abyssopelagic"), legendTitle = "bathymetry levels", plotTitle = "bathymetry") + 
-#'   splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass,  cropOverlay = PUs, ggtheme = splnr_theme)
-#'    
-splnr_plot_cost <- function(df, col_names = NULL, 
-                              legendTitle = "Cost", 
+#' bathymetry_cont <- oceandatr::get_bathymetry(planning_grid = PUs,
+#' keep = FALSE, classify_bathymetry = FALSE)
+#' splnr_plot_cost(df = bathymetry_cont, col_names = "bathymetry",
+#' legendTitle = "bathymetry", paletteName = , plotTitle = "bathymetry") +
+#'   splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass,
+#'   cropOverlay = PUs, ggtheme = splnr_theme)
+#'
+#' bathymetry_bin <- oceandatr::get_bathymetry(planning_grid = PUs,
+#'  keep = FALSE)
+#' splnr_plot_cost(df = bathymetry_bin, col_names = c("epipelagic",
+#' "hadopelagic","abyssopelagic"), legendTitle = "bathymetry levels",
+#' plotTitle = "bathymetry") +
+#'   splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass,
+#'   cropOverlay = PUs, ggtheme = splnr_theme)
+#'
+splnr_plot_cost <- function(df, col_names = NULL,
+                              legendTitle = "Cost",
                               plotTitle = "",
                               paletteName = "YlGnBu") {
-  
-  
+
+
   gg <- ggplot2::ggplot() +
     ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
     ggplot2::labs(subtitle = plotTitle, fill = legendTitle)
-  
+
   # If col_names is NULL, use all columns in the data
   if (is.null(col_names)) {
     stop("Please specify the column(s) of data to display.")
   }
-  
+
   # Replace NA with 0 in selected columns for binary data verification
   df <- dplyr::mutate_all(df, ~tidyr::replace_na(.,0))
   is_binary <- all(sapply(col_names, function(col_name) all(df[[col_name]] %in% c(0, 1))))
-  
-  
+
+
   if (is_binary) {
     # @suppress NOTE
     df$UnionColumn <- apply(df[, col_names, drop = FALSE], 1, function(x) as.numeric(any(x == 1, na.rm = TRUE)))
-    
+
     gg <- gg +
       ggplot2::geom_sf(data = df, ggplot2::aes(fill = UnionColumn),
                        colour = "grey80", size = 0.1, show.legend = TRUE) +
@@ -459,10 +466,10 @@ splnr_plot_cost <- function(df, col_names = NULL,
         ggplot2::scale_fill_gradientn(
           colors = rev(RColorBrewer::brewer.pal(100, paletteName)),
           limits = NULL
-        ) 
+        )
     }
   }
-  
+
   return(gg)
 }
 

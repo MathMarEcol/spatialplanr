@@ -62,6 +62,7 @@ sf::st_transform(cCRS)
 
 PUs <- spatialplanr::splnr_get_planningUnits(Bndry, landmass, PU_size, Shape)
 
-gfw_data <- gfwr::splnr_get_gfw('Australia', "2022-01-01", "2022-12-31", "yearly", cCRS = cCRS, compress = TRUE)
+gfw_data <- splnr_get_gfw('Australia', "2022-01-01", "2022-12-31", "yearly",
+cCRS = cCRS, compress = TRUE)
 
 }

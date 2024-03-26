@@ -21,8 +21,10 @@
 #' splnr_plot(datEx_species_bin, col_names = "Crocodylus_porosus")
 #'
 #' # Continuous
-#' bathymetry <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE, classify_bathymetry = FALSE)
-#' splnr_plot(df = bathymetry, col_names = "bathymetry", plotTitle = "bathymetry")
+#' bathymetry <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE,
+#' classify_bathymetry = FALSE)
+#' splnr_plot(df = bathymetry, col_names = "bathymetry",
+#' plotTitle = "bathymetry")
 #'
 #' # Multi binary features
 #' splnr_plot(datEx_species_bin, showFeatureSum = TRUE)

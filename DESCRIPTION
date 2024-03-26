@@ -61,7 +61,8 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
-    rlang
+    rlang, 
+    oceandatr
 Remotes: 
     github::rlesur/klippy
 Config/testthat/edition: 3

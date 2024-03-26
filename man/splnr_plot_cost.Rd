@@ -30,12 +30,19 @@ A ggplot object of the plot
 \code{splnr_plot_cost()} allows to plot cost within each planning units of a planning region in a customisable way using \code{ggplot2}. This function requires an \code{sf} object with a cost column and outputs a \code{ggobject}. It can be combined with the \code{spatialplanr} function \code{\link[=splnr_gg_add]{splnr_gg_add()}}.
 }
 \examples{
-bathymetry_cont <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE, classify_bathymetry = FALSE)
-splnr_plot_cost(df = bathymetry_cont, col_names = "bathymetry", legendTitle = "bathymetry", paletteName = , plotTitle = "bathymetry") +
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass, cropOverlay = PUs, ggtheme = splnr_theme) 
-       
-bathymetry_bin <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE)
-splnr_plot_cost(df = bathymetry_bin, col_names = c("epipelagic","hadopelagic","abyssopelagic"), legendTitle = "bathymetry levels", plotTitle = "bathymetry") + 
-  splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass,  cropOverlay = PUs, ggtheme = splnr_theme)
-   
+bathymetry_cont <- oceandatr::get_bathymetry(planning_grid = PUs,
+keep = FALSE, classify_bathymetry = FALSE)
+splnr_plot_cost(df = bathymetry_cont, col_names = "bathymetry",
+legendTitle = "bathymetry", paletteName = , plotTitle = "bathymetry") +
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass,
+  cropOverlay = PUs, ggtheme = splnr_theme)
+
+bathymetry_bin <- oceandatr::get_bathymetry(planning_grid = PUs,
+ keep = FALSE)
+splnr_plot_cost(df = bathymetry_bin, col_names = c("epipelagic",
+"hadopelagic","abyssopelagic"), legendTitle = "bathymetry levels",
+plotTitle = "bathymetry") +
+  splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass,
+  cropOverlay = PUs, ggtheme = splnr_theme)
+
 }

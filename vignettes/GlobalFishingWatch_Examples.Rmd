@@ -1,8 +1,12 @@
 ---
-title: "gfwr package tool"
+title: "Global Fishing Watch Examples and Uses"
 author: "Kilian GRIHAULT BARREIRO"
 date: "2024-01-14"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Global Fishing Watch Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
@@ -167,13 +171,15 @@ get_gfwData <- function(region, start_date, end_date, temp_res,
         dplyr::mutate(Year = `Time Range`) %>%
         sf::st_as_sf(coords = c("Lon", "Lat"), crs ="EPSG:4326")
     } else {
-      # Sinon, séparer la colonne "Time Range" selon le temp_res spécifié
+      # Otherwise, separate the "Time Range" column according to the specified temp_res
       if (temp_res == "monthly") {
         data_sf <- data_df %>%
+          purrr::map_dfr(bind_rows) %>%
           tidyr::separate("Time Range", into = c("Year", "Month"), sep = "-", remove = FALSE) %>%
           sf::st_as_sf(coords = c("Lon", "Lat"), crs = "EPSG:4326")
       } else if (temp_res == "daily") {
         data_sf <- data_df %>%
+          purrr::map_dfr(bind_rows) %>%
           tidyr::separate("Time Range", into = c("Year", "Month", "Day"), sep = "-", remove = FALSE) %>%
           sf::st_as_sf(coords = c("Lon", "Lat"), crs = "EPSG:4326")
       }
@@ -191,9 +197,9 @@ get_gfwData <- function(region, start_date, end_date, temp_res,
 ```
 
 
-To get the raw values given by GFW we do not need to specify any variable of gathering in `group_by_vars` parameter. 
+
 ```{r, message=FALSE}
-data_sf_combined <- get_gfwData('Australie', "2021-01-01", "2023-12-31", "yearly", "low", key = key, compress = FALSE)
+data_sf_combined <- get_gfwData('Australie', "2019-01-01", "2023-12-31", "yearly", "low", key = key, compress = FALSE)
 ```
 
 
@@ -302,7 +308,7 @@ ggplot(data_sf_combined, aes(x = Month, y = Total_Fishing_Hours, color = Year, g
 ##### Fishing gear type
 Here we display the Vessel activity in 'Micronesia' in 2022 according to the fishing gear type.
 ```{r, message=FALSE}
-data_sf_combined <- get_gfwData('Micronesia', "2022-01-01", "2022-12-31", "monthly", "low", key)
+data_sf_combined <- get_gfwData('Micronesia', "2021-12-31", "2023-12-31", "monthly")
 ```
 
 ```{r, echo=FALSE, message=FALSE, results='hide'}
