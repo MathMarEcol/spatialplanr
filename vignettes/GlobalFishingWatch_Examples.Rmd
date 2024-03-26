@@ -1,5 +1,5 @@
 ---
-title: "Global Fishing Watch Examples and Uses"
+title: "Global Fishing Watch Examples"
 author: "Kilian GRIHAULT BARREIRO"
 date: "2024-01-14"
 output: rmarkdown::html_vignette
@@ -141,7 +141,7 @@ get_gfwData <- function(region, start_date, end_date, temp_res,
   } else {
     # If not, divide the date range into 366-day chunks and obtain the data for each chunk.
     date_chunks <- seq(start_date, end_date, by = "366 days")
-    data_df <- purrr::map(date_chunks, ~ get_data_for_range(.x, min(.x + 365, end_date)))
+    data_df <- purrr::map(date_chunks, ~get_data_for_range(.x, min(.x + 365, end_date)))
   }
 
   if (isTRUE(compress)){
@@ -306,9 +306,9 @@ ggplot(data_sf_combined, aes(x = Month, y = Total_Fishing_Hours, color = Year, g
 ```
 
 ##### Fishing gear type
-Here we display the Vessel activity in 'Micronesia' in 2022 according to the fishing gear type.
+Here we display the Vessel activity in 'Micronesia' in 2020 according to the fishing gear type.
 ```{r, message=FALSE}
-data_sf_combined <- get_gfwData('Micronesia', "2021-12-31", "2023-12-31", "monthly")
+data_sf_combined <- get_gfwData(region = 'Micronesia', start_date = "2019-12-31", end_date = "2021-01-01", temp_res = "monthly")
 ```
 
 ```{r, echo=FALSE, message=FALSE, results='hide'}
@@ -333,14 +333,14 @@ ggplot(data_sf_combined) +
   geom_sf(data = coast_clipped, color = "black", fill = NA) +  # Add coastline
   geom_sf(data = eezs, color = 'red') +  # Ajouter la EEZ avec hachures
   theme_minimal() +
-  labs(title = "2022 Vessel Activity Map", subtitle = "recorded by GFW in Micronesia", color = "Gear types") +
+  labs(title = "2020 Vessel Activity Map", subtitle = "recorded by GFW in Micronesia", color = "Gear types") +
   theme(legend.position = "right")
 ```
 
 ##### Flags
 Here we display the Vessel activity in Papua New Guinea according to Vessels flags.
 ```{r, echo=FALSE, message=FALSE, results='hide'}
-data_sf_combined <- get_gfwData('Papua New Guinea', "2022-01-01", "2022-12-31", "monthly", "low", key) %>%
+data_sf_combined <- get_gfwData(region = 'Papua New Guinea', start_date = "2019-12-31", end_date = "2021-01-01", temp_res = "yearly",spat_res =  "low", key = key) %>%
   st_set_crs(st_crs(rnaturalearth::ne_coastline(scale = 'large'))) 
 
 coast_clipped <- rnaturalearth::ne_coastline(scale = 'large') %>%
@@ -362,7 +362,7 @@ ggplot(data_sf_combined) +
   geom_sf(data = eezs, color = 'red') +  # Ajouter la EEZ avec hachures
   scale_size_continuous(range = c(1, 10), guide = "legend", name = "Flag") +
   theme_minimal() +
-  labs(title = "2022 Vessel Activity Map", subtitle = "recorded by GFW in Papua New Guinea", color = "Flag") +
+  labs(title = "2021 Vessel Activity Map", subtitle = "recorded by GFW in Papua New Guinea", color = "Flag") +
   theme(legend.position = "right") 
 ```
 

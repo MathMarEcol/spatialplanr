@@ -62,7 +62,9 @@ Imports:
     tidyr,
     tidyselect,
     rlang, 
-    oceandatr
+    oceandatr,
+    gfwr,
+    RColorBrewer
 Remotes: 
     github::rlesur/klippy
 Config/testthat/edition: 3
