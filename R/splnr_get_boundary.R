@@ -21,18 +21,15 @@ splnr_get_boundary <- function(Limits,
                                res = 1,
                                cCRS = "ESRI:54009" # Mollweide
 ) {
-  if (is.numeric(Limits)) {
-    Bndry <- dplyr::tibble(x = seq(Limits["xmin"], Limits["xmax"], by = res), y = Limits["ymin"]) %>%
-      dplyr::bind_rows(dplyr::tibble(x = Limits["xmax"], y = seq(Limits["ymin"], Limits["ymax"], by = res))) %>%
-      dplyr::bind_rows(dplyr::tibble(x = seq(Limits["xmax"], Limits["xmin"], by = -res), y = Limits["ymax"])) %>%
-      dplyr::bind_rows(dplyr::tibble(x = Limits["xmin"], y = seq(Limits["ymax"], Limits["ymin"], by = -res))) %>%
-      splnr_create_polygon(cCRS) %>%
-      sf::st_sf()
-
-    return(Bndry)
-  }
 
   if (Limits == "Global") {
+
+    assertthat::assert_that(
+    is.numeric(res),
+    res > 0
+    )
+
+    # Code for Global Limits
     Bndry <- dplyr::tibble(x = seq(-180, 180, by = res), y = -90) %>%
       dplyr::bind_rows(dplyr::tibble(x = 180, y = seq(-90, 90, by = res))) %>%
       dplyr::bind_rows(dplyr::tibble(x = seq(180, -180, by = -res), y = 90)) %>%
@@ -43,17 +40,28 @@ splnr_get_boundary <- function(Limits,
     return(Bndry)
   }
 
+  # Assertions
+  assertthat::assert_that(
+    !missing(Limits),
+    !missing(Type),
+    is.numeric(res),
+    res > 0
+  )
 
-  ## TODO Disable EEZ until offshoredatr publicly online.
-  # if (Type == "EEZ"){
-  #   Bndry <- offshoredatr::get_area(area_name = Limits) %>%
-  #     dplyr::filter(.data$territory1 %in% Limits) %>%
-  #     sf::st_union() %>%
-  #     sf::st_transform(cCRS)
-  #   return(Bndry)
-  # }
+  if (is.numeric(Limits)) {
+    # Code for numeric Limits
+    Bndry <- dplyr::tibble(x = seq(Limits["xmin"], Limits["xmax"], by = res), y = Limits["ymin"]) %>%
+      dplyr::bind_rows(dplyr::tibble(x = Limits["xmax"], y = seq(Limits["ymin"], Limits["ymax"], by = res))) %>%
+      dplyr::bind_rows(dplyr::tibble(x = seq(Limits["xmax"], Limits["xmin"], by = -res), y = Limits["ymax"])) %>%
+      dplyr::bind_rows(dplyr::tibble(x = Limits["xmin"], y = seq(Limits["ymax"], Limits["ymin"], by = -res))) %>%
+      splnr_create_polygon(cCRS) %>%
+      sf::st_sf()
+
+    return(Bndry)
+  }
 
   if (Type == "Oceans" | Type == "Ocean") {
+    # Code for Oceans
     Bndry <- rnaturalearth::ne_download(
       scale = "large",
       category = "physical",

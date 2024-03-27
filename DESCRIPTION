@@ -36,7 +36,11 @@ Suggests:
     testthat (>= 3.0.0),
     units,
     viridis,
-    wdpar
+    wdpar, 
+    oceandatr,
+    gfwr,
+    RColorBrewer,
+    rnaturalearthhires
 VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
@@ -61,10 +65,7 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
-    rlang, 
-    oceandatr,
-    gfwr,
-    RColorBrewer
+    rlang
 Remotes: 
     github::rlesur/klippy
 Config/testthat/edition: 3
