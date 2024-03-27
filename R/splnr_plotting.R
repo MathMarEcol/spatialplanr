@@ -415,11 +415,11 @@ splnr_plot_MPAs <- function(df, colorVals = c("TRUE" = "blue", "FALSE" = "white"
 #' @export
 #'
 #' @examples
-#' bathymetry_cont <- oceandatr::get_bathymetry(planning_grid = PUs,
+#' bathymetry_cont <- oceandatr::get_bathymetry(spatial_grid = dat_PUs,
 #' keep = FALSE, classify_bathymetry = FALSE)
 #' splnr_plot_cost(df = bathymetry_cont, col_names = "bathymetry",
 #' legendTitle = "bathymetry", paletteName = , plotTitle = "bathymetry") +
-#'   splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass,
+#'   splnr_gg_add(PUs = dat_PUs, Bndry = dat_ndry, overlay = landmass,
 #'   cropOverlay = PUs, ggtheme = splnr_theme)
 #'
 #' bathymetry_bin <- oceandatr::get_bathymetry(planning_grid = PUs,
