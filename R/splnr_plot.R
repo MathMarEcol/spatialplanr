@@ -18,22 +18,32 @@
 #'
 #' @examples
 #' # Binary
-#' splnr_plot(datEx_species_bin, col_names = "Crocodylus_porosus")
+#' splnr_plot(dat_species_bin, col_names = "Spp1")
 #'
 #' # Continuous
-#' bathymetry <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE,
+#' bathymetry <- oceandatr::get_bathymetry(planning_grid = dat_PUs, keep = FALSE,
 #' classify_bathymetry = FALSE)
 #' splnr_plot(df = bathymetry, col_names = "bathymetry",
 #' plotTitle = "bathymetry")
 #'
 #' # Multi binary features
-#' splnr_plot(datEx_species_bin, showFeatureSum = TRUE)
+#' splnr_plot(dat_species_bin, showFeatureSum = TRUE)
 splnr_plot <- function(df,
                        col_names = NULL,
                        paletteName = "YlGnBu",
                        colorVals = NULL,
                        plot_title = "",
                        showFeatureSum = FALSE) {
+
+  # Assertions
+  assertthat::assert_that(
+    is.data.frame(df),
+    "geometry" %in% names(df),
+    all(c("xmin", "xmax", "ymin", "ymax") %in% names(sf::st_bbox(df))),
+    is.null(col_names) | is.character(col_names),
+    is.character(paletteName),
+    is.logical(showFeatureSum)
+  )
 
   gg <- ggplot2::ggplot() +
     ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
@@ -88,12 +98,8 @@ splnr_plot <- function(df,
       df$UnionColumn <- apply(df[, col_names, drop = FALSE], 1, function(x) as.numeric(any(x == 1, na.rm = TRUE)))
 
       gg <- gg +
-        ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$UnionColumn), colour = "grey80", size = 0.1) +
-        if (!is.null(colorVals)) {
-          ggplot2::scale_fill_manual(values = colorVals)
-        } else {
-          ggplot2::scale_fill_gradient(low = "#c6dbef", high = "#3182bd", limits = c(0, 1))
-        }
+        ggplot2::geom_sf(data = df, ggplot2::aes(fill = factor(.data$UnionColumn)), colour = "grey80", size = 0.1) +
+        ggplot2::scale_fill_manual(values = c("0" = "#c6dbef", "1" = "#3182bd"), name = "Binary", labels = c("0", "1"))
     } else {
       for (col_name in col_names) {
         gg <- gg +

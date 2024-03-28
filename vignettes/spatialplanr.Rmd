@@ -74,7 +74,7 @@ units.
 Get the boundary for your chosen region.
 
 ```{r}
-Bndry <- splnr_get_boundary(Region, Type, cCRS)
+Bndry <- splnr_get_boundary(Limits = Region, Type = Type, cCRS = cCRS)
 ```
 
 Get the land boundaries to remove overlap. The object "landmass"

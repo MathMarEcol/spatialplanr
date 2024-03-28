@@ -38,14 +38,14 @@ Plot Spatial Data, returns a gg object
 }
 \examples{
 # Binary
-splnr_plot(datEx_species_bin, col_names = "Crocodylus_porosus")
+splnr_plot(dat_species_bin, col_names = "Spp1")
 
 # Continuous
-bathymetry <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE,
+bathymetry <- oceandatr::get_bathymetry(planning_grid = dat_PUs, keep = FALSE,
 classify_bathymetry = FALSE)
 splnr_plot(df = bathymetry, col_names = "bathymetry",
 plotTitle = "bathymetry")
 
 # Multi binary features
-splnr_plot(datEx_species_bin, showFeatureSum = TRUE)
+splnr_plot(dat_species_bin, showFeatureSum = TRUE)
 }
