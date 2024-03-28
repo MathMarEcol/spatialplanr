@@ -70,6 +70,7 @@ Imports:
 Remotes: 
     github::emlab-ucsb/oceandatr,
     github::emlab-ucsb/spatialgridr,
+    github::GlobalFishingWatch/gfwr,
     github::rlesur/klippy,
     github::ropensci/rnaturalearthhires
 Config/testthat/edition: 3
