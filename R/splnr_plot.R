@@ -21,10 +21,9 @@
 #' splnr_plot(dat_species_bin, col_names = "Spp1")
 #'
 #' # Continuous
-#' bathymetry <- oceandatr::get_bathymetry(planning_grid = dat_PUs, keep = FALSE,
+#' bathymetry <- oceandatr::get_bathymetry(spatial_grid = dat_PUs, keep = FALSE,
 #' classify_bathymetry = FALSE)
-#' splnr_plot(df = bathymetry, col_names = "bathymetry",
-#' plotTitle = "bathymetry")
+#' splnr_plot(df = bathymetry, col_names = "bathymetry", plot_title = "bathymetry")
 #'
 #' # Multi binary features
 #' splnr_plot(dat_species_bin, showFeatureSum = TRUE)
