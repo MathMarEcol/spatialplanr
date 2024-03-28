@@ -43,7 +43,7 @@ Written by Kilian Barreiro
 Written: February 2024
 }
 \examples{
-
+\dontrun{
 Region <- "Coral Sea" # "Australia"
 Type <- "Oceans" # "EEZ"
 
@@ -64,5 +64,5 @@ PUs <- spatialplanr::splnr_get_planningUnits(Bndry, landmass, PU_size, Shape)
 
 gfw_data <- splnr_get_gfw('Australia', "2022-01-01", "2022-12-31", "yearly",
 cCRS = cCRS, compress = TRUE)
-
+}
 }

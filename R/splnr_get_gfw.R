@@ -19,7 +19,7 @@
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' Region <- "Coral Sea" # "Australia"
 #' Type <- "Oceans" # "EEZ"
 #'
@@ -40,7 +40,7 @@
 #'
 #' gfw_data <- splnr_get_gfw('Australia', "2022-01-01", "2022-12-31", "yearly",
 #' cCRS = cCRS, compress = TRUE)
-#'
+#'}
 
 splnr_get_gfw <- function(region, start_date, end_date, temp_res,
                           spat_res = "low",
