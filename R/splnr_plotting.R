@@ -1,6 +1,6 @@
 #' Add-ons for plotting
 #'
-#' This function allows to customise plots in a simple and reproducible way, by giving the option for several inputs that can be included in maps produced with the other functions of this package.It can be combined with the `spatialplanr` spatial plotting functions (e.g. [splnr_plot_MPAs()], [splnr_plot_PUs()], [splnr_plot_solution()], [splnr_plot_binFeature()]).
+#' This function allows to customise plots in a simple and reproducible way, by giving the option for several inputs that can be included in maps produced with the other functions of this package.It can be combined with the `spatialplanr` spatial plotting functions.
 #'
 #' @param PUs Planning Units as an `sf` object
 #' @param colorPUs A color value for the outline of planning units.
