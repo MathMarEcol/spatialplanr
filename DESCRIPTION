@@ -68,5 +68,8 @@ Imports:
     tidyselect,
     rlang
 Remotes: 
+    github::emlab-ucsb/oceandatr
+    github::emlab-ucsb/spatialgridr
     github::rlesur/klippy
+    github::ropensci/rnaturalearthhires
 Config/testthat/edition: 3
