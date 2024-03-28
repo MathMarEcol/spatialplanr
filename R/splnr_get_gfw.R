@@ -41,13 +41,15 @@
 #' gfw_data <- splnr_get_gfw('Australia', "2022-01-01", "2022-12-31", "yearly",
 #' cCRS = cCRS, compress = TRUE)
 #'
+
 splnr_get_gfw <- function(region, start_date, end_date, temp_res,
                           spat_res = "low",
                           key = gfwr::gfw_auth(),
                           cCRS = "EPSG:4326",
                           compress = FALSE) {
-
   region_id <- gfwr::get_region_id(region_name = region, region_source = 'eez', key = key)$id[1]
+
+  print(region)
 
   # Convert dates into Date objects
   start_date <- as.Date(start_date, format = "%Y-%m-%d")
@@ -56,7 +58,6 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
   # Function to obtain data for a specific date range
   get_data_for_range <- function(start_date, end_date) {
     date_range <- paste(start_date, end_date, sep = ",")
-
     data <- gfwr::get_raster(
       spatial_resolution = spat_res,
       temporal_resolution = temp_res,
@@ -66,15 +67,12 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
       region_source = 'eez',
       key = key
     )
-
     return(data)
   }
-
   # Check whether the date range is less than or equal to 366 days
   if (as.numeric(difftime(end_date, start_date, units = "days")) <= 366) {
     # If yes, obtain data for the entire date range
     data_df <- get_data_for_range(start_date, end_date)
-
   } else {
     # If not, divide the date range into 366-day chunks and obtain the data for each chunk.
     date_chunks <- seq(start_date, end_date, by = "366 days")
@@ -90,6 +88,7 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
   if (isTRUE(compress)){
 
     data_df <- data_df %>%
+      dplyr::bind_rows() %>% # Combine data frames in the list into one data frame
       dplyr::select("Lon", "Lat", "Apparent Fishing Hours") %>%
       dplyr::group_by(.data$Lon, .data$Lat) %>%
       dplyr::summarise("Apparent Fishing Hours" = sum(.data$`Apparent Fishing Hours`, na.rm = TRUE)) %>%
@@ -100,8 +99,9 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
       terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm = TRUE, round = FALSE) %>%
       sf::st_as_sf()
 
-    if (dim(data_df)[1] != dim(data_sf)[1])
-    {stop("Data dimensions of data_df and data_sf do not match after conversion to polygon")}
+    if (dim(data_df)[1] != dim(data_sf)[1]){
+      stop("Data dimensions of data_df and data_sf do not match after conversion to polygon")
+    }
 
   } else if (isFALSE(compress)){
 
@@ -126,12 +126,11 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
       }
     }
   }
-
   # But you may wish to return the data in a different CRS. For this you need transform
   if (isFALSE(cCRS == "EPSG:4326")){
     data_sf <- data_sf %>%
       sf::st_transform(crs = cCRS)
   }
-
   return(data_sf)
 }
+
