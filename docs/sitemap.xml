@@ -13,6 +13,9 @@
     <loc>https://mathmarecol.github.io/spatialplanr/articles/Climate-smart_Workflow.html</loc>
   </url>
   <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/articles/GlobalFishingWatch_Examples.html</loc>
+  </url>
+  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/articles/MultipleUse_Examples.html</loc>
   </url>
   <url>
@@ -121,6 +124,9 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_featureRep.html</loc>
   </url>
   <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_gfw.html</loc>
+  </url>
+  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_kappaCorrData.html</loc>
   </url>
   <url>
@@ -134,6 +140,9 @@
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_match_names.html</loc>
+  </url>
+  <url>
+    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_MPAs.html</loc>

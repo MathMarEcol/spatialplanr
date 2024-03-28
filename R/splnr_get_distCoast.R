@@ -66,7 +66,7 @@ splnr_get_distCoast <- function(dat_sf, custom_coast = NULL, res = NULL) {
   }
 
   # Convert grid to points (centroids)
-  grid_centroid <- sf::st_centroid(dat_sf)
+  grid_centroid <- sf::st_centroid(sf::st_geometry(dat_sf))
 
   # Get distance matrix
   dist_mat <- sf::st_distance(grid_centroid, coast) %>%

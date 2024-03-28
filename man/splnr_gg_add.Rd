@@ -75,7 +75,7 @@ splnr_gg_add(
 A ggplot object of the plot
 }
 \description{
-This function allows to customise plots in a simple and reproducible way, by giving the option for several inputs that can be included in maps produced with the other functions of this package.It can be combined with the \code{spatialplanr} spatial plotting functions (e.g. \code{\link[=splnr_plot_MPAs]{splnr_plot_MPAs()}}, \code{\link[=splnr_plot_PUs]{splnr_plot_PUs()}}, \code{\link[=splnr_plot_solution]{splnr_plot_solution()}}, \code{\link[=splnr_plot_binFeature]{splnr_plot_binFeature()}}).
+This function allows to customise plots in a simple and reproducible way, by giving the option for several inputs that can be included in maps produced with the other functions of this package.It can be combined with the \code{spatialplanr} spatial plotting functions.
 }
 \examples{
 dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),

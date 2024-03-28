@@ -26,7 +26,7 @@ reference:
 - title: Plotting
   desc: Functions for plotting.
 - contents:
-  - starts_with("splnr_plot_")
+  - starts_with("splnr_plot")
   - splnr_gg_add
 
 - title: Utilities
