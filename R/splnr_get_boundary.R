@@ -43,7 +43,6 @@ splnr_get_boundary <- function(Limits,
     return(Bndry)
   }
 
-
   ## TODO Disable EEZ until offshoredatr publicly online.
   # if (Type == "EEZ"){
   #   Bndry <- offshoredatr::get_area(area_name = Limits) %>%

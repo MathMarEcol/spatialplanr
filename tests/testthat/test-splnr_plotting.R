@@ -92,22 +92,6 @@ testthat::test_that("Correct function output", {
 })
 
 
-testthat::test_that("Correct function output", {
-  expect_s3_class(
-    splnr_plot_MPAs(dat_mpas)
-    , "gg"
-  )
-})
-
-
-
-testthat::test_that("Correct function output", {
-  expect_s3_class(
-    splnr_plot_cost(soln1)
-    , "gg"
-  )
-})
-
 
 
 
@@ -119,13 +103,6 @@ testthat::test_that("Correct function output", {
 })
 
 
-testthat::test_that("Correct function output", {
-  expect_s3_class(
-    splnr_plot_binFeature(dat_species_bin, dat_species_bin$Spp1)
-    , "gg"
-  )
-})
-
 
 testthat::test_that("Correct function output", {
   expect_s3_class(
@@ -134,15 +111,6 @@ testthat::test_that("Correct function output", {
   )
 })
 
-
-
-
-testthat::test_that("Correct function output", {
-  expect_s3_class(
-    splnr_plot_featureNo(dat_species_bin)
-    , "gg"
-  )
-})
 
 
 testthat::test_that("Correct function output", {

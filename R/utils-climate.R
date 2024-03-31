@@ -88,7 +88,7 @@ splnr_climate_priorityArea_preprocess <- function(featuresDF,
   for (i in 1:length(spp)) {
     df1 <- featuresDF %>%
       tibble::as_tibble() %>%
-      dplyr::select(!!rlang::sym(spp[i]), .data$cellID) %>% # Select 1 species at a time
+      dplyr::select(!!rlang::sym(spp[i]), "cellID") %>% # Select 1 species at a time
       dplyr::left_join(metricDF, by = "cellID")
 
     df2 <- imptList %>%
