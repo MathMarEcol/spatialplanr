@@ -1,6 +1,3 @@
-utils::globalVariables("where")
-
-
 
 #' Function for creating polygon
 #'
