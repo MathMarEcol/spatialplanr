@@ -5,13 +5,14 @@
 #' Written by Kilian Barreiro
 #' Written: February 2024
 #'
-#' @param region Region studied (character).
+#' @param region Region studied (character) or a geojson shape to filter raster
 #' @param start_date Start date (waited format : "%Y-%m-%d").
 #' @param end_date End date (waited format : "%Y-%m-%d").
 #' @param temp_res Temporal resolution ("daily","monthly","yearly").
 #' @param spat_res Spatial resolution ("low" for 0.1 degree, "high" for 0.01 degree).
+#' @param region_source source of the region ('eez','mpa', 'rfmo' or 'user_json')
 #' @param key Token for GFW API (see details GlobalFishingWatch_Examples vignette).
-#' @param cCRS The csr to which the sf will be returned (default = "EPSG:4326").
+#' @param cCRS The crs to which the sf will be returned (default = "EPSG:4326").
 #' @param compress Binary operator to compress (aggregate) the data per coordinates (default = FALSE).
 #'
 #'
@@ -42,14 +43,25 @@
 #' cCRS = cCRS, compress = TRUE)
 #'}
 
-splnr_get_gfw <- function(region, start_date, end_date, temp_res,
+splnr_get_gfw <- function(region,
+                          start_date,
+                          end_date,
+                          temp_res,
                           spat_res = "low",
+                          region_source = "eez",
                           key = gfwr::gfw_auth(),
                           cCRS = "EPSG:4326",
                           compress = FALSE) {
-  region_id <- gfwr::get_region_id(region_name = region, region_source = 'eez', key = key)$id[1]
 
-  print(region)
+
+  if (class(region)[1] == "eez"){ # Only process eez. The others have bugs
+    region_id <- gfwr::get_region_id(region_name = region, region_source = region_source, key = key)$id[1]
+    print(region)
+  } else if (class(region[1]) == "rfmo"){
+    region_id = region # gfwr retuns NULL for region ID due to a bug in as.numeric(ID)
+  } else if (class(region[1]) == "geojson"){
+   region_id <- region # Use region as is
+  }
 
   # Convert dates into Date objects
   start_date <- as.Date(start_date, format = "%Y-%m-%d")
@@ -64,7 +76,7 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
       group_by = 'flagAndGearType',
       date_range = date_range,
       region = region_id,
-      region_source = 'eez',
+      region_source = region_source,
       key = key
     )
     return(data)
@@ -114,7 +126,7 @@ splnr_get_gfw <- function(region, start_date, end_date, temp_res,
         dplyr::mutate(Year = .data$`Time Range`) %>%
         sf::st_as_sf(coords = c("Lon", "Lat"), crs ="EPSG:4326")
     } else {
-      # Sinon, séparer la colonne "Time Range" selon le temp_res spécifié
+      # Otherwise, separate the "Time Range" column according to the specified temp_res
       if (temp_res == "monthly") {
         data_sf <- data_df %>%
           tidyr::separate("Time Range", into = c("Year", "Month"), sep = "-", remove = FALSE) %>%

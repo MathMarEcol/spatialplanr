@@ -10,13 +10,14 @@ splnr_get_gfw(
   end_date,
   temp_res,
   spat_res = "low",
+  region_source = "eez",
   key = gfwr::gfw_auth(),
   cCRS = "EPSG:4326",
   compress = FALSE
 )
 }
 \arguments{
-\item{region}{Region studied (character).}
+\item{region}{Region studied (character) or a geojson shape to filter raster}
 
 \item{start_date}{Start date (waited format : "\%Y-\%m-\%d").}
 
@@ -26,9 +27,11 @@ splnr_get_gfw(
 
 \item{spat_res}{Spatial resolution ("low" for 0.1 degree, "high" for 0.01 degree).}
 
+\item{region_source}{source of the region ('eez','mpa', 'rfmo' or 'user_json')}
+
 \item{key}{Token for GFW API (see details GlobalFishingWatch_Examples vignette).}
 
-\item{cCRS}{The csr to which the sf will be returned (default = "EPSG:4326").}
+\item{cCRS}{The crs to which the sf will be returned (default = "EPSG:4326").}
 
 \item{compress}{Binary operator to compress (aggregate) the data per coordinates (default = FALSE).}
 }
