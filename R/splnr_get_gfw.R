@@ -54,11 +54,13 @@ splnr_get_gfw <- function(region,
                           compress = FALSE) {
 
 
-  if (class(region)[1] == "eez"){ # Only process eez. The others have bugs
+
+  if (region_source == "eez"){ # Only process eez. The others have bugs
     region_id <- gfwr::get_region_id(region_name = region, region_source = region_source, key = key)$id[1]
     print(region)
-  } else if (class(region[1]) == "rfmo"){
+  } else if (region_source == "rfmo"){
     region_id = region # gfwr retuns NULL for region ID due to a bug in as.numeric(ID)
+    print(region)
   } else if (class(region[1]) == "geojson"){
    region_id <- region # Use region as is
   }
