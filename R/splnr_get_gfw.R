@@ -61,7 +61,7 @@ splnr_get_gfw <- function(region,
   } else if (region_source == "rfmo"){
     region_id = region # gfwr retuns NULL for region ID due to a bug in as.numeric(ID)
     print(region)
-  } else if (is(region, "geojson")){
+  } else if (methods::is(region, "geojson")){
    region_id <- region # Use region as is
   }
 
