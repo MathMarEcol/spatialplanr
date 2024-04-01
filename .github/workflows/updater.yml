@@ -5,6 +5,11 @@ name: GitHub Actions Version Updater
 #   schedule:
 #   # Automatically run on every Sunday
 #   - cron:  '0 0 * * 0'
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
 
 jobs:
   build:
