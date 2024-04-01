@@ -11,20 +11,18 @@ on:
   pull_request:
     branches: [main, master]
 
-name: Updater
-
 jobs:
   build:
   runs-on: ubuntu-latest
 
 steps:
   - uses: actions/checkout@v3
-with:
-  # [Required] Access token with `workflow` scope.
-  token: ${{ secrets.MME_WORKFLOWSECRET }}
+    with:
+      # [Required] Access token with `workflow` scope.
+      token: ${{ secrets.MME_WORKFLOWSECRET }}
 
-- name: Run GitHub Actions Version Updater
-uses: saadmk11/github-actions-version-updater@v0.8.1
-with:
-  # [Required] Access token with `workflow` scope.
-  token: ${{ secrets.MME_WORKFLOWSECRET }}
+  - name: Run GitHub Actions Version Updater
+    uses: saadmk11/github-actions-version-updater@v0.8.1
+    with:
+      # [Required] Access token with `workflow` scope.
+      token: ${{ secrets.MME_WORKFLOWSECRET }}
