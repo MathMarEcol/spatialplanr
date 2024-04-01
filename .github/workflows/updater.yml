@@ -11,6 +11,8 @@ on:
   pull_request:
     branches: [main, master]
 
+name: Updater
+
 jobs:
   build:
   runs-on: ubuntu-latest
