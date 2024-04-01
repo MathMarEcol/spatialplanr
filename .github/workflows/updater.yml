@@ -18,11 +18,8 @@ jobs:
 steps:
   - uses: actions/checkout@v3
     with:
-      # [Required] Access token with `workflow` scope.
-      token: ${{ secrets.MME_WORKFLOWSECRET }}
-
+      token: ${{ secrets.MME_WORKFLOWSECRET }} # [Required] Access token with `workflow` scope.
   - name: Run GitHub Actions Version Updater
     uses: saadmk11/github-actions-version-updater@v0.8.1
     with:
-      # [Required] Access token with `workflow` scope.
-      token: ${{ secrets.MME_WORKFLOWSECRET }}
+      token: ${{ secrets.MME_WORKFLOWSECRET }} # [Required] Access token with `workflow` scope.
