@@ -10,11 +10,13 @@ name: GitHub Actions Version Updater
 
 jobs:
   build:
-  runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
+
 steps:
   - uses: actions/checkout@v4
     with:
       token: ${{ secrets.MME_WORKFLOWSECRET }} # [Required] Access token with `workflow` scope.
+
   - name: Run GitHub Actions Version Updater
     uses: saadmk11/github-actions-version-updater@v0.8.1
     with:
