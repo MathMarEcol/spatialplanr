@@ -12,20 +12,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-steps:
-  - uses: actions/checkout@v2
-    with:
-      token: ${{ secrets.MME_WORKFLOWSECRET }} # [Required] Access token with `workflow` scope.
+  steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.MME_WORKFLOWSECRET }} # [Required] Access token with `workflow` scope.
 
-  - name: Run GitHub Actions Version Updater
-    uses: saadmk11/github-actions-version-updater@v0.8.1
-    with:
-      token: ${{ secrets.MME_WORKFLOWSECRET }} # [Required] Access token with `workflow` scope.
-      committer_username: 'jaseeverett'
-      committer_email: 'jaseeverett@gmail.com'
-      commit_message: 'Update GitHub Actions'
-      pull_request_title: 'Updater PR'
-      skip_pull_request: 'false'
-      update_version_with: 'release-tag'
-      release_types: "minor, patch"
-      pull_request_labels: "dependencies, automated"
+    - name: Run GitHub Actions Version Updater
+      uses: saadmk11/github-actions-version-updater@v0.8.1
+      with:
+        token: ${{ secrets.MME_WORKFLOWSECRET }} # [Required] Access token with `workflow` scope.
+        committer_username: 'jaseeverett'
+        committer_email: 'jaseeverett@gmail.com'
+        commit_message: 'Update GitHub Actions'
+        pull_request_title: 'Updater PR'
+        skip_pull_request: 'false'
+        update_version_with: 'release-tag'
+        release_types: "minor, patch"
+        pull_request_labels: "dependencies, automated"
