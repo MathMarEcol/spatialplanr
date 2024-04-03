@@ -52,6 +52,9 @@ splnr_gg_add <- function(PUs = NA, colorPUs = "grey80",
                          alphaLI = 0.5, colorLI = "black", legendL = "", labelL = "MPAs",
                          ggtheme = "Default" # splnr_theme
 ) {
+  assertthat::assert_that(inherits(PUs, "sf"),
+                          inherits(Bndry, "sf"))
+
   ggList <- list()
 
   if (inherits(PUs, "sf")) {
@@ -347,6 +350,12 @@ splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
 #' @examples
 #' splnr_plot_PUs(dat_PUs)
 splnr_plot_PUs <- function(PlanUnits) {
+
+  assertthat::assert_that(
+    inherits(PlanUnits, c("sf", "sfc", "sfg")),
+    msg = "PlanUnits must be an object of class 'sf', 'sfc', or 'sfg'."
+  )
+
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = PlanUnits, colour = "grey80", fill = NA, size = 0.1, show.legend = FALSE) +
     ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +

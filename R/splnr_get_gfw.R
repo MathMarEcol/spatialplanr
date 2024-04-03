@@ -53,6 +53,15 @@ splnr_get_gfw <- function(region,
                           cCRS = "EPSG:4326",
                           compress = FALSE) {
 
+  assertthat::assert_that(is.character(region),
+                          inherits(start_date, "character") && !is.na(as.Date(start_date, "%Y-%m-%d")), #is.Date ?
+                          inherits(end_date, "character") && !is.na(as.Date(end_date, "%Y-%m-%d")),
+                          temp_res %in% c("daily", "monthly", "yearly"),
+                          spat_res %in% c("low", "high"),
+                          region_source %in% c('eez','mpa', 'rfmo', 'user_json'),
+                          is.character(key),
+                          is.character(cCRS),
+                          is.logical(compress))
 
 
   if (region_source == "eez"){ # Only process eez. The others have bugs

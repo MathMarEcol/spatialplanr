@@ -35,10 +35,9 @@ splnr_get_planningUnits <- function(Bndry,
                                     Shape = "hexagon",
                                     inverse = FALSE) {
 
-  assertthat::assert_that(CellArea > 0, msg = "CellArea must be greater than zero.")
-  assertthat::assert_that(Shape %in% c("hexagon", "square", "Hexagon", "Square"),
-                          msg = "Shape must be 'hexagon' or 'square'.")
-  assertthat::assert_that(inherits(InnerB, c("sf", "sfc", "sfg")), msg = "InnerB must be an object of class 'sf', 'sfc', or 'sfg'.")
+  assertthat::assert_that(CellArea > 0,
+                          Shape %in% c("hexagon", "square", "Hexagon", "Square"),
+                          inherits(InnerB, c("sf", "sfc", "sfg")))
 
   if (Shape %in% c("hexagon", "Hexagon")) {
     sq <- FALSE
