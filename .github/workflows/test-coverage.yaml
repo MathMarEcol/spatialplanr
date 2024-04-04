@@ -40,7 +40,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get -y install \
-            libcurl4-gnutls-dev coinor-libsymphony-dev coinor-libcbc-dev coinor-libclp-dev \
+            libcurl4-gnutls-dev coinor-libsymphony-dev \
             libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev
           while read -r cmd
           do
