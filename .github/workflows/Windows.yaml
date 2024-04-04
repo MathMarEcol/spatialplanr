@@ -49,11 +49,11 @@ jobs:
       - name: Find PhantomJS path
         id: phantomjs
         run: |
-          echo "name=path::$(Rscript -e 'cat(shinytest:::phantom_paths()[[1]])')" >> $GITHUB_STATE
+          echo "::set-output name=path::$(Rscript -e 'cat(shinytest:::phantom_paths()[[1]])')"
       - name: Cache PhantomJS
         uses: actions/cache@v4
         with:
-          path: ${{ steps.phantomjs.outputs.name }}
+          path: ${{ steps.phantomjs.outputs.path }}
           key: ${{ runner.os }}-phantomjs
           restore-keys: ${{ runner.os }}-phantomjs
       - name: Install PhantomJS
