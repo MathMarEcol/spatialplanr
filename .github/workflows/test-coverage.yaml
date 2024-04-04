@@ -34,6 +34,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          cache-version: 5
           extra-packages: any::covr, any::rcmdcheck, any::remotes, any::lpsymphony
           needs: coverage
 
