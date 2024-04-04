@@ -91,7 +91,7 @@ landmass <- rnaturalearth::ne_countries(
 ## Create Planning Units
 
 ```{r}
-PUs <- splnr_get_planningUnits(Bndry, landmass, PU_size, Shape)
+PUs <- splnr_get_planningUnits(Bndry = Bndry, InnerB = landmass, CellArea = PU_size, Shape = Shape)
 ```
 
 We can check what the PUs look like
