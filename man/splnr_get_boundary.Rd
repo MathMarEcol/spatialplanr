@@ -4,7 +4,7 @@
 \alias{splnr_get_boundary}
 \title{Get the boundary of the planning region.}
 \usage{
-splnr_get_boundary(Limits, Type, res = 1, cCRS = "ESRI:54009")
+splnr_get_boundary(Limits, Type = NULL, res = 1, cCRS = "ESRI:54009")
 }
 \arguments{
 \item{Limits}{The limits of the boundary. This can either be a 4 element numeric named vector (c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)), a vector of ocean/sea names, or a vector of EEZs.,}

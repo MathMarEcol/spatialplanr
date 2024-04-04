@@ -34,6 +34,11 @@ splnr_get_planningUnits <- function(Bndry,
                                     CellArea = 1000,
                                     Shape = "hexagon",
                                     inverse = FALSE) {
+
+  assertthat::assert_that(CellArea > 0,
+                          Shape %in% c("hexagon", "square", "Hexagon", "Square"),
+                          inherits(InnerB, c("sf", "sfc", "sfg")))
+
   if (Shape %in% c("hexagon", "Hexagon")) {
     sq <- FALSE
     diameter <- 2 * sqrt((CellArea * 1e6) / ((3 * sqrt(3) / 2))) * sqrt(3) / 2 # Diameter in m's
