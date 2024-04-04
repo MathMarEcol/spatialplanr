@@ -53,7 +53,7 @@ jobs:
       - name: Cache PhantomJS
         uses: actions/cache@v4
         with:
-          path: ${{ steps.phantomjs.outputs.path }}
+          path: ${{ steps.phantomjs.outputs.name }}
           key: ${{ runner.os }}-phantomjs
           restore-keys: ${{ runner.os }}-phantomjs
       - name: Install PhantomJS
