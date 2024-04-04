@@ -25,7 +25,7 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -40,8 +40,8 @@ jobs:
           sudo apt-get update
           sudo apt-get -y install \
             libcurl4-openssl-dev coinor-libsymphony-dev \
-            libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev
-
+            libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev \
+            libraptor2-dev librasqal3-dev
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck, any::remotes, any::lpsymphony
