@@ -41,7 +41,7 @@ jobs:
           sudo apt-get -y install \
             libcurl4-openssl-dev coinor-libsymphony-dev \
             libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev \
-            libraptor2-dev librasqal3-dev
+            libraptor2-dev librasqal3-dev libcurl4-gnutls-dev
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck, any::remotes, any::lpsymphony
