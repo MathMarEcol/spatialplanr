@@ -36,11 +36,10 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
-
       - name: Install system dependencies
         run: |
-           sudo apt-get update
-           sudo apt-get -y install \
+          sudo apt-get update
+          sudo apt-get -y install \
             libcurl4-gnutls-dev coinor-libsymphony-dev \
             libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev
           while read -r cmd
