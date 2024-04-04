@@ -27,14 +27,10 @@ jobs:
           sudo apt-get -y install \
             libcurl4-gnutls-dev coinor-libsymphony-dev \
             libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev
-          while read -r cmd
-          do
-            eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          cache-version: 5
+          cache-version: 2
           extra-packages: any::covr, any::rcmdcheck, any::remotes, any::lpsymphony
           needs: coverage
 
