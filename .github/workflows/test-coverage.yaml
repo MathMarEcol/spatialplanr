@@ -39,10 +39,10 @@ jobs:
 
       - name: Install system dependencies
         run: |
-          sudo apt-get -y install \
+           sudo apt-get update
+           sudo apt-get -y install \
             libcurl4-gnutls-dev coinor-libsymphony-dev \
-            libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev \
-            libraptor2-dev librasqal3-dev
+            libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev
           while read -r cmd
           do
             eval sudo $cmd
