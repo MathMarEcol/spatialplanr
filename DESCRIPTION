@@ -1,6 +1,6 @@
 Package: spatialplanr
 Title: Help files for prioritzr Spatial Planning projects
-Version: 0.6.1
+Version: 0.6.2
 Authors@R: c(
     person(
       given = "Jason D.",
@@ -55,6 +55,7 @@ Imports:
     ggplot2,
     ggridges,
     irr,
+    lifecycle,
     magrittr,
     methods,
     purrr,

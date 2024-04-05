@@ -3,9 +3,10 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   Climate-smart_Workflow: Climate-smart_Workflow.html
+  GlobalFishingWatch_Examples: GlobalFishingWatch_Examples.html
   MultipleUse_Examples: MultipleUse_Examples.html
   spatialplanr: spatialplanr.html
-last_built: 2024-03-31T02:32Z
+last_built: 2024-04-05T02:21Z
 urls:
   reference: https://mathmarecol.github.io/spatialplanr/reference
   article: https://mathmarecol.github.io/spatialplanr/articles
