@@ -31,6 +31,9 @@
 #' df <- splnr_convert_toPUs(dat, PlanUnits)
 #' }
 splnr_convert_toPUs <- function(dat, PlanUnits) {
+
+  lifecycle::deprecate_warn("0.6.2", "splnr_convert_toPUs()", "spatialgridr::get_data_in_grid()")
+
   ## First deal with whether the input is a file or a dataset
 
   ## LOAD FILES IF NEEDED
