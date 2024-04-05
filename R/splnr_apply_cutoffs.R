@@ -12,6 +12,12 @@
 #' @examples
 #' df <- splnr_apply_cutoffs(dat_species_prob, Cutoffs = 0.5)
 splnr_apply_cutoffs <- function(features, Cutoffs, inverse = FALSE) {
+  assertthat::assert_that(
+    inherits(features, "sf"),
+    is.numeric(Cutoffs) | (is.numeric(Cutoffs) & length(names(Cutoffs)) > 0),
+    is.logical(inverse)
+  )
+
   if (length(Cutoffs) == 1 & length(names(Cutoffs)) == 0) { # Single cutoff for all data if unnamed vector
 
     features <- features %>%
@@ -32,10 +38,6 @@ splnr_apply_cutoffs <- function(features, Cutoffs, inverse = FALSE) {
     }
   } else if (length(Cutoffs) == length(names(Cutoffs))) { # Named vector with values for each column
 
-    # nm <- features %>%
-    #   dplyr::as_tibble() %>%
-    #   dplyr::select(-c(.data$cellID, .data$geometry)) %>%
-    #   names()
 
     nm <- names(Cutoffs) # Testing - We should only be operating on the columns in the Cutoffs vector
 

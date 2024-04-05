@@ -15,9 +15,10 @@ splnr_featureNames(dat, exclude = NA)
 A character vector of names
 }
 \description{
-Returns the feature names
+\code{splnr_featureNames()} allows you to extract the names of features you want to pass to a \code{prioritizr} prioritization.
+It requires an \code{sf} object input and returns the column names of the object excluding any columns you specify in the \code{exclude} argument.
 }
 \examples{
 df <- dat_species_prob \%>\%
- splnr_featureNames(exclude = c("cellID"))
+  splnr_featureNames(exclude = c("cellID"))
 }

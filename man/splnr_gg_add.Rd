@@ -5,18 +5,22 @@
 \title{Add-ons for plotting}
 \usage{
 splnr_gg_add(
-  PUs = NA,
+  PUs = NULL,
   colorPUs = "grey80",
-  Bndry = NA,
+  Bndry = NULL,
   colorBndry = "black",
-  land = NA,
-  colorLand = "grey20",
-  contours = NA,
-  cropLand = NA,
+  overlay = NULL,
+  colorOverlay = "grey20",
+  overlay2 = NULL,
+  colorOverlay2 = "grey30",
+  overlay3 = NULL,
+  colorOverlay3 = "grey40",
+  contours = NULL,
   colorsConts = "black",
-  lockedInAreas = NA,
+  cropOverlay = NULL,
+  lockedInAreas = NULL,
   Type = "Full",
-  colInterest = NA,
+  colInterest = NULL,
   alphaLI = 0.5,
   colorLI = "black",
   legendL = "",
@@ -33,15 +37,23 @@ splnr_gg_add(
 
 \item{colorBndry}{A color value for the outline of the boundary.}
 
-\item{land}{An \code{sf} object of land polygon.}
+\item{overlay}{An \code{sf} object of overlay polygon.}
 
-\item{colorLand}{A color value for landmass.}
+\item{colorOverlay}{A color value for overlay.}
+
+\item{overlay2}{An \code{sf} object of overlay polygon.}
+
+\item{colorOverlay2}{A color value for overlay.}
+
+\item{overlay3}{An \code{sf} object of overlay polygon.}
+
+\item{colorOverlay3}{A color value for overlay.}
 
 \item{contours}{An \code{sf} object of contours that are important to visualise (e.g. outline of sea mounts, ridges; can be produced with terra::as.contour()); up to 6 different contours possible.}
 
-\item{cropLand}{An \code{sf} object with the boundary box used for cropping the land object.}
-
 \item{colorsConts}{A color value for contours.}
+
+\item{cropOverlay}{An \code{sf} object with the boundary box used for cropping the overlay object.}
 
 \item{lockedInAreas}{An \code{sf} object with binary data of locked in areas in the prioritisation (e.g. MPAs).}
 
@@ -63,20 +75,21 @@ splnr_gg_add(
 A ggplot object of the plot
 }
 \description{
-This function allows to customise plots in a simple and reproducible way, by giving the option for several inputs that can be included in maps produced with the other functions of this package.
+This function allows to customise plots in a simple and reproducible way, by giving the option for several inputs that can be included in maps produced with the other functions of this package.It can be combined with the \code{spatialplanr} spatial plotting functions.
 }
 \examples{
 dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-                                   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-                                   cost_column = "Cost") \%>\%
+  features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+  cost_column = "Cost"
+) \%>\%
   prioritizr::add_min_set_objective() \%>\%
   prioritizr::add_relative_targets(0.3) \%>\%
   prioritizr::add_binary_decisions() \%>\%
   prioritizr::add_default_solver(verbose = FALSE)
 
 dat_soln <- dat_problem \%>\%
- prioritizr::solve.ConservationProblem()
+  prioritizr::solve.ConservationProblem()
 
 splnr_plot_solution(dat_soln) +
-  splnr_gg_add(PUs = dat_PUs, ggtheme = TRUE)
+  splnr_gg_add(PUs = dat_PUs, ggtheme = "Default")
 }

@@ -1,8 +1,7 @@
-utils::globalVariables("where")
-
-
 
 #' Function for creating polygon
+#'
+#' `splnr_create_polygon()` allows you to create a polygon based on longitude and latitude coordinates in your input data.
 #'
 #' @param x A named vector of lon/lat coordinates from which to make an `sf` polygon
 #' @param cCRS The CRS to use for the polygon
@@ -21,12 +20,16 @@ splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
     list() %>%
     sf::st_polygon() %>%
     sf::st_sfc(crs = "EPSG:4326") %>%
-    sf::st_transform(crs = cCRS)
+    sf::st_transform(crs = cCRS) %>%
+    sf::st_sf()
 }
 
 
 
 #' Remove NAs from spatial data using nearest neighbour
+#'
+#' `splnr_replace_NAs()` allows you to replace NA values in your data with the value of the nearest neighbor.
+#' The nearest neighbor is determined using `st_nearest_feature()` from the `sf` package.
 #'
 #' @param df An `sf` dataframe
 #' @param vari Variable to remove NAs from
@@ -40,7 +43,6 @@ splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
 #' df <- dat_species_prob %>%
 #'   splnr_replace_NAs("Spp2")
 splnr_replace_NAs <- function(df, vari) {
-
   if (sum(is.na(dplyr::pull(df, !!rlang::sym(vari)))) > 0) { # Check if there are NAs
 
     gp <- df %>%
@@ -54,7 +56,7 @@ splnr_replace_NAs <- function(df, vari) {
       dplyr::mutate(!!rlang::sym(vari) := dplyr::pull(gp$`FALSE`, !!rlang::sym(vari))[d])
 
     df <- rbind(gp$`FALSE`, gp$`TRUE`) %>%
-      dplyr::select(-.data$isna) %>%
+      dplyr::select(-"isna") %>%
       dplyr::arrange(.data$cellID)
   }
   return(df)
@@ -90,6 +92,8 @@ splnr_match_names <- function(dat, nam) {
 
 #' Scale spatial layers to between 0 and 1
 #'
+#' `splnr_scale_01()` allows you to re-scale your data from values that are greater than 1 to values that are between 0 and 1.
+#'
 #' @param dat `sf` dataframe
 #' @param col_name Name of the column to scale
 #'
@@ -124,6 +128,9 @@ splnr_scale_01 <- function(dat, col_name) {
 
 #' Returns the feature names
 #'
+#' `splnr_featureNames()` allows you to extract the names of features you want to pass to a `prioritizr` prioritization.
+#' It requires an `sf` object input and returns the column names of the object excluding any columns you specify in the `exclude` argument.
+#'
 #' @param dat sf dataframe of features
 #' @param exclude Character vector of any columes to exclude
 #'
@@ -132,10 +139,9 @@ splnr_scale_01 <- function(dat, col_name) {
 #'
 #' @examples
 #' df <- dat_species_prob %>%
-#'  splnr_featureNames(exclude = c("cellID"))
-splnr_featureNames <- function(dat, exclude = NA){
-
-  if (is.na(exclude)){
+#'   splnr_featureNames(exclude = c("cellID"))
+splnr_featureNames <- function(dat, exclude = NA) {
+  if (is.na(exclude)) {
     exclude <- c("Cost_", "cellID")
   } else {
     exclude <- c("Cost_", "cellID", exclude)
@@ -168,8 +174,8 @@ splnr_featureNames <- function(dat, exclude = NA){
 #' df_rob <- rnaturalearth::ne_coastline(returnclass = "sf") %>%
 #'   splnr_convert_toPacific()
 splnr_convert_toPacific <- function(df,
-                                  buff = 0,
-                                  cCRS = "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") {
+                                    buff = 0,
+                                    cCRS = "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") {
   # TODO add a warning if df doesn't cross the pacific dateline
 
   longlat <- "EPSG:4326"
@@ -190,12 +196,14 @@ splnr_convert_toPacific <- function(df,
 
   # Modify world dataset to remove overlapping portions with world's polygons
   # TODO add a warning if the input df is not unprojected
-  df_proj <- df %>%
-    sf::st_transform(longlat) %>% # The input needs to be unprojected.
-    sf::st_make_valid() %>% # Just in case....
-    sf::st_difference(polygon) %>%
-    sf::st_transform(crs = cCRS) # Perform transformation on modified version of polygons
-  rm(polygon)
+  suppressWarnings({
+    df_proj <- df %>%
+      sf::st_transform(longlat) %>% # The input needs to be unprojected.
+      sf::st_make_valid() %>% # Just in case....
+      sf::st_difference(polygon) %>%
+      sf::st_transform(crs = cCRS) # Perform transformation on modified version of polygons
+    rm(polygon)
+  })
 
   # # notice that there is a line in the middle of Antarctica. This is because we have
   # # split the map after reprojection. We need to fix this:
@@ -244,6 +252,8 @@ splnr_convert_toPacific <- function(df,
 
 #' Ensure all features are in the same order.
 #'
+#' `splnr_arrangeFeatures()` sorts your data based on longitude and latitude values.
+#'
 #' @param df An sf object to sort by Lon and Lat
 #'
 #' @return A sorted sf object with the additionl cellID column
@@ -253,8 +263,12 @@ splnr_convert_toPacific <- function(df,
 #' df <- dat_species_prob %>%
 #'   splnr_arrangeFeatures()
 splnr_arrangeFeatures <- function(df) {
+
+
   # Sort rows to ensure all features are in the same order.
-  xy <- sf::st_coordinates(sf::st_centroid(df))
+  suppressWarnings(
+    xy <- sf::st_coordinates(sf::st_centroid(df))
+  )
   df <- df[order(xy[, "X"], xy[, "Y"]), ]
 
   df <- df %>%
@@ -265,6 +279,12 @@ splnr_arrangeFeatures <- function(df) {
 
 
 #' Prepare data to plot Cohen's Kappa correlation matrix
+#'
+#' Conservation planning often requires the comparison of the outputs of the solutions of different conservation problems.
+#' One way to compare solutions is by correlating the solutions using Cohen's Kappa.
+#' `splnr_get_kappaCorrData()` takes a list of `prioritizr` solutions to perform the Cohen's Kappa correlation between the solution.
+#' The resulting correlation matrix is symmetrical along the main diagonal and contains Cohen's Kappa of pairwise correlation between the solutions.
+#'  The main diagonal should always be 1. The correlation matrix obtained from this function can be passed onto [splnr_plot_corrMat()].
 #'
 #' @param sol List of `prioritizr` solutions (`sf` objects) with solutions having a column name `solution_1`
 #' @param name_sol Name tags to the different solutions
@@ -277,8 +297,9 @@ splnr_arrangeFeatures <- function(df) {
 #' @examples
 #' # 30 % target for problem/solution 1
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
@@ -288,10 +309,12 @@ splnr_arrangeFeatures <- function(df) {
 #'   prioritizr::solve.ConservationProblem()
 #'
 #' # 50 % target for problem/solution 2
-#' dat_problem2 <- prioritizr::problem(dat_species_bin %>%
-#'                                       dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#' dat_problem2 <- prioritizr::problem(
+#'   dat_species_bin %>%
+#'     dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.5) %>%
 #'   prioritizr::add_binary_decisions() %>%
@@ -304,7 +327,7 @@ splnr_arrangeFeatures <- function(df) {
 splnr_get_kappaCorrData <- function(sol, name_sol) {
   s_list <- lapply(seq_along(sol), function(x) {
     sol[[x]] %>%
-      tibble::as_tibble() %>%
+      tibble::as_tibble(.name_repair = "unique") %>%
       dplyr::select("solution_1") %>%
       stats::setNames(name_sol[[x]])
   })
@@ -322,17 +345,17 @@ splnr_get_kappaCorrData <- function(sol, name_sol) {
   }
 
   s_matrix_all <- do.call(rbind, s_matrix) %>%
-    tibble::as_tibble()
+    tibble::as_tibble(.name_repair = "unique")
   colnames(s_matrix_all)[1:2] <- c("plan1", "plan2")
 
   matrix_final <- s_matrix_all %>%
-    tibble::as_tibble() %>%
+    tibble::as_tibble(.name_repair = "unique") %>%
     dplyr::select(-kappa_pvalue) %>%
-    tidyr::pivot_wider(names_from = .data$plan2, values_from = kappa_corrvalue) %>%
+    tidyr::pivot_wider(names_from = "plan2", values_from = kappa_corrvalue) %>%
     as.matrix()
 
   matrix_x <- s_matrix_all %>%
-    tibble::as_tibble()
+    tibble::as_tibble(.name_repair = "unique")
 
   # creating corrplot
   rownames(matrix_final) <- matrix_final[, 1]
@@ -345,8 +368,11 @@ splnr_get_kappaCorrData <- function(sol, name_sol) {
 
 #' Prepare data to plot Selection Frequency of planning units
 #'
+#' When multiple spatial plans are generated, we are often interested in how many times a planning unit is selected across an array of solutions. This array can either be a `list` of the solutions of different conservation problems or generated through a [portfolio approach]{https://prioritizr.net/reference/portfolios.html} with `prioritizr`.
+#' `splnr_get_selFreq()` allows you to calculate the selection frequency of each planning unit of either a `list` or a `portfolio` of solutions. The resulting `sf` object can be passed for visualization to the `spatialplanr` function [splnr_plot_selectionFreq()].
+#'
 #' @param solnMany List or portfolio of `prioritizr` solutions
-#' @param type Either "portfolio" (`sf` object) with a portfolop produced using `prioritizr` or "list" with a list of solutions
+#' @param type Either "portfolio" (`sf` object) with a portfolio produced using `prioritizr` or "list" with a list of solutions
 #'
 #' @return `selFreq` `sf` object containing a column with the selection frequency (sum over all solutions).
 #' @export
@@ -355,8 +381,9 @@ splnr_get_kappaCorrData <- function(sol, name_sol) {
 #'
 #' @examples
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%

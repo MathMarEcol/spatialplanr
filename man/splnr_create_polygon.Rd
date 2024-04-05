@@ -15,7 +15,7 @@ splnr_create_polygon(x, cCRS = "EPSG:4326")
 An \code{sf} object for the polygon
 }
 \description{
-Function for creating polygon
+\code{splnr_create_polygon()} allows you to create a polygon based on longitude and latitude coordinates in your input data.
 }
 \examples{
 splnr_create_polygon(x = dplyr::tibble(x = seq(-50, 50, by = 1), y = 120) \%>\%

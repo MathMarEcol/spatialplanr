@@ -7,6 +7,9 @@
 splnr_plot_featureRep(
   df,
   category = NA,
+  categoryFeatureCol = NA,
+  renameFeatures = FALSE,
+  namesToReplace = NA,
   nr = 1,
   showTarget = NA,
   plotTitle = ""
@@ -15,7 +18,13 @@ splnr_plot_featureRep(
 \arguments{
 \item{df}{A \code{df} containing the target information (resulting from the splnr_get_featureRep() function)}
 
-\item{category}{A named charcter vector of feature and category for grouping the plot output}
+\item{category}{A named data frame of feature and category for grouping the plot output}
+
+\item{categoryFeatureCol}{A character with the column containing the feature infromation to be plotted if the category data frame does not contain a column named 'feature' that can be matched with the 'df' infromation.}
+
+\item{renameFeatures}{A logical on whether variable names should be used or they should be replaced with common names}
+
+\item{namesToReplace}{A data frame containing the variable name ('nameVariable') and a common name ('nameCommon').}
 
 \item{nr}{Number of rows of the legend}
 
@@ -30,23 +39,25 @@ A ggplot object of the plot
 Plot how well targets are met
 }
 \examples{
-dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-                                   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-                                   cost_column = "Cost") \%>\%
+pDat <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+  features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+  cost_column = "Cost"
+) \%>\%
   prioritizr::add_min_set_objective() \%>\%
   prioritizr::add_relative_targets(0.3) \%>\%
   prioritizr::add_binary_decisions() \%>\%
   prioritizr::add_default_solver(verbose = FALSE)
 
-dat_soln <- dat_problem \%>\%
- prioritizr::solve.ConservationProblem()
+soln <- pDat \%>\%
+  prioritizr::solve.ConservationProblem()
 
 
 # including incidental species coverage
 df <- splnr_get_featureRep(
-  soln = dat_soln,
-  pDat = dat_problem)
+  soln = soln,
+  pDat = pDat
+)
 
-(splnr_plot_featureRep(df, category = category_df))
+(splnr_plot_featureRep(df, category = dat_category))
 
 }

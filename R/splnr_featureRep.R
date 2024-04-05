@@ -1,9 +1,10 @@
-
 #' Prepare data to plot how well targets are met
 #'
 #' @param soln The `prioritizr` solution
 #' @param pDat The `prioritizr` problem
+#' @param targetsDF `data.frame`with list of features under "feature" column and their corresponding targets under "target" column
 #' @param climsmart logical denoting whether spatial planning was done climate-smart (and targets have to be calculated differently)
+#' @param climsmartApproach either 0,1,2 or 3 depending on the climate-smart approach used (0 = None; 1 = Climate Priority Area; 2 = Feature; 3 = Percentile).
 #' @param solnCol Name of the column with the solution
 #'
 #' @return `tbl_df` dataframe
@@ -13,8 +14,9 @@
 #'
 #' @examples
 #' pDat <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
@@ -27,23 +29,23 @@
 #'   soln = soln,
 #'   pDat = pDat
 #' )
-splnr_get_featureRep <- function(soln, pDat,
-                                 climsmart = FALSE, solnCol = "solution_1") {
-
+splnr_get_featureRep <- function(soln, pDat, targetsDF = NA,
+                                 climsmart = FALSE, climsmartApproach = 0, solnCol = "solution_1") {
   s_cols <- pDat$data$features[[1]]
 
   # Get data for features not chosen
   not_selected <- soln %>%
-    dplyr::select(-tidyselect::starts_with(c("Cost", "solution_")),
-                  -tidyselect::any_of(c("metric", "cellID")),
-                  -tidyselect::any_of(s_cols)) %>%
+    dplyr::select(
+      -tidyselect::starts_with(c("Cost", "solution_")),
+      -tidyselect::any_of(c("metric", "cellID")),
+      -tidyselect::any_of(s_cols)
+    ) %>%
     sf::st_drop_geometry()
 
   ns_cols <- not_selected %>%
     colnames()
 
   if (length(ns_cols) > 0) {
-
     ns1 <- not_selected %>%
       dplyr::select(c(tidyselect::all_of(ns_cols))) %>%
       dplyr::mutate(solution = dplyr::pull(soln, !!rlang::sym(solnCol)))
@@ -62,10 +64,10 @@ splnr_get_featureRep <- function(soln, pDat,
       dplyr::summarise(absolute_held = sum(.data$absolute_held))
 
     ns1 <- dplyr::left_join(area_feature, selected_feature, by = "feature") %>%
-      dplyr::mutate(relative_held = (.data$absolute_held / .data$total_amount),
-                    incidental = TRUE)
-
-
+      dplyr::mutate(
+        relative_held = (.data$absolute_held / .data$total_amount),
+        incidental = TRUE
+      )
   } else {
     ns1 <- tibble::tibble(
       feature = "DummyVar",
@@ -85,7 +87,7 @@ splnr_get_featureRep <- function(soln, pDat,
   s1 <- prioritizr::eval_feature_representation_summary(pDat, s1[, "solution"]) %>%
     dplyr::select(-"summary")
 
-  if (climsmart == TRUE) {
+  if (climsmart == TRUE & climsmartApproach == 1) {
     s1 <- s1 %>%
       dplyr::select(-.data$relative_held) %>%
       dplyr::mutate(
@@ -99,21 +101,32 @@ splnr_get_featureRep <- function(soln, pDat,
       ) %>%
       dplyr::ungroup() %>%
       dplyr::mutate(relative_held = .data$absolute_held / .data$total_amount) %>% # Calculate proportion
-      dplyr::select(-.data$total_amount, -.data$absolute_held) # Remove extra columns
+      dplyr::select(-"total_amount", -"absolute_held") %>% # Remove extra columns
+      dplyr::left_join(targetsDF, by = "feature") #%>% # Add targets to df
+    # dplyr::select(-"type")
+
+  } else if (climsmart == TRUE & climsmartApproach == 3) {
+
+    s1 <- s1 %>%
+      dplyr::left_join(targetsDF, by = "feature")
+
+  } else {
+    # Add targets to df
+    s1 <- s1 %>%
+      dplyr::left_join(pDat$targets$data[["targets"]], by = "feature") %>%
+      dplyr::select(-"type")
   }
 
   s1 <- s1 %>%
-    dplyr::mutate(relative_held = .data$relative_held,
-                  incidental = FALSE) %>%
+    dplyr::mutate(
+      relative_held = .data$relative_held,
+      incidental = FALSE
+    ) %>%
     stats::na.omit()
 
-  # Add targets to df
-  s1 <- s1 %>%
-    dplyr::left_join(pDat$targets$data[["targets"]], by = "feature") %>%
-    dplyr::select(-"type")
 
   # Now join the selected and non-selected values
-  if ((length(ns_cols) > 0)){ # Only if there are values in ns1
+  if ((length(ns_cols) > 0)) { # Only if there are values in ns1
     df <- dplyr::bind_rows(s1, ns1)
   } else {
     df <- s1
@@ -134,45 +147,83 @@ splnr_get_featureRep <- function(soln, pDat,
 #' @param df A `df` containing the target information (resulting from the splnr_get_featureRep() function)
 #' @param nr Number of rows of the legend
 #' @param plotTitle A character value for the title of the plot. Can be empty ("").
-#' @param category A named charcter vector of feature and category for grouping the plot output
+#' @param category A named data frame of feature and category for grouping the plot output
+#' @param categoryFeatureCol A character with the column containing the feature infromation to be plotted if the category data frame does not contain a column named 'feature' that can be matched with the 'df' infromation.
+#' @param renameFeatures A logical on whether variable names should be used or they should be replaced with common names
+#' @param namesToReplace A data frame containing the variable name ('nameVariable') and a common name ('nameCommon').
 #' @param showTarget `logical` Should the targets be shown on the bar plot
 #'
 #' @return A ggplot object of the plot
 #' @export
 #'
 #' @examples
-#' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#' pDat <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
-#'dat_soln <- dat_problem %>%
-#'  prioritizr::solve.ConservationProblem()
+#' soln <- pDat %>%
+#'   prioritizr::solve.ConservationProblem()
 #'
 #'
 #' # including incidental species coverage
 #' df <- splnr_get_featureRep(
-#'   soln = dat_soln,
-#'   pDat = dat_problem)
+#'   soln = soln,
+#'   pDat = pDat
+#' )
 #'
-#' (splnr_plot_featureRep(df, category = category_df))
+#' (splnr_plot_featureRep(df, category = dat_category))
 #'
 splnr_plot_featureRep <- function(df, category = NA,
+                                  categoryFeatureCol = NA,
+                                  renameFeatures = FALSE,
+                                  namesToReplace = NA,
                                   nr = 1, showTarget = NA,
                                   plotTitle = "") {
 
-  if (is.data.frame(category)){
+  if(inherits(category, c("df", "tbl_df")) & !("feature" %in% colnames(category))) {
+    if (!(inherits(categoryFeatureCol, "character"))) {
+      cat("There is no column called 'feature' in your category data frame. Please provide a column name that should be renamed to 'feature'.");
+    } else {
+      category <- category %>%
+        dplyr::rename(feature = categoryFeatureCol)
+    }}
+
+  if (renameFeatures == TRUE) {
+
+    assertthat::assert_that(is.data.frame(namesToReplace)) #sanity check
+
+    rpl <- namesToReplace %>%
+      dplyr::filter(.data$nameVariable %in% df$feature) %>%
+      dplyr::select("nameVariable", "nameCommon") %>%
+      tibble::deframe()
+
     df <- df %>%
-      dplyr::left_join(category, by = "feature")
+      dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl))
+
+    category <- category %>%
+      dplyr::mutate(feature = stringr::str_replace_all(.data$feature, rpl))
+
   }
 
-  if(max(df$relative_held < 1)) {
+
+  if (inherits(category, c("df", "tbl_df")) & ("feature" %in% colnames(category))) {
     df <- df %>%
-      dplyr::mutate(relative_held = .data$relative_held * 100,
-                    target = .data$target * 100)
+      dplyr::left_join(category, by = "feature") %>%
+      dplyr::arrange(.data$category, .data$feature) %>%
+      dplyr::mutate(feature = factor(.data$feature, levels = .data$feature))
+  }
+
+  if (max(df$relative_held < 1)) {
+    df <- df %>%
+      dplyr::mutate(
+        relative_held = .data$relative_held * 100,
+        target = .data$target * 100
+      )
   }
 
   uniqueCat <- unique(df$category[!is.na(df$category)])
@@ -212,7 +263,6 @@ splnr_plot_featureRep <- function(df, category = NA,
   }
 
   return(gg_target)
-
 }
 
 
@@ -241,15 +291,16 @@ splnr_plot_featureRep <- function(df, category = NA,
 #' # DISCLAIMER: THIS SOLUTION IS NOT ACTUALLY RUN WITH THESE TARGETS YET
 #'
 #' dat_problem <- prioritizr::problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
-#'                                    features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
-#'                                    cost_column = "Cost") %>%
+#'   features = c("Spp1", "Spp2", "Spp3", "Spp4", "Spp5"),
+#'   cost_column = "Cost"
+#' ) %>%
 #'   prioritizr::add_min_set_objective() %>%
 #'   prioritizr::add_relative_targets(0.3) %>%
 #'   prioritizr::add_binary_decisions() %>%
 #'   prioritizr::add_default_solver(verbose = FALSE)
 #'
-#'dat_soln <- dat_problem %>%
-#'  prioritizr::solve.ConservationProblem()
+#' dat_soln <- dat_problem %>%
+#'   prioritizr::solve.ConservationProblem()
 #'
 #' s1 <- dat_soln %>%
 #'   tibble::as_tibble()
@@ -342,8 +393,8 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
 
     # plotting the bars
     ggplot2::geom_bar(ggplot2::aes(x = as.factor(.data$id), y = .data$value, fill = .data$group),
-                      stat = "identity",
-                      position = "dodge"
+      stat = "identity",
+      position = "dodge"
     ) +
 
     # defining colors of the bars
@@ -359,7 +410,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
       ggplot2::aes(x = .data$end, y = 25, xend = .data$start, yend = 25),
       colour = "grey50",
       alpha = 1,
-      size = 0.5,
+      linewidth = 0.5,
       inherit.aes = FALSE
     ) +
     ggplot2::geom_segment(
@@ -367,7 +418,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
       ggplot2::aes(x = .data$end, y = 50, xend = .data$start, yend = 50),
       colour = "grey50",
       alpha = 1,
-      size = 0.5,
+      linewidth = 0.5,
       inherit.aes = FALSE
     ) +
     ggplot2::geom_segment(
@@ -375,7 +426,7 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
       ggplot2::aes(x = .data$end, y = 75, xend = .data$start, yend = 75),
       colour = "grey50",
       alpha = 1,
-      size = 0.5,
+      linewidth = 0.5,
       inherit.aes = FALSE
     ) +
     ggplot2::geom_segment(
@@ -383,18 +434,18 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
       ggplot2::aes(x = .data$end, y = 100, xend = .data$start, yend = 100),
       colour = "grey50",
       alpha = 1,
-      size = 0.5,
+      linewidth = 0.5,
       inherit.aes = FALSE
     ) +
     ggplot2::annotate("text",
-                      x = rep(max(data$id - 1), 4),
-                      y = c(25, 50, 75, 100),
-                      label = c(25, 50, 75, 100),
-                      color = "grey50",
-                      size = 4,
-                      angle = 0, #-5
-                      fontface = "bold",
-                      hjust = 0.5
+      x = rep(max(data$id - 1), 4),
+      y = c(25, 50, 75, 100),
+      label = c(25, 50, 75, 100),
+      color = "grey50",
+      size = 4,
+      angle = 0, #-5
+      fontface = "bold",
+      hjust = 0.5
     ) +
 
     # setting limitations of actual plot

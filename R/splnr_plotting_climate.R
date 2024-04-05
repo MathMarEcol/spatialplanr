@@ -13,7 +13,6 @@
 #' splnr_plot_climData(df = dat_clim, colInterest = "metric")
 splnr_plot_climData <- function(df, colInterest, colorMap = "C",
                                 plotTitle = " ", legendTitle = "Climate metric") {
-
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = df %>% sf::st_as_sf(), ggplot2::aes(fill = !!rlang::sym(colInterest)), colour = NA) +
     ggplot2::scale_fill_viridis_c(
@@ -74,9 +73,9 @@ splnr_plot_climKernelDensity_Basic <- function(soln) {
     ) +
     ggplot2::theme_bw() +
     ggplot2::theme(
-      axis.ticks = ggplot2::element_line(color = "black", size = 1),
+      axis.ticks = ggplot2::element_line(color = "black", linewidth = 1),
       text = ggplot2::element_text(size = 20),
-      axis.line = ggplot2::element_line(colour = "black", size = 1),
+      axis.line = ggplot2::element_line(colour = "black", linewidth = 1),
       axis.text.y = ggplot2::element_blank(),
       axis.text.x = ggplot2::element_text(size = 20),
       axis.title = ggplot2::element_text(size = 20),
@@ -108,8 +107,8 @@ splnr_plot_climKernelDensity_Basic <- function(soln) {
 #'
 splnr_plot_climKernelDensity_Fancy <- function(solution_list, names,
                                                colorMap = "C",
-                                               legendTitle = expression("\u0394 \u00B0C y"^"-1" * ""),
-                                               xAxisLab = expression("Climate warming (\u0394 \u00B0C y"^"-1" * ")")) {
+                                               legendTitle = expression(" \u00B0C y"^"-1" * ""),
+                                               xAxisLab = expression("Climate warming ( \u00B0C y"^"-1" * ")")) {
   list_sol <- list()
   group_name <- "approach"
 
@@ -117,7 +116,7 @@ splnr_plot_climKernelDensity_Fancy <- function(solution_list, names,
     list_sol[[i]] <- solution_list[[i]] %>%
       tibble::as_tibble() %>%
       dplyr::select("solution_1", "metric") %>%
-      dplyr::rename(!!rlang::sym(names[i]) := .data$metric) %>%
+      dplyr::rename(!!rlang::sym(names[i]) := "metric") %>%
       tidyr::pivot_longer(!!rlang::sym(names[i]), names_to = group_name, values_to = "metric")
   }
 
@@ -147,8 +146,8 @@ splnr_plot_climKernelDensity_Fancy <- function(solution_list, names,
     ggplot2::labs(x = xAxisLab) +
     ggplot2::theme_bw() +
     ggplot2::theme(
-      axis.ticks = ggplot2::element_line(color = "black", size = 1),
-      axis.line = ggplot2::element_line(colour = "black", size = 1),
+      axis.ticks = ggplot2::element_line(color = "black", linewidth = 1),
+      axis.line = ggplot2::element_line(colour = "black", linewidth = 1),
       axis.text = ggplot2::element_text(color = "black", size = 14),
       axis.title.x = ggplot2::element_text(size = 14),
       axis.title.y = ggplot2::element_blank(),
@@ -180,7 +179,7 @@ splnr_plot_climKernelDensity_Fancy <- function(solution_list, names,
 #'   setNames(c("feature")) %>%
 #'   dplyr::mutate(target = 0.3)
 #'
-#' CPA <- splnr_climate_priorityApproach(
+#' CPA <- splnr_climate_priorityAreaApproach(
 #'   featuresDF = dat_species_bin,
 #'   metricDF = dat_clim,
 #'   targetsDF = target,
@@ -188,7 +187,7 @@ splnr_plot_climKernelDensity_Fancy <- function(solution_list, names,
 #'   refugiaTarget = 1
 #' )
 #'
-#' out_sf <- CPA$Features  %>%
+#' out_sf <- CPA$Features %>%
 #'   dplyr::mutate(Cost_None = rep(1, 780)) %>%
 #'   dplyr::left_join(dat_clim %>%
 #'     sf::st_drop_geometry(), by = "cellID")
@@ -206,26 +205,27 @@ splnr_plot_climKernelDensity_Fancy <- function(solution_list, names,
 #'
 #' dat_solnClim <- prioritizr::solve.ConservationProblem(p1)
 #' splnr_plot_climKernelDensity(dat_solnClim, type = "Basic")
-#' splnr_plot_climKernelDensity(soln = list(dat_solnClim),  names = c("Input 1"), type = "Normal")
+#' splnr_plot_climKernelDensity(soln = list(dat_solnClim), names = c("Input 1"), type = "Normal")
 splnr_plot_climKernelDensity <- function(soln,
                                          names = NA,
                                          type = "Normal",
                                          colorMap = "C",
-                                         legendTitle = expression("\u0394 \u00B0C y"^"-1" * ""),
-                                         xAxisLab = expression("Climate warming (\u0394 \u00B0C y"^"-1" * ")")) {
-
+                                         legendTitle = expression(" \u00B0C y"^"-1" * ""),
+                                         xAxisLab = expression("Climate warming ( \u00B0C y"^"-1" * ")")) {
   if (type == "Normal") {
-    if (inherits(soln,"list") == FALSE){
+    if (inherits(soln, "list") == FALSE) {
       cat("Please provide a list of solutions when using this plot type.")
-    } else if (inherits(soln,"list")){
-      ggclimDens <-  splnr_plot_climKernelDensity_Fancy(solution_list = soln, names = names, colorMap = colorMap,
-                                                        legendTitle = legendTitle, xAxisLab = xAxisLab)
+    } else if (inherits(soln, "list")) {
+      ggclimDens <- splnr_plot_climKernelDensity_Fancy(
+        solution_list = soln, names = names, colorMap = colorMap,
+        legendTitle = legendTitle, xAxisLab = xAxisLab
+      )
     }
   } else if (type == "Basic") {
-    if (inherits(soln,"sf") == FALSE){
+    if (inherits(soln, "sf") == FALSE) {
       cat("Please provide an sf object.")
-    } else if (inherits(soln,"sf")){
-      ggclimDens <-  splnr_plot_climKernelDensity_Basic(soln = soln)
+    } else if (inherits(soln, "sf")) {
+      ggclimDens <- splnr_plot_climKernelDensity_Basic(soln = soln)
     }
   }
 }

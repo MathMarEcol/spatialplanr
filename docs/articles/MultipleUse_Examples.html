@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Spatial Planning With Zones">
 <meta property="og:description" content="spatialplanr">
@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">spatialplanr</a>
 
-    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -93,7 +93,8 @@
   addClassKlippyTo("pre.r, pre.markdown");
   addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
 </script><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MathMarEcol/spatialplanr" class="external-link">spatialplanr</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MathMarEcol/spatialplanr" class="external-link">spatialplanr</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -115,9 +116,10 @@ introduction to zones</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Shape</span> <span class="op">&lt;-</span> <span class="st">"Hexagon"</span> <span class="co"># "Shape of PUs</span></span>
 <span><span class="va">PU_size</span> <span class="op">&lt;-</span> <span class="fl">10000</span> <span class="co"># km2</span></span></code></pre></div>
-<p>Choose CRS for analysis</p>
+<p>Choose CRS for analysis. Here we use Mollweide</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cCRS</span> <span class="op">&lt;-</span> <span class="st">"+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"</span> <span class="co"># Mollweide</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cCRS</span> <span class="op">&lt;-</span></span>
+<span>  <span class="st">"+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="analysis-region">Analysis Region<a class="anchor" aria-label="anchor" href="#analysis-region"></a>
@@ -127,8 +129,19 @@ planning units.</p>
 <p>Get the boundary for your chosen region.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Bndry</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_boundary.html">splnr_get_boundary</a></span><span class="op">(</span><span class="va">Region</span>, <span class="va">Type</span>, <span class="va">cCRS</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Reading layer `ne_10m_geography_marine_polys' from data source </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/RtmpnrqHJA/ne_10m_geography_marine_polys.shp' </span></span>
+<span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
+<span><span class="co">#&gt; Simple feature collection with 306 features and 37 fields</span></span>
+<span><span class="co">#&gt; Geometry type: MULTIPOLYGON</span></span>
+<span><span class="co">#&gt; Dimension:     XY</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: -180 ymin: -85.19206 xmax: 179.9999 ymax: 90</span></span>
+<span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
 <span></span>
-<span><span class="va">landmass</span> <span class="op">&lt;-</span> <span class="fu">rnaturalearth</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/rnaturalearth/reference/ne_countries.html" class="external-link">ne_countries</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="st">"medium"</span>, returnclass <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="va">landmass</span> <span class="op">&lt;-</span> <span class="fu">rnaturalearth</span><span class="fu">::</span><span class="fu"><a href="https://docs.ropensci.org/rnaturalearth/reference/ne_countries.html" class="external-link">ne_countries</a></span><span class="op">(</span></span>
+<span>  scale <span class="op">=</span> <span class="st">"medium"</span>,</span>
+<span>  returnclass <span class="op">=</span> <span class="st">"sf"</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">cCRS</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -140,14 +153,17 @@ planning units.</p>
 passed as a list to <code><a href="../reference/splnr_gg_add.html">splnr_gg_add()</a></code> and that can then be
 used for all plots. For example:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">splnr_theme</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>                  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
-<span>                    legend.position <span class="op">=</span> <span class="st">"right"</span>,</span>
-<span>                    legend.direction <span class="op">=</span> <span class="st">"vertical"</span>,</span>
-<span>                    text <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>,</span>
-<span>                    axis.text <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>,</span>
-<span>                    plot.title <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
-<span>                    axis.title <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">splnr_theme</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    legend.position <span class="op">=</span> <span class="st">"right"</span>,</span>
+<span>    legend.direction <span class="op">=</span> <span class="st">"vertical"</span>,</span>
+<span>    text <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>    axis.text <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span>, colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>    plot.title <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">9</span><span class="op">)</span>,</span>
+<span>    axis.title <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="get-the-features">Get the features<a class="anchor" aria-label="anchor" href="#get-the-features"></a>
@@ -158,22 +174,24 @@ the Aquamaps (Aquamaps.org) species distribution models for our study
 area for the following species:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Dict</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span></span>
-<span>  <span class="op">~</span><span class="va">Common</span>, <span class="op">~</span><span class="va">Scientific</span>, <span class="op">~</span><span class="va">Category</span>, <span class="op">~</span><span class="va">Class</span>,</span>
-<span>  <span class="st">"Green sea turtle"</span>, <span class="st">"Chelonia_mydas"</span>, <span class="st">"Reptiles"</span>, <span class="st">"important"</span>,</span>
-<span>  <span class="st">"Loggerhead sea turtle"</span>, <span class="st">"Caretta_caretta"</span>, <span class="st">"Reptiles"</span>, <span class="st">"important"</span>,</span>
-<span>  <span class="st">"Hawksbill sea turtle"</span>, <span class="st">"Eretmochelys_imbricata"</span>, <span class="st">"Reptiles"</span>, <span class="st">"important"</span>,</span>
-<span>  <span class="st">"Olive ridley sea turtle"</span>, <span class="st">"Lepidochelys_olivacea"</span>, <span class="st">"Reptiles"</span>, <span class="st">"important"</span>,</span>
-<span>  <span class="st">"Saltwater crocodile"</span>, <span class="st">"Crocodylus_porosus"</span>, <span class="st">"Reptiles"</span>, <span class="st">"important"</span>,</span>
-<span>  <span class="st">"Humpback whale"</span>, <span class="st">"Megaptera_novaeangliae"</span>, <span class="st">"Mammals"</span>, <span class="st">"representative"</span>,</span>
-<span>  <span class="st">"Common Minke whale"</span>, <span class="st">"Balaenoptera_acutorostrata"</span>, <span class="st">"Mammals"</span>, <span class="st">"representative"</span>,</span>
-<span>  <span class="st">"Dugong"</span>, <span class="st">"Dugong_dugon"</span>, <span class="st">"Mammals"</span>, <span class="st">"important"</span>,</span>
-<span>  <span class="st">"Grey nurse shark"</span>, <span class="st">"Carcharias_taurus"</span>, <span class="st">"Sharks and rays"</span>, <span class="st">"important"</span>,</span>
-<span>  <span class="st">"Tiger shark"</span>, <span class="st">"Galeocerdo_cuvier"</span>, <span class="st">"Sharks and rays"</span>, <span class="st">"important"</span>,</span>
-<span>  <span class="st">"Great hammerhead shark"</span>, <span class="st">"Sphyrna_mokarran"</span>, <span class="st">"Sharks and rays"</span>, <span class="st">"representative"</span>,</span>
-<span>  <span class="st">"Giant oceanic manta ray"</span>, <span class="st">"Mobula_birostris"</span>, <span class="st">"Sharks and rays"</span>, <span class="st">"important"</span>,</span>
-<span>  <span class="st">"Reef manta ray"</span>, <span class="st">"Mobula_alfredi"</span>, <span class="st">"Sharks and rays"</span>, <span class="st">"important"</span>,</span>
-<span>  <span class="st">"Whitetip reef shark"</span>, <span class="st">"Triaenodon_obesus"</span>, <span class="st">"Sharks and rays"</span>, <span class="st">"important"</span>,</span>
-<span>  <span class="st">"Red-footed booby"</span>, <span class="st">"Sula_sula"</span>, <span class="st">"Birds"</span>, <span class="st">"important"</span></span>
+<span>  <span class="op">~</span><span class="va">nameCommon</span>, <span class="op">~</span><span class="va">nameVariable</span>, <span class="op">~</span><span class="va">category</span>, </span>
+<span>  <span class="st">"Green sea turtle"</span>, <span class="st">"Chelonia_mydas"</span>, <span class="st">"Reptiles"</span>, </span>
+<span>  <span class="st">"Loggerhead sea turtle"</span>, <span class="st">"Caretta_caretta"</span>, <span class="st">"Reptiles"</span>, </span>
+<span>  <span class="st">"Hawksbill sea turtle"</span>, <span class="st">"Eretmochelys_imbricata"</span>, <span class="st">"Reptiles"</span>, </span>
+<span>  <span class="st">"Olive ridley sea turtle"</span>, <span class="st">"Lepidochelys_olivacea"</span>, <span class="st">"Reptiles"</span>, </span>
+<span>  <span class="st">"Saltwater crocodile"</span>, <span class="st">"Crocodylus_porosus"</span>, <span class="st">"Reptiles"</span>, </span>
+<span>  <span class="st">"Humpback whale"</span>, <span class="st">"Megaptera_novaeangliae"</span>, <span class="st">"Mammals"</span>, </span>
+<span>  <span class="st">"Common Minke whale"</span>, <span class="st">"Balaenoptera_acutorostrata"</span>,</span>
+<span>  <span class="st">"Mammals"</span>, </span>
+<span>  <span class="st">"Dugong"</span>, <span class="st">"Dugong_dugon"</span>, <span class="st">"Mammals"</span>, </span>
+<span>  <span class="st">"Grey nurse shark"</span>, <span class="st">"Carcharias_taurus"</span>, <span class="st">"Sharks and rays"</span>, </span>
+<span>  <span class="st">"Tiger shark"</span>, <span class="st">"Galeocerdo_cuvier"</span>, <span class="st">"Sharks and rays"</span>, </span>
+<span>  <span class="st">"Great hammerhead shark"</span>, <span class="st">"Sphyrna_mokarran"</span>,</span>
+<span>  <span class="st">"Sharks and rays"</span>, </span>
+<span>  <span class="st">"Giant oceanic manta ray"</span>, <span class="st">"Mobula_birostris"</span>, <span class="st">"Sharks and rays"</span>, </span>
+<span>  <span class="st">"Reef manta ray"</span>, <span class="st">"Mobula_alfredi"</span>, <span class="st">"Sharks and rays"</span>, </span>
+<span>  <span class="st">"Whitetip reef shark"</span>, <span class="st">"Triaenodon_obesus"</span>, <span class="st">"Sharks and rays"</span>,</span>
+<span>  <span class="st">"Red-footed booby"</span>, <span class="st">"Sula_sula"</span>, <span class="st">"Birds"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>These species were not chosen based on their importance for this
 region and only represent an example for visualization purposes.</p>
@@ -188,7 +206,7 @@ species for the conservation plan.</p>
 </h4>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_species_bin</span> <span class="op">&lt;-</span> <span class="va">spDataFiltered</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>   <span class="fu"><a href="../reference/splnr_apply_cutoffs.html">splnr_apply_cutoffs</a></span><span class="op">(</span>Cutoffs <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/splnr_apply_cutoffs.html">splnr_apply_cutoffs</a></span><span class="op">(</span>Cutoffs <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">col_name</span> <span class="op">&lt;-</span> <span class="va">spDataFiltered</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -207,9 +225,11 @@ prioritisation.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">target</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Dict</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                                     <span class="va">col_name</span>,</span>
-<span>                                     <span class="st">"Cost1"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span></span>
+<span>  <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="va">col_name</span>,</span>
+<span>  <span class="st">"Cost1"</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">target</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_binary_decisions.html" class="external-link">add_binary_decisions</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -220,7 +240,7 @@ prioritisation.</p>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">ggSoln</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span><span class="va">s1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>, cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="MultipleUse_Examples_files/figure-html/unnamed-chunk-11-1.png" width="864"></p>
 <p>We can also have a look at how well the set target was met.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
@@ -273,10 +293,14 @@ cost and one cost layer that uses random numbers, the pre-defined
 targets and pass the <code>zones</code>object to the problem formulation
 before solving the conservation problem.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>, <span class="co">#when giving sf input, we need as many cost columns as we have zones</span></span>
-<span>                                                            Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                          <span class="va">z2</span>,</span>
-<span>                          cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span><span class="op">)</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span></span>
+<span>  <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>, <span class="co"># when giving sf input, we need as many cost columns as we have zones</span></span>
+<span>    Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="va">z2</span>,</span>
+<span>  cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">target2</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_binary_decisions.html" class="external-link">add_binary_decisions</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -285,12 +309,19 @@ before solving the conservation problem.</p>
 <span><span class="va">s2</span> <span class="op">&lt;-</span> <span class="va">p2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The solution can be plotted using the function
-<code><a href="../reference/splnr_plot_solutionZones.html">splnr_plot_solutionZones()</a></code> that works identical the
-function <code><a href="../reference/splnr_plot_solution.html">splnr_plot_solution()</a></code> but for the output of a
-solution generated with zones.</p>
+<code><a href="../reference/splnr_plot_solution.html">splnr_plot_solution()</a></code> with the argument <code>zones</code>
+set to <code>TRUE</code>.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">gg_s2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solutionZones.html">splnr_plot_solutionZones</a></span><span class="op">(</span><span class="va">s2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">gg_s2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span></span>
+<span>  <span class="va">s2</span>,</span>
+<span>  zones <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  colorVals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#c6dbef"</span>, <span class="st">"#3182bd"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>  legendLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Not selected"</span>, <span class="st">"Zone 1"</span>, <span class="st">"Zone 2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
+<span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>    cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="MultipleUse_Examples_files/figure-html/unnamed-chunk-16-1.png" width="864"></p>
 <p>We can see that we now how planning units that are not selected, and
 planning units that have either been selected for zone 1 or zone 2.</p>
@@ -307,8 +338,10 @@ data in a zone for reptiles and another zone containing all other taxa
 that are not reptiles, we can specify the following targets:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">targets2b</span> <span class="op">&lt;-</span> <span class="va">Dict</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>targetZ1 <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="va">Category</span> <span class="op">==</span> <span class="st">"Reptiles"</span>, <span class="fl">30</span> <span class="op">/</span> <span class="fl">100</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>                targetZ2 <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="va">Category</span> <span class="op">!=</span> <span class="st">"Reptiles"</span>, <span class="fl">10</span> <span class="op">/</span> <span class="fl">100</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    targetZ1 <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="va">category</span> <span class="op">==</span> <span class="st">"Reptiles"</span>, <span class="fl">30</span> <span class="op">/</span> <span class="fl">100</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>    targetZ2 <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/if_else.html" class="external-link">if_else</a></span><span class="op">(</span><span class="va">category</span> <span class="op">!=</span> <span class="st">"Reptiles"</span>, <span class="fl">10</span> <span class="op">/</span> <span class="fl">100</span>, <span class="fl">0</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="st">"targetZ1"</span>, <span class="st">"targetZ2"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>This sets the target for reptiles in the first zone to 30% and the
@@ -319,10 +352,15 @@ transform the data frame to a matrix at the end.</p>
 <p>We then define the conservation problem in the same way as above and
 solve it.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p2b</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>, <span class="co">#when giving sf input, we need as many cost columns as we have zones</span></span>
-<span>                                                              Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                          <span class="va">z2</span>,</span>
-<span>                          cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span><span class="op">)</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="co"># NOTE: when using sf input, we need as many cost columns as we have zones</span></span>
+<span><span class="va">p2b</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span></span>
+<span>  <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>,</span>
+<span>    Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="va">z2</span>,</span>
+<span>  cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">targets2b</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_binary_decisions.html" class="external-link">add_binary_decisions</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -347,23 +385,23 @@ solve it.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> overall 3                 48            11       0.229  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> overall 4                 44            11       0.25   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> overall 5                 42            11       0.262  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> overall 6                776            44       0.056<span style="text-decoration: underline;">7</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> overall 7                476            25       0.052<span style="text-decoration: underline;">5</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> overall 6                776            43       0.055<span style="text-decoration: underline;">4</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> overall 7                476            26       0.054<span style="text-decoration: underline;">6</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> overall 8                 26             7       0.269  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> overall 9                 44            11       0.25   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> overall 10                72            12       0.167  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> overall 10                72            13       0.181  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> overall 11               794            48       0.060<span style="text-decoration: underline;">5</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> overall 12                40            11       0.275  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> overall 13                40            11       0.275  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> overall 14                50            11       0.22   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> overall 15                26            10       0.385  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> overall 14                50            12       0.24   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> overall 15                26             8       0.308  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> zone 1  1                 22             8       0.364  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> zone 1  2                 22             8       0.364  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> zone 1  3                 24             8       0.333  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> zone 1  4                 22             8       0.364  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> zone 1  5                 21             8       0.381  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">21</span> zone 1  6                388             5       0.012<span style="text-decoration: underline;">9</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">22</span> zone 1  7                238             1       0.004<span style="text-decoration: underline;">20</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">21</span> zone 1  6                388             4       0.010<span style="text-decoration: underline;">3</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">22</span> zone 1  7                238             2       0.008<span style="text-decoration: underline;">40</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">23</span> zone 1  8                 13             5       0.385  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">24</span> zone 1  9                 22             8       0.364  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">25</span> zone 1  10                36             8       0.222  </span></span>
@@ -371,7 +409,7 @@ solve it.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">27</span> zone 1  12                20             8       0.4    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">28</span> zone 1  13                20             8       0.4    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">29</span> zone 1  14                25             8       0.32   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">30</span> zone 1  15                13             7       0.538  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">30</span> zone 1  15                13             6       0.462  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">31</span> zone 2  1                 22             3       0.136  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">32</span> zone 2  2                 22             3       0.136  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">33</span> zone 2  3                 24             3       0.125  </span></span>
@@ -381,12 +419,12 @@ solve it.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">37</span> zone 2  7                238            24       0.101  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">38</span> zone 2  8                 13             2       0.154  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">39</span> zone 2  9                 22             3       0.136  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">40</span> zone 2  10                36             4       0.111  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">40</span> zone 2  10                36             5       0.139  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">41</span> zone 2  11               397            40       0.101  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">42</span> zone 2  12                20             3       0.15   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">43</span> zone 2  13                20             3       0.15   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">44</span> zone 2  14                25             3       0.12   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">45</span> zone 2  15                13             3       0.231</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">44</span> zone 2  14                25             4       0.16   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">45</span> zone 2  15                13             2       0.154</span></span></code></pre></div>
 <p>We can see that each of the 15 features is listed (as a number) for
 an overall summary, summary for zone 1 and summary for zone 2. When
 looking at the <code>relative_held</code> column in the
@@ -407,8 +445,16 @@ suitable habitat of mammals was selected incidentally when selecting
 planning units in this zone by meeting the targets for reptiles. The
 same applies for zone 2. We can also plot the final solution again:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">gg_s2b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solutionZones.html">splnr_plot_solutionZones</a></span><span class="op">(</span><span class="va">s2b</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">gg_s2b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span></span>
+<span>  <span class="va">s2b</span>,</span>
+<span>  zones <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  colorVals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#c6dbef"</span>, <span class="st">"#3182bd"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>  legendLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Not selected"</span>, <span class="st">"Zone 1"</span>, <span class="st">"Zone 2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
+<span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>    cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="MultipleUse_Examples_files/figure-html/unnamed-chunk-21-1.png" width="864"></p>
 </div>
 <div class="section level4">
@@ -421,7 +467,7 @@ zones or between zones.</p>
 <h5 id="within-the-same-zone">Within the same zone<a class="anchor" aria-label="anchor" href="#within-the-same-zone"></a>
 </h5>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">zm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> </span>
+<code class="sourceCode R"><span><span class="va">zm1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">zm1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      [,1] [,2]</span></span>
 <span><span class="co">#&gt; [1,]    1    0</span></span>
@@ -431,10 +477,14 @@ zones, whereas ones introduce a boundary penalty when we define the
 conservation problem. Here, we only introduce penalties within zone 1
 AND zone 2 respectively.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>, <span class="co">#when giving sf input, we need as many cost columns as we have zones</span></span>
-<span>                                                              Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                          <span class="va">z2</span>,</span>
-<span>                          cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span><span class="op">)</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span></span>
+<span>  <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>, <span class="co"># when giving sf input, we need as many cost columns as we have zones</span></span>
+<span>    Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="va">z2</span>,</span>
+<span>  cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_boundary_penalties.html" class="external-link">add_boundary_penalties</a></span><span class="op">(</span><span class="fl">0.5</span>, zone <span class="op">=</span> <span class="va">zm1</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">target2</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -449,18 +499,31 @@ this example, we also set a 10 second time limit for the prioritisation.
 The results show less fragmentation than in the previous solution
 without penalties:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">gg_s3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solutionZones.html">splnr_plot_solutionZones</a></span><span class="op">(</span><span class="va">s3</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">gg_s3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span></span>
+<span>  <span class="va">s3</span>,</span>
+<span>  zones <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  colorVals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#c6dbef"</span>, <span class="st">"#3182bd"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>  legendLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Not selected"</span>, <span class="st">"Zone 1"</span>, <span class="st">"Zone 2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
+<span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>    cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="MultipleUse_Examples_files/figure-html/unnamed-chunk-24-1.png" width="864"></p>
 <p>A boundary penalty can also be introduced to only one zone:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">zm2</span> <span class="op">&lt;-</span> <span class="va">zm1</span></span>
-<span><span class="va">zm2</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">]</span> <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="va">zm2</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span></span>
-<span><span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>, <span class="co">#when giving sf input, we need as many cost columns as we have zones</span></span>
-<span>                                                              Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                          <span class="va">z2</span>,</span>
-<span>                          cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span><span class="op">)</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="co"># NOTE: When using sf input, we need as many cost columns as we have zones</span></span>
+<span><span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span></span>
+<span>  <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>,</span>
+<span>    Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="va">z2</span>,</span>
+<span>  cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_boundary_penalties.html" class="external-link">add_boundary_penalties</a></span><span class="op">(</span><span class="fl">0.5</span>, zone <span class="op">=</span> <span class="va">zm2</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">target2</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -470,8 +533,16 @@ without penalties:</p>
 <span><span class="va">s4</span> <span class="op">&lt;-</span> <span class="va">p4</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="op">(</span><span class="va">gg_s4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solutionZones.html">splnr_plot_solutionZones</a></span><span class="op">(</span><span class="va">s4</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">(</span><span class="va">gg_s4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span></span>
+<span>  <span class="va">s4</span>,</span>
+<span>  zones <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  colorVals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#c6dbef"</span>, <span class="st">"#3182bd"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>  legendLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Not selected"</span>, <span class="st">"Zone 1"</span>, <span class="st">"Zone 2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
+<span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>    cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="MultipleUse_Examples_files/figure-html/unnamed-chunk-25-1.png" width="864"></p>
 </div>
 <div class="section level5">
@@ -480,16 +551,20 @@ without penalties:</p>
 <p>Similarly, penalties can be applied between zones if specified in the
 problem.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">zm3</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span>, ncol <span class="op">=</span> <span class="fl">2</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">zm3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span>, ncol <span class="op">=</span> <span class="fl">2</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">zm3</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      [,1] [,2]</span></span>
 <span><span class="co">#&gt; [1,]    1    1</span></span>
 <span><span class="co">#&gt; [2,]    1    1</span></span></code></pre></div>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p5</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>, <span class="co">#when giving sf input, we need as many cost columns as we have zones</span></span>
-<span>                                                              Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                          <span class="va">z2</span>,</span>
-<span>                          cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span><span class="op">)</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">p5</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span></span>
+<span>  <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>, <span class="co"># when giving sf input, we need as many cost columns as we have zones</span></span>
+<span>    Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="va">z2</span>,</span>
+<span>  cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_boundary_penalties.html" class="external-link">add_boundary_penalties</a></span><span class="op">(</span><span class="fl">0.5</span>, zone <span class="op">=</span> <span class="va">zm3</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">target2</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -499,8 +574,16 @@ problem.</p>
 <span><span class="va">s5</span> <span class="op">&lt;-</span> <span class="va">p5</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="op">(</span><span class="va">gg_s5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solutionZones.html">splnr_plot_solutionZones</a></span><span class="op">(</span><span class="va">s5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">(</span><span class="va">gg_s5</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span></span>
+<span>  <span class="va">s5</span>,</span>
+<span>  zones <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  colorVals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#c6dbef"</span>, <span class="st">"#3182bd"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>  legendLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Not selected"</span>, <span class="st">"Zone 1"</span>, <span class="st">"Zone 2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
+<span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>    cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="MultipleUse_Examples_files/figure-html/unnamed-chunk-27-1.png" width="864"></p>
 </div>
 </div>
@@ -517,8 +600,10 @@ input to be in a specific format, so we first prepare the MPA data.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mpas</span> <span class="op">&lt;-</span> <span class="va">MPAsCoralSea</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>zone <span class="op">=</span> <span class="st">"zone 1"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>pu <span class="op">=</span> <span class="va">cellID</span>,</span>
-<span>                status <span class="op">=</span> <span class="va">wdpa</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
+<span>    pu <span class="op">=</span> <span class="va">cellID</span>,</span>
+<span>    status <span class="op">=</span> <span class="va">wdpa</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">status</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
@@ -527,10 +612,15 @@ give information on the planning unit identifier, rename the column of
 interest to “status” and filter out only the planning units that should
 be locked in.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p6</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>, <span class="co">#when giving sf input, we need as many cost columns as we have zones</span></span>
-<span>                                                              Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                          <span class="va">z2</span>,</span>
-<span>                          cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span><span class="op">)</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="co"># NOTE: When using sf input, we need as many cost columns as we have zones</span></span>
+<span><span class="va">p6</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span></span>
+<span>  <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>,</span>
+<span>    Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="va">z2</span>,</span>
+<span>  cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_manual_locked_constraints.html" class="external-link">add_manual_locked_constraints</a></span><span class="op">(</span><span class="va">mpas</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">target2</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -541,10 +631,18 @@ be locked in.</p>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The results can the be visualized again:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">gg_s6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solutionZones.html">splnr_plot_solutionZones</a></span><span class="op">(</span><span class="va">s6</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>,</span>
-<span>           lockedInAreas <span class="op">=</span> <span class="va">MPAsCoralSea</span>, colInterest <span class="op">=</span> <span class="va">MPAsCoralSea</span><span class="op">$</span><span class="va">wdpa</span>, Type <span class="op">=</span> <span class="st">"Full"</span>,colorLI <span class="op">=</span> <span class="st">"red"</span>, alphaLI <span class="op">=</span> <span class="fl">0.2</span>,</span>
-<span>           land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span>,labelL <span class="op">=</span> <span class="st">"Current MPAs"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">gg_s6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span></span>
+<span>  <span class="va">s6</span>,</span>
+<span>  zones <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  colorVals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#c6dbef"</span>, <span class="st">"#3182bd"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>  legendLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Not selected"</span>, <span class="st">"Zone 1"</span>, <span class="st">"Zone 2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
+<span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>,</span>
+<span>    lockedInAreas <span class="op">=</span> <span class="va">MPAsCoralSea</span>, colInterest <span class="op">=</span> <span class="va">MPAsCoralSea</span><span class="op">$</span><span class="va">wdpa</span>,</span>
+<span>    Type <span class="op">=</span> <span class="st">"Full"</span>, colorLI <span class="op">=</span> <span class="st">"red"</span>, alphaLI <span class="op">=</span> <span class="fl">0.2</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>    cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span>, labelL <span class="op">=</span> <span class="st">"Current MPAs"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="MultipleUse_Examples_files/figure-html/unnamed-chunk-30-1.png" width="864"></p>
 </div>
 <div class="section level4">
@@ -562,10 +660,15 @@ met (shortfall).</p>
 <p>Zones also works with objective functions other than the minimum set
 objective function.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p7</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>, <span class="co">#when giving sf input, we need as many cost columns as we have zones</span></span>
-<span>                                                              Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                          <span class="va">z2</span>,</span>
-<span>                          cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span><span class="op">)</span><span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="co"># NOTE: When using sf input, we need as many cost columns as we have zones</span></span>
+<span><span class="va">p7</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span></span>
+<span>  <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>,</span>
+<span>    Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="va">z2</span>,</span>
+<span>  cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_shortfall_objective.html" class="external-link">add_min_shortfall_objective</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">8</span>, <span class="fl">0.3</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">target2</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_binary_decisions.html" class="external-link">add_binary_decisions</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -577,8 +680,16 @@ output again after solving the conservation problem.</p>
 <code class="sourceCode R"><span><span class="va">s7</span> <span class="op">&lt;-</span> <span class="va">p7</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="op">(</span><span class="va">gg_s7</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solutionZones.html">splnr_plot_solutionZones</a></span><span class="op">(</span><span class="va">s7</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">(</span><span class="va">gg_s7</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span></span>
+<span>  <span class="va">s7</span>,</span>
+<span>  zones <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  colorVals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#c6dbef"</span>, <span class="st">"#3182bd"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>  legendLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Not selected"</span>, <span class="st">"Zone 1"</span>, <span class="st">"Zone 2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
+<span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>    cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="MultipleUse_Examples_files/figure-html/unnamed-chunk-32-1.png" width="864"></p>
 </div>
 <div class="section level4">
@@ -600,16 +711,23 @@ layer with values ranging from 0 to 1.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">target8</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">Dict</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">costRandom</span> <span class="op">&lt;-</span> <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>CostR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="va">set.seed</span> <span class="op">&lt;-</span> <span class="fl">10</span> <span class="co"># Add seed so the problem below solves each time</span></span>
+<span></span>
+<span><span class="va">costRandom</span> <span class="op">&lt;-</span> <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>CostR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="st">"CostR"</span><span class="op">)</span></span></code></pre></div>
 <p>We then define and solve our conservation problem:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p8</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                                     <span class="va">col_name</span>,</span>
-<span>                                     <span class="st">"Cost1"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">p8</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span></span>
+<span>  <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="va">col_name</span>,</span>
+<span>  <span class="st">"Cost1"</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">target8</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_linear_constraints.html" class="external-link">add_linear_constraints</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">costRandom</span><span class="op">$</span><span class="va">CostR</span><span class="op">)</span><span class="op">*</span><span class="fl">0.1</span>, sense <span class="op">=</span> <span class="st">"&lt;="</span>, <span class="va">costRandom</span><span class="op">$</span><span class="va">CostR</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_linear_constraints.html" class="external-link">add_linear_constraints</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">costRandom</span><span class="op">$</span><span class="va">CostR</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.1</span>,</span>
+<span>    sense <span class="op">=</span> <span class="st">"&lt;="</span>, <span class="va">costRandom</span><span class="op">$</span><span class="va">CostR</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_binary_decisions.html" class="external-link">add_binary_decisions</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_default_solver.html" class="external-link">add_default_solver</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
@@ -625,7 +743,7 @@ cost of all planning units in <code>costRandom$CostR</code>.</p>
 <p>We can visualise the solution again:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">gg_s8</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span><span class="va">s8</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, land <span class="op">=</span> <span class="va">landmass</span>, cropLand <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span>PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>, cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="MultipleUse_Examples_files/figure-html/unnamed-chunk-35-1.png" width="864"></p>
 <p><strong>NOTE:</strong> We can also use multiple linear constraints in
 the same plan, however, this might require a normalization of the input
@@ -634,13 +752,326 @@ of the thresholds, so <code>prioritizr</code> is still able to solve the
 problem.</p>
 </div>
 <div class="section level4">
+<h4 id="common-targets-across-zones">Common targets across zones<a class="anchor" aria-label="anchor" href="#common-targets-across-zones"></a>
+</h4>
+<p>Sometimes it might be required to meet a (common) conservation target
+across multiple zones, so several zones contribute to reaching the
+target. For this, we need to define a target across zones (here: 30% of
+all features across zones):</p>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">targetAcross</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>  feature <span class="op">=</span> <span class="va">col_name</span>,</span>
+<span>  zone <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"zone1"</span>, <span class="st">"zone2"</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">col_name</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  target <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.3</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">col_name</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"relative"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">col_name</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>We then need to bring our data in a specific format that requires us
+to have an individual column for a feature in a specific zone, so if we
+have <code>spp1</code> and two zones (<code>zone1</code> an
+<code>zone2</code>), then we have to have two separate columns of the
+input data: <code>spp1_zone1</code> and <code>spp1_zone2</code>. The
+species names and zone names have to be exactly those specified in the
+<code>zones()</code> object and have to separated by a
+<code>_</code>.</p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">datSpecZone1</span> <span class="op">&lt;-</span> <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html" class="external-link">rename_at</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="op">-</span><span class="va">cellID</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"_zone1"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">featuresZone1</span> <span class="op">&lt;-</span> <span class="va">datSpecZone1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="st">"cellID"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">datSpecZone2</span> <span class="op">&lt;-</span> <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html" class="external-link">rename_at</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="op">-</span><span class="va">cellID</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"_zone2"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">featuresZone2</span> <span class="op">&lt;-</span> <span class="va">datSpecZone2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="st">"cellID"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>We also extract the new feature names and then create the
+<code>zones</code> object, before joining the two newly created data
+frames to an file that will be used in the prioriztisation.</p>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">z10</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/zones.html" class="external-link">zones</a></span><span class="op">(</span></span>
+<span>  <span class="va">featuresZone1</span>,</span>
+<span>  <span class="va">featuresZone2</span>,</span>
+<span>  zone_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"zone1"</span>, <span class="st">"zone2"</span><span class="op">)</span>,</span>
+<span>  feature_names <span class="op">=</span> <span class="va">col_name</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">out_sf</span> <span class="op">&lt;-</span> <span class="va">datSpecZone1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">datSpecZone2</span>, by <span class="op">=</span> <span class="st">"cellID"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>geometry <span class="op">=</span> <span class="va">datEx_species_bin</span><span class="op">$</span><span class="va">geometry</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>,</span>
+<span>    Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="fl">300</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p>We can see here that we defined to (random) cost layers with the cost
+layer for <code>zone2</code> being three times as costly as for
+<code>zone1</code>.</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p10</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">out_sf</span>,</span>
+<span>  <span class="va">z10</span>,</span>
+<span>  cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_manual_targets.html" class="external-link">add_manual_targets</a></span><span class="op">(</span><span class="va">targetAcross</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_binary_decisions.html" class="external-link">add_binary_decisions</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_default_solver.html" class="external-link">add_default_solver</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">s10</span> <span class="op">&lt;-</span> <span class="va">p10</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>After setting up and solving the conservation problem, we can have a
+look at the resulting solution and how well the targets are met.</p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">s10F</span> <span class="op">&lt;-</span> <span class="va">s10</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"solution"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">r10</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/eval_feature_representation_summary.html" class="external-link">eval_feature_representation_summary</a></span><span class="op">(</span><span class="va">p10</span>, <span class="va">s10F</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">r10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 45 × 5</span></span></span>
+<span><span class="co">#&gt;    summary feature                    total_amount absolute_held relative_held</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> overall Chelonia_mydas                       44            14         0.318</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> overall Caretta_caretta                      44            14         0.318</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> overall Eretmochelys_imbricata               48            15         0.312</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> overall Lepidochelys_olivacea                44            14         0.318</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> overall Crocodylus_porosus                   42            14         0.333</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> overall Megaptera_novaeangliae              776           234         0.302</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> overall Balaenoptera_acutorostrata          476           146         0.307</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> overall Dugong_dugon                         26            10         0.385</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> overall Carcharias_taurus                    44            14         0.318</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> overall Galeocerdo_cuvier                    72            25         0.347</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 35 more rows</span></span></span></code></pre></div>
+<p>The overall summary shows that every feature’s suitable habitat was
+represented by at least 30% which was the combined target we had set.
+However, we can see that features from <code>zone1</code> were a lot
+more frequently selected than <code>zone2</code> because
+<code>zone2</code> is three times as costly.</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">gg_s10</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span><span class="va">s10</span>,</span>
+<span>  zones <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  colorVals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#c6dbef"</span>, <span class="st">"#3182bd"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>  legendLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Not selected"</span>, <span class="st">"Zone 1"</span>, <span class="st">"Zone 2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
+<span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>    cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="MultipleUse_Examples_files/figure-html/unnamed-chunk-41-1.png" width="864"></p>
+<p>The plot also reflects the observation above that PUs were more
+frequently selected in <code>zone1</code>. What if we wanted to
+constrain this, so that <code>zone1</code> is less often selected and
+<code>zone2</code> more often?</p>
+</div>
+<div class="section level4">
+<h4 id="targets-across-zones-with-linear-constraints">Targets across zones with linear constraints<a class="anchor" aria-label="anchor" href="#targets-across-zones-with-linear-constraints"></a>
+</h4>
+<p>We can include linear constraints for <code>zone1</code> above, so
+that its area does not exceed 30% of the whole area. For this we need to
+create a matrix that contains the data for the constraint that we want
+to include. Although we only want to put the linear constraint on
+<code>zone1</code>, <code>prioritizr</code> still requires the matrix to
+have as many columns as there are zones. Thus, we set the area cost to
+<code>1</code> for <code>zone1</code> where we want to have the
+constraint and to all <code>0</code> in <code>zone2</code> where we do
+not want to introduce a linear constraint.</p>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">CostArea</span> <span class="op">&lt;-</span> <span class="va">out_sf</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    areaCostZone1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">397</span><span class="op">)</span>,</span>
+<span>    areaCostZone2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">397</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="st">"areaCostZone1"</span>, <span class="st">"areaCostZone2"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>We then define the conservation problem and add a linear constraint
+for 30% of the area.</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p11</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">out_sf</span>,</span>
+<span>  <span class="va">z10</span>,</span>
+<span>  cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_linear_constraints.html" class="external-link">add_linear_constraints</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">CostArea</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="fl">0.3</span>,</span>
+<span>    sense <span class="op">=</span> <span class="st">"&lt;="</span>, <span class="va">CostArea</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_manual_targets.html" class="external-link">add_manual_targets</a></span><span class="op">(</span><span class="va">targetAcross</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_binary_decisions.html" class="external-link">add_binary_decisions</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_default_solver.html" class="external-link">add_default_solver</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">s11</span> <span class="op">&lt;-</span> <span class="va">p11</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">s11F</span> <span class="op">&lt;-</span> <span class="va">s11</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"solution"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">r11</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/eval_feature_representation_summary.html" class="external-link">eval_feature_representation_summary</a></span><span class="op">(</span><span class="va">p11</span>, <span class="va">s11F</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">r11</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 45 × 5</span></span></span>
+<span><span class="co">#&gt;    summary feature                    total_amount absolute_held relative_held</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> overall Chelonia_mydas                       44            14         0.318</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> overall Caretta_caretta                      44            14         0.318</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> overall Eretmochelys_imbricata               48            15         0.312</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> overall Lepidochelys_olivacea                44            14         0.318</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> overall Crocodylus_porosus                   42            14         0.333</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> overall Megaptera_novaeangliae              776           234         0.302</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> overall Balaenoptera_acutorostrata          476           144         0.303</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> overall Dugong_dugon                         26             9         0.346</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> overall Carcharias_taurus                    44            14         0.318</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> overall Galeocerdo_cuvier                    72            24         0.333</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 35 more rows</span></span></span></code></pre></div>
+<p>The selected planning units are now more equally distributed across
+zones, which is also observable in the plot:</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">gg_s11</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span></span>
+<span>  <span class="va">s11</span>,</span>
+<span>  zones <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  colorVals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#c6dbef"</span>, <span class="st">"#3182bd"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>  legendLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Not selected"</span>, <span class="st">"Zone 1"</span>, <span class="st">"Zone 2"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
+<span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>    cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="MultipleUse_Examples_files/figure-html/unnamed-chunk-45-1.png" width="864"></p>
+<p>However, we also expect the cost for the spatial plan to be higher
+than the previous one.</p>
+</div>
+<div class="section level4">
+<h4 id="targets-across-some-but-not-all-zones">Targets across some (but not all) zones<a class="anchor" aria-label="anchor" href="#targets-across-some-but-not-all-zones"></a>
+</h4>
+<p>For this example, we want an target of 30% of all suitable reptile
+habitat for zone 1 and zone 2. Additionally, we set a target of 20% in
+zone 2 for marine mammals and a target of 5% for sharks and rays in zone
+3.</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">targetAcrossSome</span> <span class="op">&lt;-</span> <span class="va">Dict</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    target <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="va">category</span> <span class="op">==</span> <span class="st">"Reptiles"</span> <span class="op">~</span> <span class="fl">30</span> <span class="op">/</span> <span class="fl">100</span>,</span>
+<span>      <span class="va">category</span> <span class="op">==</span> <span class="st">"Mammals"</span> <span class="op">~</span> <span class="fl">10</span> <span class="op">/</span> <span class="fl">100</span>,</span>
+<span>      <span class="va">category</span> <span class="op">==</span> <span class="st">"Sharks and rays"</span> <span class="op">~</span> <span class="fl">5</span> <span class="op">/</span> <span class="fl">100</span>,</span>
+<span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="fl">0</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    zone <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html" class="external-link">case_when</a></span><span class="op">(</span></span>
+<span>      <span class="va">category</span> <span class="op">==</span> <span class="st">"Reptiles"</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"zone1"</span>, <span class="st">"zone2"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      <span class="va">category</span> <span class="op">==</span> <span class="st">"Mammals"</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"zone2"</span><span class="op">)</span>,</span>
+<span>      <span class="va">category</span> <span class="op">==</span> <span class="st">"Sharks and rays"</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"zone3"</span><span class="op">)</span>,</span>
+<span>      <span class="cn">TRUE</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"zone1"</span>, <span class="st">"zone2"</span>, <span class="st">"zone3"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"relative"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">col_name</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>feature <span class="op">=</span> <span class="st">"nameVariable"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="st">"category"</span>, <span class="op">-</span><span class="st">"nameCommon"</span><span class="op">)</span></span></code></pre></div>
+<p>We then create a zones object for three different zones:</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">datSpecZone1</span> <span class="op">&lt;-</span> <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html" class="external-link">rename_at</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="op">-</span><span class="va">cellID</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"_zone1"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">featuresZone1</span> <span class="op">&lt;-</span> <span class="va">datSpecZone1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="st">"cellID"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">datSpecZone2</span> <span class="op">&lt;-</span> <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html" class="external-link">rename_at</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="op">-</span><span class="va">cellID</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"_zone2"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">featuresZone2</span> <span class="op">&lt;-</span> <span class="va">datSpecZone2</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="st">"cellID"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">datSpecZone3</span> <span class="op">&lt;-</span> <span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html" class="external-link">rename_at</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="op">-</span><span class="va">cellID</span><span class="op">)</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">.x</span>, <span class="st">"_zone3"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">featuresZone3</span> <span class="op">&lt;-</span> <span class="va">datSpecZone3</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="st">"cellID"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">z12</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/zones.html" class="external-link">zones</a></span><span class="op">(</span></span>
+<span>  <span class="va">featuresZone1</span>,</span>
+<span>  <span class="va">featuresZone2</span>,</span>
+<span>  <span class="va">featuresZone3</span>,</span>
+<span>  zone_names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"zone1"</span>, <span class="st">"zone2"</span>, <span class="st">"zone3"</span><span class="op">)</span>,</span>
+<span>  feature_names <span class="op">=</span> <span class="va">col_name</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>We then create a joint <code>sf</code> object of all zones and their
+respective costs.</p>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># NOTE: When using sf input, we need as many cost columns as we have zones</span></span>
+<span><span class="va">out_sf</span> <span class="op">&lt;-</span> <span class="va">datSpecZone1</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">datSpecZone2</span>, by <span class="op">=</span> <span class="st">"cellID"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">datSpecZone3</span>, by <span class="op">=</span> <span class="st">"cellID"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>geometry <span class="op">=</span> <span class="va">datEx_species_bin</span><span class="op">$</span><span class="va">geometry</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    Cost1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span>,</span>
+<span>    Cost2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="fl">300</span>,</span>
+<span>    Cost3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">*</span> <span class="fl">200</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p12</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">out_sf</span>,</span>
+<span>  <span class="va">z12</span>,</span>
+<span>  cost_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cost1"</span>, <span class="st">"Cost2"</span>, <span class="st">"Cost3"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_manual_targets.html" class="external-link">add_manual_targets</a></span><span class="op">(</span><span class="va">targetAcrossSome</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_binary_decisions.html" class="external-link">add_binary_decisions</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_default_solver.html" class="external-link">add_default_solver</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">s12</span> <span class="op">&lt;-</span> <span class="va">p12</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">s12F</span> <span class="op">&lt;-</span> <span class="va">s12</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"solution"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">r12</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/eval_feature_representation_summary.html" class="external-link">eval_feature_representation_summary</a></span><span class="op">(</span><span class="va">p12</span>, <span class="va">s12F</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">r12</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 60 × 5</span></span></span>
+<span><span class="co">#&gt;    summary feature                    total_amount absolute_held relative_held</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> overall Chelonia_mydas                       66            16        0.242 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> overall Caretta_caretta                      66            16        0.242 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> overall Eretmochelys_imbricata               72            17        0.236 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> overall Lepidochelys_olivacea                66            16        0.242 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> overall Crocodylus_porosus                   63            16        0.254 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> overall Megaptera_novaeangliae             <span style="text-decoration: underline;">1</span>164            64        0.055<span style="text-decoration: underline;">0</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> overall Balaenoptera_acutorostrata          714            44        0.061<span style="text-decoration: underline;">6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> overall Dugong_dugon                         39             8        0.205 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> overall Carcharias_taurus                    66            16        0.242 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> overall Galeocerdo_cuvier                   108            19        0.176 </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 50 more rows</span></span></span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">gg_s12</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span></span>
+<span>  <span class="va">s12</span>,</span>
+<span>  zones <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  colorVals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#c6dbef"</span>, <span class="st">"#3182bd"</span>, <span class="st">"navyblue"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>  legendLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Not selected"</span>, <span class="st">"Zone 1"</span>, <span class="st">"Zone 2"</span>, <span class="st">"Zone3"</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
+<span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>    cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="MultipleUse_Examples_files/figure-html/unnamed-chunk-51-1.png" width="864"></p>
+</div>
+<div class="section level4">
 <h4 id="next-steps">Next steps<a class="anchor" aria-label="anchor" href="#next-steps"></a>
 </h4>
 <div class="section level5">
 <h5 id="short-term">Short-term<a class="anchor" aria-label="anchor" href="#short-term"></a>
 </h5>
 <ul>
-<li>Add linear constraints to individual zones</li>
 <li>Test for run time of zones compared to a normal prioritisation</li>
 <li>Communicate zones outcomes effectively (e.g. targets, cost overlay
 etc.)</li>
@@ -659,8 +1090,7 @@ features)</li>
 <li>Look into some commonly used data sets for multiple use approaches
 and think about zone-specific costs, constraints, targets etc.</li>
 <li>Define our (and Waitt’s) understanding of what multiple-use is and
-how we want to implement it (can differ now and in the future)
-<ul>
+how we want to implement it (can differ now and in the future)</li>
 <li>
 <a href="https://muses-project.com/" class="external-link">EU Horizon 2020
 MUSES-project</a>: multiple use/multi-use is “the joint use of resources
@@ -677,8 +1107,6 @@ resources are being shared.”</li>
 <a href="https://doi.org/10.3389/fmars.2019.00165" class="external-link">Schupp et
 al. 2019</a>: distinguishes between for different types of multi-uses
 (one of which is co-location)</li>
-</ul>
-</li>
 </ul>
 <div class="figure">
 <img src="Schupp2019TypesMultipleUse.png" alt="Types of multiple use in MSP according to [Schupp et al. 2019](https://doi.org/10.3389/fmars.2019.00165)" width="90%"><p class="caption">
