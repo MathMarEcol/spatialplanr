@@ -19,6 +19,19 @@
 #' df <- splnr_convert_regionalisation(dat, PUs)
 #' }
 splnr_convert_regionalisation <- function(dat, PUs, cat_name = NA, col_name = NA) {
+
+  assertthat::assert_that(
+    inherits(dat, c("SpatRaster", "sf")),
+    inherits(PUs, "sf"))
+
+  if (!is.na(cat_name)) {
+    assertthat::assert_that(is.character(cat_name),
+      "cat_name must be a character vector.")}
+
+  if (!is.na(col_name)) {
+    assertthat::assert_that(is.character(col_name),
+      "col_name must be a character vector.")}
+
   if (stringr::str_detect(class(dat)[1], "SpatRaster") == TRUE) { # Rasters
 
     col_name <- names(dat) # Name of layer

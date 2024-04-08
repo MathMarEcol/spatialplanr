@@ -264,7 +264,8 @@ splnr_convert_toPacific <- function(df,
 #'   splnr_arrangeFeatures()
 splnr_arrangeFeatures <- function(df) {
 
-
+  assertthat::assert_that(inherits(df, "sf"),
+                          msg = "Input must be an sf object.")
   # Sort rows to ensure all features are in the same order.
   suppressWarnings(
     xy <- sf::st_coordinates(sf::st_centroid(df))

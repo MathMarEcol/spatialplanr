@@ -356,7 +356,7 @@ importance scores
 #### Visualization of the solution
 
 ```{r}
-(ggSoln <- splnr_plot_solution(datEx_soln) +
+(ggSoln <- splnr_plot(datEx_soln, col_names = "solution_1") +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,
     cropOverlay = PUs, ggtheme = splnr_theme
