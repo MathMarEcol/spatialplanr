@@ -23,6 +23,16 @@ splnr_get_MPAs <- function(PlanUnits,
                            Status = c("Designated", "Established", "Inscribed"),
                            Desig = c("National", "Regional", "International", "Not Applicable"),
                            Category = c("Ia", "Ib", "II", "III", "IV")) {
+
+  assertthat::assert_that(
+    inherits(PlanUnits, "sf"),
+    is.character(Countries),
+    all(Countries %in% wdpar::wdpa_countries()),
+    all(Status %in% c("Designated", "Established", "Inscribed")),
+    all(Desig %in% c("National", "Regional", "International", "Not Applicable")),
+    all(Category %in% c("Ia", "Ib", "II", "III", "IV"))
+  )
+
   wdpa_data <- Countries %>%
     lapply(wdpar::wdpa_fetch,
       wait = TRUE,

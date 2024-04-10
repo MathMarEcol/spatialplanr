@@ -43,16 +43,12 @@
 
 splnr_get_distCoast <- function(dat_sf, custom_coast = NULL, res = NULL) {
 
-  # Class object check
-  if (!inherits(dat_sf, "sf")) {
-    stop("Input data should be an 'sf' spatial object.")
-  }
-
-  # CRS check
-  if (is.null(sf::st_crs(dat_sf))) {
-    stop("The sf spatial object must have a defined CRS.")
-  }
-
+  assertthat::assert_that(
+    inherits(dat_sf, "sf"),
+    !is.null(sf::st_crs(dat_sf)),
+    is.null(custom_coast) || inherits(custom_coast, "sf"),
+    is.null(res) || res %in% c("small", "medium", "large")
+  )
 
   # Load coast
   if (is.null(custom_coast)) {

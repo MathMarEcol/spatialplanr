@@ -41,6 +41,13 @@
 #'   splnr_get_IUCNRedList()
 #' }
 splnr_get_IUCNRedList <- function(df, species_col = "Species") {
+
+  assertthat::assert_that(
+    inherits(df, "data.frame"),
+    is.character(species_col),
+    species_col %in% names(df)
+  )
+
   # Get all IUCN categories
   cate <- c("DD", "LC", "NT", "VU", "EN", "CR", "EW", "EX", "LRlc", "LRnt", "LRcd")
 

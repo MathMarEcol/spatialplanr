@@ -9,7 +9,7 @@ splnr_featureNames(dat, exclude = NA)
 \arguments{
 \item{dat}{sf dataframe of features}
 
-\item{exclude}{Character vector of any columes to exclude}
+\item{exclude}{Character vector of any columns to exclude}
 }
 \value{
 A character vector of names

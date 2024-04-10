@@ -15,6 +15,13 @@
 #'   dplyr::bind_rows(dplyr::tibble(x = seq(50, -50, by = -1), y = 180)) %>%
 #'   dplyr::bind_rows(dplyr::tibble(x = -50, y = seq(150, 120, by = -1))))
 splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
+
+  assert_that(
+    is.list(x),
+    all(sapply(x, function(coords) length(coords) == 2)),
+    is.character(cCRS)
+  )
+
   x <- x %>%
     as.matrix() %>%
     list() %>%
@@ -82,6 +89,14 @@ splnr_replace_NAs <- function(df, vari) {
 #' nam <- c("Region1" = "SE Aust", "Region2" = "Tas", "Region3" = "NE Aust")
 #' df <- splnr_match_names(dat, nam)
 splnr_match_names <- function(dat, nam) {
+
+  assertthat::assert_that(
+    inherits(dat, "sf"),
+    is.character(nam) && length(nam) > 0,
+    any(names(nam) %in% colnames(dat)),
+    any(!is.na(match(nam, colnames(dat))))
+  )
+
   col_name <- stringr::str_subset(colnames(dat), "geometry", negate = TRUE)[[1]]
 
   out <- dat %>%
@@ -132,7 +147,7 @@ splnr_scale_01 <- function(dat, col_name) {
 #' It requires an `sf` object input and returns the column names of the object excluding any columns you specify in the `exclude` argument.
 #'
 #' @param dat sf dataframe of features
-#' @param exclude Character vector of any columes to exclude
+#' @param exclude Character vector of any columns to exclude
 #'
 #' @return A character vector of names
 #' @export
@@ -141,6 +156,12 @@ splnr_scale_01 <- function(dat, col_name) {
 #' df <- dat_species_prob %>%
 #'   splnr_featureNames(exclude = c("cellID"))
 splnr_featureNames <- function(dat, exclude = NA) {
+
+  assertthat::assert_that(
+    inherits(dat, "sf"),
+    is.character(exclude) || is.na(exclude)
+  )
+
   if (is.na(exclude)) {
     exclude <- c("Cost_", "cellID")
   } else {
@@ -176,8 +197,14 @@ splnr_featureNames <- function(dat, exclude = NA) {
 splnr_convert_toPacific <- function(df,
                                     buff = 0,
                                     cCRS = "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") {
-  # TODO add a warning if df doesn't cross the pacific dateline
 
+  assert_that(
+    is_sf(df),
+    is.numeric(buff) && buff >= 0,
+    is.character(cCRS)
+  )
+
+  # TODO add a warning if df doesn't cross the pacific dateline
   longlat <- "EPSG:4326"
 
   # Define a long & slim polygon that overlaps the meridian line & set its CRS to match
@@ -326,6 +353,14 @@ splnr_arrangeFeatures <- function(df) {
 #'
 #' corrMat <- splnr_get_kappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
 splnr_get_kappaCorrData <- function(sol, name_sol) {
+
+  assertthat::assert_that(
+    is.list(sol),
+    length(sol) > 1,
+    is.character(name_sol),
+    length(name_sol) == length(sol)
+  )
+
   s_list <- lapply(seq_along(sol), function(x) {
     sol[[x]] %>%
       tibble::as_tibble(.name_repair = "unique") %>%
@@ -402,6 +437,13 @@ splnr_get_kappaCorrData <- function(sol, name_sol) {
 #' (splnr_plot_selectionFreq(selFreq))
 #'
 splnr_get_selFreq <- function(solnMany, type = "portfolio") {
+
+  assert_that(
+    type %in% c("portfolio", "list"),
+    (type == "portfolio" && inherits(solnMany, "sf")) || (type == "list" && is.list(solnMany)),
+    (!is.null(solnMany) && length(solnMany) > 0)
+  )
+
   if (type == "portfolio") { # check if provided input is a protfolio
 
     if (class(solnMany)[[1]] != "sf") {
