@@ -16,9 +16,8 @@
 #'   dplyr::bind_rows(dplyr::tibble(x = -50, y = seq(150, 120, by = -1))))
 splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
 
-  assert_that(
-    is.list(x),
-    all(sapply(x, function(coords) length(coords) == 2)),
+  assertthat::assert_that(
+    inherits(x, "tbl_df") && !is.null(attributes(x)),
     is.character(cCRS)
   )
 
@@ -92,9 +91,7 @@ splnr_match_names <- function(dat, nam) {
 
   assertthat::assert_that(
     inherits(dat, "sf"),
-    is.character(nam) && length(nam) > 0,
-    any(names(nam) %in% colnames(dat)),
-    any(!is.na(match(nam, colnames(dat))))
+    is.character(nam) && length(nam) > 0
   )
 
   col_name <- stringr::str_subset(colnames(dat), "geometry", negate = TRUE)[[1]]
@@ -198,8 +195,8 @@ splnr_convert_toPacific <- function(df,
                                     buff = 0,
                                     cCRS = "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") {
 
-  assert_that(
-    is_sf(df),
+  assertthat::assert_that(
+    inherits(df, "sf"),
     is.numeric(buff) && buff >= 0,
     is.character(cCRS)
   )
@@ -438,7 +435,7 @@ splnr_get_kappaCorrData <- function(sol, name_sol) {
 #'
 splnr_get_selFreq <- function(solnMany, type = "portfolio") {
 
-  assert_that(
+  assertthat::assert_that(
     type %in% c("portfolio", "list"),
     (type == "portfolio" && inherits(solnMany, "sf")) || (type == "list" && is.list(solnMany)),
     (!is.null(solnMany) && length(solnMany) > 0)

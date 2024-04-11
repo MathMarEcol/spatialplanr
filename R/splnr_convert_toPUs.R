@@ -34,7 +34,7 @@ splnr_convert_toPUs <- function(dat, PlanUnits) {
 
   assertthat::assert_that(
     (is.character(dat) && file.exists(dat)) || inherits(dat, c("SpatRaster", "sf")),
-    is_sf(PlanUnits))
+    inherits(PlanUnits, c("sf")))
 
   lifecycle::deprecate_warn("0.6.2", "splnr_convert_toPUs()", "spatialgridr::get_data_in_grid()")
 

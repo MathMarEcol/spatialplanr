@@ -199,7 +199,7 @@ get_gfwData <- function(region, start_date, end_date, temp_res,
 
 
 ```{r, message=FALSE}
-data_sf_combined <- splnr_get_gfw('Australia', "2019-01-01", "2023-12-31", "yearly", "low", key = key, compress = FALSE)
+data_sf_combined <- get_gfwData('Australia', "2019-01-01", "2023-12-31", "yearly", "low", key = key, compress = FALSE)
 ```
 
 

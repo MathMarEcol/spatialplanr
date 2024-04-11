@@ -344,6 +344,15 @@ splnr_plot_featureRep <- function(df, category = NA,
 splnr_plot_circBplot <- function(df, legend_color, legend_list,
                                  indicateTargets = TRUE, impTarget = NA,
                                  repTarget = NA, colTarget = "red") {
+
+  assertthat::assert_that(
+  length(unique(names(legend_color))) == length(legend_list),
+  is.logical(indicateTargets),
+  is.numeric(impTarget),
+  is.numeric(repTarget),
+  is.character(colTarget)
+  )
+
   # Adding rows to each group, creating space between the groups
   groups <- unique(df$group)
   NA_rows <- list()

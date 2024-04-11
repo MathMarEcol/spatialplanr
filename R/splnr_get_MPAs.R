@@ -27,7 +27,6 @@ splnr_get_MPAs <- function(PlanUnits,
   assertthat::assert_that(
     inherits(PlanUnits, "sf"),
     is.character(Countries),
-    all(Countries %in% wdpar::wdpa_countries()),
     all(Status %in% c("Designated", "Established", "Inscribed")),
     all(Desig %in% c("National", "Regional", "International", "Not Applicable")),
     all(Category %in% c("Ia", "Ib", "II", "III", "IV"))
