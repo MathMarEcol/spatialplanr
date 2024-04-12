@@ -278,6 +278,15 @@ splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
                                 showLegend = TRUE, legendLabels = c("Not selected", "Selected"),
                                 plotTitle = "Solution", legendTitle = "Planning Units",
                                 zones = FALSE) {
+  assertthat::assert_that(
+    inherits(soln, c("sf", "data.frame")),
+    is.logical(showLegend),
+    length(colorVals) == length(legendLabels),
+    is.character(plotTitle),
+    is.character(legendTitle),
+    is.logical(zones)
+  )
+
   if (zones == FALSE) {
     soln <- soln %>%
       dplyr::select("solution_1") %>%
@@ -403,6 +412,15 @@ splnr_plot_PUs <- function(PlanUnits) {
 splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
                                    legendTitle = "Cost",
                                    plotTitle = "Solution overlaid with cost") {
+
+  assertthat::assert_that(
+    inherits(soln, "sf"),
+    is.data.frame(Cost) || is.na(Cost),
+    is.character(Cost_name),
+    is.character(legendTitle),
+    is.character(plotTitle)
+  )
+
   if (!is.data.frame(get("Cost"))) { # potentially needed for app later
     if (!Cost_name %in% colnames(soln)) {
       cat("Cost column not found. Please check your solution data frame for your column of interest.")
@@ -492,6 +510,13 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
 #' (splnr_plot_comparison(dat_soln, dat_soln2))
 #'
 splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compared to Scenario 1:") {
+
+  assertthat::assert_that(
+    inherits(soln1, "sf"),
+    inherits(soln2, "sf"),
+    is.character(legendTitle)
+  )
+
   soln <- soln1 %>%
     dplyr::select("solution_1") %>%
     dplyr::bind_cols(soln2 %>%
@@ -556,6 +581,13 @@ splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compar
 splnr_plot_selectionFreq <- function(selFreq,
                                      plotTitle = "", paletteName = "Greens",
                                      legendTitle = "Selection \nFrequency") {
+
+  assertthat::assert_that(
+    inherits(selFreq, c("sf", "data.frame")),
+    is.character(plotTitle),
+    is.character(legendTitle)
+  )
+
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = selFreq, ggplot2::aes(fill = .data$selFreq), colour = NA) +
     ggplot2::scale_fill_brewer(
@@ -620,6 +652,20 @@ splnr_plot_selectionFreq <- function(selFreq,
 splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
                                        plotTitle = "", colorMap = "A", decimals = 4,
                                        legendTitle = "Importance Score") {
+
+  assertthat::assert_that(
+    inherits(soln, c("data.frame", "tbl_df", "tbl")),
+    inherits(pDat, c("R6", "ConservationProblem")),
+    is.character(method),
+    is.character(plotTitle),
+    is.character(colorMap),
+    is.numeric(decimals),
+    is.character(legendTitle)
+  )
+
+  assertthat::assert_that(
+    method %in% c("Ferrier", "RWR", "RC"))
+
   soln <- soln %>% tibble::as_tibble()
 
   if (method == "Ferrier") {
@@ -734,6 +780,15 @@ splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
 splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#4477AA"),
                                legendTitle = "Correlation \ncoefficient",
                                AxisLabels = NULL, plotTitle = "") {
+
+  assertthat::assert_that(
+    is.matrix(x),
+    length(colourGradient) == 3,
+    is.character(legendTitle),
+    is.null(AxisLabels) || (is.character(AxisLabels) && length(AxisLabels) == nrow(x)),
+    is.character(plotTitle)
+  )
+
   if ((class(AxisLabels)[[1]] == "character") & (nrow(x) != length(AxisLabels))) {
     print("Not enough labels for the length of the matrix. Please check your labels.")
   }

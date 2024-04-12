@@ -49,6 +49,13 @@ splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
 #' df <- dat_species_prob %>%
 #'   splnr_replace_NAs("Spp2")
 splnr_replace_NAs <- function(df, vari) {
+
+  assertthat::assert_that(
+    inherits(df, c("sf", "data.frame")),
+    is.character(vari),
+    vari %in% names(df)
+  )
+
   if (sum(is.na(dplyr::pull(df, !!rlang::sym(vari)))) > 0) { # Check if there are NAs
 
     gp <- df %>%
@@ -119,6 +126,13 @@ splnr_match_names <- function(dat, nam) {
 #'   dplyr::mutate(Spp1 = Spp1 * 100) %>%
 #'   splnr_scale_01(col_name = "Spp1")
 splnr_scale_01 <- function(dat, col_name) {
+
+  assertthat::assert_that(
+    inherits(dat, c("sf", "data.frame")),
+    is.character(col_name),
+    col_name %in% names(dat)
+  )
+
   mx <- max(dplyr::pull(dat, !!rlang::sym(col_name)), na.rm = TRUE) # Get max probability
 
   if (mx > 100) {

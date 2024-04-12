@@ -185,6 +185,22 @@ splnr_plot_featureRep <- function(df, category = NA,
                                   nr = 1, showTarget = NA,
                                   plotTitle = "") {
 
+  assertthat::assert_that(
+    inherits(df, c("data.frame", "tbl_df")),
+    is.logical(renameFeatures),
+    is.logical(showTarget),
+    is.character(plotTitle),
+    all(colSums(is.na(category)) == nrow(category)) || inherits(category, c("data.frame","tbl","tbl_df"))
+  )
+
+  if (renameFeatures) {
+    assertthat::assert_that(
+      is.data.frame(namesToReplace),
+      "nameVariable" %in% colnames(namesToReplace),
+      "nameCommon" %in% colnames(namesToReplace)
+    )
+  }
+
   if(inherits(category, c("df", "tbl_df")) & !("feature" %in% colnames(category))) {
     if (!(inherits(categoryFeatureCol, "character"))) {
       cat("There is no column called 'feature' in your category data frame. Please provide a column name that should be renamed to 'feature'.");
