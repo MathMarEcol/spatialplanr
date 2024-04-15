@@ -11,6 +11,8 @@
 #' @param colorVals The color values to use if col_names is specified and the data is binary.
 #' @param plot_title The title of the plot.
 #' @param showFeatureSum A boolean indicator to specify if the feature sum should be displayed.
+#' @param legend_title The title of the legend.
+#' @param legend_labels A vector of strings containing the labels to use for legend values.
 #'
 #' @return A ggplot object.
 #'
@@ -18,21 +20,23 @@
 #'
 #' @examples
 #' # Binary
-#' splnr_plot(dat_species_bin, col_names = "Spp1")
+#' splnr_plot(dat_species_bin, col_names = "Spp1", legend_title = "Legend", legend_labels = c("Absent", "Present"))
 #'
 #' # Continuous
 #' bathymetry <- oceandatr::get_bathymetry(spatial_grid = dat_PUs, keep = FALSE,
 #' classify_bathymetry = FALSE)
-#' splnr_plot(df = bathymetry, col_names = "bathymetry", plot_title = "bathymetry")
+#' splnr_plot(df = bathymetry, col_names = "bathymetry", plot_title = "bathymetry", legend_title = "Bathymetry (m)")
 #'
 #' # Multi binary features
-#' splnr_plot(dat_species_bin, showFeatureSum = TRUE)
+#' splnr_plot(dat_species_bin, showFeatureSum = TRUE, legend_title = "Number of features")
 splnr_plot <- function(df,
                        col_names = NULL,
                        paletteName = "YlGnBu",
                        colorVals = NULL,
                        plot_title = "",
-                       showFeatureSum = FALSE) {
+                       showFeatureSum = FALSE,
+                       legend_title = "Legend",
+                       legend_labels = NULL) {
 
   # Assertions
   assertthat::assert_that(
@@ -41,7 +45,9 @@ splnr_plot <- function(df,
     all(c("xmin", "xmax", "ymin", "ymax") %in% names(sf::st_bbox(df))),
     is.null(col_names) | is.character(col_names),
     is.character(paletteName),
-    is.logical(showFeatureSum)
+    is.logical(showFeatureSum),
+    is.character(legend_title),
+    is.null(legend_labels) | is.character(legend_labels)
   )
 
   gg <- ggplot2::ggplot() +
@@ -51,9 +57,10 @@ splnr_plot <- function(df,
                                                  nrow = 2,
                                                  order = 1,
                                                  direction = "horizontal",
-                                                 title = "Legend",
+                                                 title = legend_title,
                                                  title.position = "top",
-                                                 title.hjust = 0.5))
+                                                 title.hjust = 0.5,
+                                                 labels = legend_labels))
 
   if (showFeatureSum) {
     # Calculate feature sum if requested
@@ -67,12 +74,11 @@ splnr_plot <- function(df,
     gg <- gg +
       ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data$FeatureSum), colour = NA, size = 0.1) +
       ggplot2::scale_fill_distiller(
-        name = "Features",
+        name = legend_title,
         palette = paletteName,
         aesthetics = c("fill"),
         oob = scales::squish
       ) +
-      ggplot2::labs(subtitle = "Number of Features") +
       ggplot2::guides(fill = ggplot2::guide_colourbar(order = -1))
 
     return(gg)
@@ -98,7 +104,7 @@ splnr_plot <- function(df,
 
       gg <- gg +
         ggplot2::geom_sf(data = df, ggplot2::aes(fill = factor(.data$UnionColumn)), colour = "grey80", size = 0.1) +
-        ggplot2::scale_fill_manual(values = c("0" = "#c6dbef", "1" = "#3182bd"), name = "Binary", labels = c("0", "1"))
+        ggplot2::scale_fill_manual(values = c("0" = "#c6dbef", "1" = "#3182bd"), name = "Binary", labels = legend_labels)
     } else {
       for (col_name in col_names) {
         gg <- gg +

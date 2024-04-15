@@ -191,7 +191,9 @@ the binary habitat suitability map for Green sea turtles:
 (ggFeature1 <- splnr_plot(
   datEx_species_bin,
   "Chelonia_mydas",
-  plot_title = "Chelonia mydas"
+  plot_title = "Chelonia mydas",
+  legend_title = "",
+  legend_labels = c("Absence", "Presence")
 ) +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,
@@ -207,7 +209,10 @@ are fairly ubiquitous across the whole Coral Sea.
 ```{r}
 (ggFeature <- splnr_plot(
   datEx_species_bin,
-  "Megaptera_novaeangliae"
+  "Megaptera_novaeangliae",
+  plot_title = "Megaptera novaeangliae",
+  legend_title = "",
+  legend_labels = c("Absence", "Presence")
 ) +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,
@@ -225,7 +230,7 @@ we can also plot the number of features with suitable habitat within a
 planning unit of the study region.
 
 ```{r}
-(ggFeatNo <- splnr_plot(datEx_species_bin, showFeatureSum = TRUE) +
+(ggFeatNo <- splnr_plot(datEx_species_bin, showFeatureSum = TRUE, plot_title = "", legend_title = "Number of features") +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,
     cropOverlay = PUs, ggtheme = splnr_theme
@@ -258,7 +263,7 @@ units are assigned an equal cost of 1.
 
 ```{r}
 out_sf$Cost_None <- 1
-(ggCost <- splnr_plot(out_sf, col_names = "Cost_None") +
+(ggCost <- splnr_plot(out_sf, col_names = "Cost_None", legend_title = "Cost", legend_labels = "1") +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,
     cropOverlay = PUs, ggtheme = splnr_theme
@@ -272,7 +277,7 @@ out_sf$Cost_None <- 1
 The gfwr package allows us to recover data from fisheries across the world,
 we set here the parameter `compress` as `TRUE` to recover the 
 `Apparent fishing hours` per coordinates.
-```{r}
+```{r, eval=FALSE}
 gfw_data <- splnr_get_gfw('Australia', "2022-01-01", "2022-12-31", "yearly", cCRS = cCRS, compress = TRUE) %>%
   sf::st_interpolate_aw(PUs, extensive = TRUE)
 
@@ -356,7 +361,7 @@ importance scores
 #### Visualization of the solution
 
 ```{r}
-(ggSoln <- splnr_plot(datEx_soln, col_names = "solution_1") +
+(ggSoln <- splnr_plot(datEx_soln, col_names = "solution_1", legend_title = "Solution", legend_labels = c("0","1")) +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,
     cropOverlay = PUs, ggtheme = splnr_theme

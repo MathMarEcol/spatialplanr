@@ -10,7 +10,9 @@ splnr_plot(
   paletteName = "YlGnBu",
   colorVals = NULL,
   plot_title = "",
-  showFeatureSum = FALSE
+  showFeatureSum = FALSE,
+  legend_title = "Legend",
+  legend_labels = NULL
 )
 }
 \arguments{
@@ -25,6 +27,10 @@ splnr_plot(
 \item{plot_title}{The title of the plot.}
 
 \item{showFeatureSum}{A boolean indicator to specify if the feature sum should be displayed.}
+
+\item{legend_title}{The title of the legend.}
+
+\item{legend_labels}{A vector of strings containing the labels to use for legend values.}
 }
 \value{
 A ggplot object.
@@ -38,13 +44,13 @@ Plot Spatial Data, returns a gg object
 }
 \examples{
 # Binary
-splnr_plot(dat_species_bin, col_names = "Spp1")
+splnr_plot(dat_species_bin, col_names = "Spp1", legend_title = "Legend", legend_labels = c("Absent", "Present"))
 
 # Continuous
 bathymetry <- oceandatr::get_bathymetry(spatial_grid = dat_PUs, keep = FALSE,
 classify_bathymetry = FALSE)
-splnr_plot(df = bathymetry, col_names = "bathymetry", plot_title = "bathymetry")
+splnr_plot(df = bathymetry, col_names = "bathymetry", plot_title = "bathymetry", legend_title = "Bathymetry (m)")
 
 # Multi binary features
-splnr_plot(dat_species_bin, showFeatureSum = TRUE)
+splnr_plot(dat_species_bin, showFeatureSum = TRUE, legend_title = "Number of features")
 }
