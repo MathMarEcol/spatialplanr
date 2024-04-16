@@ -37,7 +37,7 @@ splnr_get_MPAs <- function(PlanUnits,
     wdpar::wdpa_dissolve() %>% # Dissolve data to remove overlapping areas.
     dplyr::select("geometry") %>%
     dplyr::mutate(wdpa = 1) %>%
-    splnr_convert_toPUs(PlanUnits)
+    spatialgridr::get_data_in_grid(spatial_grid = PlanUnits, dat = ., apply_cutoff = FALSE)
 
   return(wdpa_data)
 }
