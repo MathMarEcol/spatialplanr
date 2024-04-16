@@ -337,7 +337,7 @@ ecological information and only chosen for visualization purposes.
 ### Set up conservation problem
 
 ```{r}
-datEx_problem <- prioritizr::problem(out_sf, feature_names, "Apparent.Fishing.Hours") %>%
+datEx_problem <- prioritizr::problem(out_sf, feature_names, "Cost_None") %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_relative_targets(target$target) %>%
   prioritizr::add_binary_decisions() %>%
@@ -379,7 +379,7 @@ overlay of the cost to show how the solution avoids highly costly areas:
 (ggCostOverlay <- splnr_plot_costOverlay(
   soln = datEx_soln,
   Cost = NA,
-  Cost_name = "Apparent.Fishing.Hours"
+  Cost_name = "Cost_None"
 ) +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,

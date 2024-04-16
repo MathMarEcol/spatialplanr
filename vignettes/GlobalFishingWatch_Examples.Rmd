@@ -199,7 +199,7 @@ get_gfwData <- function(region, start_date, end_date, temp_res,
 
 
 ```{r, message=FALSE}
-data_sf_combined <- get_gfwData('Australia', "2019-01-01", "2023-12-31", "yearly", "low", key = key, compress = FALSE)
+data_sf_combined <- splnr_get_gfw('Australia', "2019-01-01", "2023-12-31", "yearly", "low", key = key, compress = FALSE)
 ```
 
 
@@ -291,7 +291,7 @@ We may need to compare different timeframes, such as seasons, to see if there ar
 __Note :__ As more vessels have adopted AIS (mainly in economically developed countries) since the deployment of these technologies, the rise in activities must be seen in the context of this increase and not necessarily of more intense fishing activity.
 ```{r, message=FALSE}
 #We need to change the temporal range according to our need group by it to display the total fishing hours. <br>
-data_sf_combined <- get_gfwData('Australia', "2019-01-01", "2023-12-31", "monthly") %>%
+data_sf_combined <- splnr_get_gfw('Australia', "2019-01-01", "2023-12-31", "monthly", key = key) %>%
   dplyr::group_by(Year, Month) %>%
   dplyr::summarize(Total_Fishing_Hours = sum(`Apparent Fishing Hours`))
 ```
@@ -308,7 +308,7 @@ ggplot(data_sf_combined, aes(x = Month, y = Total_Fishing_Hours, color = Year, g
 ##### Fishing gear type
 Here we display the Vessel activity in 'Micronesia' in 2020 according to the fishing gear type.
 ```{r, message=FALSE}
-data_sf_combined <- get_gfwData(region = 'Micronesia', start_date = "2019-12-31", end_date = "2021-01-01", temp_res = "monthly")
+data_sf_combined <- splnr_get_gfw(region = 'Micronesia', start_date = "2019-12-31", end_date = "2021-01-01", temp_res = "monthly")
 ```
 
 ```{r, echo=FALSE, message=FALSE, results='hide'}
@@ -340,7 +340,7 @@ ggplot(data_sf_combined) +
 ##### Flags
 Here we display the Vessel activity in Papua New Guinea according to Vessels flags.
 ```{r, echo=FALSE, message=FALSE, results='hide'}
-data_sf_combined <- get_gfwData(region = 'Papua New Guinea', start_date = "2019-12-31", end_date = "2021-01-01", temp_res = "yearly",spat_res =  "low", key = key) %>%
+data_sf_combined <- splnr_get_gfw(region = 'Papua New Guinea', start_date = "2019-12-31", end_date = "2021-01-01", temp_res = "yearly",spat_res =  "low", key = key) %>%
   st_set_crs(st_crs(rnaturalearth::ne_coastline(scale = 'large'))) 
 
 coast_clipped <- rnaturalearth::ne_coastline(scale = 'large') %>%
