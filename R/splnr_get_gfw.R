@@ -1,4 +1,11 @@
-#' Function to recover data from Global Fishing Watch.
+#' The `get_gfwData` function recover the data of Global Fishing Watch and returns it as a sf object. <br>
+#'   We have the same parameters than the `get_raster` function, plus `n_crs` which is the crs for the sf_modification <br>
+#'   Different possible values can be combined and are : <br>
+#'   - `Time Range`, `Flag`, `Geartype`. <br>
+#'   _(A combination can be : c('Time Range','Geartype'), if you want to get the sum of fishing hours per date and geartype, for example you want to display the drifting longline fishing in a specific year)_ <br> <br>
+#'   __Notes :__ <br>
+#'   1. For the moment we are limited to the EEZs of each region, but we can potentially restrict the working area to specific MPAs (further details in the gfwr package). <br>
+#'   2. Days indicated in the__ `start_date` __and__ `end_date` __variables are included in the data recovery.
 #'
 #' The code takes several parameters described below and return an sf object with gfw data aggregated or not (param compress)
 #'

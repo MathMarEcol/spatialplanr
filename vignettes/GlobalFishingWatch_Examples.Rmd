@@ -16,7 +16,8 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 # How to use : Global Fishing Watch R Package (`gfwr`)
 
-The `gfwr` package provides convenient functions to pull GFW data directly into R into usable formats.  
+The `gfwr` package provides convenient functions to pull GFW data directly into R into usable formats.
+The `splnr_get_gfw` function has been created to enable data to be retrieved and processed in a variety of ways, some of which are described here.
 It contains three main functions, including `get_vessel_info()`, `get_event()` and `get_raster()`. The two first being devoted to retrieving information and features on one ore several specific vessels. The last is of particular interest to us because it allows us to gather information from global fishing watch raster on the fishing effort (further details in the function appropriate section).
 
 The time spent fishing is computed using Automatic Identification System (AIS) data, which is transmitted by most industrial fishing vessels. The AIS data provides information on the location, speed, and direction of the vessel, which can be used to identify when the vessel is actively fishing. 
@@ -29,19 +30,10 @@ _Good to know: IMO mandates AIS for most vessels larger than 36 meters._ <br>
 3. AIS interference with each other in areas of high vessel density. <br>
 4. Some terrestrial satellites only receive messages near shore. <br>
 
-
 ## Installation
 ```{r, eval=FALSE}
 remotes::install_github("GlobalFishingWatch/gfwr")
 ```
-
-```{r, message=FALSE}
-library(gfwr)
-library(ggplot2)
-library(dplyr)
-library(sf)
-```
-
 
 ## API 
 To access GFW APIs, you need to :<br>
@@ -58,7 +50,7 @@ usethis::edit_r_environ()
 
 We save the key in an object that will be used in gfwr functions.
 ```{r}
-key <- gfw_auth()
+key <- gfwr::gfw_auth()
 ```
 
 
@@ -66,7 +58,7 @@ key <- gfw_auth()
 
 A region_id is necessary to use the `get_raster` function.
 ```{r, results='hide'}
-region_id <- get_region_id(region_name = 'Australia', region_source = 'eez', key = key)$id
+region_id <- gfwr::get_region_id(region_name = "Australia", region_source = "eez", key = key)$id
 ```
 
 The `get_raster` function gets a raster of fishing effort from the API and converts the response to a data frame which contains occurrences for each vessel and for each grid cell (data is binned into grid cells of different resolution), the `Vessel IDs`, `Flag`, `Geartype` and `Apparent fishing Hours` which are basically the amount of fishing hours of each vessel per grid cell (`geometry`).
@@ -77,132 +69,24 @@ Data can be provided through :<br>
 - `vessel_id`, `flag`, `gearType`, `flagAndGearType`.
 
 ```{r, eval=FALSE, message=FALSE}
-data <- get_raster(
-  spatial_resolution = 'low',
-  temporal_resolution = 'monthly',
-  group_by = 'flagAndGearType',
-  date_range = '2022-01-01,2023-01-01',
-  region = region_id, 
-  region_source = 'eez',
+gfwr::get_raster(
+  spatial_resolution = "low",
+  temporal_resolution = "monthly",
+  group_by = "flagAndGearType",
+  date_range = "2022-01-01,2023-01-01",
+  region = region_id,
+  region_source = "eez",
   key = key
 )
 ```
 _(You can remove the option_ `message = FALSE` _to see the columns types.)_
 
 #### `get_raster` caveats and limitations.
-Date range is limited to 1-year. Nevertheless, with some modifications, we can get round these problems through `get_gfwFishingEffort`.
-
-#### `get_gfwFishingEffort` function.
-
-The `get_gfwFishingEffort` function recover the data of Global Fishing Watch and returns it as a sf object. <br>
-We have the same parameters than the `get_raster` function, plus `n_crs` which is the crs for the sf_modification <br> 
-Different possible values can be combined and are : <br>
-- `Time Range`, `Flag`, `Geartype`. <br>
-_(A combination can be : c('Time Range','Geartype'), if you want to get the sum of fishing hours per date and geartype, for example you want to display the drifting longline fishing in a specific year)_ <br> <br>
-__Notes :__ <br>
-1. For the moment we are limited to the EEZs of each region, but we can potentially restrict the working area to specific MPAs (further details in the gfwr package). <br>
-2. Days indicated in the__ `start_date` __and__ `end_date` __variables are included in the data recovery.
-```{r}
-get_gfwData <- function(region, start_date, end_date, temp_res,
-                        spat_res = "low",
-                        key = gfwr::gfw_auth(),
-                        cCRS = "EPSG:4326",
-                        compress = FALSE) {
-
-
-  region_id <- gfwr::get_region_id(region_name = region, region_source = 'eez', key = key)$id[1]
-
-  # Convert dates into Date objects
-  start_date <- as.Date(start_date, format = "%Y-%m-%d")
-  end_date <- as.Date(end_date, format = "%Y-%m-%d")
-
-  # Function to obtain data for a specific date range
-  get_data_for_range <- function(start_date, end_date) {
-    date_range <- paste(start_date, end_date, sep = ",")
-
-    data <- gfwr::get_raster(
-      spatial_resolution = spat_res,
-      temporal_resolution = temp_res,
-      group_by = 'flagAndGearType',
-      date_range = date_range,
-      region = region_id,
-      region_source = 'eez',
-      key = key
-    )
-
-    return(data)
-  }
-
-  # Check whether the date range is less than or equal to 366 days
-  if (as.numeric(difftime(end_date, start_date, units = "days")) <= 366) {
-    # If yes, obtain data for the entire date range
-    data_df <- get_data_for_range(start_date, end_date)
-
-  } else {
-    # If not, divide the date range into 366-day chunks and obtain the data for each chunk.
-    date_chunks <- seq(start_date, end_date, by = "366 days")
-    data_df <- purrr::map(date_chunks, ~get_data_for_range(.x, min(.x + 365, end_date)))
-  }
-
-  if (isTRUE(compress)){
-    # GFW data will always be "EPSG:4326". No need to have CRS as an option here
-
-    data_df <- data_df %>%
-      purrr::map_dfr(bind_rows) %>%
-      dplyr::select("Lon", "Lat", "Apparent Fishing Hours") %>%
-      dplyr::group_by(Lon, Lat) %>%
-      dplyr::summarise("Apparent Fishing Hours" = sum(`Apparent Fishing Hours`, na.rm = T)) %>%
-      dplyr::ungroup()
-
-    data_sf <- data_df %>%
-      terra::rast(type = "xyz", crs = "EPSG:4326") %>% # Convert to polygons for easier use
-      terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm = TRUE, round = FALSE) %>%
-      sf::st_as_sf()
-
-    if (dim(data_df)[1] != dim(data_sf)[1])
-    {stop("Data dimensions of data_df and data_sf do not match after conversion to polygon")}
-
-  } else if (isFALSE(compress)){
-
-    # Separate the "Time Range" column based on the specified temp_res
-    if (temp_res == "yearly") {
-      data_sf <- data_df %>%
-        purrr::map_dfr(bind_rows) %>%
-        dplyr::mutate(Year = `Time Range`) %>%
-        sf::st_as_sf(coords = c("Lon", "Lat"), crs ="EPSG:4326")
-    } else {
-      # Otherwise, separate the "Time Range" column according to the specified temp_res
-      if (temp_res == "monthly") {
-        data_sf <- data_df %>%
-          purrr::map_dfr(bind_rows) %>%
-          tidyr::separate("Time Range", into = c("Year", "Month"), sep = "-", remove = FALSE) %>%
-          sf::st_as_sf(coords = c("Lon", "Lat"), crs = "EPSG:4326")
-      } else if (temp_res == "daily") {
-        data_sf <- data_df %>%
-          purrr::map_dfr(bind_rows) %>%
-          tidyr::separate("Time Range", into = c("Year", "Month", "Day"), sep = "-", remove = FALSE) %>%
-          sf::st_as_sf(coords = c("Lon", "Lat"), crs = "EPSG:4326")
-      }
-    }
-  }
-
-  # But you may wish to return the data in a different CRS. For this you need transform
-  if (isFALSE(cCRS == "EPSG:4326")){
-    data_sf <- data_sf %>%
-      sf::st_transform(crs = cCRS)
-  }
-
-  return(data_sf)
-}
-```
-
-
+Date range is limited to 1-year. Nevertheless, with some modifications, we can get round these problems through `splnr_get_gfw`.
 
 ```{r, message=FALSE}
-data_sf_combined <- splnr_get_gfw('Australia', "2019-01-01", "2023-12-31", "yearly", "low", key = key, compress = FALSE)
+data_sf_combined <- splnr_get_gfw("Australia", "2019-01-01", "2023-12-31", "yearly", "low", key = key, compress = FALSE)
 ```
-
-
 
 
 ## Visualization
@@ -211,10 +95,10 @@ To display the data, we load : <br>
 - EEZ Polygons from _Flanders Marine Institute (2023). Maritime Boundaries Geodatabase: Maritime Boundaries and Exclusive Economic Zones (200NM), version 12. Available online at https://www.marineregions.org/. https://doi.org/10.14284/632_
 ```{r, message = FALSE, results='hide'}
 # Check and modify if necessary the spatial reference of data_sf_combined
-data_sf_combined <- st_set_crs(data_sf_combined, st_crs(rnaturalearth::ne_coastline(scale = 'large'))) 
+data_sf_combined <- sf::st_set_crs(data_sf_combined, sf::st_crs(rnaturalearth::ne_coastline(scale = "large")))
 
-coast_clipped <- rnaturalearth::ne_coastline(scale = 'large') %>%
-  sf::st_as_sf() %>% 
+coast_clipped <- rnaturalearth::ne_coastline(scale = "large") %>%
+  sf::st_as_sf() %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
 
 # Load EEZ polygons
@@ -227,95 +111,106 @@ eezs <- oceandatr::get_area(area_name = "Australia") %>%
 #### Here we display the Fishing Effort in Australia from 2019 to 2023.
 ##### Raw Fishing Effort
 ```{r, echo=FALSE}
-main_plot <- ggplot(data_sf_combined) +
-  geom_sf(aes(color = log10(`Apparent Fishing Hours`))) +
-  geom_sf(data = coast_clipped, color = "black", fill = NA) +  # Add coastline
-  geom_sf(data = eezs, fill = "red", color = 'red') +  # Add the EEZ with hatching
-  scale_color_viridis_c(guide = "legend") +
-  theme_minimal() +
-  labs(title = "2022 Vessel Activity Map", subtitle = "Fishing Hours recorded by GFW in Australia", color = "Fishing Hours (log10)") +
-  theme(legend.position = "bottom",
-        legend.text = element_text(size = 8),  
-        legend.title = element_text(size = 10))  +
-  guides(color = guide_colorbar(title.position = "top",  
-                               title.vjust = 0.5,  
-                               title.hjust = -0.5,
-                               label.theme = element_text(size = 8),  
-                               barwidth = 5,  
-                               barheight = 0.5))  
+main_plot <- ggplot2::ggplot(data_sf_combined) +
+  ggplot2::geom_sf(ggplot2::aes(color = log10(`Apparent Fishing Hours`))) +
+  ggplot2::geom_sf(data = coast_clipped, color = "black", fill = NA) + # Add coastline
+  ggplot2::geom_sf(data = eezs, fill = "red", color = "red") + # Add the EEZ with hatching
+  ggplot2::scale_color_viridis_c(guide = "legend") +
+  ggplot2::theme_minimal() +
+  ggplot2::labs(title = "2022 Vessel Activity Map", subtitle = "Fishing Hours recorded by GFW in Australia", color = "Fishing Hours (log10)") +
+  ggplot2::theme(
+    legend.position = "bottom",
+    legend.text = ggplot2::element_text(size = 8),
+    legend.title = ggplot2::element_text(size = 10)
+  ) +
+  ggplot2::guides(color = ggplot2::guide_colorbar(
+    title.position = "top",
+    title.vjust = 0.5,
+    title.hjust = -0.5,
+    label.theme = ggplot2::element_text(size = 8),
+    barwidth = 5,
+    barheight = 0.5
+  ))
 
-#The display and writing in this section is for information purposes only, to understand how the information on the grid is translated.
-overlay_plot <- ggplot(data_sf_combined) +
-  geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf), fill = "white") +  
-  geom_sf(aes(color = log10(`Apparent Fishing Hours`))) +
-  geom_sf(data = coast_clipped, color = "black", fill = NA) +  # Add coastline
-  geom_sf(data = eezs, fill = "red", color = 'red') +  
-  scale_color_viridis_c(guide = "legend") +
-  labs(title = "Vessel Activity Map in Australia between 2019 and 2023", subtitle = "Fishing Hours data recorded by GFW", color = "Fishing Hours \n (log10)") +
-  theme_minimal() +
-  theme(legend.position = "none",
-        title = element_blank(),
-        axis.text.x = element_blank(),  
-        axis.text.y = element_blank(),  
-        axis.title.x = element_blank(), 
-        axis.title.y = element_blank(), 
-        panel.border = element_rect(color = "black", fill = NA, size = 1)) +
-  coord_sf(xlim = c(152,155), ylim = c(-27,-29))
+# The display and writing in this section is for information purposes only, to understand how the information on the grid is translated.
+overlay_plot <- ggplot2::ggplot(data_sf_combined) +
+  ggplot2::geom_rect(ggplot2::aes(xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf), fill = "white") +
+  ggplot2::geom_sf(ggplot2::aes(color = log10(`Apparent Fishing Hours`))) +
+  ggplot2::geom_sf(data = coast_clipped, color = "black", fill = NA) + # Add coastline
+  ggplot2::geom_sf(data = eezs, fill = "red", color = "red") +
+  ggplot2::scale_color_viridis_c(guide = "legend") +
+  ggplot2::labs(title = "Vessel Activity Map in Australia between 2019 and 2023", subtitle = "Fishing Hours data recorded by GFW", color = "Fishing Hours \n (log10)") +
+  ggplot2::theme_minimal() +
+  ggplot2::theme(
+    legend.position = "none",
+    title = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_blank(),
+    axis.text.y = ggplot2::element_blank(),
+    axis.title.x = ggplot2::element_blank(),
+    axis.title.y = ggplot2::element_blank(),
+    panel.border = ggplot2::element_rect(color = "black", fill = NA, size = 1)
+  ) +
+  ggplot2::coord_sf(xlim = c(152, 155), ylim = c(-27, -29))
 
 main_plot +
-    annotation_custom(
-      ggplotGrob(overlay_plot),
-      xmin = 130,
-      xmax = 170,
-      ymin = -20,
-      ymax = -36)
+  ggplot2::annotation_custom(
+    ggplot2::ggplotGrob(overlay_plot),
+    xmin = 130,
+    xmax = 170,
+    ymin = -20,
+    ymax = -36
+  )
 ```
 
 
 ##### By years
 ```{r, echo=FALSE}
-ggplot(data_sf_combined) +
-  geom_sf(aes(color = as.factor(Year))) +
-  geom_sf(data = coast_clipped, color = "black", fill = NA) +  # Add coastline
-  geom_sf(data = eezs, color = 'red') +  # Ajouter la EEZ avec hachures
-  theme_minimal() +
-  scale_color_viridis_d(guide = "legend") +
-  labs(title = "Vessel Activity Map in Australia between 2019 and 2024", subtitle = "Fishing Hours data recorded by GFW", color = "Years") +
-  theme(legend.position = "bottom",
-        legend.text = element_text(size = 8),  
-        legend.title = element_text(size = 10))  
+ggplot2::ggplot(data_sf_combined) +
+  ggplot2::geom_sf(ggplot2::aes(color = as.factor(Year))) +
+  ggplot2::geom_sf(data = coast_clipped, color = "black", fill = NA) + # Add coastline
+  ggplot2::geom_sf(data = eezs, color = "red") + # Ajouter la EEZ avec hachures
+  ggplot2::theme_minimal() +
+  ggplot2::scale_color_viridis_d(guide = "legend") +
+  ggplot2::labs(title = "Vessel Activity Map in Australia between 2019 and 2024", subtitle = "Fishing Hours data recorded by GFW", color = "Years") +
+  ggplot2::theme(
+    legend.position = "bottom",
+    legend.text = ggplot2::element_text(size = 8),
+    legend.title = ggplot2::element_text(size = 10)
+  )
 ```
 
 ##### Year-on-year comparison
 We may need to compare different timeframes, such as seasons, to see if there are any patterns. <br>
 __Note :__ As more vessels have adopted AIS (mainly in economically developed countries) since the deployment of these technologies, the rise in activities must be seen in the context of this increase and not necessarily of more intense fishing activity.
 ```{r, message=FALSE}
-#We need to change the temporal range according to our need group by it to display the total fishing hours. <br>
-data_sf_combined <- splnr_get_gfw('Australia', "2019-01-01", "2023-12-31", "monthly", key = key) %>%
+# We need to change the temporal range according to our need group by it to display the total fishing hours. <br>
+data_sf_combined <- splnr_get_gfw("Australia", "2019-01-01", "2023-12-31", "monthly", key = key) %>%
   dplyr::group_by(Year, Month) %>%
   dplyr::summarize(Total_Fishing_Hours = sum(`Apparent Fishing Hours`))
 ```
 
 ```{r, echo=FALSE}
-ggplot(data_sf_combined, aes(x = Month, y = Total_Fishing_Hours, color = Year, group = Year)) +
-  geom_line() +
-  geom_point() +
-  labs(title = "Total Fishing Hours per month (2014-2023)", 
-       x = "Month", y = "Total Fishing Hours") +
-  theme_minimal()
+ggplot2::ggplot(data_sf_combined, ggplot2::aes(x = Month, y = Total_Fishing_Hours, color = Year, group = Year)) +
+  ggplot2::geom_line() +
+  ggplot2::geom_point() +
+  ggplot2::labs(
+    title = "Total Fishing Hours per month (2014-2023)",
+    x = "Month", y = "Total Fishing Hours"
+  ) +
+  ggplot2::theme_minimal()
 ```
 
 ##### Fishing gear type
 Here we display the Vessel activity in 'Micronesia' in 2020 according to the fishing gear type.
 ```{r, message=FALSE}
-data_sf_combined <- splnr_get_gfw(region = 'Micronesia', start_date = "2019-12-31", end_date = "2021-01-01", temp_res = "monthly")
+data_sf_combined <- splnr_get_gfw(region = "Micronesia", start_date = "2019-12-31", end_date = "2021-01-01", temp_res = "monthly")
 ```
 
 ```{r, echo=FALSE, message=FALSE, results='hide'}
 # Check and modify if necessary the spatial reference of data_sf_combined
-data_sf_combined <- st_set_crs(data_sf_combined, st_crs(rnaturalearth::ne_coastline(scale = 'large'))) 
+data_sf_combined <- sf::st_set_crs(data_sf_combined, sf::st_crs(rnaturalearth::ne_coastline(scale = "large")))
 
-coast_clipped <- rnaturalearth::ne_coastline(scale = 'large') %>%
+coast_clipped <- rnaturalearth::ne_coastline(scale = "large") %>%
   sf::st_as_sf() %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
 
@@ -328,27 +223,27 @@ eezs <- oceandatr::get_area(area_name = "Micronesia") %>%
 
 ```{r, echo=FALSE}
 # Create the map
-ggplot(data_sf_combined) +
-  geom_sf(aes(color = `Geartype`)) +
-  geom_sf(data = coast_clipped, color = "black", fill = NA) +  # Add coastline
-  geom_sf(data = eezs, color = 'red') +  # Ajouter la EEZ avec hachures
-  theme_minimal() +
-  labs(title = "2020 Vessel Activity Map", subtitle = "recorded by GFW in Micronesia", color = "Gear types") +
-  theme(legend.position = "right")
+ggplot2::ggplot(data_sf_combined) +
+  ggplot2::geom_sf(ggplot2::aes(color = `Geartype`)) +
+  ggplot2::geom_sf(data = coast_clipped, color = "black", fill = NA) + # Add coastline
+  ggplot2::geom_sf(data = eezs, color = "red") + # Ajouter la EEZ avec hachures
+  ggplot2::theme_minimal() +
+  ggplot2::labs(title = "2020 Vessel Activity Map", subtitle = "recorded by GFW in Micronesia", color = "Gear types") +
+  ggplot2::theme(legend.position = "right")
 ```
 
 ##### Flags
 Here we display the Vessel activity in Papua New Guinea according to Vessels flags.
 ```{r, echo=FALSE, message=FALSE, results='hide'}
-data_sf_combined <- splnr_get_gfw(region = 'Papua New Guinea', start_date = "2019-12-31", end_date = "2021-01-01", temp_res = "yearly",spat_res =  "low", key = key) %>%
-  st_set_crs(st_crs(rnaturalearth::ne_coastline(scale = 'large'))) 
+data_sf_combined <- splnr_get_gfw(region = "Papua New Guinea", start_date = "2019-12-31", end_date = "2021-01-01", temp_res = "yearly", spat_res = "low", key = key) %>%
+  sf::st_set_crs(sf::st_crs(rnaturalearth::ne_coastline(scale = "large")))
 
-coast_clipped <- rnaturalearth::ne_coastline(scale = 'large') %>%
+coast_clipped <- rnaturalearth::ne_coastline(scale = "large") %>%
   sf::st_as_sf() %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
 
 # Load EEZ polygons
-eezs <- oceandatr::get_area(area_name = "Papua New Guinea") %>% 
+eezs <- oceandatr::get_area(area_name = "Papua New Guinea") %>%
   sf::st_transform(crs = sf::st_crs(data_sf_combined)) %>%
   sf::st_make_valid() %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
@@ -356,14 +251,14 @@ eezs <- oceandatr::get_area(area_name = "Papua New Guinea") %>%
 
 ```{r, echo=FALSE}
 # Create the map
-ggplot(data_sf_combined) +
-  geom_sf(aes(color = `Flag`)) +
-  geom_sf(data = coast_clipped, color = "black", fill = NA) +  # Add coastline
-  geom_sf(data = eezs, color = 'red') +  # Ajouter la EEZ avec hachures
-  scale_size_continuous(range = c(1, 10), guide = "legend", name = "Flag") +
-  theme_minimal() +
-  labs(title = "2021 Vessel Activity Map", subtitle = "recorded by GFW in Papua New Guinea", color = "Flag") +
-  theme(legend.position = "right") 
+ggplot2::ggplot(data_sf_combined) +
+  ggplot2::geom_sf(ggplot2::aes(color = `Flag`)) +
+  ggplot2::geom_sf(data = coast_clipped, color = "black", fill = NA) + # Add coastline
+  ggplot2::geom_sf(data = eezs, color = "red") + # Ajouter la EEZ avec hachures
+  ggplot2::scale_size_continuous(range = c(1, 10), guide = "legend", name = "Flag") +
+  ggplot2::theme_minimal() +
+  ggplot2::labs(title = "2021 Vessel Activity Map", subtitle = "recorded by GFW in Papua New Guinea", color = "Flag") +
+  ggplot2::theme(legend.position = "right")
 ```
 
 
