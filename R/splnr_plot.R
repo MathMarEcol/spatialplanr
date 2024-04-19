@@ -20,15 +20,26 @@
 #'
 #' @examples
 #' # Binary
-#' splnr_plot(dat_species_bin, col_names = "Spp1", legend_title = "Legend", legend_labels = c("Absent", "Present"))
+#' splnr_plot(df = dat_species_bin,
+#'            col_names = "Spp1",
+#'            legend_title = "Legend",
+#'            legend_labels = c("Absent", "Present"))
 #'
 #' # Continuous
-#' bathymetry <- oceandatr::get_bathymetry(spatial_grid = dat_PUs, keep = FALSE,
-#' classify_bathymetry = FALSE)
-#' splnr_plot(df = bathymetry, col_names = "bathymetry", plot_title = "bathymetry", legend_title = "Bathymetry (m)")
+#' bathymetry <- oceandatr::get_bathymetry(spatial_grid = dat_PUs,
+#'                                         keep = FALSE,
+#'                                         classify_bathymetry = FALSE)
+#'
+#' splnr_plot(df = bathymetry,
+#'            col_names = "bathymetry",
+#'            plot_title = "bathymetry",
+#'            legend_title = "Bathymetry (m)")
 #'
 #' # Multi binary features
-#' splnr_plot(dat_species_bin, showFeatureSum = TRUE, legend_title = "Number of features")
+#' splnr_plot(df = dat_species_bin,
+#'            showFeatureSum = TRUE,
+#'            legend_title = "Number of features")
+
 splnr_plot <- function(df,
                        col_names = NULL,
                        paletteName = "YlGnBu",
