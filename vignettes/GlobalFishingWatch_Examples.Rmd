@@ -4,12 +4,12 @@ author: "Kilian GRIHAULT BARREIRO"
 date: "2024-01-14"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Global Fishing Watch Examples}
+%\VignetteIndexEntry{Global Fishing Watch Examples}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
----
-
-```{r setup, include=FALSE}
+  ---
+  
+  ```{r setup_chunks, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
@@ -33,6 +33,11 @@ _Good to know: IMO mandates AIS for most vessels larger than 36 meters._ <br>
 ## Installation
 ```{r, eval=FALSE}
 remotes::install_github("GlobalFishingWatch/gfwr")
+```
+
+```{r setup}
+library(gfwr)
+library(spatialplanr)
 ```
 
 ## API 
@@ -117,7 +122,9 @@ main_plot <- ggplot2::ggplot(data_sf_combined) +
   ggplot2::geom_sf(data = eezs, fill = "red", color = "red") + # Add the EEZ with hatching
   ggplot2::scale_color_viridis_c(guide = "legend") +
   ggplot2::theme_minimal() +
-  ggplot2::labs(title = "2022 Vessel Activity Map", subtitle = "Fishing Hours recorded by GFW in Australia", color = "Fishing Hours (log10)") +
+  ggplot2::labs(title = "2022 Vessel Activity Map", 
+                subtitle = "Fishing Hours recorded by GFW in Australia", 
+                color = "Fishing Hours (log10)") +
   ggplot2::theme(
     legend.position = "bottom",
     legend.text = ggplot2::element_text(size = 8),
@@ -139,7 +146,9 @@ overlay_plot <- ggplot2::ggplot(data_sf_combined) +
   ggplot2::geom_sf(data = coast_clipped, color = "black", fill = NA) + # Add coastline
   ggplot2::geom_sf(data = eezs, fill = "red", color = "red") +
   ggplot2::scale_color_viridis_c(guide = "legend") +
-  ggplot2::labs(title = "Vessel Activity Map in Australia between 2019 and 2023", subtitle = "Fishing Hours data recorded by GFW", color = "Fishing Hours \n (log10)") +
+  ggplot2::labs(title = "Vessel Activity Map in Australia between 2019 and 2023", 
+                subtitle = "Fishing Hours data recorded by GFW", 
+                color = "Fishing Hours \n (log10)") +
   ggplot2::theme_minimal() +
   ggplot2::theme(
     legend.position = "none",

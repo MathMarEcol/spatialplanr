@@ -25,8 +25,8 @@ klippy::klippy(position = c("top", "right"))
 ```
 
 ```{r setup}
-print("library")
 library(spatialplanr)
+library(tidyverse)
 ```
 
 # Overview
@@ -90,8 +90,7 @@ Dict <- tibble::tribble(
   "Olive ridley sea turtle", "Lepidochelys_olivacea", "Reptiles", 
   "Saltwater crocodile", "Crocodylus_porosus", "Reptiles", 
   "Humpback whale", "Megaptera_novaeangliae", "Mammals", 
-  "Common Minke whale", "Balaenoptera_acutorostrata",
-  "Mammals", 
+  "Common Minke whale", "Balaenoptera_acutorostrata", "Mammals", 
   "Dugong", "Dugong_dugon", "Mammals", 
   "Grey nurse shark", "Carcharias_taurus", "Sharks and rays", 
   "Tiger shark", "Galeocerdo_cuvier", "Sharks and rays", 
