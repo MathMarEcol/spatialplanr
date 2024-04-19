@@ -6,16 +6,16 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
+  
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  warning = FALSE,
-  cache = FALSE,
-  message = FALSE,
-  eval = TRUE,
-  fig.width = 9
+collapse = TRUE,
+comment = "#>",
+warning = FALSE,
+cache = FALSE,
+message = FALSE,
+eval = TRUE,
+fig.width = 9
 )
 ```
 
@@ -26,7 +26,6 @@ klippy::klippy(position = c("top", "right"))
 
 ```{r setup}
 library(spatialplanr)
-library(tidyverse)
 ```
 
 # Overview
@@ -34,9 +33,7 @@ library(tidyverse)
 This code has been written to simplify the process for running a _prioritizr_ analysis on a given region. It is still a work in progress so feel free to submit pull requests with new features and code improvements.
 
 ## Set user parameters 
-You can set a region if it is defined in `splnr_get_planningUnits`. 
 ```{r}
-print("parameters")
 Region <- "Coral Sea" # "Australia"
 Type <- "Oceans" # "EEZ"
 Shape <- "Hexagon" # "Shape of PUs
@@ -75,7 +72,11 @@ landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>
 
 ## Create Planning Units 
 ```{r}
-PUs <- splnr_get_planningUnits(Bndry, landmass, PU_size, Shape)
+PUs <- spatialgridr::get_grid(area_polygon = Bndry,
+                              projection_crs = cCRS,
+                              option = "sf_hex",
+                              resolution = PU_size,
+                              sf_method = "centroid")
 ```
 
 ## Get the features 
@@ -143,10 +144,10 @@ The climate velocity data can be visualized using the `splnr_plot_climData()` fu
 
 ```{r, fig.width = 9}
 (ggclim <- splnr_plot_climData(metric_df, "metric") +
-  splnr_gg_add(
-    Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+   splnr_gg_add(
+     Bndry = Bndry, overlay = landmass,
+     cropOverlay = PUs, ggtheme = splnr_theme
+   ))
 ```
 
 In our case, there were few areas with low climate velocity, which are the areas we define as climate refugia in our example. Usually, we would combine several metrics (e.g. exposure, velocity etc.) of multiple SSP scenarios to get more robust climate refugia. For our example, we randomly set areas with very high velocity to a value between `0.85-1` to visualize the output (CHANGE THIS LATER TO BETTER DATA).
@@ -162,10 +163,10 @@ metric_df <- CoralSeaVelocity %>%
   )
 
 (ggclim <- splnr_plot_climData(metric_df, "metric") +
-  splnr_gg_add(
-    Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+    splnr_gg_add(
+      Bndry = Bndry, overlay = landmass,
+      cropOverlay = PUs, ggtheme = splnr_theme
+    ))
 ```
 
 We then use the climate priority area approach `splnr_climate_priorityAreaApproach()` detailed in [Buenafe et al (2023)](https://doi.org/10.1002/eap.2852) to determine climate refugia. Briefly, this approach selects a percentile (in our case 5%) of the suitable habitat of each feature that is considered the most climate-smart. It also requires a `direction` input indicating at which side of the metric range the more climate-smart areas can be found. In our case, lower climate velocity denotes more climate-smart (`direction = -1`), but in other cases a higher value might represent the more climate-smart planning units (`direction = 1`). 
@@ -199,7 +200,7 @@ out_sf <- CPA_Approach$Features %>%
     by = "cellID"
   ) %>%
   dplyr::left_join(metric_df %>%
-    sf::st_drop_geometry(), by = "cellID")
+                     sf::st_drop_geometry(), by = "cellID")
 
 targets <- CPA_Approach$Targets
 ```
@@ -238,10 +239,10 @@ We can look at the resulting plan using `splnr_plot_solution()`.
 
 ```{r, fig.width = 9}
 (ggSoln <- splnr_plot_solution(dat_solnClim) +
-  splnr_gg_add(
-    Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+   splnr_gg_add(
+     Bndry = Bndry, overlay = landmass,
+     cropOverlay = PUs, ggtheme = splnr_theme
+   ))
 ```
 
 However, we are also interested how climate-smart the selected planning units in the solution actually are. For this, we can use a kernel density plot 
@@ -285,7 +286,7 @@ out_sf <- Percentile_Approach$Features %>%
     by = "cellID"
   ) %>%
   dplyr::left_join(metric_df %>%
-    sf::st_drop_geometry(), by = "cellID")
+                     sf::st_drop_geometry(), by = "cellID")
 
 targets <- Percentile_Approach$Targets
 ```
@@ -312,7 +313,7 @@ p2 <- prioritizr::problem(out_sf, usedFeatures, "Cost_None") %>%
   prioritizr::add_default_solver(verbose = FALSE)
 
 dat_solnClimPercentile <- prioritizr::solve.ConservationProblem(p2,
-  force = TRUE
+                                                                force = TRUE
 )
 ```
 
@@ -320,10 +321,10 @@ We can look at the resulting plan using `splnr_plot_solution()`.
 
 ```{r, fig.width = 9}
 (ggSoln <- splnr_plot_solution(dat_solnClimPercentile) +
-  splnr_gg_add(
-    Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+   splnr_gg_add(
+     Bndry = Bndry, overlay = landmass,
+     cropOverlay = PUs, ggtheme = splnr_theme
+   ))
 ```
 
 However, we are also interested how climate-smart the selected planning units in the solution actually are. For this, we can use a kernel density plot 
@@ -365,7 +366,7 @@ out_sf <- Feature_Approach$Features %>%
     by = "cellID"
   ) %>%
   dplyr::left_join(metric_df %>%
-    sf::st_drop_geometry(), by = "cellID")
+                     sf::st_drop_geometry(), by = "cellID")
 
 targets <- Feature_Approach$Targets
 ```
@@ -396,10 +397,10 @@ dat_solnClimFeature <- prioritizr::solve.ConservationProblem(p3)
 
 ```{r, fig.width = 9}
 (ggSoln <- splnr_plot_solution(dat_solnClimFeature) +
-  splnr_gg_add(
-    Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+   splnr_gg_add(
+     Bndry = Bndry, overlay = landmass,
+     cropOverlay = PUs, ggtheme = splnr_theme
+   ))
 ```
 
 However, we are also interested how climate-smart the selected planning units in the solution actually are. For this, we can use a kernel density plot 

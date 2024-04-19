@@ -1,15 +1,13 @@
 ---
 title: "Global Fishing Watch Examples"
-author: "Kilian GRIHAULT BARREIRO"
-date: "2024-01-14"
 output: rmarkdown::html_vignette
 vignette: >
-%\VignetteIndexEntry{Global Fishing Watch Examples}
+  %\VignetteIndexEntry{Global Fishing Watch Examples}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  ---
+---
   
-  ```{r setup_chunks, include=FALSE}
+```{r setup_chunks, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 

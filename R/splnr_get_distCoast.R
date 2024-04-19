@@ -35,11 +35,12 @@
 #' ) %>%
 #'   sf::st_transform(cCRS)
 #'
-#' dat_sf <- splnr_get_planningUnits(Bndry = Bndry,
-#'                                   InnerB = landmass,
-#'                                   CellArea = 10000,
-#'                                   Shape = "Hexagon") %>%
-#'   splnr_get_distCoast(res = "medium")
+# dat_sf <- spatialgridr::get_grid(area_polygon = Bndry,
+#                                  projection_crs = cCRS,
+#                                  option = "sf_hex",
+#                                  resolution = 10000,
+#                                  sf_method = "centroid") %>%
+#   splnr_get_distCoast(res = "medium")
 
 splnr_get_distCoast <- function(dat_sf, custom_coast = NULL, res = NULL) {
 

@@ -46,9 +46,4 @@ landmass <- rnaturalearth::ne_countries(
 ) \%>\%
   sf::st_transform(cCRS)
 
-dat_sf <- splnr_get_planningUnits(Bndry = Bndry,
-                                  InnerB = landmass,
-                                  CellArea = 10000,
-                                  Shape = "Hexagon") \%>\%
-  splnr_get_distCoast(res = "medium")
 }

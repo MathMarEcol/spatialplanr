@@ -31,7 +31,6 @@
 #' Region <- "Coral Sea" # "Australia"
 #' Type <- "Oceans" # "EEZ"
 #'
-#' Shape <- "Hexagon" # "Shape of PUs
 #' PU_size <- 10000 # km2
 #'
 #' cCRS <- "ESRI:54009"
@@ -44,7 +43,11 @@
 #' ) %>%
 #' sf::st_transform(cCRS)
 #'
-#' PUs <- spatialplanr::splnr_get_planningUnits(Bndry, landmass, PU_size, Shape)
+#' PUs <- spatialgridr::get_grid(area_polygon = Bndry,
+#'                                  projection_crs = cCRS,
+#'                                  option = "sf_hex",
+#'                                  resolution = PU_size,
+#'                                  sf_method = "centroid")
 #'
 #' gfw_data <- splnr_get_gfw('Australia', "2022-01-01", "2022-12-31", "yearly",
 #' cCRS = cCRS, compress = TRUE)

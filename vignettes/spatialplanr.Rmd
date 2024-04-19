@@ -55,7 +55,6 @@ Region <- c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)
 Set the shape and area of the planning unit in square kilometres.
 
 ```{r}
-Shape <- "Hexagon" # "Shape of PUs
 PU_size <- 10000 # km2
 ```
 
@@ -91,7 +90,12 @@ landmass <- rnaturalearth::ne_countries(
 ## Create Planning Units
 
 ```{r}
-PUs <- splnr_get_planningUnits(Bndry = Bndry, InnerB = landmass, CellArea = PU_size, Shape = Shape)
+PUs <- spatialgridr::get_grid(area_polygon = Bndry,
+                                 projection_crs = cCRS,
+                                 option = "sf_hex",
+                                 resolution = 10000,
+                                 sf_method = "centroid")
+
 ```
 
 We can check what the PUs look like

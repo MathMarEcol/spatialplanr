@@ -60,15 +60,16 @@ Imports:
     methods,
     purrr,
     rappdirs,
+    rlang,
     rnaturalearth,
     scales,
     sf,
+    spatialgridr,
     stringr,
     terra,
     tibble,
     tidyr,
-    tidyselect,
-    rlang
+    tidyselect
 Remotes: 
     github::emlab-ucsb/oceandatr,
     github::emlab-ucsb/spatialgridr,

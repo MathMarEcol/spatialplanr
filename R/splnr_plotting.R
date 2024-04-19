@@ -357,7 +357,7 @@ splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
 
 #' Plot Planning Units
 #'
-#' `splnr_plot_PUs()` allows to plot the planning units of a planning region (for example created with the `spatialplanr`function [splnr_get_planningUnits()]) in a customisable way using `ggplot2`. This function requires an `sf` object containing the geographic information of PUs in the planning region and outputs a `ggobject`. It can be combined with the `spatialplanr` function [splnr_gg_add()].
+#' `splnr_plot_PUs()` allows to plot the planning units of a planning region in a customisable way using `ggplot2`. This function requires an `sf` object containing the geographic information of PUs in the planning region and outputs a `ggobject`. It can be combined with the `spatialplanr` function [splnr_gg_add()].
 #'
 #' @param PlanUnits Planning Units as an `sf` object
 #'
