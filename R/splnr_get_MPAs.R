@@ -35,7 +35,8 @@ splnr_get_MPAs <- function(PlanUnits,
   wdpa_data <- Countries %>%
     lapply(wdpar::wdpa_fetch,
       wait = TRUE,
-      download_dir = rappdirs::user_data_dir("wdpar")
+      download_dir = rappdirs::user_data_dir("wdpar"),
+      verbose = FALSE
     ) %>%
     dplyr::bind_rows() %>%
     dplyr::filter(.data$MARINE > 0) %>%
