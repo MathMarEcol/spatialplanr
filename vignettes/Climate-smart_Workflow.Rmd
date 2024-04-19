@@ -39,7 +39,7 @@ Type <- "Oceans" # "EEZ"
 Shape <- "Hexagon" # "Shape of PUs
 PU_size <- 10000 # km2
 
-cCRS <- "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs" # Mollweide
+cCRS <- "ESRI:54009" # Mollweide
 ```
 
 We can also use a customised `ggplot` theme that can be passed as a list to `splnr_gg_add()` and that can then be used for all plots. For example:
