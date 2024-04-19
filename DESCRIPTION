@@ -60,6 +60,7 @@ Imports:
     methods,
     purrr,
     rappdirs,
+    rlang,
     rnaturalearth,
     scales,
     sf,
@@ -68,7 +69,6 @@ Imports:
     tibble,
     tidyr,
     tidyselect,
-    rlang
 Remotes: 
     github::emlab-ucsb/oceandatr,
     github::emlab-ucsb/spatialgridr,
