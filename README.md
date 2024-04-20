@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# spatialplanr <a href='https://github.com/MathMarEcol/spatialplanr'><img src='man/figures/logo.png' style="float:right; height:200px;"></a>
+# spatialplanr <a href='https://github.com/MathMarEcol/spatialplanr'><img src='man/figures/logo.png' style="align:right; height:200px;"></a>
 
 <!-- badges: start -->
 
