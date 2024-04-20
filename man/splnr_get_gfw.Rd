@@ -2,18 +2,7 @@
 % Please edit documentation in R/splnr_get_gfw.R
 \name{splnr_get_gfw}
 \alias{splnr_get_gfw}
-\title{The \code{get_gfwData} function recover the data of Global Fishing Watch and returns it as a sf object. \if{html}{\out{<br>}}
-We have the same parameters than the \code{get_raster} function, plus \code{n_crs} which is the crs for the sf_modification \if{html}{\out{<br>}}
-Different possible values can be combined and are : \if{html}{\out{<br>}}
-\itemize{
-\item \verb{Time Range}, \code{Flag}, \code{Geartype}. \if{html}{\out{<br>}}
-\emph{(A combination can be : c('Time Range','Geartype'), if you want to get the sum of fishing hours per date and geartype, for example you want to display the drifting longline fishing in a specific year)} \if{html}{\out{<br>}} \if{html}{\out{<br>}}
-\strong{Notes :} \if{html}{\out{<br>}}
-}
-\enumerate{
-\item For the moment we are limited to the EEZs of each region, but we can potentially restrict the working area to specific MPAs (further details in the gfwr package). \if{html}{\out{<br>}}
-\item Days indicated in the__ \code{start_date} \strong{and} \code{end_date} __variables are included in the data recovery.
-}}
+\title{Function to recover data from Global Fishing Watch.}
 \usage{
 splnr_get_gfw(
   region,
@@ -58,28 +47,7 @@ Written: February 2024
 }
 \examples{
 \dontrun{
-Region <- "Coral Sea" # "Australia"
-Type <- "Oceans" # "EEZ"
-
-PU_size <- 10000 # km2
-
-cCRS <- "ESRI:54009"
-
-Bndry <- spatialplanr::splnr_get_boundary(Region, Type, cCRS)
-
-landmass <- rnaturalearth::ne_countries(
- scale = "medium",
- returnclass = "sf"
-) \%>\%
-sf::st_transform(cCRS)
-
-PUs <- spatialgridr::get_grid(area_polygon = Bndry,
-                                 projection_crs = cCRS,
-                                 option = "sf_hex",
-                                 resolution = PU_size,
-                                 sf_method = "centroid")
-
-gfw_data <- splnr_get_gfw('Australia', "2022-01-01", "2022-12-31", "yearly",
-cCRS = cCRS, compress = TRUE)
+gfw_data <- splnr_get_gfw('Australia', "2021-01-01", "2022-12-31", "yearly",
+    cCRS = cCRS, compress = TRUE)
 }
 }
