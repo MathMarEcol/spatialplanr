@@ -55,7 +55,6 @@ Imports:
     ggplot2,
     ggridges,
     irr,
-    lifecycle,
     magrittr,
     methods,
     purrr,

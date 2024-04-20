@@ -34,7 +34,7 @@ grid <- sf::st_sf(geometry = grid) \%>\%
   sf::st_set_crs(crs)
 splnr_get_distCoast(grid)
 
-cCRS <- "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"
+cCRS <- "ESRI:54009"
 
 Bndry <- splnr_get_boundary(Limits = "Coral Sea",
                             Type = "Oceans",

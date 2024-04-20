@@ -508,7 +508,6 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
 #'   prioritizr::solve.ConservationProblem()
 #'
 #' (splnr_plot_comparison(dat_soln, dat_soln2))
-#'
 splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compared to Scenario 1:") {
 
   assertthat::assert_that(
@@ -649,8 +648,12 @@ splnr_plot_selectionFreq <- function(selFreq,
 #'   prioritizr::solve.ConservationProblem()
 #'
 #' (splnr_plot_importanceScore(soln = dat_soln, pDat = dat_problem, method = "Ferrier", decimals = 4))
-splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
-                                       plotTitle = "", colorMap = "A", decimals = 4,
+splnr_plot_importanceScore <- function(soln,
+                                       pDat,
+                                       method = "Ferrier",
+                                       plotTitle = "",
+                                       colorMap = "A",
+                                       decimals = 4,
                                        legendTitle = "Importance Score") {
 
   assertthat::assert_that(

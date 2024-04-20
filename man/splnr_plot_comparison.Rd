@@ -54,5 +54,4 @@ dat_soln2 <- dat_problem2 \%>\%
   prioritizr::solve.ConservationProblem()
 
 (splnr_plot_comparison(dat_soln, dat_soln2))
-
 }

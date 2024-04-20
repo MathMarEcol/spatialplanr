@@ -34,9 +34,8 @@ splnr_get_MPAs <- function(PlanUnits,
 
   wdpa_data <- Countries %>%
     lapply(wdpar::wdpa_fetch,
-      wait = TRUE,
-      download_dir = rappdirs::user_data_dir("wdpar"),
-      verbose = FALSE
+           wait = TRUE,
+           download_dir = rappdirs::user_data_dir("wdpar")
     ) %>%
     dplyr::bind_rows() %>%
     dplyr::filter(.data$MARINE > 0) %>%
@@ -46,8 +45,9 @@ splnr_get_MPAs <- function(PlanUnits,
     wdpar::wdpa_clean(retain_status = NULL, erase_overlaps = FALSE) %>% # clean protected area data
     wdpar::wdpa_dissolve() %>% # Dissolve data to remove overlapping areas.
     dplyr::select("geometry") %>%
-    dplyr::mutate(wdpa = 1) %>%
-    spatialgridr::get_data_in_grid(spatial_grid = PlanUnits, dat = ., apply_cutoff = FALSE)
+    dplyr::mutate(wdpa = 1)
+
+  wdpa_data <- spatialgridr::get_data_in_grid(spatial_grid = PlanUnits, dat = wdpa_data, apply_cutoff = FALSE)
 
   return(wdpa_data)
 }
