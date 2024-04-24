@@ -32,7 +32,9 @@ An \code{sf} object is returned with the PU area covered by the selected marine 
 }
 \examples{
 dat <- splnr_get_MPAs(dat_PUs, "Australia")
+
 aust <- rnaturalearth::ne_countries(country = "Australia", returnclass = "sf")
+
 gg <- ggplot2::ggplot() +
   ggplot2::geom_sf(data = dat, ggplot2::aes(fill = wdpa)) +
   ggplot2::geom_sf(data = aust, fill = "grey50")
