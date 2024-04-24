@@ -2,7 +2,7 @@
 % Please edit documentation in R/splnr_plot.R
 \name{splnr_plot}
 \alias{splnr_plot}
-\title{Function to plot data. (For now can replace splnr_plot_cost(), splnr_plot_binFeature(), splnr_plot_MPAs(),splnr_plot_featureNo())}
+\title{Function to plot data.}
 \usage{
 splnr_plot(
   df,
@@ -36,10 +36,12 @@ splnr_plot(
 A ggplot object.
 }
 \description{
-Written by Kilian Barreiro
-Written: February 2024
+(For now can replace splnr_plot_cost(), splnr_plot_binFeature(), splnr_plot_MPAs(),splnr_plot_featureNo())
 }
 \details{
+Written by Kilian Barreiro
+Written: February 2024
+
 Plot Spatial Data, returns a gg object
 }
 \examples{
