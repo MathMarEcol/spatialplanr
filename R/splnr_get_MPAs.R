@@ -27,16 +27,15 @@ splnr_get_MPAs <- function(PlanUnits,
   assertthat::assert_that(
     inherits(PlanUnits, "sf"),
     is.character(Countries),
-    all(Status %in% c("Designated", "Established", "Inscribed")),
+    all(Status %in% c("Designated", "Established", "Inscribed", "Proposed", "Adopted")),
     all(Desig %in% c("National", "Regional", "International", "Not Applicable")),
-    all(Category %in% c("Ia", "Ib", "II", "III", "IV"))
+    all(Category %in% c("Ia", "Ib", "II", "III", "IV", "V", "VI", "Not Reported", "Not Applicable", "Not Assigned"))
   )
 
   wdpa_data <- Countries %>%
     lapply(wdpar::wdpa_fetch,
-      wait = TRUE,
-      download_dir = rappdirs::user_data_dir("wdpar")
-    ) %>%
+           wait = TRUE,
+           download_dir = rappdirs::user_data_dir("wdpar")) %>%
     dplyr::bind_rows() %>%
     dplyr::filter(.data$MARINE > 0) %>%
     dplyr::filter(.data$IUCN_CAT %in% Category) %>% # filter category
