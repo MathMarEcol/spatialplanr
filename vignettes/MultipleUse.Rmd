@@ -18,10 +18,6 @@ eval = TRUE
 )
 ```
 
-```{r klippy, eval=TRUE, echo=FALSE, include=TRUE}
-klippy::klippy(position = c("top", "right"))
-```
-
 ```{r setup}
 library(spatialplanr)
 set.seed(100)

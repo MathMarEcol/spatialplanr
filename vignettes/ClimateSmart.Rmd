@@ -19,11 +19,6 @@ fig.width = 9
 )
 ```
 
-```{r klippy, eval=TRUE, echo=FALSE, include=TRUE}
-print("klippy")
-klippy::klippy(position = c("top", "right"))
-```
-
 ```{r setup}
 library(spatialplanr)
 ```
