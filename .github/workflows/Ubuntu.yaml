@@ -46,7 +46,13 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck, any::remotes, any::lpsymphony, any::shinytest
+          extra-packages: |
+            any::rcmdcheck
+            any::remotes
+            any::lpsymphony
+            any::shinytest
+            any::webdriver
+            any::covr
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
