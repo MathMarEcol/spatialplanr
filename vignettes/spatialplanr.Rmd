@@ -22,10 +22,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r klippy, eval=TRUE, echo=FALSE, include=TRUE}
-klippy::klippy(position = c("top", "right"))
-```
-
 ```{r setup}
 library(spatialplanr)
 ```
@@ -55,15 +51,13 @@ Region <- c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)
 Set the shape and area of the planning unit in square kilometres.
 
 ```{r}
-Shape <- "Hexagon" # "Shape of PUs
 PU_size <- 10000 # km2
 ```
 
 Choose CRS for analysis. In this case we use Mollweide
 
 ```{r}
-cCRS <-
-  "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"
+cCRS <- "ESRI:54009"
 ```
 
 ## Analysis Region
@@ -91,7 +85,12 @@ landmass <- rnaturalearth::ne_countries(
 ## Create Planning Units
 
 ```{r}
-PUs <- splnr_get_planningUnits(Bndry = Bndry, InnerB = landmass, CellArea = PU_size, Shape = Shape)
+PUs <- spatialgridr::get_grid(area_polygon = Bndry,
+                                 projection_crs = cCRS,
+                                 option = "sf_hex",
+                                 resolution = 10000,
+                                 sf_method = "centroid")
+
 ```
 
 We can check what the PUs look like
@@ -152,13 +151,11 @@ Dict <- tibble::tribble(
   "Olive ridley sea turtle", "Lepidochelys_olivacea", "Reptiles", 
   "Saltwater crocodile", "Crocodylus_porosus", "Reptiles", 
   "Humpback whale", "Megaptera_novaeangliae", "Mammals", 
-  "Common Minke whale", "Balaenoptera_acutorostrata",
-  "Mammals", 
+  "Common Minke whale", "Balaenoptera_acutorostrata", "Mammals", 
   "Dugong", "Dugong_dugon", "Mammals", 
   "Grey nurse shark", "Carcharias_taurus", "Sharks and rays", 
   "Tiger shark", "Galeocerdo_cuvier", "Sharks and rays", 
-  "Great hammerhead shark", "Sphyrna_mokarran",
-  "Sharks and rays", 
+  "Great hammerhead shark", "Sphyrna_mokarran", "Sharks and rays", 
   "Giant oceanic manta ray", "Mobula_birostris", "Sharks and rays", 
   "Reef manta ray", "Mobula_alfredi", "Sharks and rays", 
   "Whitetip reef shark", "Triaenodon_obesus", "Sharks and rays",

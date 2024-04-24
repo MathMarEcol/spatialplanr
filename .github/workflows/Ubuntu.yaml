@@ -41,11 +41,16 @@ jobs:
           sudo apt-get update
           sudo apt-get -y install \
             libcurl4-gnutls-dev coinor-libsymphony-dev \
-            libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev
+            libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev \
+            libgmp3-dev libmpfr-dev
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck, any::remotes, any::lpsymphony
+          extra-packages: |
+            any::rcmdcheck
+            any::remotes
+            any::lpsymphony
+            any::shinytest
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2

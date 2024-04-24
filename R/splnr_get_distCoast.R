@@ -23,7 +23,7 @@
 #'   sf::st_set_crs(crs)
 #' splnr_get_distCoast(grid)
 #'
-#' cCRS <- "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"
+#' cCRS <- "ESRI:54009"
 #'
 #' Bndry <- splnr_get_boundary(Limits = "Coral Sea",
 #'                             Type = "Oceans",
@@ -35,11 +35,12 @@
 #' ) %>%
 #'   sf::st_transform(cCRS)
 #'
-#' dat_sf <- splnr_get_planningUnits(Bndry = Bndry,
-#'                                   InnerB = landmass,
-#'                                   CellArea = 10000,
-#'                                   Shape = "Hexagon") %>%
-#'   splnr_get_distCoast(res = "medium")
+# dat_sf <- spatialgridr::get_grid(area_polygon = Bndry,
+#                                  projection_crs = cCRS,
+#                                  option = "sf_hex",
+#                                  resolution = 10000,
+#                                  sf_method = "centroid") %>%
+#   splnr_get_distCoast(res = "medium")
 
 splnr_get_distCoast <- function(dat_sf, custom_coast = NULL, res = NULL) {
 

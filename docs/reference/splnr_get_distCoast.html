@@ -29,9 +29,9 @@ The output inherits the crs from this sf object so ensure it is in the correct p
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/Climate-smart_Workflow.html">Climate-Smart Spatial Planning</a>
-    <a class="dropdown-item" href="../articles/GlobalFishingWatch_Examples.html">Global Fishing Watch Examples</a>
-    <a class="dropdown-item" href="../articles/MultipleUse_Examples.html">Spatial Planning With Zones</a>
+    <a class="dropdown-item" href="../articles/ClimateSmart.html">Climate-Smart Spatial Planning</a>
+    <a class="dropdown-item" href="../articles/GlobalFishingWatch.html">Global Fishing Watch Examples</a>
+    <a class="dropdown-item" href="../articles/MultipleUse.html">Spatial Planning With Zones</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -117,13 +117,13 @@ Updated: December 2023</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8 POLYGON ((1 2, 2 2, 2 3, 1 ...         371.9517</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9 POLYGON ((2 2, 3 2, 3 3, 2 ...         406.2456</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">cCRS</span> <span class="op">&lt;-</span> <span class="st">"+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"</span></span></span>
+<span class="r-in"><span><span class="va">cCRS</span> <span class="op">&lt;-</span> <span class="st">"ESRI:54009"</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">Bndry</span> <span class="op">&lt;-</span> <span class="fu"><a href="splnr_get_boundary.html">splnr_get_boundary</a></span><span class="op">(</span>Limits <span class="op">=</span> <span class="st">"Coral Sea"</span>,</span></span>
 <span class="r-in"><span>                            Type <span class="op">=</span> <span class="st">"Oceans"</span>,</span></span>
 <span class="r-in"><span>                            cCRS <span class="op">=</span> <span class="va">cCRS</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Reading layer `ne_10m_geography_marine_polys' from data source </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/RtmpgS3qyV/ne_10m_geography_marine_polys.shp' </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/Rtmp4J5cJR/ne_10m_geography_marine_polys.shp' </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   using driver `ESRI Shapefile'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simple feature collection with 306 features and 37 fields</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Geometry type: MULTIPOLYGON</span>
@@ -137,11 +137,6 @@ Updated: December 2023</p>
 <span class="r-in"><span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">cCRS</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">dat_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="splnr_get_planningUnits.html">splnr_get_planningUnits</a></span><span class="op">(</span>Bndry <span class="op">=</span> <span class="va">Bndry</span>,</span></span>
-<span class="r-in"><span>                                  InnerB <span class="op">=</span> <span class="va">landmass</span>,</span></span>
-<span class="r-in"><span>                                  CellArea <span class="op">=</span> <span class="fl">10000</span>,</span></span>
-<span class="r-in"><span>                                  Shape <span class="op">=</span> <span class="st">"Hexagon"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">splnr_get_distCoast</span><span class="op">(</span>res <span class="op">=</span> <span class="st">"medium"</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

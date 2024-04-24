@@ -27,9 +27,9 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/Climate-smart_Workflow.html">Climate-Smart Spatial Planning</a>
-    <a class="dropdown-item" href="../articles/GlobalFishingWatch_Examples.html">Global Fishing Watch Examples</a>
-    <a class="dropdown-item" href="../articles/MultipleUse_Examples.html">Spatial Planning With Zones</a>
+    <a class="dropdown-item" href="../articles/ClimateSmart.html">Climate-Smart Spatial Planning</a>
+    <a class="dropdown-item" href="../articles/GlobalFishingWatch.html">Global Fishing Watch Examples</a>
+    <a class="dropdown-item" href="../articles/MultipleUse.html">Spatial Planning With Zones</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -91,17 +91,17 @@
           
           <code><a href="splnr_get_gfw.html">splnr_get_gfw()</a></code> 
         </dt>
-        <dd>Function to recover data from Global Fishing Watch.</dd>
+        <dd>The <code>get_gfwData</code> function recover the data of Global Fishing Watch and returns it as a sf object. <br>
+We have the same parameters than the <code>get_raster</code> function, plus <code>n_crs</code> which is the crs for the sf_modification <br>
+Different possible values can be combined and are : <br><ul><li><p><code>Time Range</code>, <code>Flag</code>, <code>Geartype</code>. <br><em>(A combination can be : c('Time Range','Geartype'), if you want to get the sum of fishing hours per date and geartype, for example you want to display the drifting longline fishing in a specific year)</em> <br><br><strong>Notes :</strong> <br></p></li>
+</ul><ol><li><p>For the moment we are limited to the EEZs of each region, but we can potentially restrict the working area to specific MPAs (further details in the gfwr package). <br></p></li>
+<li><p>Days indicated in the__ <code>start_date</code> <strong>and</strong> <code>end_date</code> __variables are included in the data recovery.</p></li>
+</ol></dd>
       </dl><dl><dt>
           
           <code><a href="splnr_get_kappaCorrData.html">splnr_get_kappaCorrData()</a></code> 
         </dt>
         <dd>Prepare data to plot Cohen's Kappa correlation matrix</dd>
-      </dl><dl><dt>
-          
-          <code><a href="splnr_get_planningUnits.html">splnr_get_planningUnits()</a></code> 
-        </dt>
-        <dd>Function to create square or heaxagonal planning units for your area of interest.</dd>
       </dl><dl><dt>
           
           <code><a href="splnr_get_selFreq.html">splnr_get_selFreq()</a></code> 

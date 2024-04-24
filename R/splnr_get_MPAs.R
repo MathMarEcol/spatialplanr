@@ -14,7 +14,9 @@
 #'
 #' @examples
 #' dat <- splnr_get_MPAs(dat_PUs, "Australia")
+#'
 #' aust <- rnaturalearth::ne_countries(country = "Australia", returnclass = "sf")
+#'
 #' gg <- ggplot2::ggplot() +
 #'   ggplot2::geom_sf(data = dat, ggplot2::aes(fill = wdpa)) +
 #'   ggplot2::geom_sf(data = aust, fill = "grey50")
@@ -33,7 +35,7 @@ splnr_get_MPAs <- function(PlanUnits,
   )
 
   wdpa_data <- Countries %>%
-    lapply(wdpar::wdpa_fetch,
+    purrr::map(wdpar::wdpa_fetch,
            wait = TRUE,
            download_dir = rappdirs::user_data_dir("wdpar")) %>%
     dplyr::bind_rows() %>%
@@ -44,8 +46,9 @@ splnr_get_MPAs <- function(PlanUnits,
     wdpar::wdpa_clean(retain_status = NULL, erase_overlaps = FALSE) %>% # clean protected area data
     wdpar::wdpa_dissolve() %>% # Dissolve data to remove overlapping areas.
     dplyr::select("geometry") %>%
-    dplyr::mutate(wdpa = 1) %>%
-    splnr_convert_toPUs(PlanUnits)
+    dplyr::mutate(wdpa = 1)
+
+  wdpa_data <- spatialgridr::get_data_in_grid(spatial_grid = PlanUnits, dat = wdpa_data, apply_cutoff = FALSE)
 
   return(wdpa_data)
 }
