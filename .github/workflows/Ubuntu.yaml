@@ -38,7 +38,6 @@ jobs:
 
       - name: Install system dependencies
         run: |
-          sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
           sudo apt-get update
           sudo apt-get -y install \
             libcurl4-gnutls-dev coinor-libsymphony-dev \
@@ -47,12 +46,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: |
-            any::rcmdcheck
-            any::covr
-            any::remotes
-            any::lpsymphony
-            any::shinytest
+          extra-packages: any::rcmdcheck, any::remotes, any::lpsymphony, any::shinytest
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
