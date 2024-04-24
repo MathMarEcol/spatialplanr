@@ -25,31 +25,33 @@ splnr_get_MPAs <- function(PlanUnits,
                            Status = c("Designated", "Established", "Inscribed"),
                            Desig = c("National", "Regional", "International", "Not Applicable"),
                            Category = c("Ia", "Ib", "II", "III", "IV")) {
+#
+#   assertthat::assert_that(
+#     inherits(PlanUnits, "sf"),
+#     is.character(Countries),
+#     all(Status %in% c("Designated", "Established", "Inscribed")),
+#     all(Desig %in% c("National", "Regional", "International", "Not Applicable")),
+#     all(Category %in% c("Ia", "Ib", "II", "III", "IV"))
+#   )
+#
+#   wdpa_data <- Countries %>%
+#     lapply(wdpar::wdpa_fetch,
+#            wait = TRUE,
+#            download_dir = rappdirs::user_data_dir("wdpar")
+#     ) %>%
+#     dplyr::bind_rows() %>%
+#     dplyr::filter(.data$MARINE > 0) %>%
+#     dplyr::filter(.data$IUCN_CAT %in% Category) %>% # filter category
+#     dplyr::filter(.data$DESIG_TYPE %in% Desig) %>% # filter designation
+#     dplyr::filter(.data$STATUS %in% Status) %>% # filter status
+#     wdpar::wdpa_clean(retain_status = NULL, erase_overlaps = FALSE) %>% # clean protected area data
+#     wdpar::wdpa_dissolve() %>% # Dissolve data to remove overlapping areas.
+#     dplyr::select("geometry") %>%
+#     dplyr::mutate(wdpa = 1)
+#
+#   wdpa_data <- spatialgridr::get_data_in_grid(spatial_grid = PlanUnits, dat = wdpa_data, apply_cutoff = FALSE)
 
-  assertthat::assert_that(
-    inherits(PlanUnits, "sf"),
-    is.character(Countries),
-    all(Status %in% c("Designated", "Established", "Inscribed")),
-    all(Desig %in% c("National", "Regional", "International", "Not Applicable")),
-    all(Category %in% c("Ia", "Ib", "II", "III", "IV"))
-  )
-
-  wdpa_data <- Countries %>%
-    lapply(wdpar::wdpa_fetch,
-           wait = TRUE,
-           download_dir = rappdirs::user_data_dir("wdpar")
-    ) %>%
-    dplyr::bind_rows() %>%
-    dplyr::filter(.data$MARINE > 0) %>%
-    dplyr::filter(.data$IUCN_CAT %in% Category) %>% # filter category
-    dplyr::filter(.data$DESIG_TYPE %in% Desig) %>% # filter designation
-    dplyr::filter(.data$STATUS %in% Status) %>% # filter status
-    wdpar::wdpa_clean(retain_status = NULL, erase_overlaps = FALSE) %>% # clean protected area data
-    wdpar::wdpa_dissolve() %>% # Dissolve data to remove overlapping areas.
-    dplyr::select("geometry") %>%
-    dplyr::mutate(wdpa = 1)
-
-  wdpa_data <- spatialgridr::get_data_in_grid(spatial_grid = PlanUnits, dat = wdpa_data, apply_cutoff = FALSE)
+  wdpa_data <- wdpar::wdpa_fetch("Australia")
 
   return(wdpa_data)
 }
