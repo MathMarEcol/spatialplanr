@@ -51,7 +51,7 @@ splnr_get_MPAs <- function(PlanUnits,
 #
 #   wdpa_data <- spatialgridr::get_data_in_grid(spatial_grid = PlanUnits, dat = wdpa_data, apply_cutoff = FALSE)
 
-  wdpa_data <- wdpar::wdpa_fetch("Australia")
+  wdpa_data <- dat_PUs
 
   return(wdpa_data)
 }
