@@ -149,12 +149,15 @@ splnr_plot <- function(df,
 
 
   } else if (is_continuous) {
+
     gg <- gg +
       ggplot2::geom_sf(data = df, ggplot2::aes(fill = {{col_names}}), colour = "grey80", size = 0.1) +
       # ggplot2::scale_fill_gradientn(colors = rev(RColorBrewer::brewer.pal(9, paletteName)), limits = NULL) + # TODO Remove RColourBrewer if possible to reduce dependencies
       ggplot2::guides(fill = ggplot2::guide_colourbar(order = 1))
+
   } else if (is.null(col_names)){ # No column to plot by
-    gg <- ggplot2::ggplot() +
+
+    gg <- gg +
       ggplot2::geom_sf(data = df, colour = "grey80", fill = NA, size = 0.1)
   }
 
