@@ -53,9 +53,8 @@ library(spatialplanr)
 
 ## API 
 To access GFW APIs, you need to :<br>
-1. register for a GFW account here : http://bit.ly/447cRG9 <br>
-2. Request API key here :
-https://globalfishingwatch.org/our-apis/tokens
+1. register for a GFW account [here](http://bit.ly/447cRG9).   
+2. Request API key [here](https://globalfishingwatch.org/our-apis/tokens).   
 
 Once you have your token, add it to your .Renviron file (by executing the chunk 
 below), by writing (GFW_TOKEN = "YOUR_TOKEN") in the file. <br> 
@@ -143,7 +142,7 @@ eezs <- oceandatr::get_area(area_name = "Australia") %>%
 ##### Raw Fishing Effort
 ```{r, echo=FALSE}
 main_plot <- ggplot2::ggplot(data_sf_combined) +
-  ggplot2::geom_sf(ggplot2::aes(color = log10(`Apparent Fishing Hours`))) +
+  ggplot2::geom_sf(ggplot2::aes(color = log10(ApparentFishingHrs))) +
   ggplot2::geom_sf(data = coast_clipped, color = "black", fill = NA) + # Add coastline
   ggplot2::geom_sf(data = eezs, fill = "red", color = "red") + # Add the EEZ with hatching
   ggplot2::scale_color_viridis_c(guide = "legend") +
@@ -168,7 +167,7 @@ main_plot <- ggplot2::ggplot(data_sf_combined) +
 # The display and writing in this section is for information purposes only, to understand how the information on the grid is translated.
 overlay_plot <- ggplot2::ggplot(data_sf_combined) +
   ggplot2::geom_rect(ggplot2::aes(xmin = -Inf,xmax = Inf,ymin = -Inf,ymax = Inf), fill = "white") +
-  ggplot2::geom_sf(ggplot2::aes(color = log10(`Apparent Fishing Hours`))) +
+  ggplot2::geom_sf(ggplot2::aes(color = log10(ApparentFishingHrs))) +
   ggplot2::geom_sf(data = coast_clipped, color = "black", fill = NA) + # Add coastline
   ggplot2::geom_sf(data = eezs, fill = "red", color = "red") +
   ggplot2::scale_color_viridis_c(guide = "legend") +
@@ -225,7 +224,7 @@ fishing activity.
 # We need to change the temporal range according to our need group by it to display the total fishing hours. <br>
 data_sf_combined <- splnr_get_gfw("Australia", "2019-01-01", "2023-12-31", "monthly", key = key) %>%
   dplyr::group_by(Year, Month) %>%
-  dplyr::summarize(Total_Fishing_Hours = sum(`Apparent Fishing Hours`))
+  dplyr::summarize(Total_Fishing_Hours = sum(ApparentFishingHrs))
 ```
 
 ```{r, echo=FALSE}
@@ -307,13 +306,10 @@ ggplot2::ggplot(data_sf_combined) +
 The fishing detection model was trained on AIS data from 503 vessels and 
 identified fishing activity with over 90% accuracy, which means that it can 
 identify a fishing and non-fishing activity with high accuracy. More details 
-on AIS operation and limitations here : 
-<br> https://globalfishingwatch.org/dataset-and-code-fishing-effort/ <br>
+on AIS operation and limitations [here](https://globalfishingwatch.org/dataset-and-code-fishing-effort/).
 
 
 ###### Hierarchy of vessels gear types :
-<!-- <img src="fishing_classification_hierarchy.jpg" alt="Fishing Classification Hierarchy" width="750" height="500"/> <br> -->
+<img src="https://globalfishingwatch.org/wp-content/uploads/figure6_fishing_classification_hierarchy-1.jpg" alt="Fishing Classification Hierarchy" width="750" height="500"/> <br>
 
 _Source : https://globalfishingwatch.org/datasets-and-code-vessel-identity/ _
-
-https://gateway.api.globalfishingwatch.org/auth?client=gfw&callback=https%3A%2F%2Fglobalfishingwatch.org%2Fmap%2F%3FcallbackUrlStorage%3Dtrue&locale=en 
