@@ -1,6 +1,6 @@
 # splnr_get_MaskedPolygon <- function(df, res, mask, inverse){
 #
-#   longlat <- "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"
+#   longlat <- "EPSG:4326"
 #
 #   # Creating a empty raster
 #   rs <- raster::raster(ncol = 360*(1/res), nrow = 180*(1/res))
