@@ -10,22 +10,13 @@
     <loc>https://mathmarecol.github.io/spatialplanr/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/articles/Climate-smart_Workflow.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/articles/ClimateSmart.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/articles/GlobalFishingWatch.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/articles/GlobalFishingWatch_Examples.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/articles/MultipleUse.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/articles/MultipleUse_Examples.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/articles/index.html</loc>
@@ -109,9 +100,6 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_convert_toPUs.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_convert_toPacific.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_create_polygon.html</loc>
   </url>
   <url>
@@ -139,9 +127,6 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_kappaCorrData.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_planningUnits.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_get_selFreq.html</loc>
   </url>
   <url>
@@ -152,15 +137,6 @@
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_MPAs.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_PUs.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_binFeature.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_circBplot.html</loc>
@@ -178,13 +154,7 @@
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_corrMat.html</loc>
   </url>
   <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_cost.html</loc>
-  </url>
-  <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_costOverlay.html</loc>
-  </url>
-  <url>
-    <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_featureNo.html</loc>
   </url>
   <url>
     <loc>https://mathmarecol.github.io/spatialplanr/reference/splnr_plot_featureRep.html</loc>
