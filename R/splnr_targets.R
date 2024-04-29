@@ -14,6 +14,15 @@
 #' targets <- dat_species_prob %>%
 #'   splnr_targets_byInverseArea(target_min = 0.3, target_max = 0.8)
 splnr_targets_byInverseArea <- function(df, target_min, target_max) {
+
+  assertthat::assert_that(
+    inherits(df, c("sf", "data.frame")),
+    is.numeric(target_min) && target_min >= 0 && target_min <= 1,
+    is.numeric(target_max) && target_max >= 0 && target_max <= 1,
+    target_min <= target_max,
+    "cellID" %in% names(df)
+  )
+
   PU_area_km2 <- as.numeric(sf::st_area(df[1, 1]) / 1e+06) # Area of each planning unit
 
   total_PU_area <- nrow(df) * PU_area_km2 # Total area of the study region
@@ -54,6 +63,16 @@ splnr_targets_byInverseArea <- function(df, target_min, target_max) {
 #'   catName = "category"
 #' )
 splnr_targets_byCategory <- function(dat, catTarg, catName = "Category") {
+
+  assertthat::assert_that(
+    inherits(dat, c("sf", "data.frame")),
+    is.character(catName),
+    catName %in% names(dat),
+    is.vector(catTarg),
+    length(catTarg) > 0,
+    all(names(catTarg) %in% unique(dat[[catName]]))
+  )
+
   dat <- dat %>%
     dplyr::left_join(
       tibble::enframe(catTarg),
@@ -83,6 +102,14 @@ splnr_targets_byCategory <- function(dat, catTarg, catName = "Category") {
 #' IUCN_target <- c("EX" = 0.8, "EW" = 0.6)
 #' dat <- splnr_targets_byIUCN(dat, IUCN_target)
 splnr_targets_byIUCN <- function(dat, IUCN_target, IUCN_col = "IUCN_Category") {
+
+  assertthat::assert_that(
+    inherits(dat, c("sf", "data.frame")),
+    is.na(IUCN_col) || is.character(IUCN_col),
+    IUCN_col %in% names(dat),
+    (is.numeric(IUCN_target) && length(IUCN_target) == 1) || is.vector(IUCN_target)
+  )
+
   if ("target" %in% colnames(dat) == FALSE) {
     dat$target <- NA
   }

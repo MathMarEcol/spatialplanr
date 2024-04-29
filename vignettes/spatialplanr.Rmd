@@ -3,31 +3,25 @@ title: "A Basic Spatial Planning Workflow"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{A Basic Spatial Planning Workflow}
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
-  markdown: 
-    wrap: 72
+  %\VignetteEncoding{UTF-8}
 ---
-
+  
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  warning = FALSE,
-  cache = FALSE,
-  message = FALSE,
-  eval = TRUE,
-  fig.width = 9
+collapse = TRUE,
+comment = "#>",
+warning = FALSE,
+cache = FALSE,
+message = FALSE,
+eval = TRUE,
+fig.width = 9
 )
-```
-
-```{r klippy, eval=TRUE, echo=FALSE, include=TRUE}
-klippy::klippy(position = c("top", "right"))
 ```
 
 ```{r setup}
 library(spatialplanr)
+# devtools::load_all()
 ```
 
 # Overview
@@ -55,15 +49,13 @@ Region <- c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)
 Set the shape and area of the planning unit in square kilometres.
 
 ```{r}
-Shape <- "Hexagon" # "Shape of PUs
-PU_size <- 10000 # km2
+PU_diam <- 107460 # m2 (10,000 km2)
 ```
 
 Choose CRS for analysis. In this case we use Mollweide
 
 ```{r}
-cCRS <-
-  "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"
+cCRS <- "ESRI:54009"
 ```
 
 ## Analysis Region
@@ -91,25 +83,31 @@ landmass <- rnaturalearth::ne_countries(
 ## Create Planning Units
 
 ```{r}
-PUs <- splnr_get_planningUnits(Bndry = Bndry, InnerB = landmass, CellArea = PU_size, Shape = Shape)
+PUs <- spatialgridr::get_grid(area_polygon = Bndry,
+                              projection_crs = cCRS,
+                              option = "sf_hex",
+                              resolution = PU_diam,
+                              sf_method = "centroid")
+
 ```
 
 We can check what the PUs look like
 
 ```{r}
-(ggPU <- splnr_plot_PUs(PUs) +
-  ggplot2::theme_bw()) # Plot Planning Units
+(ggPU <- splnr_plot(df = PUs) +
+   ggplot2::theme_bw()) # Plot Planning Units
 ```
+
 
 If we want to add additional properties to our map, for example landmass
 or the boundary, we can use `splnr_gg_add()`.
 
 ```{r}
-(ggPU <- splnr_plot_PUs(PUs) +
-  splnr_gg_add(
-    Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = "Default"
-  ))
+(ggPU <- splnr_plot(df = PUs) +
+   splnr_gg_add(
+     Bndry = Bndry, overlay = landmass,
+     cropOverlay = PUs, ggtheme = "Default"
+   ))
 ```
 
 We can also use a customised `ggplpot` theme that can be passed as a
@@ -129,11 +127,11 @@ splnr_theme <- list(
   )
 )
 
-(ggPU <- splnr_plot_PUs(PUs) +
-  splnr_gg_add(
-    Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+(ggPU <- splnr_plot(PUs) +
+    splnr_gg_add(
+      Bndry = Bndry, overlay = landmass,
+      cropOverlay = PUs, ggtheme = splnr_theme
+    ))
 ```
 
 ## Get the features
@@ -152,13 +150,11 @@ Dict <- tibble::tribble(
   "Olive ridley sea turtle", "Lepidochelys_olivacea", "Reptiles", 
   "Saltwater crocodile", "Crocodylus_porosus", "Reptiles", 
   "Humpback whale", "Megaptera_novaeangliae", "Mammals", 
-  "Common Minke whale", "Balaenoptera_acutorostrata",
-  "Mammals", 
+  "Common Minke whale", "Balaenoptera_acutorostrata", "Mammals", 
   "Dugong", "Dugong_dugon", "Mammals", 
   "Grey nurse shark", "Carcharias_taurus", "Sharks and rays", 
   "Tiger shark", "Galeocerdo_cuvier", "Sharks and rays", 
-  "Great hammerhead shark", "Sphyrna_mokarran",
-  "Sharks and rays", 
+  "Great hammerhead shark", "Sphyrna_mokarran", "Sharks and rays", 
   "Giant oceanic manta ray", "Mobula_birostris", "Sharks and rays", 
   "Reef manta ray", "Mobula_alfredi", "Sharks and rays", 
   "Whitetip reef shark", "Triaenodon_obesus", "Sharks and rays",
@@ -189,14 +185,16 @@ the binary habitat suitability map for Green sea turtles:
 
 ```{r}
 (ggFeature1 <- splnr_plot(
-  datEx_species_bin,
-  "Chelonia_mydas",
-  plot_title = "Chelonia mydas"
+  df = datEx_species_bin,
+  col_names = "Chelonia_mydas",
+  plot_title = "Chelonia mydas",
+  legend_labels = c("Absence", "Presence")
 ) +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,
     cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+  )
+)
 ```
 
 The suitable habitat for Green sea turtles as predicted by Aquamaps is
@@ -207,7 +205,10 @@ are fairly ubiquitous across the whole Coral Sea.
 ```{r}
 (ggFeature <- splnr_plot(
   datEx_species_bin,
-  "Megaptera_novaeangliae"
+  "Megaptera_novaeangliae",
+  plot_title = "Megaptera novaeangliae",
+  legend_title = "",
+  legend_labels = c("Absence", "Presence")
 ) +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,
@@ -225,11 +226,16 @@ we can also plot the number of features with suitable habitat within a
 planning unit of the study region.
 
 ```{r}
-(ggFeatNo <- splnr_plot(datEx_species_bin, showFeatureSum = TRUE) +
-  splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+(ggFeatNo <- splnr_plot(df = datEx_species_bin, 
+                        col_names =  colnames(datEx_species_bin %>% 
+                                                sf::st_drop_geometry() %>% 
+                                                dplyr::select(tidyselect::starts_with("Spp"))),
+                        plot_title = "", 
+                        legend_title = "Number of features") +
+   splnr_gg_add(
+     PUs = PUs, Bndry = Bndry, overlay = landmass,
+     cropOverlay = PUs, ggtheme = splnr_theme
+   ))
 ```
 
 ### Prepare Data for prioritisation
@@ -258,11 +264,11 @@ units are assigned an equal cost of 1.
 
 ```{r}
 out_sf$Cost_None <- 1
-(ggCost <- splnr_plot(out_sf, col_names = "Cost_None") +
-  splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+(ggCost <- splnr_plot(out_sf, col_names = "Cost_None", legend_title = "Cost", legend_labels = "1") +
+    splnr_gg_add(
+      PUs = PUs, Bndry = Bndry, overlay = landmass,
+      cropOverlay = PUs, ggtheme = splnr_theme
+    ))
 ```
 
 
@@ -272,18 +278,18 @@ out_sf$Cost_None <- 1
 The gfwr package allows us to recover data from fisheries across the world,
 we set here the parameter `compress` as `TRUE` to recover the 
 `Apparent fishing hours` per coordinates.
-```{r}
+```{r, eval=FALSE}
 gfw_data <- splnr_get_gfw('Australia', "2022-01-01", "2022-12-31", "yearly", cCRS = cCRS, compress = TRUE) %>%
   sf::st_interpolate_aw(PUs, extensive = TRUE)
 
 out_sf$Apparent.Fishing.Hours <- 0 # Add column to PUs
 out_sf$Apparent.Fishing.Hours[as.numeric(rownames(PUs))] <- gfw_data$Apparent.Fishing.Hours # Put corresponding data in PUs
- 
+
 
 (ggCost <- splnr_plot(out_sf, col_names = "Apparent.Fishing.Hours") +
-  splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
+    splnr_gg_add(
+      PUs = PUs, Bndry = Bndry, overlay = landmass,
+      cropOverlay = PUs, ggtheme = splnr_theme
     ))
 ```
 
@@ -332,7 +338,7 @@ ecological information and only chosen for visualization purposes.
 ### Set up conservation problem
 
 ```{r}
-datEx_problem <- prioritizr::problem(out_sf, feature_names, "Apparent.Fishing.Hours") %>%
+datEx_problem <- prioritizr::problem(out_sf, feature_names, "Cost_None") %>%
   prioritizr::add_min_set_objective() %>%
   prioritizr::add_relative_targets(target$target) %>%
   prioritizr::add_binary_decisions() %>%
@@ -356,11 +362,11 @@ importance scores
 #### Visualization of the solution
 
 ```{r}
-(ggSoln <- splnr_plot_solution(datEx_soln) +
-  splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+(ggSoln <- splnr_plot(datEx_soln, col_names = "solution_1", legend_title = "Solution", legend_labels = c("0","1")) +
+   splnr_gg_add(
+     PUs = PUs, Bndry = Bndry, overlay = landmass,
+     cropOverlay = PUs, ggtheme = splnr_theme
+   ))
 ```
 
 This plot shows the optimal solution for the planning region that meets
@@ -374,7 +380,7 @@ overlay of the cost to show how the solution avoids highly costly areas:
 (ggCostOverlay <- splnr_plot_costOverlay(
   soln = datEx_soln,
   Cost = NA,
-  Cost_name = "Apparent.Fishing.Hours"
+  Cost_name = "Cost_None"
 ) +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,
@@ -394,13 +400,13 @@ region.
 
 ```{r, fig.height=7}
 dfTarget <- splnr_get_featureRep(datEx_soln, datEx_problem,
-  climsmart = FALSE, solnCol = "solution_1"
+                                 climsmart = FALSE, solnCol = "solution_1"
 )
 
 
 (ggTarget <- splnr_plot_featureRep(dfTarget, category = Dict, renameFeatures = TRUE,
                                    namesToReplace = Dict, categoryFeatureCol = "nameCommon",
-  nr = 1, showTarget = TRUE,
+                                   nr = 1, showTarget = TRUE,
 ))
 ```
 
@@ -485,10 +491,10 @@ LockedIn <- splnr_get_MPAs(PUs, "Australia") %>%
 
 ```{r}
 (ggMPA <- splnr_plot(MPAsCoralSea, "wdpa") +
-  splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+   splnr_gg_add(
+     PUs = PUs, Bndry = Bndry, overlay = landmass,
+     cropOverlay = PUs, ggtheme = splnr_theme
+   ))
 ```
 
 We will also include targets based on IUCN categories to prioritise
@@ -549,10 +555,10 @@ datEx_soln2 <- datEx_problem2 %>%
   prioritizr::solve.ConservationProblem()
 
 (ggSoln2 <- splnr_plot_solution(datEx_soln2) +
-  splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+    splnr_gg_add(
+      PUs = PUs, Bndry = Bndry, overlay = landmass,
+      cropOverlay = PUs, ggtheme = splnr_theme
+    ))
 ```
 
 But we locked in areas that were already existing MPAs. If we want to
@@ -561,12 +567,12 @@ MPAs, we can can add this to the `splnr_gg_add()`function.
 
 ```{r}
 (splnr_plot_solution(datEx_soln2) +
-  splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, lockedInAreas = MPAsCoralSea,
-    colInterest = MPAsCoralSea$wdpa, Type = "Full",
-    colorLI = "lightgrey", alphaLI = 0.2, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+   splnr_gg_add(
+     PUs = PUs, Bndry = Bndry, lockedInAreas = MPAsCoralSea,
+     colInterest = MPAsCoralSea$wdpa, Type = "Full",
+     colorLI = "lightgrey", alphaLI = 0.2, overlay = landmass,
+     cropOverlay = PUs, ggtheme = splnr_theme
+   ))
 ```
 
 If we instead only want to see the contours of the locked in areas we
@@ -574,21 +580,21 @@ can set `Type = "Contours"`in `splnr_gg_add()`.
 
 ```{r}
 (splnr_plot_solution(datEx_soln2) +
-  splnr_gg_add(
-    lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa,
-    Type = "Contours", overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+   splnr_gg_add(
+     lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa,
+     Type = "Contours", overlay = landmass,
+     cropOverlay = PUs, ggtheme = splnr_theme
+   ))
 ```
 
 #### Visualize comparison
 
 ```{r}
 (ggComp <- splnr_plot_comparison(datEx_soln, datEx_soln2) +
-  splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+   splnr_gg_add(
+     PUs = PUs, Bndry = Bndry, overlay = landmass,
+     cropOverlay = PUs, ggtheme = splnr_theme
+   ))
 ```
 
 This plot shows how the first solution (without current MPAs) differs
@@ -599,11 +605,11 @@ selected in both solutions (grey).
 
 ```{r}
 CorrMat <- splnr_get_kappaCorrData(list(datEx_soln, datEx_soln2),
-  name_sol = c("soln1", "soln2")
+                                   name_sol = c("soln1", "soln2")
 )
 
 (ggCorr <- splnr_plot_corrMat(CorrMat,
-  AxisLabels = c("Solution 1", "Solution 2")
+                              AxisLabels = c("Solution 1", "Solution 2")
 ))
 ```
 
@@ -632,8 +638,8 @@ selFreq <- datEx_soln_portfolio %>% # calculate selection frequency
   dplyr::select(selFreq)
 
 (ggselFreq <- splnr_plot_selectionFreq(selFreq) +
-  splnr_gg_add(
-    PUs = PUs, Bndry = Bndry, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme
-  ))
+    splnr_gg_add(
+      PUs = PUs, Bndry = Bndry, overlay = landmass,
+      cropOverlay = PUs, ggtheme = splnr_theme
+    ))
 ```

@@ -33,7 +33,9 @@ splnr_plot_importanceScore(
 A ggplot object of the plot
 }
 \description{
-[Importance scores]{https://prioritizr.net/reference/importance.html} are a mean to reflect the irreplaceability of a planning unit in the solution of a \code{prioirtizr} conservation problem. Based on the \code{prioritizr} package, \code{splnr_plot_importanceScore()} allows to visualize three different types of importance scores with \code{ggplot2} that should be used based on the conservation problem at hand. The \code{prioritizr} development team generally recommend using the [replacement cost score]{https://prioritizr.net/reference/eval_replacement_importance.html}, however this might be not be feasible for conservation problems with many planning units or features.
+\href{https://prioritizr.net/reference/importance.html}{Importance scores} are a mean to reflect the irreplaceability of a planning unit in the solution of a \code{prioirtizr} conservation problem. Based on the \code{prioritizr} package, \code{splnr_plot_importanceScore()} allows to visualize three different types of importance scores with \code{ggplot2} that should be used based on the conservation problem at hand. The \code{prioritizr} development team generally recommend using the \href{https://prioritizr.net/reference/eval_replacement_importance.html}{replacement cost score}, however this might be not be feasible for conservation problems with many planning units or features.
+}
+\details{
 The function outputs a \code{ggobject} and can be combined with the \code{spatialplanr} function \code{\link[=splnr_gg_add]{splnr_gg_add()}}.
 }
 \examples{

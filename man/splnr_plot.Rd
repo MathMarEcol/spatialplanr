@@ -2,15 +2,16 @@
 % Please edit documentation in R/splnr_plot.R
 \name{splnr_plot}
 \alias{splnr_plot}
-\title{Function to plot data. (For now can replace splnr_plot_cost(), splnr_plot_binFeature(), splnr_plot_MPAs(),splnr_plot_featureNo())}
+\title{Function to plot data.}
 \usage{
 splnr_plot(
   df,
   col_names = NULL,
   paletteName = "YlGnBu",
-  colorVals = NULL,
+  colourVals = c("#c6dbef", "#3182bd"),
   plot_title = "",
-  showFeatureSum = FALSE
+  legend_title = NULL,
+  legend_labels = NULL
 )
 }
 \arguments{
@@ -20,31 +21,50 @@ splnr_plot(
 
 \item{paletteName}{The name of the color palette to use for filling. Default is "YlGnBu".}
 
-\item{colorVals}{The color values to use if col_names is specified and the data is binary.}
+\item{colourVals}{The color values to use if col_names is specified and the data is binary.}
 
 \item{plot_title}{The title of the plot.}
 
-\item{showFeatureSum}{A boolean indicator to specify if the feature sum should be displayed.}
+\item{legend_title}{The title of the legend.}
+
+\item{legend_labels}{A vector of strings containing the labels to use for legend values.}
 }
 \value{
 A ggplot object.
 }
 \description{
-Written by Kilian Barreiro
-Written: February 2024
+(For now can replace splnr_plot_cost(), splnr_plot_binFeature(), splnr_plot_MPAs(),splnr_plot_featureNo())
 }
 \details{
+Written by Kilian Barreiro
+Written: February 2024
+
 Plot Spatial Data, returns a gg object
 }
 \examples{
-# Binary
-splnr_plot(dat_species_bin, col_names = "Spp1")
+# Binary plot of species distribution
+splnr_plot(df = dat_species_bin,
+           col_names = "Spp1",
+           legend_title = "Legend",
+           legend_labels = c("Absent", "Present"))
 
-# Continuous
-bathymetry <- oceandatr::get_bathymetry(spatial_grid = dat_PUs, keep = FALSE,
-classify_bathymetry = FALSE)
-splnr_plot(df = bathymetry, col_names = "bathymetry", plot_title = "bathymetry")
+# Continuous plot of bathymetry
+bathymetry <- oceandatr::get_bathymetry(spatial_grid = dat_PUs,
+                                        keep = FALSE,
+                                        classify_bathymetry = FALSE)
+splnr_plot(df = bathymetry,
+           col_names = "bathymetry",
+           plot_title = "bathymetry",
+           legend_title = "Bathymetry (m)")
+
+# Plot Planning Units
+splnr_plot(df = dat_PUs)
 
 # Multi binary features
-splnr_plot(dat_species_bin, showFeatureSum = TRUE)
+splnr_plot(df = dat_species_bin,
+           col_names = colnames(dat_species_bin \%>\%
+                                  sf::st_drop_geometry() \%>\%
+                                  dplyr::select(
+                                    tidyselect::starts_with("Spp"))),
+           legend_title = "Number of features")
 }

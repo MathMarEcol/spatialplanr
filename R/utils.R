@@ -15,6 +15,12 @@
 #'   dplyr::bind_rows(dplyr::tibble(x = seq(50, -50, by = -1), y = 180)) %>%
 #'   dplyr::bind_rows(dplyr::tibble(x = -50, y = seq(150, 120, by = -1))))
 splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
+
+  assertthat::assert_that(
+    inherits(x, "tbl_df") && !is.null(attributes(x)),
+    is.character(cCRS)
+  )
+
   x <- x %>%
     as.matrix() %>%
     list() %>%
@@ -43,6 +49,13 @@ splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
 #' df <- dat_species_prob %>%
 #'   splnr_replace_NAs("Spp2")
 splnr_replace_NAs <- function(df, vari) {
+
+  assertthat::assert_that(
+    inherits(df, c("sf", "data.frame")),
+    is.character(vari),
+    vari %in% names(df)
+  )
+
   if (sum(is.na(dplyr::pull(df, !!rlang::sym(vari)))) > 0) { # Check if there are NAs
 
     gp <- df %>%
@@ -82,6 +95,12 @@ splnr_replace_NAs <- function(df, vari) {
 #' nam <- c("Region1" = "SE Aust", "Region2" = "Tas", "Region3" = "NE Aust")
 #' df <- splnr_match_names(dat, nam)
 splnr_match_names <- function(dat, nam) {
+
+  assertthat::assert_that(
+    inherits(dat, "sf"),
+    is.character(nam) && length(nam) > 0
+  )
+
   col_name <- stringr::str_subset(colnames(dat), "geometry", negate = TRUE)[[1]]
 
   out <- dat %>%
@@ -107,6 +126,13 @@ splnr_match_names <- function(dat, nam) {
 #'   dplyr::mutate(Spp1 = Spp1 * 100) %>%
 #'   splnr_scale_01(col_name = "Spp1")
 splnr_scale_01 <- function(dat, col_name) {
+
+  assertthat::assert_that(
+    inherits(dat, c("sf", "data.frame")),
+    is.character(col_name),
+    col_name %in% names(dat)
+  )
+
   mx <- max(dplyr::pull(dat, !!rlang::sym(col_name)), na.rm = TRUE) # Get max probability
 
   if (mx > 100) {
@@ -132,7 +158,7 @@ splnr_scale_01 <- function(dat, col_name) {
 #' It requires an `sf` object input and returns the column names of the object excluding any columns you specify in the `exclude` argument.
 #'
 #' @param dat sf dataframe of features
-#' @param exclude Character vector of any columes to exclude
+#' @param exclude Character vector of any columns to exclude
 #'
 #' @return A character vector of names
 #' @export
@@ -141,6 +167,12 @@ splnr_scale_01 <- function(dat, col_name) {
 #' df <- dat_species_prob %>%
 #'   splnr_featureNames(exclude = c("cellID"))
 splnr_featureNames <- function(dat, exclude = NA) {
+
+  assertthat::assert_that(
+    inherits(dat, "sf"),
+    is.character(exclude) || is.na(exclude)
+  )
+
   if (is.na(exclude)) {
     exclude <- c("Cost_", "cellID")
   } else {
@@ -154,99 +186,6 @@ splnr_featureNames <- function(dat, exclude = NA) {
 
   return(dat)
 }
-
-
-#' Convert a world sf object to a Pacific-centred one
-#' Defaults to assuming Robinson projection
-#'
-#' Written by Jason D. Everett
-#' UQ/CSIRO/UNSW
-#' Last edited 8th Sept 2021
-#'
-#' @param df An sf dataframe
-#' @param buff The buffer too apply to features that cross after merge
-#' @param cCRS The crs to use for the output.
-#'
-#' @return An sf object in the Robinson projection
-#' @export
-#'
-#' @examples
-#' df_rob <- rnaturalearth::ne_coastline(returnclass = "sf") %>%
-#'   splnr_convert_toPacific()
-splnr_convert_toPacific <- function(df,
-                                    buff = 0,
-                                    cCRS = "+proj=robin +lon_0=180 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs") {
-  # TODO add a warning if df doesn't cross the pacific dateline
-
-  longlat <- "EPSG:4326"
-
-  # Define a long & slim polygon that overlaps the meridian line & set its CRS to match
-  # that of world Adapted from here:
-  # https://stackoverflow.com/questions/56146735/visual-bug-when-changing-robinson-projections-central-meridian-with-ggplot2
-
-  polygon <- sf::st_polygon(x = list(rbind(
-    c(-0.0001, 90),
-    c(0, 90),
-    c(0, -90),
-    c(-0.0001, -90),
-    c(-0.0001, 90)
-  ))) %>%
-    sf::st_sfc() %>%
-    sf::st_set_crs(longlat)
-
-  # Modify world dataset to remove overlapping portions with world's polygons
-  # TODO add a warning if the input df is not unprojected
-  suppressWarnings({
-    df_proj <- df %>%
-      sf::st_transform(longlat) %>% # The input needs to be unprojected.
-      sf::st_make_valid() %>% # Just in case....
-      sf::st_difference(polygon) %>%
-      sf::st_transform(crs = cCRS) # Perform transformation on modified version of polygons
-    rm(polygon)
-  })
-
-  # # notice that there is a line in the middle of Antarctica. This is because we have
-  # # split the map after reprojection. We need to fix this:
-  bbox <- sf::st_bbox(df_proj)
-  bbox[c(1, 3)] <- c(-1e-5, 1e-5)
-  polygon_proj <- sf::st_as_sfc(bbox)
-
-  crosses <- df_proj %>%
-    sf::st_intersects(polygon_proj) %>%
-    sapply(length) %>%
-    as.logical() %>%
-    which()
-
-  # # Adding buffer (usually 0)
-  df_proj <- df_proj[crosses, ] %>%
-    sf::st_buffer(buff)
-
-  return(df_proj)
-}
-
-
-
-# Create one polygon that we can use to populate with PUs
-#
-# splnr_Create_SinglePolygon <- function (df, res){
-#
-#   # Creating a empty raster
-#   rs <- raster::raster(ncol = 360*(1/res), nrow = 180*(1/res))
-#   rs[] <- 1:raster::ncell(rs)
-#   raster::crs(rs) <- sf::st_crs(df) # Make raster crs the same as the sf object.
-#
-#   # Fasterize the land object
-#   df_rs <- fasterize::fasterize(df, rs)
-#
-#   pol <- stars::as(df_rs,  "SpatialPolygonsDataFrame")
-#   pol$layer <- seq(1, length(pol))
-#
-#   # Now to a sf object and create ONE BIG polygon that we can use to populate with PUs
-#   pol_sf <- sf::st_as_sf(pol) %>%
-#     dplyr::select(.data$layer) %>%
-#     dplyr::summarise(total_layer = sum(.data$layer, do_union = TRUE))
-# }
-
 
 
 
@@ -264,7 +203,8 @@ splnr_convert_toPacific <- function(df,
 #'   splnr_arrangeFeatures()
 splnr_arrangeFeatures <- function(df) {
 
-
+  assertthat::assert_that(inherits(df, "sf"),
+                          msg = "Input must be an sf object.")
   # Sort rows to ensure all features are in the same order.
   suppressWarnings(
     xy <- sf::st_coordinates(sf::st_centroid(df))
@@ -325,6 +265,14 @@ splnr_arrangeFeatures <- function(df) {
 #'
 #' corrMat <- splnr_get_kappaCorrData(list(dat_soln, dat_soln2), name_sol = c("soln1", "soln2"))
 splnr_get_kappaCorrData <- function(sol, name_sol) {
+
+  assertthat::assert_that(
+    is.list(sol),
+    length(sol) > 1,
+    is.character(name_sol),
+    length(name_sol) == length(sol)
+  )
+
   s_list <- lapply(seq_along(sol), function(x) {
     sol[[x]] %>%
       tibble::as_tibble(.name_repair = "unique") %>%
@@ -368,7 +316,7 @@ splnr_get_kappaCorrData <- function(sol, name_sol) {
 
 #' Prepare data to plot Selection Frequency of planning units
 #'
-#' When multiple spatial plans are generated, we are often interested in how many times a planning unit is selected across an array of solutions. This array can either be a `list` of the solutions of different conservation problems or generated through a [portfolio approach]{https://prioritizr.net/reference/portfolios.html} with `prioritizr`.
+#' When multiple spatial plans are generated, we are often interested in how many times a planning unit is selected across an array of solutions. This array can either be a `list` of the solutions of different conservation problems or generated through a [portfolio approach](https://prioritizr.net/reference/portfolios.html) with `prioritizr`.
 #' `splnr_get_selFreq()` allows you to calculate the selection frequency of each planning unit of either a `list` or a `portfolio` of solutions. The resulting `sf` object can be passed for visualization to the `spatialplanr` function [splnr_plot_selectionFreq()].
 #'
 #' @param solnMany List or portfolio of `prioritizr` solutions
@@ -401,6 +349,13 @@ splnr_get_kappaCorrData <- function(sol, name_sol) {
 #' (splnr_plot_selectionFreq(selFreq))
 #'
 splnr_get_selFreq <- function(solnMany, type = "portfolio") {
+
+  assertthat::assert_that(
+    type %in% c("portfolio", "list"),
+    (type == "portfolio" && inherits(solnMany, "sf")) || (type == "list" && is.list(solnMany)),
+    (!is.null(solnMany) && length(solnMany) > 0)
+  )
+
   if (type == "portfolio") { # check if provided input is a protfolio
 
     if (class(solnMany)[[1]] != "sf") {

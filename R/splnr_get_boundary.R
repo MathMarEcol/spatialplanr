@@ -23,9 +23,10 @@ splnr_get_boundary <- function(Limits,
 ) {
   assertthat::assert_that(res > 0, msg = "Resolution 'res' must be greater than zero.")
 
-  if (is.numeric(Limits)) {
-    assertthat::assert_that(missing(Type), msg = "Type must be missing when Limits are numeric.")
+  if (is.numeric(Limits) || Limits == "Global") {
+    assertthat::assert_that(missing(Type), msg = "Type must be missing when Limits are numeric or global.")}
 
+  if (is.numeric(Limits)) {
     Bndry <- dplyr::tibble(x = seq(Limits["xmin"], Limits["xmax"], by = res), y = Limits["ymin"]) %>%
       dplyr::bind_rows(dplyr::tibble(x = Limits["xmax"], y = seq(Limits["ymin"], Limits["ymax"], by = res))) %>%
       dplyr::bind_rows(dplyr::tibble(x = seq(Limits["xmax"], Limits["xmin"], by = -res), y = Limits["ymax"])) %>%
@@ -37,8 +38,6 @@ splnr_get_boundary <- function(Limits,
   }
 
   if (Limits == "Global") {
-    assertthat::assert_that(missing(Type), msg = "Type must be missing when Limits are 'Global'.")
-
     Bndry <- dplyr::tibble(x = seq(-180, 180, by = res), y = -90) %>%
       dplyr::bind_rows(dplyr::tibble(x = 180, y = seq(-90, 90, by = res))) %>%
       dplyr::bind_rows(dplyr::tibble(x = seq(180, -180, by = -res), y = 90)) %>%

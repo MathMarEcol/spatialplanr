@@ -1,9 +1,24 @@
-#' Function to recover data from Global Fishing Watch.
+#' The `get_gfwData` function recover the data of Global Fishing Watch and
+#' returns it as a sf object.
 #'
-#' The code takes several parameters described below and return an sf object with gfw data aggregated or not (param compress)
 #'
-#' Written by Kilian Barreiro
-#' Written: February 2024
+#' The possibilities offered by this function are explained in `vignette("GlobalFishingWatch")`
+#'
+#' We have the same parameters than the `get_raster` function, plus `cCRS`
+#' which is the crs for the sf_modification <br>
+#' Different possible values can be combined and are : <br>
+#' - `Time Range`, `Flag`, `Geartype`. <br>
+#' __(A combination can be : c('Time Range','Geartype'), if you want to get__
+#' __the sum of fishing hours per date and geartype, for example you want to__
+#' __display the drifting longline fishing in a specific year)__ <br> <br>
+#' __Notes :__ <br>
+#' 1. For the moment we are limited to the EEZs of each region, but we can
+#' potentially restrict the working area to specific MPAs. <br>
+#' 2. Days indicated in the__ `start_date` __and__ `end_date` __variables are
+#' included in the data recovery.
+#'
+#' The code takes several parameters described below and return an sf object
+#' with gfw data aggregated or not (param compress)
 #'
 #' @param region Region studied (character) or a geojson shape to filter raster
 #' @param start_date Start date (waited format : "%Y-%m-%d").
@@ -11,10 +26,9 @@
 #' @param temp_res Temporal resolution ("daily","monthly","yearly").
 #' @param spat_res Spatial resolution ("low" for 0.1 degree, "high" for 0.01 degree).
 #' @param region_source source of the region ('eez','mpa', 'rfmo' or 'user_json')
-#' @param key Token for GFW API (see details GlobalFishingWatch_Examples vignette).
+#' @param key Token for GFW API (see details GlobalFishingWatch vignette).
 #' @param cCRS The crs to which the sf will be returned (default = "EPSG:4326").
 #' @param compress Binary operator to compress (aggregate) the data per coordinates (default = FALSE).
-#'
 #'
 #' @return An `sf` object with gfw data.
 #' @export
@@ -22,9 +36,8 @@
 #' @examples
 #' \dontrun{
 #' gfw_data <- splnr_get_gfw('Australia', "2021-01-01", "2022-12-31", "yearly",
-#'     cCRS = cCRS, compress = TRUE)
+#'     cCRS = "ESRI:54009", compress = TRUE)
 #'}
-
 splnr_get_gfw <- function(region,
                           start_date,
                           end_date,
@@ -45,14 +58,10 @@ splnr_get_gfw <- function(region,
                           is.character(cCRS),
                           is.logical(compress))
 
-
   if (region_source == "eez"){ # Only process eez. RFMO and geojson have bugs
-
     region_id <- gfwr::get_region_id(region_name = region, region_source = region_source, key = key)$id
-    print(region)
   } else if (region_source == "rfmo"){
     region_id = region # gfwr retuns NULL for region ID due to a bug in as.numeric(ID)
-    print(region)
   } else if (methods::is(region, "geojson")){
     region_id <- region # Use region as is
   }
@@ -73,48 +82,48 @@ splnr_get_gfw <- function(region,
       date_range = date_range,
       region = rid,
       region_source = region_source,
-      key = key
-    )
+      key = key)
+
+    data <- data %>%
+      dplyr::mutate(GFWregionID = rid,
+                    GFWregion = region) %>%
+      dplyr::rename(TimeRange = .data$`Time Range`,
+                    VesselID = .data$`Vessel IDs`,
+                    ApparentFishingHrs = .data$`Apparent Fishing Hours`)
+
     return(data)
   }
 
+  # Create expanded dataframe with all combinations
+  eg <- tidyr::expand_grid(
+    Date = seq(start_date, end_date, by = "366 days"),
+    Region = region_id
+  )
 
-  # Check whether the date range is less than or equal to 366 days
-  if (as.numeric(difftime(end_date, start_date, units = "days")) <= 366) {
+  data_df <- purrr::map2(eg$Date, eg$Region, ~ get_data_for_range(.x, min(.x + 365, end_date), .y)) %>%
+    vctrs::list_drop_empty() %>%
+    dplyr::bind_rows()
 
-    # If yes, obtain data for the entire date range
-    data_df <- get_data_for_range(start_date, end_date, region_id)
-
-  } else {
-    # If not, divide the date range into 366-day chunks and obtain the data for each chunk.
-
-    # Create expanded dataframe with all combinations
-    eg <- tidyr::expand_grid(
-      Date = seq(start_date, end_date, by = "366 days"),
-      Region = region_id
-    )
-
-    data_df <- purrr::map2(eg$Date, eg$Region, ~ get_data_for_range(.x, min(.x + 365, end_date), .y)) %>%
-      vctrs::list_drop_empty() %>%
-      dplyr::bind_rows()
-
-    if(rlang::is_empty(data_df)){
-      stop(paste0("No data found at all for the requested area of ", region, " between ", start_date, " and ", end_date))
-    }
+  if(rlang::is_empty(data_df)){
+    stop(paste0("No data found at all for the requested area of ", region, " between ", start_date, " and ", end_date))
   }
+
 
   if (isTRUE(compress)){
 
     data_df <- data_df %>%
-      dplyr::select("Lon", "Lat", "Apparent Fishing Hours") %>%
+      # dplyr::select("Lon", "Lat", "ApparentFishingHrs", "GFWregionID") %>%
       dplyr::group_by(.data$Lon, .data$Lat) %>%
-      dplyr::summarise("Apparent Fishing Hours" = sum(.data$`Apparent Fishing Hours`, na.rm = TRUE)) %>%
+      dplyr::summarise("ApparentFishingHrs" = sum(.data$ApparentFishingHrs, na.rm = TRUE),
+                       GFWregionID = dplyr::first(.data$GFWregionID)) %>%
       dplyr::ungroup()
 
     data_sf <- data_df %>%
       terra::rast(type = "xyz", crs = "EPSG:4326") %>% # Convert to polygons for easier use
       terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm = TRUE, round = FALSE) %>%
-      sf::st_as_sf()
+      sf::st_as_sf() %>%
+      dplyr::mutate(GFWregionID = as.factor(.data$GFWregionID),
+                    GFWregion = region)
 
     if (dim(data_df)[1] != dim(data_sf)[1]){
       stop("Data dimensions of data_df and data_sf do not match after conversion to polygon")
@@ -127,17 +136,17 @@ splnr_get_gfw <- function(region,
     # Separate the "Time Range" column based on the specified temp_res
     if (temp_res == "yearly") {
       data_sf <- data_df %>%
-        dplyr::mutate(Year = .data$`Time Range`) %>%
+        dplyr::mutate(Year = .data$TimeRange) %>%
         sf::st_as_sf(coords = c("Lon", "Lat"), crs ="EPSG:4326")
     } else {
       # Otherwise, separate the "Time Range" column according to the specified temp_res
       if (temp_res == "monthly") {
         data_sf <- data_df %>%
-          tidyr::separate("Time Range", into = c("Year", "Month"), sep = "-", remove = FALSE) %>%
+          tidyr::separate("TimeRange", into = c("Year", "Month"), sep = "-", remove = FALSE) %>%
           sf::st_as_sf(coords = c("Lon", "Lat"), crs = "EPSG:4326")
       } else if (temp_res == "daily") {
         data_sf <- data_df %>%
-          tidyr::separate("Time Range", into = c("Year", "Month", "Day"), sep = "-", remove = FALSE) %>%
+          tidyr::separate("TimeRange", into = c("Year", "Month", "Day"), sep = "-", remove = FALSE) %>%
           sf::st_as_sf(coords = c("Lon", "Lat"), crs = "EPSG:4326")
       }
     }

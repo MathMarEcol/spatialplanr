@@ -278,6 +278,15 @@ splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
                                 showLegend = TRUE, legendLabels = c("Not selected", "Selected"),
                                 plotTitle = "Solution", legendTitle = "Planning Units",
                                 zones = FALSE) {
+  assertthat::assert_that(
+    inherits(soln, c("sf", "data.frame")),
+    is.logical(showLegend),
+    length(colorVals) == length(legendLabels),
+    is.character(plotTitle),
+    is.character(legendTitle),
+    is.logical(zones)
+  )
+
   if (zones == FALSE) {
     soln <- soln %>%
       dplyr::select("solution_1") %>%
@@ -346,32 +355,6 @@ splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
     ggplot2::labs(subtitle = plotTitle)
 }
 
-#' Plot Planning Units
-#'
-#' `splnr_plot_PUs()` allows to plot the planning units of a planning region (for example created with the `spatialplanr`function [splnr_get_planningUnits()]) in a customisable way using `ggplot2`. This function requires an `sf` object containing the geographic information of PUs in the planning region and outputs a `ggobject`. It can be combined with the `spatialplanr` function [splnr_gg_add()].
-#'
-#' @param PlanUnits Planning Units as an `sf` object
-#'
-#' @return A ggplot object of the plot
-#' @export
-#'
-#' @examples
-#' splnr_plot_PUs(dat_PUs)
-splnr_plot_PUs <- function(PlanUnits) {
-
-  assertthat::assert_that(
-    inherits(PlanUnits, c("sf", "sfc", "sfg")),
-    msg = "PlanUnits must be an object of class 'sf', 'sfc', or 'sfg'."
-  )
-
-  gg <- ggplot2::ggplot() +
-    ggplot2::geom_sf(data = PlanUnits, colour = "grey80", fill = NA, size = 0.1, show.legend = FALSE) +
-    ggplot2::coord_sf(xlim = sf::st_bbox(PlanUnits)$xlim, ylim = sf::st_bbox(PlanUnits)$ylim) +
-    ggplot2::labs(subtitle = "Planning Units")
-
-  return(gg)
-}
-
 
 #' Plot cost overlay
 #'
@@ -403,6 +386,15 @@ splnr_plot_PUs <- function(PlanUnits) {
 splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
                                    legendTitle = "Cost",
                                    plotTitle = "Solution overlaid with cost") {
+
+  assertthat::assert_that(
+    inherits(soln, "sf"),
+    is.data.frame(Cost) || is.na(Cost),
+    is.character(Cost_name),
+    is.character(legendTitle),
+    is.character(plotTitle)
+  )
+
   if (!is.data.frame(get("Cost"))) { # potentially needed for app later
     if (!Cost_name %in% colnames(soln)) {
       cat("Cost column not found. Please check your solution data frame for your column of interest.")
@@ -490,8 +482,14 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
 #'   prioritizr::solve.ConservationProblem()
 #'
 #' (splnr_plot_comparison(dat_soln, dat_soln2))
-#'
 splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compared to Scenario 1:") {
+
+  assertthat::assert_that(
+    inherits(soln1, "sf"),
+    inherits(soln2, "sf"),
+    is.character(legendTitle)
+  )
+
   soln <- soln1 %>%
     dplyr::select("solution_1") %>%
     dplyr::bind_cols(soln2 %>%
@@ -524,8 +522,8 @@ splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compar
 
 #' Plot selection frequency of a planning unit in an array of prioritisations
 #'
-#' When multiple spatial plans are generated, we are often interested in how many times a planning unit is selected across an array of solutions. This array can either be made up of the solutions to different conservation problems or generated through a [portfolio approach]{https://prioritizr.net/reference/portfolios.html} with `prioritizr`.
-#' Either way, this function requires an `sf` object input that contains a column (`selFreq`) with the selection frequency of each planning unit that can be generated with the `spatialplanr`function [splnr_get_selFreq]. `splnr_plot_selectionFreq()` allows to visualize this selection frequency using `ggplot2`. It outputs a `ggobject` and can be combined with the `spatialplanr` function [splnr_gg_add()].
+#' When multiple spatial plans are generated, we are often interested in how many times a planning unit is selected across an array of solutions. This array can either be made up of the solutions to different conservation problems or generated through a [portfolio approach](https://prioritizr.net/reference/portfolios.html) with `prioritizr`.
+#' Either way, this function requires an `sf` object input that contains a column (`selFreq`) with the selection frequency of each planning unit that can be generated with the `spatialplanr`function `splnr_get_selFreq()`. `splnr_plot_selectionFreq()` allows to visualize this selection frequency using `ggplot2`. It outputs a `ggobject` and can be combined with the `spatialplanr` function `splnr_gg_add()`.
 #'
 #' @param selFreq An `sf` object containing the selection frequency of a planning unit from an array of solutions
 #' @param paletteName A string (or number) for the color palette to use. Available palettes can be found at https://ggplot2.tidyverse.org/reference/scale_brewer.html.
@@ -556,6 +554,13 @@ splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compar
 splnr_plot_selectionFreq <- function(selFreq,
                                      plotTitle = "", paletteName = "Greens",
                                      legendTitle = "Selection \nFrequency") {
+
+  assertthat::assert_that(
+    inherits(selFreq, c("sf", "data.frame")),
+    is.character(plotTitle),
+    is.character(legendTitle)
+  )
+
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = selFreq, ggplot2::aes(fill = .data$selFreq), colour = NA) +
     ggplot2::scale_fill_brewer(
@@ -588,7 +593,8 @@ splnr_plot_selectionFreq <- function(selFreq,
 
 #' Plot importance score
 #'
-#' [Importance scores]{https://prioritizr.net/reference/importance.html} are a mean to reflect the irreplaceability of a planning unit in the solution of a `prioirtizr` conservation problem. Based on the `prioritizr` package, `splnr_plot_importanceScore()` allows to visualize three different types of importance scores with `ggplot2` that should be used based on the conservation problem at hand. The `prioritizr` development team generally recommend using the [replacement cost score]{https://prioritizr.net/reference/eval_replacement_importance.html}, however this might be not be feasible for conservation problems with many planning units or features.
+#' [Importance scores](https://prioritizr.net/reference/importance.html) are a mean to reflect the irreplaceability of a planning unit in the solution of a `prioirtizr` conservation problem. Based on the `prioritizr` package, `splnr_plot_importanceScore()` allows to visualize three different types of importance scores with `ggplot2` that should be used based on the conservation problem at hand. The `prioritizr` development team generally recommend using the [replacement cost score](https://prioritizr.net/reference/eval_replacement_importance.html), however this might be not be feasible for conservation problems with many planning units or features.
+#'
 #' The function outputs a `ggobject` and can be combined with the `spatialplanr` function [splnr_gg_add()].
 #'
 #' @param soln The `prioritizr` solution
@@ -617,9 +623,27 @@ splnr_plot_selectionFreq <- function(selFreq,
 #'   prioritizr::solve.ConservationProblem()
 #'
 #' (splnr_plot_importanceScore(soln = dat_soln, pDat = dat_problem, method = "Ferrier", decimals = 4))
-splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
-                                       plotTitle = "", colorMap = "A", decimals = 4,
+splnr_plot_importanceScore <- function(soln,
+                                       pDat,
+                                       method = "Ferrier",
+                                       plotTitle = "",
+                                       colorMap = "A",
+                                       decimals = 4,
                                        legendTitle = "Importance Score") {
+
+  assertthat::assert_that(
+    inherits(soln, c("data.frame", "tbl_df", "tbl")),
+    inherits(pDat, c("R6", "ConservationProblem")),
+    is.character(method),
+    is.character(plotTitle),
+    is.character(colorMap),
+    is.numeric(decimals),
+    is.character(legendTitle)
+  )
+
+  assertthat::assert_that(
+    method %in% c("Ferrier", "RWR", "RC"))
+
   soln <- soln %>% tibble::as_tibble()
 
   if (method == "Ferrier") {
@@ -734,6 +758,15 @@ splnr_plot_importanceScore <- function(soln, pDat, method = "Ferrier",
 splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#4477AA"),
                                legendTitle = "Correlation \ncoefficient",
                                AxisLabels = NULL, plotTitle = "") {
+
+  assertthat::assert_that(
+    is.matrix(x),
+    length(colourGradient) == 3,
+    is.character(legendTitle),
+    is.null(AxisLabels) || (is.character(AxisLabels) && length(AxisLabels) == nrow(x)),
+    is.character(plotTitle)
+  )
+
   if ((class(AxisLabels)[[1]] == "character") & (nrow(x) != length(AxisLabels))) {
     print("Not enough labels for the length of the matrix. Please check your labels.")
   }

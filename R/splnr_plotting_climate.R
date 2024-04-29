@@ -13,6 +13,16 @@
 #' splnr_plot_climData(df = dat_clim, colInterest = "metric")
 splnr_plot_climData <- function(df, colInterest, colorMap = "C",
                                 plotTitle = " ", legendTitle = "Climate metric") {
+
+  assertthat::assert_that(
+    inherits(df, "sf"),
+    "metric" %in% names(df),
+    is.character(colInterest),
+    is.character(colorMap),
+    is.character(plotTitle),
+    is.character(legendTitle)
+  )
+
   gg <- ggplot2::ggplot() +
     ggplot2::geom_sf(data = df %>% sf::st_as_sf(), ggplot2::aes(fill = !!rlang::sym(colInterest)), colour = NA) +
     ggplot2::scale_fill_viridis_c(
@@ -43,6 +53,15 @@ splnr_plot_climData <- function(df, colInterest, colorMap = "C",
 #' @keywords internal
 #'
 splnr_plot_climKernelDensity_Basic <- function(soln) {
+
+  assertthat::assert_that(
+    inherits(soln, "data.frame"),
+    "metric" %in% names(soln),
+    "solution_1" %in% names(soln),
+    is.numeric(soln$metric),
+    is.numeric(soln$solution_1)
+  )
+
   soln$approach <- "Ridge" # Need a dummy variable here.
 
   ggRidge <- ggplot2::ggplot() +
@@ -109,6 +128,18 @@ splnr_plot_climKernelDensity_Fancy <- function(solution_list, names,
                                                colorMap = "C",
                                                legendTitle = expression(" \u00B0C y"^"-1" * ""),
                                                xAxisLab = expression("Climate warming ( \u00B0C y"^"-1" * ")")) {
+
+  assertthat::assert_that(
+    is.list(solution_list),
+    length(solution_list) > 0,
+    is.character(names),
+    length(names) == length(solution_list),
+    is.character(colorMap),
+    is.vector(legendTitle) || missing(legendTitle) || is.expression(legendTitle),
+    is.vector(xAxisLab) || missing(xAxisLab) || is.expression(xAxisLab)
+  )
+
+
   list_sol <- list()
   group_name <- "approach"
 
@@ -212,6 +243,15 @@ splnr_plot_climKernelDensity <- function(soln,
                                          colorMap = "C",
                                          legendTitle = expression(" \u00B0C y"^"-1" * ""),
                                          xAxisLab = expression("Climate warming ( \u00B0C y"^"-1" * ")")) {
+
+  assertthat::assert_that(
+    is.character(type),
+    is.character(names) || is.na(names),
+    is.character(colorMap),
+    is.vector(legendTitle) || missing(legendTitle) || is.expression(legendTitle),
+    is.vector(xAxisLab) || missing(xAxisLab) || is.expression(xAxisLab)
+  )
+
   if (type == "Normal") {
     if (inherits(soln, "list") == FALSE) {
       cat("Please provide a list of solutions when using this plot type.")

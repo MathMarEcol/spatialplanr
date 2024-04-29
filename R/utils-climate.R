@@ -253,6 +253,20 @@ splnr_climate_priorityAreaApproach <- function(featuresDF,
                                                direction,
                                                percentile = 5,
                                                refugiaTarget = 1) {
+
+  assertthat::assert_that(inherits(featuresDF, "sf"),
+                          "cellID" %in% names(featuresDF),
+                          is.data.frame(metricDF),
+                          "cellID" %in% names(metricDF),
+                          is.data.frame(targetsDF),
+                          "feature" %in% names(targetsDF),
+                          "target" %in% names(targetsDF),
+                          direction %in% c(-1, 1),
+                          is.numeric(percentile),
+                          percentile >= 0 && percentile <= 100,
+                          is.numeric(refugiaTarget),
+                          refugiaTarget >= 0 && refugiaTarget <= 1)
+
   CPAFeatures <- splnr_climate_priorityArea_preprocess(
     featuresDF = featuresDF, metricDF = metricDF,
     direction = direction, percentile = percentile
@@ -425,6 +439,21 @@ splnr_climate_featureApproach <- function(featuresDF,
                                           direction,
                                           percentile = 35,
                                           refugiaTarget = 0.3) {
+
+  assertthat::assert_that(inherits(featuresDF, "sf"),
+                          "cellID" %in% names(featuresDF),
+                          is.data.frame(metricDF),
+                          "cellID" %in% names(metricDF),
+                          is.data.frame(targetsDF),
+                          "feature" %in% names(targetsDF),
+                          "target" %in% names(targetsDF),
+                          direction %in% c(-1, 1),
+                          is.numeric(percentile),
+                          percentile >= 0 && percentile <= 100,
+                          is.numeric(refugiaTarget),
+                          refugiaTarget >= 0 && refugiaTarget <= 1)
+
+
   featureFeatures <- splnr_climate_feature_preprocess(
     featuresDF = featuresDF, metricDF = metricDF,
     direction = direction, percentile = percentile
@@ -646,6 +675,19 @@ splnr_climate_percentileApproach <- function(featuresDF,
                                              targetsDF,
                                              direction,
                                              percentile = 35) {
+
+  assertthat::assert_that(inherits(featuresDF, "sf"),
+                          "cellID" %in% names(featuresDF),
+                          is.data.frame(metricDF),
+                          "cellID" %in% names(metricDF),
+                          is.data.frame(targetsDF),
+                          "feature" %in% names(targetsDF),
+                          "target" %in% names(targetsDF),
+                          direction %in% c(-1, 1),
+                          is.numeric(percentile),
+                          percentile >= 0 && percentile <= 100)
+
+
   percentileFeatures <- splnr_climate_percentile_preprocess(
     featuresDF = featuresDF, metricDF = metricDF,
     direction = direction, percentile = percentile

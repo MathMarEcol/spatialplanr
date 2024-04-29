@@ -32,7 +32,11 @@
 #' }
 splnr_convert_toPUs <- function(dat, PlanUnits) {
 
-  lifecycle::deprecate_warn("0.6.2", "splnr_convert_toPUs()", "spatialgridr::get_data_in_grid()")
+  assertthat::assert_that(
+    (is.character(dat) && file.exists(dat)) || inherits(dat, c("SpatRaster", "sf")),
+    inherits(PlanUnits, c("sf")))
+
+  # lifecycle::deprecate_warn("0.6.2", "splnr_convert_toPUs()", "spatialgridr::get_data_in_grid()")
 
   ## First deal with whether the input is a file or a dataset
 

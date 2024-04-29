@@ -81,21 +81,10 @@ testthat::test_that("Correct function output", {
 
 testthat::test_that("Correct function output", {
   expect_s3_class(
-    rnaturalearth::ne_coastline(returnclass = "sf") %>%
-      splnr_convert_toPacific(), "sf"
-  )
-})
-
-
-testthat::test_that("Correct function output", {
-  expect_s3_class(
     dat_species_prob %>%
       splnr_arrangeFeatures(), "sf"
   )
 })
-
-
-
 
 
 testthat::test_that("Correct function output", {

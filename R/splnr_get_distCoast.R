@@ -16,14 +16,13 @@
 #' @export
 #'
 #' @examples
-#' crs <- sf::st_crs("+proj=longlat +datum=WGS84 +no_defs")
 #' bbox <- sf::st_bbox(c(xmin = 0, ymin = 0, xmax = 3, ymax = 3))
 #' grid <- sf::st_make_grid(bbox, n = c(3, 3), what = "polygons")
 #' grid <- sf::st_sf(geometry = grid) %>%
-#'   sf::st_set_crs(crs)
+#'   sf::st_set_crs("EPSG:4326")
 #' splnr_get_distCoast(grid)
 #'
-#' cCRS <- "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m no_defs"
+#' cCRS <- "ESRI:54009"
 #'
 #' Bndry <- splnr_get_boundary(Limits = "Coral Sea",
 #'                             Type = "Oceans",
@@ -35,24 +34,21 @@
 #' ) %>%
 #'   sf::st_transform(cCRS)
 #'
-#' dat_sf <- splnr_get_planningUnits(Bndry = Bndry,
-#'                                   InnerB = landmass,
-#'                                   CellArea = 10000,
-#'                                   Shape = "Hexagon") %>%
-#'   splnr_get_distCoast(res = "medium")
+# dat_sf <- spatialgridr::get_grid(area_polygon = Bndry,
+#                                  projection_crs = cCRS,
+#                                  option = "sf_hex",
+#                                  resolution = 10000,
+#                                  sf_method = "centroid") %>%
+#   splnr_get_distCoast(res = "medium")
 
 splnr_get_distCoast <- function(dat_sf, custom_coast = NULL, res = NULL) {
 
-  # Class object check
-  if (!inherits(dat_sf, "sf")) {
-    stop("Input data should be an 'sf' spatial object.")
-  }
-
-  # CRS check
-  if (is.null(sf::st_crs(dat_sf))) {
-    stop("The sf spatial object must have a defined CRS.")
-  }
-
+  assertthat::assert_that(
+    inherits(dat_sf, "sf"),
+    !is.null(sf::st_crs(dat_sf)),
+    is.null(custom_coast) || inherits(custom_coast, "sf"),
+    is.null(res) || res %in% c("small", "medium", "large")
+  )
 
   # Load coast
   if (is.null(custom_coast)) {

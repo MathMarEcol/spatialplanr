@@ -185,6 +185,22 @@ splnr_plot_featureRep <- function(df, category = NA,
                                   nr = 1, showTarget = NA,
                                   plotTitle = "") {
 
+  assertthat::assert_that(
+    inherits(df, c("data.frame", "tbl_df")),
+    is.logical(renameFeatures),
+    is.logical(showTarget),
+    is.character(plotTitle),
+    all(colSums(is.na(category)) == nrow(category)) || inherits(category, c("data.frame","tbl","tbl_df"))
+  )
+
+  if (renameFeatures) {
+    assertthat::assert_that(
+      is.data.frame(namesToReplace),
+      "nameVariable" %in% colnames(namesToReplace),
+      "nameCommon" %in% colnames(namesToReplace)
+    )
+  }
+
   if(inherits(category, c("df", "tbl_df")) & !("feature" %in% colnames(category))) {
     if (!(inherits(categoryFeatureCol, "character"))) {
       cat("There is no column called 'feature' in your category data frame. Please provide a column name that should be renamed to 'feature'.");
@@ -248,13 +264,13 @@ splnr_plot_featureRep <- function(df, category = NA,
       axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5, size = 16, colour = "black"),
       axis.text.y = ggplot2::element_text(size = 16, colour = "black"),
       axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_text(size = 16),
       legend.title = ggplot2::element_blank(),
       legend.text = ggplot2::element_text(size = 16),
-      axis.title.y = ggplot2::element_text(size = 16),
-      title = ggplot2::element_text(size = 16),
-      legend.position = c(0.5, 0.95),
+      legend.position.inside = c(0.5, 0.95),
       legend.direction = "horizontal",
-      legend.background = ggplot2::element_rect(fill = "NA")
+      legend.background = ggplot2::element_rect(fill = "NA"),
+      title = ggplot2::element_text(size = 16)
     )
 
   if (!(is.na(showTarget))) {
@@ -344,6 +360,15 @@ splnr_plot_featureRep <- function(df, category = NA,
 splnr_plot_circBplot <- function(df, legend_color, legend_list,
                                  indicateTargets = TRUE, impTarget = NA,
                                  repTarget = NA, colTarget = "red") {
+
+  assertthat::assert_that(
+  length(unique(names(legend_color))) == length(legend_list),
+  is.logical(indicateTargets),
+  is.numeric(impTarget),
+  is.numeric(repTarget),
+  is.character(colTarget)
+  )
+
   # Adding rows to each group, creating space between the groups
   groups <- unique(df$group)
   NA_rows <- list()
