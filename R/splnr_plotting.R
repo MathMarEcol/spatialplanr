@@ -522,7 +522,7 @@ splnr_plot_comparison <- function(soln1, soln2, legendTitle = "Scenario 2 compar
 
 #' Plot selection frequency of a planning unit in an array of prioritisations
 #'
-#' When multiple spatial plans are generated, we are often interested in how many times a planning unit is selected across an array of solutions. This array can either be made up of the solutions to different conservation problems or generated through a [portfolio approach]{https://prioritizr.net/reference/portfolios.html} with `prioritizr`.
+#' When multiple spatial plans are generated, we are often interested in how many times a planning unit is selected across an array of solutions. This array can either be made up of the solutions to different conservation problems or generated through a [portfolio approach](https://prioritizr.net/reference/portfolios.html) with `prioritizr`.
 #' Either way, this function requires an `sf` object input that contains a column (`selFreq`) with the selection frequency of each planning unit that can be generated with the `spatialplanr`function [splnr_get_selFreq]. `splnr_plot_selectionFreq()` allows to visualize this selection frequency using `ggplot2`. It outputs a `ggobject` and can be combined with the `spatialplanr` function [splnr_gg_add()].
 #'
 #' @param selFreq An `sf` object containing the selection frequency of a planning unit from an array of solutions
@@ -593,7 +593,8 @@ splnr_plot_selectionFreq <- function(selFreq,
 
 #' Plot importance score
 #'
-#' [Importance scores]{https://prioritizr.net/reference/importance.html} are a mean to reflect the irreplaceability of a planning unit in the solution of a `prioirtizr` conservation problem. Based on the `prioritizr` package, `splnr_plot_importanceScore()` allows to visualize three different types of importance scores with `ggplot2` that should be used based on the conservation problem at hand. The `prioritizr` development team generally recommend using the [replacement cost score]{https://prioritizr.net/reference/eval_replacement_importance.html}, however this might be not be feasible for conservation problems with many planning units or features.
+#' [Importance scores](https://prioritizr.net/reference/importance.html) are a mean to reflect the irreplaceability of a planning unit in the solution of a `prioirtizr` conservation problem. Based on the `prioritizr` package, `splnr_plot_importanceScore()` allows to visualize three different types of importance scores with `ggplot2` that should be used based on the conservation problem at hand. The `prioritizr` development team generally recommend using the [replacement cost score](https://prioritizr.net/reference/eval_replacement_importance.html), however this might be not be feasible for conservation problems with many planning units or features.
+#'
 #' The function outputs a `ggobject` and can be combined with the `spatialplanr` function [splnr_gg_add()].
 #'
 #' @param soln The `prioritizr` solution

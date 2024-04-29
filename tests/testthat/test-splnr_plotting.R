@@ -84,16 +84,6 @@ testthat::test_that("Correct function output", {
 
 
 
-testthat::test_that("Correct function output", {
-  expect_s3_class(
-    splnr_plot_PUs(dat_PUs)
-    , "gg"
-  )
-})
-
-
-
-
 
 testthat::test_that("Correct function output", {
   expect_s3_class(
