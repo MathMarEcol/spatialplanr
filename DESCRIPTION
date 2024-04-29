@@ -72,5 +72,7 @@ Remotes:
     github::emlab-ucsb/oceandatr,
     github::emlab-ucsb/spatialgridr,
     github::GlobalFishingWatch/gfwr,
+    github::prioritizr/prioritizr,
+    github::prioritizr/wdpar,
     github::ropensci/rnaturalearthhires
 Config/testthat/edition: 3
