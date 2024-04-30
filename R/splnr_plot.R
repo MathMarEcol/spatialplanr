@@ -1,6 +1,6 @@
 #' Function to plot data.
 #'
-#' (For now can replace splnr_plot_cost(), splnr_plot_binFeature(), splnr_plot_MPAs(),splnr_plot_featureNo())
+#' (For now can replace splnr_plot_cost(), splnr_plot_binFeature(), splnr_plot_MPAs(), splnr_plot_featureNo())
 #'
 #' Written by Kilian Barreiro
 #' Written: February 2024

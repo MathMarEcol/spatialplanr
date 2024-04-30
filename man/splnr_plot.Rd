@@ -33,7 +33,7 @@ splnr_plot(
 A ggplot object.
 }
 \description{
-(For now can replace splnr_plot_cost(), splnr_plot_binFeature(), splnr_plot_MPAs(),splnr_plot_featureNo())
+(For now can replace splnr_plot_cost(), splnr_plot_binFeature(), splnr_plot_MPAs(), splnr_plot_featureNo())
 }
 \details{
 Written by Kilian Barreiro
