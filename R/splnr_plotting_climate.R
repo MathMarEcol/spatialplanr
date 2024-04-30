@@ -62,6 +62,11 @@ splnr_plot_climKernelDensity_Basic <- function(soln) {
     is.numeric(soln$solution_1)
   )
 
+
+  if (requireNamespace("ggridges", quietly = TRUE) == FALSE){
+    stop("To run splnr_plot_climKernelDensity you will need to install the package ggridges.")
+  }
+
   soln$approach <- "Ridge" # Need a dummy variable here.
 
   ggRidge <- ggplot2::ggplot() +

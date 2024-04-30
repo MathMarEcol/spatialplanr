@@ -273,6 +273,10 @@ splnr_get_kappaCorrData <- function(sol, name_sol) {
     length(name_sol) == length(sol)
   )
 
+  if (requireNamespace("irr", quietly = TRUE) == FALSE){
+    stop("To run splnr_get_kappaCorrData you will need to install the package irr.")
+  }
+
   s_list <- lapply(seq_along(sol), function(x) {
     sol[[x]] %>%
       tibble::as_tibble(.name_repair = "unique") %>%

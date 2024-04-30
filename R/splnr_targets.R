@@ -114,14 +114,14 @@ splnr_targets_byIUCN <- function(dat, IUCN_target, IUCN_col = "IUCN_Category") {
     dat$target <- NA
   }
 
-  if (checkmate::test_numeric(IUCN_target, names = "named")) {
-    # If the target is a named vector, apply the relevent targets
-
+  if (is.vector(IUCN_target, mode = "numeric") & !is.null(names(IUCN_target))) {
+    # If the target is a named vector, apply the relevant targets
     dat <- dat %>%
       dplyr::left_join(data.frame(IUCN_target, col1 = names(IUCN_target)), by = dplyr::join_by(!!rlang::sym(IUCN_col) == "col1")) %>%
       dplyr::mutate(target = dplyr::coalesce(IUCN_target, .data$target)) %>%
       dplyr::select(-IUCN_target)
-  } else if (checkmate::test_numeric(IUCN_target, max.len = 1)) {
+
+  } else if (is.numeric(IUCN_target) & length(IUCN_target) == 1) {
     # If the target is a single numeric, apply to all IUCN categories.
 
     dat <- dat %>%

@@ -771,6 +771,10 @@ splnr_plot_corrMat <- function(x, colourGradient = c("#BB4444", "#FFFFFF", "#447
     print("Not enough labels for the length of the matrix. Please check your labels.")
   }
 
+  if (requireNamespace("ggcorrplot", quietly = TRUE) == FALSE){
+    stop("To run splnr_plot_corrMat you will need to install the package ggcorrplot.")
+  }
+
   gg <- ggcorrplot::ggcorrplot(x,
                                outline.color = "black",
                                lab = TRUE
