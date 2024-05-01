@@ -73,46 +73,48 @@ splnr_plot <- function(df,
   is_continuous <- FALSE
   showFeatureSum <- FALSE
 
+
+  # browser()
+
+
   # Figure out data type
 
-  if (!is.null(col_names)){ # One column name
+  if (!is.null(col_names)){ # If there is a column name
 
-    if (length(col_names) == 1){
+    if (length(col_names) == 1){ # One column name
+
       ## Is the data binary?
-      df <- df %>%
+      df0 <- df %>%
         # Replace NA with 0 in selected columns for binary data verification
         dplyr::mutate(dplyr::across(tidyselect::all_of(col_names), ~tidyr::replace_na(., 0)))
 
-      is_binary <- all(purrr::map_vec(col_names, function(col_name) all(df[[col_name]] %in% c(0, 1, TRUE, FALSE))))
+      # TODO WE should check for logical rather than testing TRUE/FALSE here because we shouldn't be adding a 0, to a T/F option
+
+      is_binary <- all(purrr::map_vec(col_names, function(col_name) all(df0[[col_name]] %in% c(0, 1, TRUE, FALSE))))
 
       ## Is the data continuous?
-      if (!is_binary){
+      if (isFALSE(is_binary)){
         is_continuous <- TRUE # May not always be true but plotting as continuous will work, and highlight the issue
       }
+
     } else if (length(col_names) > 1){ # Mutliple columns
       showFeatureSum <- TRUE # FeatureSum
     }
-  } else {
-    is_binary <- FALSE
-    is_continuous <- FALSE
-    showFeatureSum <- FALSE
 
   }
-
-
   # DEFAULT PLOT CODE
   gg <- ggplot2::ggplot() +
     ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
     ggplot2::labs(subtitle = plot_title)
 
-    # ggplot2::guides(fill = ggplot2::guide_legend(override.aes = list(linetype = 0),
-    #                                              nrow = 2,
-    #                                              order = 1,
-    #                                              direction = "horizontal",
-    #                                              title = legend_title,
-    #                                              title.position = "top",
-    #                                              title.hjust = 0.5,
-    #                                              labels = legend_labels))
+  # ggplot2::guides(fill = ggplot2::guide_legend(override.aes = list(linetype = 0),
+  #                                              nrow = 2,
+  #                                              order = 1,
+  #                                              direction = "horizontal",
+  #                                              title = legend_title,
+  #                                              title.position = "top",
+  #                                              title.hjust = 0.5,
+  #                                              labels = legend_labels))
 
   if (showFeatureSum) {
 
@@ -150,8 +152,8 @@ splnr_plot <- function(df,
   } else if (is_continuous) {
 
     gg <- gg +
-      ggplot2::geom_sf(data = df, ggplot2::aes(fill = {{col_names}}), colour = "grey80", size = 0.1) +
-      # ggplot2::scale_fill_gradientn(colors = rev(RColorBrewer::brewer.pal(9, paletteName)), limits = NULL) + # TODO Remove RColourBrewer if possible to reduce dependencies
+      ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data[[col_names]]), colour = "grey80", size = 0.1) +
+      ggplot2::scale_fill_viridis_c() +
       ggplot2::guides(fill = ggplot2::guide_colourbar(order = 1))
 
   } else if (is.null(col_names)){ # No column to plot by

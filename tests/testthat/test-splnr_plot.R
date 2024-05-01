@@ -33,9 +33,7 @@ splnr_theme <- list(
 )
 
 
-bathymetry <- oceandatr::get_bathymetry(spatial_grid = dat_PUs,
-                                        keep = FALSE,
-                                        classify_bathymetry = FALSE)
+distance <- splnr_get_distCoast(dat_PUs)
 
 testthat::test_that("Correct function output", {
   expect_s3_class(
@@ -50,10 +48,10 @@ testthat::test_that("Correct function output", {
 
 testthat::test_that("Correct function output", {
   expect_s3_class(
-    splnr_plot(df = bathymetry,
-               col_names = "bathymetry",
-               plot_title = "bathymetry",
-               legend_title = "Bathymetry (m)")
+    splnr_plot(df = distance,
+               col_names = "coastDistance_km",
+               plot_title = "Distance to Coast",
+               legend_title = "Distance (km)")
     , "gg"
   )
 })
