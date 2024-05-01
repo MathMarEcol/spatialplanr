@@ -41,7 +41,8 @@ jobs:
           sudo apt-get update
           sudo apt-get -y install \
             libcurl4-gnutls-dev coinor-libsymphony-dev \
-            libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev
+            libudunits2-dev libgdal-dev libgeos-dev libproj-dev \
+            libglpk-dev chromium-browser
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
