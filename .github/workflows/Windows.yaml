@@ -50,15 +50,6 @@ jobs:
           extra-packages: any::rcmdcheck, any::remotes, any::lpsymphony, any::shinytest
           needs: check
 
-      - name: Find PhantomJS path
-        id: phantomjs
-        run: echo "path=$(Rscript -e 'cat(shinytest:::phantom_paths()[[1]])')" >> $GITHUB_OUTPUT
-
-      - name: Install PhantomJS
-        run: >
-          Rscript
-          -e "if (!shinytest::dependenciesInstalled()) shinytest::installDependencies()"
-
       - uses: r-lib/actions/check-r-package@v2
         with:
           args: 'c("--no-manual", "--no-vignettes", "--no-build-vignettes", "--ignore-vignettes")'
