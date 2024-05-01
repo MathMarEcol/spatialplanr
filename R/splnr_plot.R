@@ -119,7 +119,6 @@ splnr_plot <- function(df,
     # Calculate feature sum if multiple features
     df <- df %>%
       dplyr::as_tibble() %>%
-      # dplyr::select(-tidyselect::any_of(c("cellID"))) %>%
       dplyr::select(tidyselect::all_of(c(col_names, "geometry"))) %>%
       dplyr::mutate(FeatureSum = rowSums(dplyr::across(tidyselect::where(is.numeric)), na.rm = TRUE)) %>%
       sf::st_as_sf(sf_column_name = "geometry") %>%

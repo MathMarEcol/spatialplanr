@@ -124,7 +124,7 @@ splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
       name = legendTitle,
       values = colorVals,
       labels = legendLabels,
-      aesthetics = c("colour", "fill"),
+      aesthetics = c("fill"),
       guide = ggplot2::guide_legend(
         override.aes = list(linetype = 0),
         nrow = nrows,
