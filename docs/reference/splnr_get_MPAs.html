@@ -78,7 +78,7 @@ An <code>sf</code> object is returned with the PU area covered by the selected m
 
 
 <dt>Countries</dt>
-<dd><p>A character vector of the countries for which to extract MPAs</p></dd>
+<dd><p>A character vector of the countries for which to extract MPAs. To get all MPAs, use <code>"global"</code> here.</p></dd>
 
 
 <dt>Status</dt>
@@ -103,6 +103,7 @@ An <code>sf</code> object is returned with the PU area covered by the selected m
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">splnr_get_MPAs</span><span class="op">(</span><span class="va">dat_PUs</span>, <span class="st">"Australia"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> importing local data (version Apr 2024); use "force=TRUE" if you need latest version.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>attribute variables are assumed to be spatially constant throughout all geometries</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>attribute variables are assumed to be spatially constant throughout all geometries</span>
