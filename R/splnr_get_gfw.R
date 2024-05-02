@@ -48,7 +48,7 @@ splnr_get_gfw <- function(region,
                           cCRS = "EPSG:4326",
                           compress = FALSE) {
 
-  assertthat::assert_that(is.character(region),
+  assertthat::assert_that((is.character(region) | is.numeric(region)),
                           inherits(start_date, "character") && !is.na(as.Date(start_date, "%Y-%m-%d")), #is.Date ?
                           inherits(end_date, "character") && !is.na(as.Date(end_date, "%Y-%m-%d")),
                           temp_res %in% c("daily", "monthly", "yearly"),
@@ -58,10 +58,12 @@ splnr_get_gfw <- function(region,
                           is.character(cCRS),
                           is.logical(compress))
 
-  if (region_source == "eez"){ # Only process eez. RFMO and geojson have bugs
+  if (region_source == "eez" & is.character(region)){ # Only process eez. RFMO and geojson have bugs
     region_id <- gfwr::get_region_id(region_name = region, region_source = region_source, key = key)$id
+  } else if (region_source == "eez" & is.numeric(region)){
+    region_id <- region
   } else if (region_source == "rfmo"){
-    region_id = region # gfwr retuns NULL for region ID due to a bug in as.numeric(ID)
+    region_id <- region # gfwr retuns NULL for region ID due to a bug in as.numeric(ID)
   } else if (methods::is(region, "geojson")){
     region_id <- region # Use region as is
   }
@@ -85,8 +87,7 @@ splnr_get_gfw <- function(region,
       key = key)
 
     data <- data %>%
-      dplyr::mutate(GFWregionID = rid,
-                    GFWregion = region) %>%
+      dplyr::mutate(GFWregionID = rid) %>%
       dplyr::rename(TimeRange = .data$`Time Range`,
                     VesselID = .data$`Vessel IDs`,
                     ApparentFishingHrs = .data$`Apparent Fishing Hours`)
@@ -112,7 +113,6 @@ splnr_get_gfw <- function(region,
   if (isTRUE(compress)){
 
     data_df <- data_df %>%
-      # dplyr::select("Lon", "Lat", "ApparentFishingHrs", "GFWregionID") %>%
       dplyr::group_by(.data$Lon, .data$Lat) %>%
       dplyr::summarise("ApparentFishingHrs" = sum(.data$ApparentFishingHrs, na.rm = TRUE),
                        GFWregionID = dplyr::first(.data$GFWregionID)) %>%
@@ -122,8 +122,7 @@ splnr_get_gfw <- function(region,
       terra::rast(type = "xyz", crs = "EPSG:4326") %>% # Convert to polygons for easier use
       terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm = TRUE, round = FALSE) %>%
       sf::st_as_sf() %>%
-      dplyr::mutate(GFWregionID = as.factor(.data$GFWregionID),
-                    GFWregion = region)
+      dplyr::mutate(GFWregionID = as.factor(.data$GFWregionID))
 
     if (dim(data_df)[1] != dim(data_sf)[1]){
       stop("Data dimensions of data_df and data_sf do not match after conversion to polygon")
