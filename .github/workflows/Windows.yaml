@@ -36,10 +36,11 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
 
       - uses: browser-actions/setup-chrome@v1
+        id: setup-chrome
         with:
           install-dependencies: true
-
-      - run: chrome --version
+      - run: |
+        ${{ steps.setup-chrome.outputs.chrome-path }} --version
 
       - uses: r-lib/actions/setup-r@v2
         with:
@@ -49,11 +50,11 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          cache-version: 7
           extra-packages: |
             any::rcmdcheck
             any::remotes
             any::lpsymphony
-            any::shinytest
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2

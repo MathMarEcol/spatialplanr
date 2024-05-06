@@ -47,7 +47,11 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           cache-version: 8
-          extra-packages: any::covr, any::rcmdcheck, any::remotes, any::lpsymphony
+          extra-packages: |
+            any::covr
+            any::rcmdcheck
+            any::remotes
+            any::lpsymphony
           needs: coverage
 
       - name: Test coverage
