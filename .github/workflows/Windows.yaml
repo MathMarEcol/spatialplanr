@@ -37,9 +37,7 @@ jobs:
 
       - uses: browser-actions/setup-chrome@v1
         id: setup-chrome
-        with:
-          install-dependencies: true
-      - run: |
+        run: |
           ${{ steps.setup-chrome.outputs.chrome-path }} --version
 
       - uses: r-lib/actions/setup-r@v2
