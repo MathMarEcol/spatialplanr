@@ -34,6 +34,9 @@ splnr_get_MPAs <- function(PlanUnits,
     all(Category %in% c("Ia", "Ib", "II", "III", "IV", "V", "VI", "Not Reported", "Not Applicable", "Not Assigned"))
   )
 
+
+  options(chromote.timeout = 120)
+
   wdpa_data <- Countries %>%
     purrr::map(wdpar::wdpa_fetch,
            wait = TRUE,
