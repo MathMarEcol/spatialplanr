@@ -39,27 +39,16 @@ jobs:
         run: |
           brew install pkg-config
           brew tap coin-or-tools/coinor
+          brew install coin-or-tools/coinor/dylp
           brew install coin-or-tools/coinor/symphony
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck, any::remotes, any::lpsymphony, any::shinytest
+          extra-packages: |
+            any::rcmdcheck
+            any::remotes
+            any::lpsymphony
           needs: check
-
-      - name: Find PhantomJS path
-        id: phantomjs
-        run: |
-          echo "::set-output name=path::$(Rscript -e 'cat(shinytest:::phantom_paths()[[1]])')"
-      - name: Cache PhantomJS
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.phantomjs.outputs.path }}
-          key: ${{ runner.os }}-phantomjs
-          restore-keys: ${{ runner.os }}-phantomjs
-      - name: Install PhantomJS
-        run: >
-          Rscript
-          -e "if (!shinytest::dependenciesInstalled()) shinytest::installDependencies()"
 
       - uses: r-lib/actions/check-r-package@v2
         with:
@@ -68,4 +57,3 @@ jobs:
           error-on: '"error"'
           check-dir: '"check"'
           upload-snapshots: true
-

@@ -15,7 +15,7 @@ splnr_get_MPAs(
 \arguments{
 \item{PlanUnits}{Planning Units as an \code{sf} object}
 
-\item{Countries}{A character vector of the countries for which to extract MPAs}
+\item{Countries}{A character vector of the countries for which to extract MPAs. To get all MPAs, use \code{"global"} here.}
 
 \item{Status}{The status field in the WDPA provides information on whether a protected area has been established, designated, or proposed at the time the data was submitted.}
 

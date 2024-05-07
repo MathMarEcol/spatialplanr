@@ -138,8 +138,8 @@ testthat::test_that("Correct function output", {
   expect_s3_class(
     splnr_plot_corrMat(splnr_get_kappaCorrData(list(soln1, soln2), name_sol = c("soln1", "soln2")),
                        AxisLabels = c("Solution 1", "Solution 2"))
-  , "gg"
-)
+    , "gg"
+  )
 })
 
 

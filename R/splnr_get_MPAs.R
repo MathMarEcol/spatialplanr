@@ -4,7 +4,7 @@
 #' An `sf` object is returned with the PU area covered by the selected marine protected areas.
 #'
 #' @param PlanUnits Planning Units as an `sf` object
-#' @param Countries A character vector of the countries for which to extract MPAs
+#' @param Countries A character vector of the countries for which to extract MPAs. To get all MPAs, use `"global"` here.
 #' @param Status The status field in the WDPA provides information on whether a protected area has been established, designated, or proposed at the time the data was submitted.
 #' @param Desig The designation type is the category or type of protected area as legally/officially designated or proposed.
 #' @param Category Stores the IUCN Protected Area Management Categories (recorded in field IUCN_CAT) for each of the protected areas where these categories are reported
@@ -33,6 +33,9 @@ splnr_get_MPAs <- function(PlanUnits,
     all(Desig %in% c("National", "Regional", "International", "Not Applicable")),
     all(Category %in% c("Ia", "Ib", "II", "III", "IV", "V", "VI", "Not Reported", "Not Applicable", "Not Assigned"))
   )
+
+
+  options(chromote.timeout = 120)
 
   wdpa_data <- Countries %>%
     purrr::map(wdpar::wdpa_fetch,
