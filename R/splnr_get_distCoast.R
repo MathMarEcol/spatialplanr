@@ -34,7 +34,7 @@
 #' ) %>%
 #'   sf::st_transform(cCRS)
 #'
-# dat_sf <- spatialgridr::get_grid(area_polygon = Bndry,
+# dat_sf <- spatialgridr::get_grid(boundary = Bndry,
 #                                  projection_crs = cCRS,
 #                                  option = "sf_hex",
 #                                  resolution = 10000,
