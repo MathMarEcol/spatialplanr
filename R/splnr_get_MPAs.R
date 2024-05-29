@@ -8,6 +8,7 @@
 #' @param Status The status field in the WDPA provides information on whether a protected area has been established, designated, or proposed at the time the data was submitted.
 #' @param Desig The designation type is the category or type of protected area as legally/officially designated or proposed.
 #' @param Category Stores the IUCN Protected Area Management Categories (recorded in field IUCN_CAT) for each of the protected areas where these categories are reported
+#' @param ... Other arguments passed to `wdpa_fetch()`
 #'
 #' @return A `sf` object with the MPAs intersected with the planning units
 #' @export
@@ -24,7 +25,8 @@ splnr_get_MPAs <- function(PlanUnits,
                            Countries,
                            Status = c("Designated", "Established", "Inscribed"),
                            Desig = c("National", "Regional", "International", "Not Applicable"),
-                           Category = c("Ia", "Ib", "II", "III", "IV")) {
+                           Category = c("Ia", "Ib", "II", "III", "IV"),
+                           ...) {
 
   assertthat::assert_that(
     inherits(PlanUnits, "sf"),
@@ -40,7 +42,8 @@ splnr_get_MPAs <- function(PlanUnits,
   wdpa_data <- Countries %>%
     purrr::map(wdpar::wdpa_fetch,
            wait = TRUE,
-           download_dir = rappdirs::user_data_dir("wdpar")) %>%
+           download_dir = rappdirs::user_data_dir("wdpar"),
+           ...) %>%
     dplyr::bind_rows() %>%
     dplyr::filter(.data$MARINE > 0) %>%
     dplyr::filter(.data$IUCN_CAT %in% Category) %>% # filter category

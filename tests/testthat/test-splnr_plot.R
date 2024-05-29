@@ -14,7 +14,7 @@ landmass <- rnaturalearth::ne_countries(
 ) %>%
   sf::st_transform(cCRS)
 
-PUs <- spatialgridr::get_grid(area_polygon = Bndry,
+PUs <- spatialgridr::get_grid(boundary = Bndry,
                               projection_crs = cCRS,
                               option = "sf_hex",
                               resolution = PU_diam,
