@@ -9,7 +9,8 @@ splnr_get_MPAs(
   Countries,
   Status = c("Designated", "Established", "Inscribed"),
   Desig = c("National", "Regional", "International", "Not Applicable"),
-  Category = c("Ia", "Ib", "II", "III", "IV")
+  Category = c("Ia", "Ib", "II", "III", "IV"),
+  ...
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ splnr_get_MPAs(
 \item{Desig}{The designation type is the category or type of protected area as legally/officially designated or proposed.}
 
 \item{Category}{Stores the IUCN Protected Area Management Categories (recorded in field IUCN_CAT) for each of the protected areas where these categories are reported}
+
+\item{...}{Other arguments passed to \code{wdpa_fetch()}}
 }
 \value{
 A \code{sf} object with the MPAs intersected with the planning units
