@@ -58,103 +58,132 @@ splnr_get_gfw <- function(region,
                           is.character(cCRS),
                           is.logical(compress))
 
-  if (region_source == "eez" & is.character(region)){ # Only process eez. RFMO and geojson have bugs
-    region_id <- gfwr::get_region_id(region_name = region, region_source = region_source, key = key)$id
-  } else if (region_source == "eez" & is.numeric(region)){
-    region_id <- region
-  } else if (region_source == "rfmo"){
-    region_id <- region # gfwr retuns NULL for region ID due to a bug in as.numeric(ID)
-  } else if (methods::is(region, "geojson")){
-    region_id <- region # Use region as is
-  }
-
-  # Convert dates into Date objects
-  start_date <- as.Date(start_date, format = "%Y-%m-%d")
-  end_date <- as.Date(end_date, format = "%Y-%m-%d")
-
-  # Function to obtain data for a specific date range
-  get_data_for_range <- function(start_date, end_date, rid) {
-
-    date_range <- paste(start_date, end_date, sep = ",")
-
-    data <- gfwr::get_raster(
-      spatial_resolution = spat_res,
-      temporal_resolution = temp_res,
-      group_by = 'flagAndGearType',
-      date_range = date_range,
-      region = rid,
-      region_source = region_source,
-      key = key)
-
-    data <- data %>%
-      dplyr::mutate(GFWregionID = rid) %>%
-      dplyr::rename(TimeRange = .data$`Time Range`,
-                    VesselID = .data$`Vessel IDs`,
-                    ApparentFishingHrs = .data$`Apparent Fishing Hours`)
-
-    return(data)
-  }
-
-  # Create expanded dataframe with all combinations
-  eg <- tidyr::expand_grid(
-    Date = seq(start_date, end_date, by = "366 days"),
-    Region = region_id
-  )
-
-  data_df <- purrr::map2(eg$Date, eg$Region, ~ get_data_for_range(.x, min(.x + 365, end_date), .y)) %>%
-    vctrs::list_drop_empty() %>%
-    dplyr::bind_rows()
-
-  if(rlang::is_empty(data_df)){
-    stop(paste0("No data found at all for the requested area of ", region, " between ", start_date, " and ", end_date))
-  }
 
 
-  if (isTRUE(compress)){
 
-    data_df <- data_df %>%
-      dplyr::group_by(.data$Lon, .data$Lat) %>%
-      dplyr::summarise("ApparentFishingHrs" = sum(.data$ApparentFishingHrs, na.rm = TRUE),
-                       GFWregionID = dplyr::first(.data$GFWregionID)) %>%
-      dplyr::ungroup()
 
-    data_sf <- data_df %>%
-      terra::rast(type = "xyz", crs = "EPSG:4326") %>% # Convert to polygons for easier use
-      terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm = TRUE, round = FALSE) %>%
-      sf::st_as_sf() %>%
-      dplyr::mutate(GFWregionID = as.factor(.data$GFWregionID))
+  get_gfw_byRegion <- function(region){
 
-    if (dim(data_df)[1] != dim(data_sf)[1]){
-      stop("Data dimensions of data_df and data_sf do not match after conversion to polygon")
+    if (region_source == "eez" & is.character(region)){ # Only process eez. RFMO and geojson have bugs
+      region_id <- gfwr::get_region_id(region_name = region, region_source = region_source, key = key)$id
+    } else if (region_source == "eez" & is.numeric(region)){
+      region_id <- region
+    } else if (region_source == "rfmo"){
+      region_id <- region # gfwr retuns NULL for region ID due to a bug in as.numeric(ID)
+    } else if (methods::is(region, "geojson")){
+      region_id <- region # Use region as is
     }
 
-  } else if (isFALSE(compress)){
+    # Convert dates into Date objects
+    start_date <- as.Date(start_date, format = "%Y-%m-%d")
+    end_date <- as.Date(end_date, format = "%Y-%m-%d")
 
-    # Combine data frames in the list into one data frame
+    # Function to obtain data for a specific date range
+    get_data_for_range <- function(start_date, end_date, rid) {
 
-    # Separate the "Time Range" column based on the specified temp_res
-    if (temp_res == "yearly") {
+      date_range <- paste(start_date, end_date, sep = ",")
+
+      data <- gfwr::get_raster(
+        spatial_resolution = spat_res,
+        temporal_resolution = temp_res,
+        group_by = 'flagAndGearType',
+        date_range = date_range,
+        region = rid,
+        region_source = region_source,
+        key = key)
+
+      data <- data %>%
+        dplyr::mutate(GFWregionID = rid) %>%
+        dplyr::rename(TimeRange = .data$`Time Range`,
+                      VesselID = .data$`Vessel IDs`,
+                      ApparentFishingHrs = .data$`Apparent Fishing Hours`)
+
+      return(data)
+    }
+
+    # Create expanded dataframe with all combinations
+    eg <- tidyr::expand_grid(
+      Date = seq(start_date, end_date, by = "366 days"),
+      Region = region_id
+    )
+
+    data_df <- purrr::map2(eg$Date, eg$Region, ~ get_data_for_range(.x, min(.x + 365, end_date), .y)) %>%
+      vctrs::list_drop_empty() %>%
+      dplyr::bind_rows()
+
+    if(rlang::is_empty(data_df)){
+      stop(paste0("No data found at all for the requested area of ", region, " between ", start_date, " and ", end_date))
+    }
+
+
+    if (isTRUE(compress)){
+
+      data_df <- data_df %>%
+        dplyr::group_by(.data$Lon, .data$Lat) %>%
+        dplyr::summarise("ApparentFishingHrs" = sum(.data$ApparentFishingHrs, na.rm = TRUE),
+                         GFWregionID = dplyr::first(.data$GFWregionID)) %>%
+        dplyr::ungroup()
+
       data_sf <- data_df %>%
-        dplyr::mutate(Year = .data$TimeRange) %>%
-        sf::st_as_sf(coords = c("Lon", "Lat"), crs ="EPSG:4326")
-    } else {
-      # Otherwise, separate the "Time Range" column according to the specified temp_res
-      if (temp_res == "monthly") {
+        terra::rast(type = "xyz", crs = "EPSG:4326") %>% # Convert to polygons for easier use
+        terra::as.polygons(trunc = FALSE, dissolve = FALSE, na.rm = TRUE, round = FALSE) %>%
+        sf::st_as_sf() %>%
+        dplyr::mutate(GFWregionID = as.factor(.data$GFWregionID))
+
+      if (dim(data_df)[1] != dim(data_sf)[1]){
+        stop("Data dimensions of data_df and data_sf do not match after conversion to polygon")
+      }
+
+    } else if (isFALSE(compress)){
+
+      # Combine data frames in the list into one data frame
+
+      # Separate the "Time Range" column based on the specified temp_res
+      if (temp_res == "yearly") {
         data_sf <- data_df %>%
-          tidyr::separate("TimeRange", into = c("Year", "Month"), sep = "-", remove = FALSE) %>%
-          sf::st_as_sf(coords = c("Lon", "Lat"), crs = "EPSG:4326")
-      } else if (temp_res == "daily") {
-        data_sf <- data_df %>%
-          tidyr::separate("TimeRange", into = c("Year", "Month", "Day"), sep = "-", remove = FALSE) %>%
-          sf::st_as_sf(coords = c("Lon", "Lat"), crs = "EPSG:4326")
+          dplyr::mutate(Year = .data$TimeRange) %>%
+          sf::st_as_sf(coords = c("Lon", "Lat"), crs ="EPSG:4326")
+      } else {
+        # Otherwise, separate the "Time Range" column according to the specified temp_res
+        if (temp_res == "monthly") {
+          data_sf <- data_df %>%
+            tidyr::separate("TimeRange", into = c("Year", "Month"), sep = "-", remove = FALSE) %>%
+            sf::st_as_sf(coords = c("Lon", "Lat"), crs = "EPSG:4326")
+        } else if (temp_res == "daily") {
+          data_sf <- data_df %>%
+            tidyr::separate("TimeRange", into = c("Year", "Month", "Day"), sep = "-", remove = FALSE) %>%
+            sf::st_as_sf(coords = c("Lon", "Lat"), crs = "EPSG:4326")
+        }
       }
     }
+    # But you may wish to return the data in a different CRS. For this you need transform
+    if (isFALSE(cCRS == "EPSG:4326")){
+      data_sf <- data_sf %>%
+        sf::st_transform(crs = cCRS)
+    }
+    return(data_sf)
   }
-  # But you may wish to return the data in a different CRS. For this you need transform
-  if (isFALSE(cCRS == "EPSG:4326")){
-    data_sf <- data_sf %>%
-      sf::st_transform(crs = cCRS)
+
+  # Run the analysis
+  out <- purrr::map(region, function(x) get_gfw_byRegion(x))
+
+
+  if (isFALSE(compress)){ # Do nothing. Just bind as a df
+    out <- out %>%
+      dplyr::bind_rows()
   }
-  return(data_sf)
+
+  if (isTRUE(compress)){# Take care of duplicate cells on boundaries
+    out <- out %>%
+      dplyr::bind_rows() %>%
+      dplyr::group_by(.data$geometry) %>%
+      dplyr::summarise("ApparentFishingHrs" = sum(.data$ApparentFishingHrs, na.rm = TRUE),
+                       GFWregionID = toString(.data$GFWregionID)) %>%
+      dplyr::ungroup()
+
+  }
+
+  return(out)
+
 }
 
