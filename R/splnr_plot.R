@@ -26,14 +26,10 @@
 #'            legend_title = "Legend",
 #'            legend_labels = c("Absent", "Present"))
 #'
-#' # Continuous plot of bathymetry
-#' bathymetry <- oceandatr::get_bathymetry(spatial_grid = dat_PUs,
-#'                                         keep = FALSE,
-#'                                         classify_bathymetry = FALSE)
-#
-#' splnr_plot(df = bathymetry,
+#' # Continuous plot of bathymetry#
+#' splnr_plot(df = dat_bathy,
 #'            col_names = "bathymetry",
-#'            plot_title = "bathymetry",
+#'            plot_title = "Bathymetry",
 #'            legend_title = "Bathymetry (m)")
 #'
 #' # Plot Planning Units
