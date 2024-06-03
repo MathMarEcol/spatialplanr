@@ -46,7 +46,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          cache-version: 8
+          cache-version: 2
           extra-packages: |
             any::covr
             any::rcmdcheck
@@ -81,3 +81,8 @@ jobs:
         uses: codecov/codecov-action@v4
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          flags: backend
+          directory: ${{env.working-directory}}
+          files: ${{env.working-directory}}/coverage.xml
+          fail_ci_if_error: false
