@@ -122,6 +122,11 @@ dat_clim <- dat_PUs %>%
   sf::st_sf() %>%
   dplyr::mutate(metric = climVec)
 
+dat_bathy <- oceandatr::get_bathymetry(spatial_grid = dat_PUs,
+                                        keep = FALSE,
+                                        classify_bathymetry = FALSE)
+
+
 # Save the data
 usethis::use_data(dat_bndry,
   dat_PUs,
@@ -136,5 +141,6 @@ usethis::use_data(dat_bndry,
   dat_category,
   dat_category2,
   dat_clim,
+  dat_bathy,
   overwrite = TRUE
 )
