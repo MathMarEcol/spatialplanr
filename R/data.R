@@ -253,3 +253,20 @@
 #' }
 #' @source "Made up data"
 "spDataFiltered"
+
+
+#' Bathymetry Data
+#'
+#' Bathymetry data downloaded via the oceandatr package
+#'
+#' @format `dat_bathy`
+#' A data frame with bathymetry data
+#' \describe{
+#
+#'   \item{cellID}{ID number for each row (or cell) of the dataset}
+#'   \item{bathymetry}{Bathymetry data}
+#'   \item{geometry}{sf geometry column}
+#'   ...
+#' }
+#' @source "oceandatr package"
+"dat_bathy"
