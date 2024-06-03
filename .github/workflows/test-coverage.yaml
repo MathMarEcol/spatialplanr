@@ -23,9 +23,19 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install \
+            libcurl4-gnutls-dev coinor-libsymphony-dev \
+            libudunits2-dev libgdal-dev libgeos-dev libproj-dev \
+            libglpk-dev chromium-browser
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::covr, any::xml2
+          extra-packages: |
+            any::covr
+            any::xml2
           needs: coverage
 
       - name: Test coverage
