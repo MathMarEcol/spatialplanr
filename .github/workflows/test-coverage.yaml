@@ -28,14 +28,17 @@ jobs:
           sudo apt-get update
           sudo apt-get -y install \
             libcurl4-gnutls-dev coinor-libsymphony-dev \
-            libudunits2-dev libgdal-dev libgeos-dev libproj-dev \
-            libglpk-dev chromium-browser
+            libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev \
+            libgmp3-dev libmpfr-dev chromium-browser
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
             any::covr
             any::xml2
+            any::rcmdcheck
+            any::remotes
+            any::lpsymphony
           needs: coverage
 
       - name: Test coverage
