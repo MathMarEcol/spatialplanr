@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+      PKG_SYSREQS: false
 
     steps:
       - uses: actions/checkout@v4
@@ -28,14 +30,18 @@ jobs:
           sudo apt-get update
           sudo apt-get -y install \
             libcurl4-gnutls-dev coinor-libsymphony-dev \
-            libudunits2-dev libgdal-dev libgeos-dev libproj-dev \
-            libglpk-dev chromium-browser
+            libudunits2-dev libgdal-dev libgeos-dev libproj-dev libglpk-dev \
+            libgmp3-dev libmpfr-dev chromium-browser
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          cache-version: 4
           extra-packages: |
             any::covr
             any::xml2
+            any::rcmdcheck
+            any::remotes
+            any::lpsymphony
           needs: coverage
 
       - name: Test coverage
