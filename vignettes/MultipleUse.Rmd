@@ -63,10 +63,9 @@ landmass <- rnaturalearth::ne_countries(
 ## Create Planning Units 
 ```{r}
 PUs <- spatialgridr::get_grid(boundary = Bndry,
-                              projection_crs = cCRS,
-                              option = "sf_hex",
-                              resolution = PU_size,
-                              sf_method = "centroid")
+                              crs = cCRS,
+                              output = "sf_hex",
+                              resolution = PU_size)
 
 ```
 

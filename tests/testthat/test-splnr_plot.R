@@ -15,10 +15,9 @@ landmass <- rnaturalearth::ne_countries(
   sf::st_transform(cCRS)
 
 PUs <- spatialgridr::get_grid(boundary = Bndry,
-                              projection_crs = cCRS,
-                              option = "sf_hex",
-                              resolution = PU_diam,
-                              sf_method = "centroid")
+                              crs = cCRS,
+                              output = "sf_hex",
+                              resolution = PU_diam)
 
 splnr_theme <- list(
   ggplot2::theme_bw(),

@@ -153,8 +153,8 @@ effect.)</em></p>
 function.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">region_id</span> <span class="op">&lt;-</span> <span class="fu">gfwr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gfwr/man/get_region_id.html" class="external-link">get_region_id</a></span><span class="op">(</span>region_name <span class="op">=</span> <span class="st">"Australia"</span>, </span>
-<span>                                 region_source <span class="op">=</span> <span class="st">"eez"</span>, </span>
-<span>                                 key <span class="op">=</span> <span class="va">key</span><span class="op">)</span><span class="op">$</span><span class="va">id</span></span></code></pre></div>
+<span>                                 region_source <span class="op">=</span> <span class="st">"eez"</span>,</span>
+<span>                                 key <span class="op">=</span> <span class="fu">gfwr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gfwr/man/gfw_auth.html" class="external-link">gfw_auth</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">id</span></span></code></pre></div>
 <p>The <code>get_raster</code> function gets a raster of fishing effort
 from the API and converts the response to a data frame which contains
 occurrences for each vessel and for each grid cell (data is binned into
@@ -175,7 +175,7 @@ resolutions. <br> - <code>vessel_id</code>, <code>flag</code>,
 <span>  date_range <span class="op">=</span> <span class="st">"2022-01-01,2023-01-01"</span>,</span>
 <span>  region <span class="op">=</span> <span class="va">region_id</span>,</span>
 <span>  region_source <span class="op">=</span> <span class="st">"eez"</span>,</span>
-<span>  key <span class="op">=</span> <span class="va">key</span></span>
+<span>  key <span class="op">=</span> <span class="fu">gfwr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gfwr/man/gfw_auth.html" class="external-link">gfw_auth</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><em>(You can remove the option</em> <code>message = FALSE</code>
 <em>to see the columns types.)</em></p>
@@ -187,12 +187,11 @@ resolutions. <br> - <code>vessel_id</code>, <code>flag</code>,
 modifications, we can get round these problems through
 <code>splnr_get_gfw</code>.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_sf_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_gfw.html">splnr_get_gfw</a></span><span class="op">(</span><span class="st">"Australia"</span>, </span>
-<span>                                  <span class="st">"2019-01-01"</span>, </span>
-<span>                                  <span class="st">"2023-12-31"</span>, </span>
-<span>                                  <span class="st">"yearly"</span>, </span>
-<span>                                  <span class="st">"low"</span>, </span>
-<span>                                  key <span class="op">=</span> <span class="va">key</span>, </span>
+<code class="sourceCode R"><span><span class="va">data_sf_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_gfw.html">splnr_get_gfw</a></span><span class="op">(</span>region <span class="op">=</span> <span class="st">"Australia"</span>, </span>
+<span>                                  start_date <span class="op">=</span> <span class="st">"2019-01-01"</span>,</span>
+<span>                                  end_date <span class="op">=</span>  <span class="st">"2023-12-31"</span>,</span>
+<span>                                  temp_res <span class="op">=</span> <span class="st">"yearly"</span>, </span>
+<span>                                  spat_res <span class="op">=</span> <span class="st">"low"</span>,</span>
 <span>                                  compress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -243,7 +242,11 @@ the context of this increase and not necessarily of more intense fishing
 activity.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># We need to change the temporal range according to our need group by it to display the total fishing hours. &lt;br&gt;</span></span>
-<span><span class="va">data_sf_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_gfw.html">splnr_get_gfw</a></span><span class="op">(</span><span class="st">"Australia"</span>, <span class="st">"2019-01-01"</span>, <span class="st">"2023-12-31"</span>, <span class="st">"monthly"</span>, key <span class="op">=</span> <span class="va">key</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="va">data_sf_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_gfw.html">splnr_get_gfw</a></span><span class="op">(</span>region <span class="op">=</span> <span class="st">"Australia"</span>, </span>
+<span>                                  start_date <span class="op">=</span> <span class="st">"2019-01-01"</span>, </span>
+<span>                                  end_date <span class="op">=</span> <span class="st">"2023-12-31"</span>, </span>
+<span>                                  temp_res <span class="op">=</span> <span class="st">"monthly"</span>, </span>
+<span>                                  key <span class="op">=</span> <span class="fu">gfwr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/gfwr/man/gfw_auth.html" class="external-link">gfw_auth</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Year</span>, <span class="va">Month</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarize</a></span><span class="op">(</span>Total_Fishing_Hours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">ApparentFishingHrs</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="GlobalFishingWatch_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
@@ -254,7 +257,10 @@ activity.</p>
 <p>Here we display the Vessel activity in ‘Micronesia’ in 2020 according
 to the fishing gear type.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data_sf_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_gfw.html">splnr_get_gfw</a></span><span class="op">(</span>region <span class="op">=</span> <span class="st">"Micronesia"</span>, start_date <span class="op">=</span> <span class="st">"2019-12-31"</span>, end_date <span class="op">=</span> <span class="st">"2021-01-01"</span>, temp_res <span class="op">=</span> <span class="st">"monthly"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">data_sf_combined</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_gfw.html">splnr_get_gfw</a></span><span class="op">(</span>region <span class="op">=</span> <span class="st">"Micronesia"</span>, </span>
+<span>                                  start_date <span class="op">=</span> <span class="st">"2019-12-31"</span>, </span>
+<span>                                  end_date <span class="op">=</span> <span class="st">"2021-01-01"</span>, </span>
+<span>                                  temp_res <span class="op">=</span> <span class="st">"monthly"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="GlobalFishingWatch_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 </div>
 <div class="section level4">

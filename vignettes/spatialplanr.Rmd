@@ -21,7 +21,6 @@ fig.width = 9
 
 ```{r setup}
 library(spatialplanr)
-# devtools::load_all()
 ```
 
 # Overview
@@ -40,22 +39,24 @@ Region <- "Coral Sea" # "Australia"
 Type <- "Oceans" # "EEZ"
 ```
 
-You can also define a region with square boundaries if you need.
+You can also define a region with square boundaries (in degrees) if you need.
 
 ```{r, eval=FALSE}
 Region <- c(xmin = 150, xmax = 160, ymin = -40, ymax = -30)
 ```
 
-Set the shape and area of the planning unit in square kilometres.
-
-```{r}
-PU_diam <- 107460 # m2 (10,000 km2)
-```
 
 Choose CRS for analysis. In this case we use Mollweide
 
 ```{r}
 cCRS <- "ESRI:54009"
+```
+
+
+Set the shape and diameter of the planning units. This will be in the same units as the CRS (usually metres or degrees).
+
+```{r}
+PU_diam <- 107460 # m
 ```
 
 ## Analysis Region
@@ -83,11 +84,10 @@ landmass <- rnaturalearth::ne_countries(
 ## Create Planning Units
 
 ```{r}
-PUs <- spatialgridr::get_grid(boundary = Bndry,
-                              projection_crs = cCRS,
-                              option = "sf_hex",
-                              resolution = PU_diam,
-                              sf_method = "centroid")
+PUs <- spatialgridr::get_grid(boundary = Bndry, 
+                              crs = cCRS,
+                              output = "sf_hex", 
+                              resolution = PU_diam)
 
 ```
 
