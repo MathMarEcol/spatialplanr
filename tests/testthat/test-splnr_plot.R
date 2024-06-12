@@ -34,9 +34,21 @@ splnr_theme <- list(
 
 distance <- splnr_get_distCoast(dat_PUs)
 
+# Binary plot of species distribution
 testthat::test_that("Correct function output", {
   expect_s3_class(
     splnr_plot(df = dat_species_bin,
+               col_names = "Spp1",
+               legend_title = "Legend",
+               legend_labels = c("Absent", "Present"))
+    , "gg"
+  )
+})
+
+# Logical plot of species distribution
+testthat::test_that("Correct function output", {
+  expect_s3_class(
+    splnr_plot(df = dat_species_bin %>% dplyr::mutate(dplyr::across(tidyselect::starts_with("Spp"), as.logical)),
                col_names = "Spp1",
                legend_title = "Legend",
                legend_labels = c("Absent", "Present"))
@@ -102,8 +114,25 @@ testthat::test_that("Correct function output", {
   )
 })
 
+testthat::test_that("Correct function output", {
+  expect_s3_class(
+    ggPU <- splnr_plot(df = PUs) +
+      splnr_gg_add(
+        Bndry = Bndry, overlay = landmass,
+        cropOverlay = PUs, ggtheme = "Default",
+        lockIn  = dat_mpas, nameLockIn = "wdpa",
+        typeLockIn = "Contours",
+        alphaLockIn = 0.5, colorLockIn = "red",
+        legendLockIn = "", labelLockIn = "MPAs"
+      )
+    , "gg"
+  )
+})
 
 
+# overlay2 = NULL, colorOverlay2 = "grey30",
+# overlay3 = NULL, colorOverlay3 = "grey40",
+# contours = NULL, colorConts = "black",
 
 # testthat::test_that("Correct function output", {
 #   expect_s3_class(
