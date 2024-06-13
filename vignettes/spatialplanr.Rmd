@@ -206,9 +206,7 @@ are fairly ubiquitous across the whole Coral Sea.
 (ggFeature <- splnr_plot(
   datEx_species_bin,
   "Megaptera_novaeangliae",
-  plot_title = "Megaptera novaeangliae",
-  legend_title = "",
-  legend_labels = c("Absence", "Presence")
+  plot_title = "Megaptera novaeangliae"
 ) +
   splnr_gg_add(
     PUs = PUs, Bndry = Bndry, overlay = landmass,
@@ -568,21 +566,22 @@ MPAs, we can can add this to the `splnr_gg_add()`function.
 ```{r}
 (splnr_plot_solution(datEx_soln2) +
    splnr_gg_add(
-     PUs = PUs, Bndry = Bndry, lockedInAreas = MPAsCoralSea,
-     colInterest = MPAsCoralSea$wdpa, Type = "Full",
-     colorLI = "lightgrey", alphaLI = 0.2, overlay = landmass,
+     PUs = PUs, Bndry = Bndry, lockIn = MPAsCoralSea,
+     nameLockIn = "wdpa", typeLockIn = "Full",
+     colorLockIn = "lightgrey", alphaLockIn = 0.2, overlay = landmass,
      cropOverlay = PUs, ggtheme = splnr_theme
    ))
 ```
 
 If we instead only want to see the contours of the locked in areas we
-can set `Type = "Contours"`in `splnr_gg_add()`.
+can set `typeLockIn = "Contours"`in `splnr_gg_add()`.
 
 ```{r}
 (splnr_plot_solution(datEx_soln2) +
    splnr_gg_add(
-     lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa,
-     Type = "Contours", overlay = landmass,
+     lockIn = MPAsCoralSea,
+     nameLockIn = "wdpa", typeLockIn = "Contours",
+     colorLockIn = "lightgrey", alphaLockIn = 0.2, overlay = landmass,
      cropOverlay = PUs, ggtheme = splnr_theme
    ))
 ```

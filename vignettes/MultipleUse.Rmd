@@ -465,10 +465,10 @@ The results can the be visualized again:
   legendLabels = c("Not selected", "Zone 1", "Zone 2")
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry,
-    lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa,
-    Type = "Full", colorLI = "red", alphaLI = 0.2, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme, labelL = "Current MPAs"
+    PUs = PUs, Bndry = Bndry, lockIn = MPAsCoralSea,
+    nameLockIn = "wdpa", typeLockIn = "Full",
+    colorLockIn = "lightgrey", alphaLockIn = 0.2, overlay = landmass,
+    labelLockIn = "Current MPAs", cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 
