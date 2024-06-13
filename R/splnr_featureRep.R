@@ -152,6 +152,7 @@ splnr_get_featureRep <- function(soln, pDat, targetsDF = NA,
 #' @param renameFeatures A logical on whether variable names should be used or they should be replaced with common names
 #' @param namesToReplace A data frame containing the variable name ('nameVariable') and a common name ('nameCommon').
 #' @param showTarget `logical` Should the targets be shown on the bar plot
+#' @param ... Other arguments passed on to `ggplot2::theme()`
 #'
 #' @return A ggplot object of the plot
 #' @export
@@ -183,7 +184,8 @@ splnr_plot_featureRep <- function(df, category = NA,
                                   renameFeatures = FALSE,
                                   namesToReplace = NA,
                                   nr = 1, showTarget = NA,
-                                  plotTitle = "") {
+                                  plotTitle = "",
+                                  ...) {
 
   assertthat::assert_that(
     inherits(df, c("data.frame", "tbl_df")),
@@ -267,11 +269,16 @@ splnr_plot_featureRep <- function(df, category = NA,
       axis.title.y = ggplot2::element_text(size = 16),
       legend.title = ggplot2::element_blank(),
       legend.text = ggplot2::element_text(size = 16),
+      legend.position = "inside",
       legend.position.inside = c(0.5, 0.95),
       legend.direction = "horizontal",
       legend.background = ggplot2::element_rect(fill = "NA"),
-      title = ggplot2::element_text(size = 16)
+      title = ggplot2::element_text(size = 16),
+      ...
     )
+
+
+  browser()
 
   if (!(is.na(showTarget))) {
     gg_target <- gg_target +
