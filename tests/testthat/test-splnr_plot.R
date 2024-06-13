@@ -118,7 +118,10 @@ testthat::test_that("Correct function output", {
   expect_s3_class(
     ggPU <- splnr_plot(df = PUs) +
       splnr_gg_add(
-        Bndry = Bndry, overlay = landmass,
+        Bndry = Bndry,
+        overlay = landmass,
+        overlay2 = landmass,
+        overlay3 = landmass,
         cropOverlay = PUs, ggtheme = "Default",
         lockIn  = dat_mpas, nameLockIn = "wdpa",
         typeLockIn = "Contours",
