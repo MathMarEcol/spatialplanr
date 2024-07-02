@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">spatialplanr</a>
 
-    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.6</small>
+    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,15 +83,14 @@
       <img src="../logo.png" class="logo" alt=""><h1>A Basic Spatial Planning Workflow</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/MathMarEcol/spatialplanr/blob/HEAD/vignettes/spatialplanr.Rmd" class="external-link"><code>vignettes/spatialplanr.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MathMarEcol/spatialplanr/blob/HEAD/tests/testthat/vignettes/spatialplanr.Rmd" class="external-link"><code>tests/testthat/vignettes/spatialplanr.Rmd</code></a></small>
       <div class="d-none name"><code>spatialplanr.Rmd</code></div>
     </div>
 
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MathMarEcol/spatialplanr" class="external-link">spatialplanr</a></span><span class="op">)</span></span>
-<span><span class="co"># devtools::load_all()</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/MathMarEcol/spatialplanr" class="external-link">spatialplanr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -107,15 +106,17 @@ improvements.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Region</span> <span class="op">&lt;-</span> <span class="st">"Coral Sea"</span> <span class="co"># "Australia"</span></span>
 <span><span class="va">Type</span> <span class="op">&lt;-</span> <span class="st">"Oceans"</span> <span class="co"># "EEZ"</span></span></code></pre></div>
-<p>You can also define a region with square boundaries if you need.</p>
+<p>You can also define a region with square boundaries (in degrees) if
+you need.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Region</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="fl">150</span>, xmax <span class="op">=</span> <span class="fl">160</span>, ymin <span class="op">=</span> <span class="op">-</span><span class="fl">40</span>, ymax <span class="op">=</span> <span class="op">-</span><span class="fl">30</span><span class="op">)</span></span></code></pre></div>
-<p>Set the shape and area of the planning unit in square kilometres.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">PU_diam</span> <span class="op">&lt;-</span> <span class="fl">107460</span> <span class="co"># m2 (10,000 km2)</span></span></code></pre></div>
 <p>Choose CRS for analysis. In this case we use Mollweide</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cCRS</span> <span class="op">&lt;-</span> <span class="st">"ESRI:54009"</span></span></code></pre></div>
+<p>Set the shape and diameter of the planning units. This will be in the
+same units as the CRS (usually metres or degrees).</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">PU_diam</span> <span class="op">&lt;-</span> <span class="fl">107460</span> <span class="co"># m</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="analysis-region">Analysis Region<a class="anchor" aria-label="anchor" href="#analysis-region"></a>
@@ -126,7 +127,7 @@ planning units.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Bndry</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_boundary.html">splnr_get_boundary</a></span><span class="op">(</span>Limits <span class="op">=</span> <span class="va">Region</span>, Type <span class="op">=</span> <span class="va">Type</span>, cCRS <span class="op">=</span> <span class="va">cCRS</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `ne_10m_geography_marine_polys' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/Rtmp9Dshy5/ne_10m_geography_marine_polys.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/RtmpsIlU2l/ne_10m_geography_marine_polys.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 306 features and 37 fields</span></span>
 <span><span class="co">#&gt; Geometry type: MULTIPOLYGON</span></span>
@@ -146,11 +147,10 @@ represents the land mass that should be removed (inverse = FALSE)</p>
 <h3 id="create-planning-units">Create Planning Units<a class="anchor" aria-label="anchor" href="#create-planning-units"></a>
 </h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">PUs</span> <span class="op">&lt;-</span> <span class="fu">spatialgridr</span><span class="fu">::</span><span class="fu"><a href="https://emlab-ucsb.github.io/spatialgridr/reference/get_grid.html" class="external-link">get_grid</a></span><span class="op">(</span>boundary <span class="op">=</span> <span class="va">Bndry</span>,</span>
-<span>                              projection_crs <span class="op">=</span> <span class="va">cCRS</span>,</span>
-<span>                              option <span class="op">=</span> <span class="st">"sf_hex"</span>,</span>
-<span>                              resolution <span class="op">=</span> <span class="va">PU_diam</span>,</span>
-<span>                              sf_method <span class="op">=</span> <span class="st">"centroid"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">PUs</span> <span class="op">&lt;-</span> <span class="fu">spatialgridr</span><span class="fu">::</span><span class="fu"><a href="https://emlab-ucsb.github.io/spatialgridr/reference/get_grid.html" class="external-link">get_grid</a></span><span class="op">(</span>boundary <span class="op">=</span> <span class="va">Bndry</span>, </span>
+<span>                              crs <span class="op">=</span> <span class="va">cCRS</span>,</span>
+<span>                              output <span class="op">=</span> <span class="st">"sf_hex"</span>, </span>
+<span>                              resolution <span class="op">=</span> <span class="va">PU_diam</span><span class="op">)</span></span></code></pre></div>
 <p>We can check what the PUs look like</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">ggPU</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">PUs</span><span class="op">)</span> <span class="op">+</span></span>
@@ -253,9 +253,7 @@ they are fairly ubiquitous across the whole Coral Sea.</p>
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">ggFeature</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">datEx_species_bin</span>,</span>
 <span>  <span class="st">"Megaptera_novaeangliae"</span>,</span>
-<span>  plot_title <span class="op">=</span> <span class="st">"Megaptera novaeangliae"</span>,</span>
-<span>  legend_title <span class="op">=</span> <span class="st">""</span>,</span>
-<span>  legend_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Absence"</span>, <span class="st">"Presence"</span><span class="op">)</span></span>
+<span>  plot_title <span class="op">=</span> <span class="st">"Megaptera novaeangliae"</span></span>
 <span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
 <span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
@@ -581,20 +579,21 @@ MPAs, we can can add this to the
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span><span class="va">datEx_soln2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>   <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
-<span>     PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, lockedInAreas <span class="op">=</span> <span class="va">MPAsCoralSea</span>,</span>
-<span>     colInterest <span class="op">=</span> <span class="va">MPAsCoralSea</span><span class="op">$</span><span class="va">wdpa</span>, Type <span class="op">=</span> <span class="st">"Full"</span>,</span>
-<span>     colorLI <span class="op">=</span> <span class="st">"lightgrey"</span>, alphaLI <span class="op">=</span> <span class="fl">0.2</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>     PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, lockIn <span class="op">=</span> <span class="va">MPAsCoralSea</span>,</span>
+<span>     nameLockIn <span class="op">=</span> <span class="st">"wdpa"</span>, typeLockIn <span class="op">=</span> <span class="st">"Full"</span>,</span>
+<span>     colorLockIn <span class="op">=</span> <span class="st">"lightgrey"</span>, alphaLockIn <span class="op">=</span> <span class="fl">0.2</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
 <span>     cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
 <span>   <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-36-1.png" width="864"></p>
 <p>If we instead only want to see the contours of the locked in areas we
-can set <code>Type = "Contours"</code>in
+can set <code>typeLockIn = "Contours"</code>in
 <code><a href="../reference/splnr_gg_add.html">splnr_gg_add()</a></code>.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span><span class="va">datEx_soln2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>   <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
-<span>     lockedInAreas <span class="op">=</span> <span class="va">MPAsCoralSea</span>, colInterest <span class="op">=</span> <span class="va">MPAsCoralSea</span><span class="op">$</span><span class="va">wdpa</span>,</span>
-<span>     Type <span class="op">=</span> <span class="st">"Contours"</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>     lockIn <span class="op">=</span> <span class="va">MPAsCoralSea</span>,</span>
+<span>     nameLockIn <span class="op">=</span> <span class="st">"wdpa"</span>, typeLockIn <span class="op">=</span> <span class="st">"Contours"</span>,</span>
+<span>     colorLockIn <span class="op">=</span> <span class="st">"lightgrey"</span>, alphaLockIn <span class="op">=</span> <span class="fl">0.2</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
 <span>     cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
 <span>   <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-37-1.png" width="864"></p>

@@ -1,6 +1,9 @@
 #' Add-ons for plotting
 #'
-#' This function allows to customise plots in a simple and reproducible way, by giving the option for several inputs that can be included in maps produced with the other functions of this package.It can be combined with the `spatialplanr` spatial plotting functions.
+#' This function allows to customise plots in a simple and reproducible way, by
+#' giving the option for several inputs that can be included in maps produced
+#' with the other functions of this package.It can be combined with the
+#' `spatialplanr` spatial plotting functions.
 #'
 #' @param PUs Planning Units as an `sf` object
 #' @param colorPUs A color value for the outline of planning units.
@@ -12,17 +15,28 @@
 #' @param colorOverlay2 A color value for overlay.
 #' @param overlay3 An `sf` object of overlay polygon.
 #' @param colorOverlay3 A color value for overlay.
-#' @param cropOverlay An `sf` object with the boundary box used for cropping the overlay object.
-#' @param contours An `sf` object of contours that are important to visualise (e.g. outline of sea mounts, ridges; can be produced with terra::as.contour()); up to 6 different contours possible.
-#' @param colorsConts A color value for contours.
-#' @param lockedInAreas An `sf` object with binary data of locked in areas in the prioritisation (e.g. MPAs).
-#' @param Type Either "Full" or "Contours"; "Full" maps the locked in areas on top of the planning units; "Contours" draws the outline of the locked in areas.
-#' @param colInterest column of data frame that contains binary information of the locked in areas to plot
-#' @param alphaLI A value (0-1) for the opacity of the locked in areas when plotted on top of other plots.
-#' @param colorLI A color value for the locked in areas.
-#' @param legendL A character value for the title of the legend of the locked in areas. Can be empty ("").
-#' @param labelL The legend label of the locked in area (e.g. MPAs)
-#' @param ggtheme The theme applied to the plot. Can either be NA (default ggplot), "Default" (default spatialplanr: theme_bw() and some basic theme settings) or a user-defined list of theme properties.
+#' @param cropOverlay An `sf` object with the boundary box used for cropping the
+#'   overlay object.
+#' @param contours An `sf` object of contours that are important to visualise
+#'   (e.g. outline of sea mounts, ridges; can be produced with
+#'   terra::as.contour()); up to 6 different contours possible.
+#' @param colorConts A color value for contours.
+#' @param lockIn An `sf` object with binary data of locked in areas in
+#'   the prioritisation (e.g. MPAs).
+#' @param typeLockIn Either "Full" or "Contours"; "Full" maps the locked in areas on
+#'   top of the planning units; "Contours" draws the outline of the locked in
+#'   areas.
+#' @param nameLockIn column of data frame that contains binary information of
+#'   the locked in areas to plot
+#' @param alphaLockIn A value (0-1) for the opacity of the locked in areas when
+#'   plotted on top of other plots.
+#' @param colorLockIn A color value for the locked in areas.
+#' @param legendLockIn A character value for the title of the legend of the locked in
+#'   areas. Can be empty ("").
+#' @param labelLockIn The legend label of the locked in area (e.g. MPAs)
+#' @param ggtheme The theme applied to the plot. Can either be NA (default
+#'   ggplot), "Default" (default spatialplanr: theme_bw() and some basic theme
+#'   settings) or a user-defined list of theme properties.
 #'
 #' @return A ggplot object of the plot
 #' @export
@@ -47,10 +61,11 @@ splnr_gg_add <- function(PUs = NULL, colorPUs = "grey80",
                          overlay = NULL, colorOverlay = "grey20",
                          overlay2 = NULL, colorOverlay2 = "grey30",
                          overlay3 = NULL, colorOverlay3 = "grey40",
-                         contours = NULL, colorsConts = "black",
+                         contours = NULL, colorConts = "black",
                          cropOverlay = NULL,
-                         lockedInAreas = NULL, Type = "Full", colInterest = NULL,
-                         alphaLI = 0.5, colorLI = "black", legendL = "", labelL = "MPAs",
+                         lockIn = NULL, typeLockIn = "Full", nameLockIn = NULL,
+                         alphaLockIn = 0.5, colorLockIn = "black", legendLockIn = "",
+                         labelLockIn = "MPAs",
                          ggtheme = "Default" # splnr_theme
 ) {
 
@@ -60,7 +75,7 @@ splnr_gg_add <- function(PUs = NULL, colorPUs = "grey80",
   if(!is.null(overlay2)){assertthat::assert_that(inherits(overlay2, "sf"))}
   if(!is.null(overlay3)){assertthat::assert_that(inherits(overlay3, "sf"))}
   if(!is.null(contours)){assertthat::assert_that(inherits(contours, "sf"))}
-
+  if(!is.null(lockIn)){assertthat::assert_that(inherits(lockIn, "sf"))}
 
   ggList <- list()
 
@@ -110,7 +125,7 @@ splnr_gg_add <- function(PUs = NULL, colorPUs = "grey80",
         ggList,
         list(
           ggnewscale::new_scale_colour(),
-          ggplot2::geom_sf(data = contours, colour = colorsConts, fill = NA, ggplot2::aes(linetype = .data$Category), size = 0.5, show.legend = "line"),
+          ggplot2::geom_sf(data = contours, colour = colorConts, fill = NA, ggplot2::aes(linetype = .data$Category), size = 0.5, show.legend = "line"),
           ggplot2::scale_linetype_manual(" ",
                                          breaks = namesConts,
                                          values = vals,
@@ -127,22 +142,22 @@ splnr_gg_add <- function(PUs = NULL, colorPUs = "grey80",
     }
   }
 
-  if (inherits(lockedInAreas, "sf")) {
-    lockedInAreas <- lockedInAreas %>%
-      dplyr::mutate(lockedIn = as.logical(colInterest)) %>%
-      dplyr::filter(.data$lockedIn == 1)
+  if (inherits(lockIn, "sf")) {
+    lockIn <- lockIn %>%
+      dplyr::mutate(lockedIn = as.logical(.data[[nameLockIn]])) %>%
+      dplyr::filter(.data$lockedIn == 1) # TODO Add ability for TRUE as well
 
-    if (Type == "Full") {
+    if (typeLockIn == "Full") {
       ggList <- c(
         ggList,
         list(
           ggnewscale::new_scale_fill(),
           ggnewscale::new_scale_colour(),
-          ggplot2::geom_sf(data = lockedInAreas, ggplot2::aes(fill = .data$lockedIn), alpha = alphaLI),
+          ggplot2::geom_sf(data = lockIn, ggplot2::aes(fill = .data$lockedIn), alpha = alphaLockIn),
           ggplot2::scale_fill_manual(
-            name = legendL,
-            values = c("TRUE" = colorLI),
-            labels = labelL,
+            name = legendLockIn,
+            values = c("TRUE" = colorLockIn),
+            labels = labelLockIn,
             aesthetics = c("colour", "fill"),
             guide = ggplot2::guide_legend(
               override.aes = list(linetype = 0),
@@ -155,11 +170,11 @@ splnr_gg_add <- function(PUs = NULL, colorPUs = "grey80",
           )
         )
       )
-    } else if (Type == "Contours") {
-      lockedInAreas <- lockedInAreas %>%
+    } else if (typeLockIn == "Contours") {
+      lockIn <- lockIn %>%
         sf::st_union() %>%
         sf::st_as_sf() %>%
-        dplyr::rename(geometry = .data$x) %>%
+        dplyr::rename(geometry = "x") %>%
         dplyr::mutate(lockedIn = 1) %>%
         dplyr::mutate(lockedIn = as.factor(.data$lockedIn))
 
@@ -168,10 +183,10 @@ splnr_gg_add <- function(PUs = NULL, colorPUs = "grey80",
         list(
           ggnewscale::new_scale_fill(),
           ggnewscale::new_scale_colour(),
-          ggplot2::geom_sf(data = lockedInAreas, colour = colorLI, fill = NA, ggplot2::aes(linetype = .data$lockedIn), size = 0.5, show.legend = "line"),
+          ggplot2::geom_sf(data = lockIn, colour = colorLockIn, fill = NA, ggplot2::aes(linetype = .data$lockedIn), size = 0.5, show.legend = "line"),
           ggplot2::scale_linetype_manual("",
                                          values = 1,
-                                         labels = labelL,
+                                         labels = labelLockIn,
                                          guide = ggplot2::guide_legend(
                                            override.aes = list(fill = NA),
                                            # nrow = 2,

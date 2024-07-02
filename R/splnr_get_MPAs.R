@@ -14,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#' dat <- splnr_get_MPAs(dat_PUs, "Australia")
+#' dat <- splnr_get_MPAs(PlanUnits = dat_PUs, Countries = "Australia")
 #'
 #' aust <- rnaturalearth::ne_countries(country = "Australia", returnclass = "sf")
 #'
@@ -54,7 +54,9 @@ splnr_get_MPAs <- function(PlanUnits,
     dplyr::select("geometry") %>%
     dplyr::mutate(wdpa = 1)
 
-  wdpa_data <- spatialgridr::get_data_in_grid(spatial_grid = PlanUnits, dat = wdpa_data, apply_cutoff = FALSE)
+  wdpa_data <- spatialgridr::get_data_in_grid(spatial_grid = PlanUnits,
+                                              dat = wdpa_data,
+                                              cutoff = NULL)
 
   return(wdpa_data)
 }

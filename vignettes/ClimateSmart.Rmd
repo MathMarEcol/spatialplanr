@@ -31,10 +31,13 @@ This code has been written to simplify the process for running a _prioritizr_ an
 ```{r}
 Region <- "Coral Sea" # "Australia"
 Type <- "Oceans" # "EEZ"
-Shape <- "Hexagon" # "Shape of PUs
-PU_size <- 10000 # km2
-
 cCRS <- "ESRI:54009" # Mollweide
+```
+
+Set the diameter of the planning units. This will be in the same units as the CRS (usually metres or degrees).
+
+```{r}
+PU_size <- 107460 # m
 ```
 
 We can also use a customised `ggplot` theme that can be passed as a list to `splnr_gg_add()` and that can then be used for all plots. For example:
@@ -68,10 +71,9 @@ landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>
 ## Create Planning Units 
 ```{r}
 PUs <- spatialgridr::get_grid(boundary = Bndry,
-                              projection_crs = cCRS,
-                              option = "sf_hex",
-                              resolution = PU_size,
-                              sf_method = "centroid")
+                              crs = cCRS,
+                              output = "sf_hex",
+                              resolution = PU_size)
 ```
 
 ## Get the features 

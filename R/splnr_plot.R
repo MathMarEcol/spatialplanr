@@ -26,6 +26,14 @@
 #'            legend_title = "Legend",
 #'            legend_labels = c("Absent", "Present"))
 #'
+#' # Logical plot of species distribution
+#' splnr_plot(df = dat_species_bin %>%
+#'                 dplyr::mutate(dplyr::across(
+#'                   tidyselect::starts_with("Spp"), as.logical)),
+#'            col_names = "Spp1",
+#'            legend_title = "Legend",
+#'            legend_labels = c("Absent", "Present"))
+#'
 #' # Continuous plot of bathymetry#
 #' splnr_plot(df = dat_bathy,
 #'            col_names = "bathymetry",
@@ -66,12 +74,9 @@ splnr_plot <- function(df,
 
   # Set the defaults
   is_binary <- FALSE
+  is_logi <- FALSE
   is_continuous <- FALSE
   showFeatureSum <- FALSE
-
-
-  # browser()
-
 
   # Figure out data type
 
@@ -79,17 +84,18 @@ splnr_plot <- function(df,
 
     if (length(col_names) == 1){ # One column name
 
-      ## Is the data binary?
-      df0 <- df %>%
-        # Replace NA with 0 in selected columns for binary data verification
-        dplyr::mutate(dplyr::across(tidyselect::all_of(col_names), ~tidyr::replace_na(., 0)))
+      if (is.logical(df[[col_names]])){ # Is the column logical?
+        is_logi <- TRUE
+      } else { # See if it is binary
+        df0 <- df %>%
+          # Replace NA with 0 in selected columns for binary data verification
+          dplyr::mutate(dplyr::across(tidyselect::all_of(col_names), ~tidyr::replace_na(., 0)))
 
-      # TODO WE should check for logical rather than testing TRUE/FALSE here because we shouldn't be adding a 0, to a T/F option
-
-      is_binary <- all(purrr::map_vec(col_names, function(col_name) all(df0[[col_name]] %in% c(0, 1, TRUE, FALSE))))
+        is_binary <- all(purrr::map_vec(col_names, function(x) all(df0[[x]] %in% c(0, 1))))
+      }
 
       ## Is the data continuous?
-      if (isFALSE(is_binary)){
+      if (isFALSE(is_binary) & isFALSE(is_logi)){
         is_continuous <- TRUE # May not always be true but plotting as continuous will work, and highlight the issue
       }
 
@@ -103,14 +109,7 @@ splnr_plot <- function(df,
     ggplot2::coord_sf(xlim = sf::st_bbox(df)$xlim, ylim = sf::st_bbox(df)$ylim) +
     ggplot2::labs(subtitle = plot_title)
 
-  # ggplot2::guides(fill = ggplot2::guide_legend(override.aes = list(linetype = 0),
-  #                                              nrow = 2,
-  #                                              order = 1,
-  #                                              direction = "horizontal",
-  #                                              title = legend_title,
-  #                                              title.position = "top",
-  #                                              title.hjust = 0.5,
-  #                                              labels = legend_labels))
+  # Plot logic based on data type
 
   if (showFeatureSum) {
 
@@ -132,17 +131,27 @@ splnr_plot <- function(df,
       ggplot2::guides(fill = ggplot2::guide_colourbar(order = -1))
 
     return(gg)
-  } else if (is_binary) {
+  } else if (is_binary | is_logi) {
 
     if (is.null(legend_labels)){
       legend_labels = c("Absence", "Presence")
     }
 
     gg <- gg +
-      ggplot2::geom_sf(data = df, ggplot2::aes(fill = factor(.data[[col_names]])), colour = "grey80", size = 0.1) +
-      ggplot2::scale_fill_manual(values = c("0" = colourVals[1], "1" = colourVals[2]),
+      ggplot2::geom_sf(data = df, ggplot2::aes(fill = factor(.data[[col_names]])), colour = "grey80", size = 0.1)
+
+    if (isTRUE(is_binary)) {
+      gg <- gg +
+        ggplot2::scale_fill_manual(values = c("0" = colourVals[1], "1" = colourVals[2]),
+                                   labels = legend_labels,
+                                   name = legend_title)
+    }
+
+    if (isTRUE(is_logi)) {
+      gg <- gg +
+        ggplot2::scale_fill_manual(values = c("FALSE" = colourVals[1], "TRUE" = colourVals[2]),
                                  labels = legend_labels,
-                                 name = legend_title)
+                                 name = legend_title)}
 
 
   } else if (is_continuous) {

@@ -48,13 +48,18 @@ splnr_plot(df = dat_species_bin,
            legend_title = "Legend",
            legend_labels = c("Absent", "Present"))
 
-# Continuous plot of bathymetry
-bathymetry <- oceandatr::get_bathymetry(spatial_grid = dat_PUs,
-                                        keep = FALSE,
-                                        classify_bathymetry = FALSE)
-splnr_plot(df = bathymetry,
+# Logical plot of species distribution
+splnr_plot(df = dat_species_bin \%>\%
+                dplyr::mutate(dplyr::across(
+                  tidyselect::starts_with("Spp"), as.logical)),
+           col_names = "Spp1",
+           legend_title = "Legend",
+           legend_labels = c("Absent", "Present"))
+
+# Continuous plot of bathymetry#
+splnr_plot(df = dat_bathy,
            col_names = "bathymetry",
-           plot_title = "bathymetry",
+           plot_title = "Bathymetry",
            legend_title = "Bathymetry (m)")
 
 # Plot Planning Units

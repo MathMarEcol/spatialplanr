@@ -45,16 +45,7 @@ reference:
 
 - title: Built in datasets
   contents:
-  - dat_category
-  - dat_category2
-  - dat_bndry
-  - dat_clim
-  - dat_mpas
-  - dat_PUs
-  - dat_region
-  - dat_species_bin
-  - dat_species_bin2
-  - dat_species_prob
+  - starts_with("dat_")
   - CoralSeaVelocity
   - IUCN_IA_Targets
   - MPAsCoralSea

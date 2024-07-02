@@ -12,7 +12,8 @@ splnr_plot_featureRep(
   namesToReplace = NA,
   nr = 1,
   showTarget = NA,
-  plotTitle = ""
+  plotTitle = "",
+  ...
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ splnr_plot_featureRep(
 \item{showTarget}{\code{logical} Should the targets be shown on the bar plot}
 
 \item{plotTitle}{A character value for the title of the plot. Can be empty ("").}
+
+\item{...}{Other arguments passed on to \code{ggplot2::theme()}}
 }
 \value{
 A ggplot object of the plot
