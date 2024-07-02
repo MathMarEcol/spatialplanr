@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">spatialplanr</a>
 
-    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.6</small>
+    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>A Basic Spatial Planning Workflow</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/MathMarEcol/spatialplanr/blob/HEAD/vignettes/spatialplanr.Rmd" class="external-link"><code>vignettes/spatialplanr.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MathMarEcol/spatialplanr/blob/HEAD/tests/testthat/vignettes/spatialplanr.Rmd" class="external-link"><code>tests/testthat/vignettes/spatialplanr.Rmd</code></a></small>
       <div class="d-none name"><code>spatialplanr.Rmd</code></div>
     </div>
 
@@ -127,7 +127,7 @@ planning units.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Bndry</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_boundary.html">splnr_get_boundary</a></span><span class="op">(</span>Limits <span class="op">=</span> <span class="va">Region</span>, Type <span class="op">=</span> <span class="va">Type</span>, cCRS <span class="op">=</span> <span class="va">cCRS</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `ne_10m_geography_marine_polys' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/Rtmpis8q1E/ne_10m_geography_marine_polys.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/RtmpsIlU2l/ne_10m_geography_marine_polys.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 306 features and 37 fields</span></span>
 <span><span class="co">#&gt; Geometry type: MULTIPOLYGON</span></span>
@@ -253,9 +253,7 @@ they are fairly ubiquitous across the whole Coral Sea.</p>
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">ggFeature</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span></span>
 <span>  <span class="va">datEx_species_bin</span>,</span>
 <span>  <span class="st">"Megaptera_novaeangliae"</span>,</span>
-<span>  plot_title <span class="op">=</span> <span class="st">"Megaptera novaeangliae"</span>,</span>
-<span>  legend_title <span class="op">=</span> <span class="st">""</span>,</span>
-<span>  legend_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Absence"</span>, <span class="st">"Presence"</span><span class="op">)</span></span>
+<span>  plot_title <span class="op">=</span> <span class="st">"Megaptera novaeangliae"</span></span>
 <span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
 <span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
@@ -581,20 +579,21 @@ MPAs, we can can add this to the
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span><span class="va">datEx_soln2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>   <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
-<span>     PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, lockedInAreas <span class="op">=</span> <span class="va">MPAsCoralSea</span>,</span>
-<span>     colInterest <span class="op">=</span> <span class="va">MPAsCoralSea</span><span class="op">$</span><span class="va">wdpa</span>, Type <span class="op">=</span> <span class="st">"Full"</span>,</span>
-<span>     colorLI <span class="op">=</span> <span class="st">"lightgrey"</span>, alphaLI <span class="op">=</span> <span class="fl">0.2</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>     PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, lockIn <span class="op">=</span> <span class="va">MPAsCoralSea</span>,</span>
+<span>     nameLockIn <span class="op">=</span> <span class="st">"wdpa"</span>, typeLockIn <span class="op">=</span> <span class="st">"Full"</span>,</span>
+<span>     colorLockIn <span class="op">=</span> <span class="st">"lightgrey"</span>, alphaLockIn <span class="op">=</span> <span class="fl">0.2</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
 <span>     cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
 <span>   <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-36-1.png" width="864"></p>
 <p>If we instead only want to see the contours of the locked in areas we
-can set <code>Type = "Contours"</code>in
+can set <code>typeLockIn = "Contours"</code>in
 <code><a href="../reference/splnr_gg_add.html">splnr_gg_add()</a></code>.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span><span class="va">datEx_soln2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>   <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
-<span>     lockedInAreas <span class="op">=</span> <span class="va">MPAsCoralSea</span>, colInterest <span class="op">=</span> <span class="va">MPAsCoralSea</span><span class="op">$</span><span class="va">wdpa</span>,</span>
-<span>     Type <span class="op">=</span> <span class="st">"Contours"</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
+<span>     lockIn <span class="op">=</span> <span class="va">MPAsCoralSea</span>,</span>
+<span>     nameLockIn <span class="op">=</span> <span class="st">"wdpa"</span>, typeLockIn <span class="op">=</span> <span class="st">"Contours"</span>,</span>
+<span>     colorLockIn <span class="op">=</span> <span class="st">"lightgrey"</span>, alphaLockIn <span class="op">=</span> <span class="fl">0.2</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
 <span>     cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
 <span>   <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-37-1.png" width="864"></p>

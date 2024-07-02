@@ -16,15 +16,15 @@ splnr_gg_add(
   overlay3 = NULL,
   colorOverlay3 = "grey40",
   contours = NULL,
-  colorsConts = "black",
+  colorConts = "black",
   cropOverlay = NULL,
-  lockedInAreas = NULL,
-  Type = "Full",
-  colInterest = NULL,
-  alphaLI = 0.5,
-  colorLI = "black",
-  legendL = "",
-  labelL = "MPAs",
+  lockIn = NULL,
+  typeLockIn = "Full",
+  nameLockIn = NULL,
+  alphaLockIn = 0.5,
+  colorLockIn = "black",
+  legendLockIn = "",
+  labelLockIn = "MPAs",
   ggtheme = "Default"
 )
 }
@@ -49,33 +49,47 @@ splnr_gg_add(
 
 \item{colorOverlay3}{A color value for overlay.}
 
-\item{contours}{An \code{sf} object of contours that are important to visualise (e.g. outline of sea mounts, ridges; can be produced with terra::as.contour()); up to 6 different contours possible.}
+\item{contours}{An \code{sf} object of contours that are important to visualise
+(e.g. outline of sea mounts, ridges; can be produced with
+terra::as.contour()); up to 6 different contours possible.}
 
-\item{colorsConts}{A color value for contours.}
+\item{colorConts}{A color value for contours.}
 
-\item{cropOverlay}{An \code{sf} object with the boundary box used for cropping the overlay object.}
+\item{cropOverlay}{An \code{sf} object with the boundary box used for cropping the
+overlay object.}
 
-\item{lockedInAreas}{An \code{sf} object with binary data of locked in areas in the prioritisation (e.g. MPAs).}
+\item{lockIn}{An \code{sf} object with binary data of locked in areas in
+the prioritisation (e.g. MPAs).}
 
-\item{Type}{Either "Full" or "Contours"; "Full" maps the locked in areas on top of the planning units; "Contours" draws the outline of the locked in areas.}
+\item{typeLockIn}{Either "Full" or "Contours"; "Full" maps the locked in areas on
+top of the planning units; "Contours" draws the outline of the locked in
+areas.}
 
-\item{colInterest}{column of data frame that contains binary information of the locked in areas to plot}
+\item{nameLockIn}{column of data frame that contains binary information of
+the locked in areas to plot}
 
-\item{alphaLI}{A value (0-1) for the opacity of the locked in areas when plotted on top of other plots.}
+\item{alphaLockIn}{A value (0-1) for the opacity of the locked in areas when
+plotted on top of other plots.}
 
-\item{colorLI}{A color value for the locked in areas.}
+\item{colorLockIn}{A color value for the locked in areas.}
 
-\item{legendL}{A character value for the title of the legend of the locked in areas. Can be empty ("").}
+\item{legendLockIn}{A character value for the title of the legend of the locked in
+areas. Can be empty ("").}
 
-\item{labelL}{The legend label of the locked in area (e.g. MPAs)}
+\item{labelLockIn}{The legend label of the locked in area (e.g. MPAs)}
 
-\item{ggtheme}{The theme applied to the plot. Can either be NA (default ggplot), "Default" (default spatialplanr: theme_bw() and some basic theme settings) or a user-defined list of theme properties.}
+\item{ggtheme}{The theme applied to the plot. Can either be NA (default
+ggplot), "Default" (default spatialplanr: theme_bw() and some basic theme
+settings) or a user-defined list of theme properties.}
 }
 \value{
 A ggplot object of the plot
 }
 \description{
-This function allows to customise plots in a simple and reproducible way, by giving the option for several inputs that can be included in maps produced with the other functions of this package.It can be combined with the \code{spatialplanr} spatial plotting functions.
+This function allows to customise plots in a simple and reproducible way, by
+giving the option for several inputs that can be included in maps produced
+with the other functions of this package.It can be combined with the
+\code{spatialplanr} spatial plotting functions.
 }
 \examples{
 dat_problem <- prioritizr::problem(dat_species_bin \%>\% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),

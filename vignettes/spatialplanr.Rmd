@@ -53,10 +53,10 @@ cCRS <- "ESRI:54009"
 ```
 
 
-Set the shape and diameter of the planning units. This will be in the same units as the CRS (usually metres or degrees).
+Set the diameter of the planning units. This will be in the same units as the CRS (usually metres or degrees).
 
 ```{r}
-PU_diam <- 107460 # m
+PU_size <- 107460 # m
 ```
 
 ## Analysis Region
@@ -87,7 +87,7 @@ landmass <- rnaturalearth::ne_countries(
 PUs <- spatialgridr::get_grid(boundary = Bndry, 
                               crs = cCRS,
                               output = "sf_hex", 
-                              resolution = PU_diam)
+                              resolution = PU_size)
 
 ```
 
@@ -227,7 +227,7 @@ planning unit of the study region.
 (ggFeatNo <- splnr_plot(df = datEx_species_bin, 
                         col_names =  colnames(datEx_species_bin %>% 
                                                 sf::st_drop_geometry() %>% 
-                                                dplyr::select(tidyselect::starts_with("Spp"))),
+                                                dplyr::select(-"cellID")),
                         plot_title = "", 
                         legend_title = "Number of features") +
    splnr_gg_add(
@@ -262,7 +262,8 @@ units are assigned an equal cost of 1.
 
 ```{r}
 out_sf$Cost_None <- 1
-(ggCost <- splnr_plot(out_sf, col_names = "Cost_None", legend_title = "Cost", legend_labels = "1") +
+(ggCost <- splnr_plot(out_sf, col_names = "Cost_None", 
+                      legend_title = "Cost", legend_labels = "1") +
     splnr_gg_add(
       PUs = PUs, Bndry = Bndry, overlay = landmass,
       cropOverlay = PUs, ggtheme = splnr_theme
@@ -277,11 +278,17 @@ The gfwr package allows us to recover data from fisheries across the world,
 we set here the parameter `compress` as `TRUE` to recover the 
 `Apparent fishing hours` per coordinates.
 ```{r, eval=FALSE}
-gfw_data <- splnr_get_gfw('Australia', "2022-01-01", "2022-12-31", "yearly", cCRS = cCRS, compress = TRUE) %>%
+gfw_data <- splnr_get_gfw(region = 'Australia', 
+                          start_date = "2022-01-01", 
+                          end_date = "2022-12-31", 
+                          temp_res = "yearly", 
+                          cCRS = cCRS, 
+                          compress = TRUE) %>%
   sf::st_interpolate_aw(PUs, extensive = TRUE)
 
 out_sf$Apparent.Fishing.Hours <- 0 # Add column to PUs
-out_sf$Apparent.Fishing.Hours[as.numeric(rownames(PUs))] <- gfw_data$Apparent.Fishing.Hours # Put corresponding data in PUs
+out_sf$Apparent.Fishing.Hours[as.numeric(rownames(PUs))] <- 
+  gfw_data$Apparent.Fishing.Hours # Put corresponding data in PUs
 
 
 (ggCost <- splnr_plot(out_sf, col_names = "Apparent.Fishing.Hours") +
@@ -297,12 +304,16 @@ Many features can be taken into account as cost layers before the
 prioritization, we provide here different features from the `oceandatr`package.
 
 ```{r, eval=FALSE, echo=FALSE}
-bathymetry <- oceandatr::get_bathymetry(planning_grid = PUs, keep = FALSE, classify_bathymetry = FALSE)
+bathymetry <- oceandatr::get_bathymetry(planning_grid = PUs, 
+                                        keep = FALSE, 
+                                        classify_bathymetry = FALSE)
 geomorphology <- oceandatr::get_geomorphology(planning_grid = PUs)
 knolls <- oceandatr::get_knolls(planning_grid = PUs)
-seamounts <- oceandatr::get_seamounts_buffered(planning_grid = PUs, buffer = 30000)
+seamounts <- oceandatr::get_seamounts_buffered(planning_grid = PUs, 
+                                               buffer = 30000)
 coral_habitat <- oceandatr::get_coral_habitat(planning_grid = PUs)
-enviro_regions <- oceandatr::get_enviro_regions(planning_grid = PUs, max_num_clusters = 5)
+enviro_regions <- oceandatr::get_enviro_regions(planning_grid = PUs, 
+                                                max_num_clusters = 5)
 ```
 
 
@@ -360,7 +371,10 @@ importance scores
 #### Visualization of the solution
 
 ```{r}
-(ggSoln <- splnr_plot(datEx_soln, col_names = "solution_1", legend_title = "Solution", legend_labels = c("0","1")) +
+(ggSoln <- splnr_plot(datEx_soln, 
+                      col_names = "solution_1", 
+                      legend_title = "Solution", 
+                      legend_labels = c("0","1")) +
    splnr_gg_add(
      PUs = PUs, Bndry = Bndry, overlay = landmass,
      cropOverlay = PUs, ggtheme = splnr_theme
@@ -398,12 +412,16 @@ region.
 
 ```{r, fig.height=7}
 dfTarget <- splnr_get_featureRep(datEx_soln, datEx_problem,
-                                 climsmart = FALSE, solnCol = "solution_1"
+                                 climsmart = FALSE, 
+                                 solnCol = "solution_1"
 )
 
 
-(ggTarget <- splnr_plot_featureRep(dfTarget, category = Dict, renameFeatures = TRUE,
-                                   namesToReplace = Dict, categoryFeatureCol = "nameCommon",
+(ggTarget <- splnr_plot_featureRep(dfTarget, 
+                                   category = Dict, 
+                                   renameFeatures = TRUE,
+                                   namesToReplace = Dict, 
+                                   categoryFeatureCol = "nameCommon",
                                    nr = 1, showTarget = TRUE,
 ))
 ```

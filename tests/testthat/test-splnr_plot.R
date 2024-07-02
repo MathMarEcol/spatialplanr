@@ -3,7 +3,7 @@
 
 Region <- "Coral Sea" # "Australia"
 Type <- "Oceans" # "EEZ"
-PU_diam <- 107460 # m2 (10,000 km2)
+PU_size <- 107460 # m2 (10,000 km2)
 cCRS <- "ESRI:54009"
 
 Bndry <- splnr_get_boundary(Limits = Region, Type = Type, cCRS = cCRS)
@@ -17,7 +17,7 @@ landmass <- rnaturalearth::ne_countries(
 PUs <- spatialgridr::get_grid(boundary = Bndry,
                               crs = cCRS,
                               output = "sf_hex",
-                              resolution = PU_diam)
+                              resolution = PU_size)
 
 splnr_theme <- list(
   ggplot2::theme_bw(),

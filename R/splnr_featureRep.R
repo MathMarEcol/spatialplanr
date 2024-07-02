@@ -277,9 +277,6 @@ splnr_plot_featureRep <- function(df, category = NA,
       ...
     )
 
-
-  browser()
-
   if (!(is.na(showTarget))) {
     gg_target <- gg_target +
       ggplot2::geom_point(data = df, ggplot2::aes(x = .data$feature, y = .data$target), shape = 3, size = 10, na.rm = TRUE)

@@ -48,6 +48,14 @@ splnr_plot(df = dat_species_bin,
            legend_title = "Legend",
            legend_labels = c("Absent", "Present"))
 
+# Logical plot of species distribution
+splnr_plot(df = dat_species_bin \%>\%
+                dplyr::mutate(dplyr::across(
+                  tidyselect::starts_with("Spp"), as.logical)),
+           col_names = "Spp1",
+           legend_title = "Legend",
+           legend_labels = c("Absent", "Present"))
+
 # Continuous plot of bathymetry#
 splnr_plot(df = dat_bathy,
            col_names = "bathymetry",
