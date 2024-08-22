@@ -64,7 +64,7 @@ splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
     inherits(soln, c("sf", "data.frame")),
     is.logical(showLegend),
     length(colorVals) == length(legendLabels),
-    is.character(plotTitle),
+    is.character(plotTitle) | is.call(plotTitle),
     is.character(legendTitle),
     is.logical(zones)
   )
@@ -135,6 +135,9 @@ splnr_plot_solution <- function(soln, colorVals = c("#c6dbef", "#3182bd"),
       )
     ) +
     ggplot2::labs(subtitle = plotTitle)
+
+  return(gg)
+
 }
 
 
