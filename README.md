@@ -1,6 +1,8 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 # spatialplanr <a href='https://github.com/MathMarEcol/spatialplanr'><img src="man/figures/logo.png" align="right" height="139" /></a>
+
 <!-- badges: start -->
 
 [![Lifecycle:
@@ -10,8 +12,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![Windows](https://github.com/MathMarEcol/spatialplanr/actions/workflows/Windows.yaml/badge.svg)](https://github.com/MathMarEcol/spatialplanr/actions/workflows/Windows.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/MathMarEcol/spatialplanr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/MathMarEcol/spatialplanr/tree/main)
-[![issues -
-planktonr](https://img.shields.io/github/issues/MathMarEcol/spatialplanr)](https://github.com/MathMarEcol/spatialplanr/issues)
+[![Issues](https://img.shields.io/github/issues/MathMarEcol/spatialplanr)](https://github.com/MathMarEcol/spatialplanr/issues)
 <!-- badges: end -->
 
 ## Overview
