@@ -105,7 +105,7 @@ hexSticker::sticker(gg,
                     asp = 1,
                     filename = file.path("data-raw", "spatialplanr.png"))
 
-usethis::use_logo(imp = file.path("data-raw", "spatialplanr.png"))
+usethis::use_logo(img = file.path("data-raw", "spatialplanr.png"))
 
 
 # Create favicons for the site
