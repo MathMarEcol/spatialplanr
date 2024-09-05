@@ -11,13 +11,7 @@
 
 library(spatialplanr)
 
-Shape <- "Hexagon" # "Shape of PUs
-# PU_size <- 100000 # km2
-# cCRS <- "ESRI:54009" # Mollweide
-# cCRS <- "ESRI:54030" # Robinson
 cCRS <- "EPSG:4326"
-
-
 
 create_hexagon <- function(center_x, center_y, size, top_type) {
   if (top_type == "flat" || top_type == "flat_topped") {
@@ -63,22 +57,14 @@ Bndry <- create_hexagon(70, -5, 70*1.1547, "pointed") %>%
   sf::st_sf() %>%
   sf::st_make_valid()
 
-ggplot2::ggplot(data = Bndry) +
-  ggplot2::geom_sf()
-
 landmass <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
   sf::st_make_valid() %>%
   sf::st_intersection(Bndry) %>%
   sf::st_make_valid()
 
-ggplot2::ggplot() +
-  ggplot2::geom_sf(data = landmass) +
-  ggplot2::geom_sf(data = Bndry, fill = NA)
-
-
 PUs <- sf::st_make_grid(Bndry,
   square = FALSE,
-  cellsize = c(2, 2),
+  cellsize = c(4, 4),
   what = "polygons"
 ) %>%
   sf::st_sf() %>%
@@ -88,39 +74,39 @@ PUs <- sf::st_make_grid(Bndry,
 PUs <- PUs %>%
   dplyr::mutate(Prob = runif(dim(PUs)[1]))
 
-
-# Possible colours...
-# https://www.pinterest.com.au/pin/sunset-color-scheme-image-search-results-in-2023--224194887692504381/
-
 (gg <- ggplot2::ggplot() +
-  ggplot2::geom_sf(data = PUs, colour = "#fdf7c2", linewidth = 0.05, show.legend = FALSE, ggplot2::aes(fill = Prob)) +
-  ggplot2::scale_fill_gradient(
-    low = "#3eadbe", # "#84dfd3"
-    high = "#05555f"
-  ) +
-  ggplot2::geom_sf(data = landmass, colour = "#2e1707", fill = "#9d3c11", alpha = 1, linewidth = 0.05, show.legend = FALSE) +
-  ggplot2::coord_sf(xlim = sf::st_bbox(PUs)$xlim, ylim = sf::st_bbox(PUs)$ylim) +
-  ggplot2::theme_void())
+    ggplot2::geom_sf(data = PUs, colour = "#4F4F51", fill = "#46718C", linewidth = 0.1, show.legend = FALSE) +
+    ggplot2::geom_sf(data = landmass, colour = "grey70", fill = "#4F4F51", alpha = 1, linewidth = 0.05, show.legend = FALSE) +
+    ggplot2::coord_sf(xlim = sf::st_bbox(PUs)$xlim, ylim = sf::st_bbox(PUs)$ylim) +
+    ggplot2::theme_void())
 
 
 hexSticker::sticker(gg,
-  package = "spatialplanr",
-  p_x = 1,
-  p_y = 0.98,
-  p_color = "white",
-  p_family = "Aller_Rg",
-  p_fontface = "bold",
-  p_size = 80,
-  s_x = 1,
-  s_y = 1,
-  s_width = 2.2,
-  s_height = 2.2,
-  # h_fill = "#9FE2BF",
-  h_color = "#2e1707", # "grey40",
-  dpi = 1000,
-  asp = 1,
-  filename = file.path("man", "figures", "logo.png")
-)
+                    package = "spatialplanr",
+                    p_x = 1,
+                    p_y = 0.98,
+                    p_color = "white",
+                    p_family = "Aller_Rg",
+                    p_fontface = "bold",
+                    p_size = 80,
+                    s_x = 1,
+                    s_y = 1,
+                    s_width = 2.2,
+                    s_height = 2.2,
+                    # h_fill = "#9FE2BF",
+                    h_color = "black", # "grey40",
+                    url = "mathmarecol.github.io/spatialplanr",
+                    u_color = "grey90",
+                    # u_family = "sans",
+                    u_size = 15.5,
+                    u_x = 0.99,
+                    u_y = 0.06,
+                    dpi = 1000,
+                    asp = 1,
+                    filename = file.path("data-raw", "spatialplanr.png"))
+
+usethis::use_logo(imp = file.path("data-raw", "spatialplanr.png"))
+
 
 # Create favicons for the site
 pkgdown::build_favicons(pkg = ".", overwrite = TRUE)

@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# spatialplanr <a href='https://github.com/MathMarEcol/spatialplanr'><img src="man/figures/logo.png" align="right" height="139"/>
+# spatialplanr <a href="https://mathmarecol.github.io/spatialplanr"><img src="man/figures/logo.png" align="right" height="139" alt="spatialplanr website" /></a>
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
