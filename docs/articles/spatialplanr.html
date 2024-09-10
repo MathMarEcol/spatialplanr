@@ -5,7 +5,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="spatialplanr">
 <title>A Basic Spatial Planning Workflow • spatialplanr</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -15,63 +14,47 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="A Basic Spatial Planning Workflow">
-<meta property="og:description" content="spatialplanr">
-<meta property="og:image" content="https://mathmarecol.github.io/spatialplanr/logo.png">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="A Basic Spatial Planning Workflow">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light" data-bs-theme="light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">spatialplanr</a>
 
     <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.7</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="active nav-item">
-  <a class="nav-link" href="../articles/spatialplanr.html">Get started</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="active nav-item"><a class="nav-link" href="../articles/spatialplanr.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/ClimateSmart.html">Climate-Smart Spatial Planning</a>
-    <a class="dropdown-item" href="../articles/GlobalFishingWatch.html">Global Fishing Watch</a>
-    <a class="dropdown-item" href="../articles/MultipleUse.html">Spatial Planning With Zones</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/ClimateSmart.html">Climate-Smart Spatial Planning</a></li>
+    <li><a class="dropdown-item" href="../articles/GlobalFishingWatch.html">Global Fishing Watch</a></li>
+    <li><a class="dropdown-item" href="../articles/MultipleUse.html">Spatial Planning With Zones</a></li>
+  </ul>
 </li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/MathMarEcol/spatialplanr/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/MathMarEcol/spatialplanr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -83,7 +66,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>A Basic Spatial Planning Workflow</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/MathMarEcol/spatialplanr/blob/HEAD/tests/testthat/vignettes/spatialplanr.Rmd" class="external-link"><code>tests/testthat/vignettes/spatialplanr.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MathMarEcol/spatialplanr/blob/HEAD/vignettes/spatialplanr.Rmd" class="external-link"><code>vignettes/spatialplanr.Rmd</code></a></small>
       <div class="d-none name"><code>spatialplanr.Rmd</code></div>
     </div>
 
@@ -113,10 +96,10 @@ you need.</p>
 <p>Choose CRS for analysis. In this case we use Mollweide</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cCRS</span> <span class="op">&lt;-</span> <span class="st">"ESRI:54009"</span></span></code></pre></div>
-<p>Set the shape and diameter of the planning units. This will be in the
-same units as the CRS (usually metres or degrees).</p>
+<p>Set the diameter of the planning units. This will be in the same
+units as the CRS (usually metres or degrees).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">PU_diam</span> <span class="op">&lt;-</span> <span class="fl">107460</span> <span class="co"># m</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">PU_size</span> <span class="op">&lt;-</span> <span class="fl">107460</span> <span class="co"># m</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="analysis-region">Analysis Region<a class="anchor" aria-label="anchor" href="#analysis-region"></a>
@@ -127,7 +110,7 @@ planning units.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Bndry</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_boundary.html">splnr_get_boundary</a></span><span class="op">(</span>Limits <span class="op">=</span> <span class="va">Region</span>, Type <span class="op">=</span> <span class="va">Type</span>, cCRS <span class="op">=</span> <span class="va">cCRS</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `ne_10m_geography_marine_polys' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/RtmpsIlU2l/ne_10m_geography_marine_polys.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/RtmpFXGTcW/ne_10m_geography_marine_polys.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 306 features and 37 fields</span></span>
 <span><span class="co">#&gt; Geometry type: MULTIPOLYGON</span></span>
@@ -150,7 +133,7 @@ represents the land mass that should be removed (inverse = FALSE)</p>
 <code class="sourceCode R"><span><span class="va">PUs</span> <span class="op">&lt;-</span> <span class="fu">spatialgridr</span><span class="fu">::</span><span class="fu"><a href="https://emlab-ucsb.github.io/spatialgridr/reference/get_grid.html" class="external-link">get_grid</a></span><span class="op">(</span>boundary <span class="op">=</span> <span class="va">Bndry</span>, </span>
 <span>                              crs <span class="op">=</span> <span class="va">cCRS</span>,</span>
 <span>                              output <span class="op">=</span> <span class="st">"sf_hex"</span>, </span>
-<span>                              resolution <span class="op">=</span> <span class="va">PU_diam</span><span class="op">)</span></span></code></pre></div>
+<span>                              resolution <span class="op">=</span> <span class="va">PU_size</span><span class="op">)</span></span></code></pre></div>
 <p>We can check what the PUs look like</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">ggPU</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">PUs</span><span class="op">)</span> <span class="op">+</span></span>
@@ -271,7 +254,7 @@ within a planning unit of the study region.</p>
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">ggFeatNo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">datEx_species_bin</span>, </span>
 <span>                        col_names <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>                                                <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>                                                <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu">tidyselect</span><span class="fu">::</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">starts_with</a></span><span class="op">(</span><span class="st">"Spp"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                                                <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="st">"cellID"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                        plot_title <span class="op">=</span> <span class="st">""</span>, </span>
 <span>                        legend_title <span class="op">=</span> <span class="st">"Number of features"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>   <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
@@ -301,7 +284,8 @@ plan whilst meeting the conservation targets. For this, all the planning
 units are assigned an equal cost of 1.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">out_sf</span><span class="op">$</span><span class="va">Cost_None</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span><span class="op">(</span><span class="va">ggCost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span><span class="va">out_sf</span>, col_names <span class="op">=</span> <span class="st">"Cost_None"</span>, legend_title <span class="op">=</span> <span class="st">"Cost"</span>, legend_labels <span class="op">=</span> <span class="st">"1"</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="op">(</span><span class="va">ggCost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span><span class="va">out_sf</span>, col_names <span class="op">=</span> <span class="st">"Cost_None"</span>, </span>
+<span>                      legend_title <span class="op">=</span> <span class="st">"Cost"</span>, legend_labels <span class="op">=</span> <span class="st">"1"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
 <span>      PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
 <span>      cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
@@ -318,11 +302,17 @@ world, we set here the parameter <code>compress</code> as
 <code>TRUE</code> to recover the <code>Apparent fishing hours</code> per
 coordinates.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">gfw_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_gfw.html">splnr_get_gfw</a></span><span class="op">(</span><span class="st">'Australia'</span>, <span class="st">"2022-01-01"</span>, <span class="st">"2022-12-31"</span>, <span class="st">"yearly"</span>, cCRS <span class="op">=</span> <span class="va">cCRS</span>, compress <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">gfw_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_gfw.html">splnr_get_gfw</a></span><span class="op">(</span>region <span class="op">=</span> <span class="st">'Australia'</span>, </span>
+<span>                          start_date <span class="op">=</span> <span class="st">"2022-01-01"</span>, </span>
+<span>                          end_date <span class="op">=</span> <span class="st">"2022-12-31"</span>, </span>
+<span>                          temp_res <span class="op">=</span> <span class="st">"yearly"</span>, </span>
+<span>                          cCRS <span class="op">=</span> <span class="va">cCRS</span>, </span>
+<span>                          compress <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/interpolate_aw.html" class="external-link">st_interpolate_aw</a></span><span class="op">(</span><span class="va">PUs</span>, extensive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">out_sf</span><span class="op">$</span><span class="va">Apparent.Fishing.Hours</span> <span class="op">&lt;-</span> <span class="fl">0</span> <span class="co"># Add column to PUs</span></span>
-<span><span class="va">out_sf</span><span class="op">$</span><span class="va">Apparent.Fishing.Hours</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">PUs</span><span class="op">)</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">gfw_data</span><span class="op">$</span><span class="va">Apparent.Fishing.Hours</span> <span class="co"># Put corresponding data in PUs</span></span>
+<span><span class="va">out_sf</span><span class="op">$</span><span class="va">Apparent.Fishing.Hours</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">PUs</span><span class="op">)</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> </span>
+<span>  <span class="va">gfw_data</span><span class="op">$</span><span class="va">Apparent.Fishing.Hours</span> <span class="co"># Put corresponding data in PUs</span></span>
 <span></span>
 <span></span>
 <span><span class="op">(</span><span class="va">ggCost</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span><span class="va">out_sf</span>, col_names <span class="op">=</span> <span class="st">"Apparent.Fishing.Hours"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -385,7 +375,10 @@ targets <em>+</em> Visualization of importance scores</p>
 <h5 id="visualization-of-the-solution">Visualization of the solution<a class="anchor" aria-label="anchor" href="#visualization-of-the-solution"></a>
 </h5>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggSoln</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span><span class="va">datEx_soln</span>, col_names <span class="op">=</span> <span class="st">"solution_1"</span>, legend_title <span class="op">=</span> <span class="st">"Solution"</span>, legend_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0"</span>,<span class="st">"1"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">ggSoln</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span><span class="va">datEx_soln</span>, </span>
+<span>                      col_names <span class="op">=</span> <span class="st">"solution_1"</span>, </span>
+<span>                      legend_title <span class="op">=</span> <span class="st">"Solution"</span>, </span>
+<span>                      legend_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0"</span>,<span class="st">"1"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>   <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
 <span>     PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
 <span>     cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
@@ -422,12 +415,16 @@ were not included in the spatial plan but can still be found in the
 planning region.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dfTarget</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_featureRep.html">splnr_get_featureRep</a></span><span class="op">(</span><span class="va">datEx_soln</span>, <span class="va">datEx_problem</span>,</span>
-<span>                                 climsmart <span class="op">=</span> <span class="cn">FALSE</span>, solnCol <span class="op">=</span> <span class="st">"solution_1"</span></span>
+<span>                                 climsmart <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>                                 solnCol <span class="op">=</span> <span class="st">"solution_1"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span></span>
-<span><span class="op">(</span><span class="va">ggTarget</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_featureRep.html">splnr_plot_featureRep</a></span><span class="op">(</span><span class="va">dfTarget</span>, category <span class="op">=</span> <span class="va">Dict</span>, renameFeatures <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                                   namesToReplace <span class="op">=</span> <span class="va">Dict</span>, categoryFeatureCol <span class="op">=</span> <span class="st">"nameCommon"</span>,</span>
+<span><span class="op">(</span><span class="va">ggTarget</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_featureRep.html">splnr_plot_featureRep</a></span><span class="op">(</span><span class="va">dfTarget</span>, </span>
+<span>                                   category <span class="op">=</span> <span class="va">Dict</span>, </span>
+<span>                                   renameFeatures <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                                   namesToReplace <span class="op">=</span> <span class="va">Dict</span>, </span>
+<span>                                   categoryFeatureCol <span class="op">=</span> <span class="st">"nameCommon"</span>,</span>
 <span>                                   nr <span class="op">=</span> <span class="fl">1</span>, showTarget <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-28-1.png" width="864"></p>
@@ -466,9 +463,8 @@ Rarity Weighted Richness.</p>
 <span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
 <span>    cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Ferrier Score.</span></span></code></pre></div>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; Ferrier Score.</span></span>
+<span></span>
 <span><span class="va">ggRWR</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_importanceScore.html">splnr_plot_importanceScore</a></span><span class="op">(</span></span>
 <span>  soln <span class="op">=</span> <span class="va">datEx_soln</span>,</span>
 <span>  pDat <span class="op">=</span> <span class="va">datEx_problem</span>,</span>
@@ -480,9 +476,8 @@ Rarity Weighted Richness.</p>
 <span>    PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
 <span>    cropOverlay <span class="op">=</span> <span class="va">PUs</span>, ggtheme <span class="op">=</span> <span class="va">splnr_theme</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Rarity Wighted Richness.</span></span></code></pre></div>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#&gt; Rarity Wighted Richness.</span></span>
+<span></span>
 <span><span class="op">(</span><span class="va">ggScores</span> <span class="op">&lt;-</span> <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">ggFerrier</span> <span class="op">+</span> <span class="va">ggRWR</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-30-1.png" width="864"></p>
 <p>In our example, both scores label similar -coastal- planning units as
@@ -501,13 +496,13 @@ with the following characteristics: * Status = c(“Designated”,
 “Established”, “Inscribed”) * Designation Type = c(“National”,
 “Regional”, “International”, “Not Applicable”) * IUCN Category = c(“Ia”,
 “Ib”, “II”, “III”, “IV”)</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># The user can download their own MPAs using this code,</span></span>
 <span><span class="co"># but below we use data already within the package.</span></span>
 <span><span class="va">LockedIn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_MPAs.html">splnr_get_MPAs</a></span><span class="op">(</span><span class="va">PUs</span>, <span class="st">"Australia"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/splnr_apply_cutoffs.html">splnr_apply_cutoffs</a></span><span class="op">(</span><span class="fl">0.5</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>wdpa <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/logical.html" class="external-link">as.logical</a></span><span class="op">(</span><span class="va">wdpa</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">ggMPA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span><span class="va">MPAsCoralSea</span>, <span class="st">"wdpa"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>   <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
 <span>     PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
@@ -527,7 +522,7 @@ species with an IUCN status of:</p>
 species that do not fall into any of these categories receive an inverse
 area target, so species with a greater area of suitable habitat are
 assigned a lower target.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">minTarget</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
 <span><span class="va">maxTarget</span> <span class="op">&lt;-</span> <span class="fl">0.2</span></span>
@@ -541,7 +536,7 @@ assigned a lower target.</p>
 <p>We can also adjust the targets based on the IUCN Category. Here we
 apply an increased target of 0.3 for all species with an increased
 thread level on the IUCN Red List(“EX”, “EW”, “CR”, “EN”, “VU”).</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">IUCN_IA_Targets</span> <span class="op">&lt;-</span> <span class="va">IA_Targets</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/splnr_get_IUCNRedList.html">splnr_get_IUCNRedList</a></span><span class="op">(</span>species_col <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># Add RL data to the df</span></span>
@@ -554,7 +549,7 @@ start by running <code><a href="https://docs.ropensci.org/rredlist/reference/rl_
 <div class="section level5">
 <h5 id="set-up-second-conservation-problem">Set up second conservation problem<a class="anchor" aria-label="anchor" href="#set-up-second-conservation-problem"></a>
 </h5>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_problem2</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">out_sf</span>, <span class="va">feature_names</span>, <span class="st">"Cost_None"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_relative_targets.html" class="external-link">add_relative_targets</a></span><span class="op">(</span><span class="va">IA_Targets</span><span class="op">$</span><span class="va">target</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -576,7 +571,7 @@ start by running <code><a href="https://docs.ropensci.org/rredlist/reference/rl_
 show the overlap between the selected planning units and the current
 MPAs, we can can add this to the
 <code><a href="../reference/splnr_gg_add.html">splnr_gg_add()</a></code>function.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span><span class="va">datEx_soln2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>   <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
 <span>     PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, lockIn <span class="op">=</span> <span class="va">MPAsCoralSea</span>,</span>
@@ -588,7 +583,7 @@ MPAs, we can can add this to the
 <p>If we instead only want to see the contours of the locked in areas we
 can set <code>typeLockIn = "Contours"</code>in
 <code><a href="../reference/splnr_gg_add.html">splnr_gg_add()</a></code>.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="fu"><a href="../reference/splnr_plot_solution.html">splnr_plot_solution</a></span><span class="op">(</span><span class="va">datEx_soln2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>   <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
 <span>     lockIn <span class="op">=</span> <span class="va">MPAsCoralSea</span>,</span>
@@ -601,7 +596,7 @@ can set <code>typeLockIn = "Contours"</code>in
 <div class="section level5">
 <h5 id="visualize-comparison">Visualize comparison<a class="anchor" aria-label="anchor" href="#visualize-comparison"></a>
 </h5>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">ggComp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_comparison.html">splnr_plot_comparison</a></span><span class="op">(</span><span class="va">datEx_soln</span>, <span class="va">datEx_soln2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>   <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
 <span>     PUs <span class="op">=</span> <span class="va">PUs</span>, Bndry <span class="op">=</span> <span class="va">Bndry</span>, overlay <span class="op">=</span> <span class="va">landmass</span>,</span>
@@ -613,7 +608,7 @@ from the second solution (including current MPAs. The categorical map
 displays, which of the planning units were selected in solution 2 but
 not in solution 1 (red), in solution 1 but not in solution 2 (blue), or
 selected in both solutions (grey).</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">CorrMat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_kappaCorrData.html">splnr_get_kappaCorrData</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">datEx_soln</span>, <span class="va">datEx_soln2</span><span class="op">)</span>,</span>
 <span>                                   name_sol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"soln1"</span>, <span class="st">"soln2"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -634,7 +629,7 @@ interesting in how many times a planning unit is selected across the
 array of solutions. To demonstrate how this can be done using this
 package, we first create an array (= portfolio) of solutions. One
 example of this is by using the portfolio</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_soln_portfolio</span> <span class="op">&lt;-</span> <span class="va">datEx_problem</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_cuts_portfolio.html" class="external-link">add_cuts_portfolio</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="co"># create a portfolio of solutions</span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -656,7 +651,7 @@ example of this is by using the portfolio</p>
 </div>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
@@ -667,15 +662,15 @@ example of this is by using the portfolio</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
