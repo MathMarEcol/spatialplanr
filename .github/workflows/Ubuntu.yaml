@@ -19,6 +19,9 @@ jobs:
       matrix:
         config:
           - {os: ubuntu-20.04, r: 'release', pkgs: 'all'}
+          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,   r: 'release'}
+          - {os: ubuntu-latest,   r: 'oldrel-1'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
