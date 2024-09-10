@@ -35,9 +35,9 @@ Region <- "Coral Sea" # "Australia"
 Type <- "Oceans" # "EEZ"
 ```
 
-Set the shape and area of the planning unit in square kilometres.
+Set the diameter of the planning units. This will be in the same units as the CRS (usually metres or degrees).
 ```{r}
-PU_size <- 10000 # km2
+PU_size <- 107460 # m
 ```
 
 Choose CRS for analysis. Here we use Mollweide
@@ -63,10 +63,9 @@ landmass <- rnaturalearth::ne_countries(
 ## Create Planning Units 
 ```{r}
 PUs <- spatialgridr::get_grid(boundary = Bndry,
-                              projection_crs = cCRS,
-                              option = "sf_hex",
-                              resolution = PU_size,
-                              sf_method = "centroid")
+                              crs = cCRS,
+                              output = "sf_hex",
+                              resolution = PU_size)
 
 ```
 
@@ -154,6 +153,7 @@ s1 <- p1 %>%
 
 (ggSoln <- splnr_plot_solution(s1) +
     splnr_gg_add(PUs = PUs, Bndry = Bndry, overlay = landmass, cropOverlay = PUs, ggtheme = splnr_theme))
+
 ```
 
 We can also have a look at how well the set target was met.
@@ -466,10 +466,10 @@ The results can the be visualized again:
   legendLabels = c("Not selected", "Zone 1", "Zone 2")
 ) +
   splnr_gg_add(
-    PUs = PUs, Bndry = Bndry,
-    lockedInAreas = MPAsCoralSea, colInterest = MPAsCoralSea$wdpa,
-    Type = "Full", colorLI = "red", alphaLI = 0.2, overlay = landmass,
-    cropOverlay = PUs, ggtheme = splnr_theme, labelL = "Current MPAs"
+    PUs = PUs, Bndry = Bndry, lockIn = MPAsCoralSea,
+    nameLockIn = "wdpa", typeLockIn = "Full",
+    colorLockIn = "lightgrey", alphaLockIn = 0.2, overlay = landmass,
+    labelLockIn = "Current MPAs", cropOverlay = PUs, ggtheme = splnr_theme
   ))
 ```
 

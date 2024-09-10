@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">spatialplanr</a>
 
-    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.6</small>
+    <small class="nav-text text-info me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Climate-Smart Spatial Planning</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/MathMarEcol/spatialplanr/blob/HEAD/vignettes/ClimateSmart.Rmd" class="external-link"><code>vignettes/ClimateSmart.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MathMarEcol/spatialplanr/blob/HEAD/tests/testthat/vignettes/ClimateSmart.Rmd" class="external-link"><code>tests/testthat/vignettes/ClimateSmart.Rmd</code></a></small>
       <div class="d-none name"><code>ClimateSmart.Rmd</code></div>
     </div>
 
@@ -133,7 +133,7 @@ planning units.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Bndry</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_boundary.html">splnr_get_boundary</a></span><span class="op">(</span>Limits <span class="op">=</span> <span class="va">Region</span>, Type <span class="op">=</span> <span class="va">Type</span>, cCRS <span class="op">=</span> <span class="va">cCRS</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `ne_10m_geography_marine_polys' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/RtmpBFSINJ/ne_10m_geography_marine_polys.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/RtmpO1VM0v/ne_10m_geography_marine_polys.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 306 features and 37 fields</span></span>
 <span><span class="co">#&gt; Geometry type: MULTIPOLYGON</span></span>
@@ -150,10 +150,9 @@ planning units.</p>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">PUs</span> <span class="op">&lt;-</span> <span class="fu">spatialgridr</span><span class="fu">::</span><span class="fu"><a href="https://emlab-ucsb.github.io/spatialgridr/reference/get_grid.html" class="external-link">get_grid</a></span><span class="op">(</span>boundary <span class="op">=</span> <span class="va">Bndry</span>,</span>
-<span>                              projection_crs <span class="op">=</span> <span class="va">cCRS</span>,</span>
-<span>                              option <span class="op">=</span> <span class="st">"sf_hex"</span>,</span>
-<span>                              resolution <span class="op">=</span> <span class="va">PU_size</span>,</span>
-<span>                              sf_method <span class="op">=</span> <span class="st">"centroid"</span><span class="op">)</span></span></code></pre></div>
+<span>                              crs <span class="op">=</span> <span class="va">cCRS</span>,</span>
+<span>                              output <span class="op">=</span> <span class="st">"sf_hex"</span>,</span>
+<span>                              resolution <span class="op">=</span> <span class="va">PU_size</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="get-the-features">Get the features<a class="anchor" aria-label="anchor" href="#get-the-features"></a>
