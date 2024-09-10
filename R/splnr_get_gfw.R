@@ -35,15 +35,15 @@
 #'
 #' @examples
 #' \dontrun{
-#' gfw_data <- splnr_get_gfw('Australia', "2021-01-01", "2022-12-31", "yearly",
+#' gfw_data <- splnr_get_gfw('Australia', "2021-01-01", "2022-12-31", "YEARLY",
 #'     cCRS = "ESRI:54009", compress = TRUE)
 #'}
 splnr_get_gfw <- function(region,
                           start_date,
                           end_date,
                           temp_res,
-                          spat_res = "low",
-                          region_source = "eez",
+                          spat_res = "LOW",
+                          region_source = "EEZ",
                           key = gfwr::gfw_auth(),
                           cCRS = "EPSG:4326",
                           compress = FALSE) {
@@ -51,26 +51,22 @@ splnr_get_gfw <- function(region,
   assertthat::assert_that((is.character(region) | is.numeric(region)),
                           inherits(start_date, "character") && !is.na(as.Date(start_date, "%Y-%m-%d")), #is.Date ?
                           inherits(end_date, "character") && !is.na(as.Date(end_date, "%Y-%m-%d")),
-                          temp_res %in% c("daily", "monthly", "yearly"),
-                          spat_res %in% c("low", "high"),
-                          region_source %in% c('eez', 'mpa', 'rfmo', 'user_json'),
+                          temp_res %in% c("DAILY", "MONTHLY", "YEARLY"),
+                          spat_res %in% c("LOW", "HIGH"),
+                          region_source %in% c('EEZ', 'MPA', 'RFMO', 'USER_SHAPEFILE'),
                           is.character(key),
                           is.character(cCRS),
                           is.logical(compress))
 
-
-
-
-
   get_gfw_byRegion <- function(region){
 
-    if (region_source == "eez" & is.character(region)){ # Only process eez. RFMO and geojson have bugs
+    if (region_source == "EEZ" & is.character(region)){ # Only process eez. RFMO and geojson have bugs
       region_id <- gfwr::get_region_id(region_name = region, region_source = region_source, key = key)$id
-    } else if (region_source == "eez" & is.numeric(region)){
+    } else if (region_source == "EEZ" & is.numeric(region)){
       region_id <- region
-    } else if (region_source == "rfmo"){
+    } else if (region_source == "RFMO"){
       region_id <- region # gfwr retuns NULL for region ID due to a bug in as.numeric(ID)
-    } else if (methods::is(region, "geojson")){
+    } else if (methods::is(region, "USER_SHAPEFILE")){
       region_id <- region # Use region as is
     }
 
@@ -81,13 +77,12 @@ splnr_get_gfw <- function(region,
     # Function to obtain data for a specific date range
     get_data_for_range <- function(start_date, end_date, rid) {
 
-      date_range <- paste(start_date, end_date, sep = ",")
-
       data <- gfwr::get_raster(
         spatial_resolution = spat_res,
         temporal_resolution = temp_res,
-        group_by = 'flagAndGearType',
-        date_range = date_range,
+        group_by = 'FLAGANDGEARTYPE',
+        start_date = start_date,
+        end_date = end_date,
         region = rid,
         region_source = region_source,
         key = key)
@@ -139,17 +134,17 @@ splnr_get_gfw <- function(region,
       # Combine data frames in the list into one data frame
 
       # Separate the "Time Range" column based on the specified temp_res
-      if (temp_res == "yearly") {
+      if (temp_res == "YEARLY") {
         data_sf <- data_df %>%
           dplyr::mutate(Year = .data$TimeRange) %>%
           sf::st_as_sf(coords = c("Lon", "Lat"), crs ="EPSG:4326")
       } else {
         # Otherwise, separate the "Time Range" column according to the specified temp_res
-        if (temp_res == "monthly") {
+        if (temp_res == "MONTHLY") {
           data_sf <- data_df %>%
             tidyr::separate("TimeRange", into = c("Year", "Month"), sep = "-", remove = FALSE) %>%
             sf::st_as_sf(coords = c("Lon", "Lat"), crs = "EPSG:4326")
-        } else if (temp_res == "daily") {
+        } else if (temp_res == "DAILY") {
           data_sf <- data_df %>%
             tidyr::separate("TimeRange", into = c("Year", "Month", "Day"), sep = "-", remove = FALSE) %>%
             sf::st_as_sf(coords = c("Lon", "Lat"), crs = "EPSG:4326")

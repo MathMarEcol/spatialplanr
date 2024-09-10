@@ -10,8 +10,8 @@ splnr_get_gfw(
   start_date,
   end_date,
   temp_res,
-  spat_res = "low",
-  region_source = "eez",
+  spat_res = "LOW",
+  region_source = "EEZ",
   key = gfwr::gfw_auth(),
   cCRS = "EPSG:4326",
   compress = FALSE
@@ -65,7 +65,7 @@ with gfw data aggregated or not (param compress)
 }
 \examples{
 \dontrun{
-gfw_data <- splnr_get_gfw('Australia', "2021-01-01", "2022-12-31", "yearly",
+gfw_data <- splnr_get_gfw('Australia', "2021-01-01", "2022-12-31", "YEARLY",
     cCRS = "ESRI:54009", compress = TRUE)
 }
 }

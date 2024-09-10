@@ -74,7 +74,7 @@ key <- gfwr::gfw_auth()
 A region_id is necessary to use the `get_raster` function.
 ```{r, results='hide'}
 region_id <- gfwr::get_region_id(region_name = "Australia", 
-                                 region_source = "eez",
+                                 region_source = "EEZ",
                                  key = gfwr::gfw_auth())$id
 ```
 
@@ -85,18 +85,19 @@ the `Vessel IDs`, `Flag`, `Geartype` and `Apparent fishing Hours` which are
 basically the amount of fishing hours of each vessel per grid cell (`geometry`).
 
 Data can be provided through :<br>
-- `daily`, `monthly` and `yearly` temporal resolutions. <br>
-- `low` (0.1 deg) and `high` (0.01 deg) spatial resolutions. <br>
-- `vessel_id`, `flag`, `gearType`, `flagAndGearType`.
+- `DAILY`, `MONTHLY` and `YEARLY` temporal resolutions. <br>
+- `LOW` (0.1 deg) and `HIGH` (0.01 deg) spatial resolutions. <br>
+- `VESSEL_ID`, `FLAG`, `GEARTYPE`, `FLAGANDGEARTYPE`.
 
 ```{r, eval=FALSE, message=FALSE}
 gfwr::get_raster(
-  spatial_resolution = "low",
-  temporal_resolution = "monthly",
-  group_by = "flagAndGearType",
-  date_range = "2022-01-01,2023-01-01",
+  spatial_resolution = "LOW",
+  temporal_resolution = "MONTHLY",
+  group_by = "FLAGANDGEARTYPE",
+  start_date = "2022-01-01",
+  end_date = "2023-01-01",
   region = region_id,
-  region_source = "eez",
+  region_source = "EEZ",
   key = gfwr::gfw_auth()
 )
 ```
@@ -110,8 +111,8 @@ get round these problems through `splnr_get_gfw`.
 data_sf_combined <- splnr_get_gfw(region = "Australia", 
                                   start_date = "2019-01-01",
                                   end_date =  "2023-12-31",
-                                  temp_res = "yearly", 
-                                  spat_res = "low",
+                                  temp_res = "YEARLY",
+                                  spat_res = "LOW",
                                   compress = FALSE)
 ```
 
@@ -131,7 +132,7 @@ coast_clipped <- rnaturalearth::ne_coastline(scale = "large") %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
 
 # Load EEZ polygons
-eezs <- oceandatr::get_area(area_name = "Australia") %>%
+eezs <- spatialgridr::get_boundary(name = "Australia", type = "eez", country_type = "country") %>%
   sf::st_transform(crs = sf::st_crs(data_sf_combined)) %>%
   sf::st_make_valid() %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
@@ -224,7 +225,7 @@ fishing activity.
 data_sf_combined <- splnr_get_gfw(region = "Australia", 
                                   start_date = "2019-01-01", 
                                   end_date = "2023-12-31", 
-                                  temp_res = "monthly", 
+                                  temp_res = "MONTHLY", 
                                   key = gfwr::gfw_auth()) %>%
   dplyr::group_by(Year, Month) %>%
   dplyr::summarize(Total_Fishing_Hours = sum(ApparentFishingHrs))
@@ -248,7 +249,7 @@ fishing gear type.
 data_sf_combined <- splnr_get_gfw(region = "Micronesia", 
                                   start_date = "2019-12-31", 
                                   end_date = "2021-01-01", 
-                                  temp_res = "monthly")
+                                  temp_res = "MONTHLY")
 ```
 
 ```{r, echo=FALSE, message=FALSE, results='hide'}
@@ -260,7 +261,7 @@ coast_clipped <- rnaturalearth::ne_coastline(scale = "large") %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
 
 # Load EEZ polygons
-eezs <- oceandatr::get_area(area_name = "Micronesia") %>%
+eezs <- spatialgridr::get_boundary(name = "Micronesia", type = "eez", country_type = "country") %>%
   sf::st_transform(crs = sf::st_crs(data_sf_combined)) %>%
   sf::st_make_valid() %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
@@ -283,8 +284,8 @@ Here we display the Vessel activity in Papua New Guinea according to Vessels fla
 data_sf_combined <- splnr_get_gfw(region = "Papua New Guinea", 
                                   start_date = "2019-12-31", 
                                   end_date = "2021-01-01", 
-                                  temp_res = "yearly", 
-                                  spat_res = "low") %>%
+                                  temp_res = "YEARLY", 
+                                  spat_res = "LOW") %>%
   sf::st_set_crs(sf::st_crs(rnaturalearth::ne_coastline(scale = "large")))
 
 coast_clipped <- rnaturalearth::ne_coastline(scale = "large") %>%
@@ -292,7 +293,7 @@ coast_clipped <- rnaturalearth::ne_coastline(scale = "large") %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
 
 # Load EEZ polygons
-eezs <- oceandatr::get_area(area_name = "Papua New Guinea") %>%
+eezs <- spatialgridr::get_boundary(name = "Papua New Guinea", type = "eez", country_type = "country") %>%
   sf::st_transform(crs = sf::st_crs(data_sf_combined)) %>%
   sf::st_make_valid() %>%
   sf::st_intersection(sf::st_as_sfc(sf::st_bbox(data_sf_combined)))
@@ -303,7 +304,7 @@ eezs <- oceandatr::get_area(area_name = "Papua New Guinea") %>%
 ggplot2::ggplot(data_sf_combined) +
   ggplot2::geom_sf(ggplot2::aes(color = `Flag`)) +
   ggplot2::geom_sf(data = coast_clipped, color = "black", fill = NA) + # Add coastline
-  ggplot2::geom_sf(data = eezs, color = "red", fill = NA) + # Ajouter la EEZ avec hachures
+  ggplot2::geom_sf(data = eezs, color = "red", fill = NA) + # Add EEZ
   ggplot2::scale_size_continuous(range = c(1, 10), guide = "legend", name = "Flag") +
   ggplot2::theme_minimal() +
   ggplot2::labs(title = "2021 Vessel Activity Map", subtitle = "recorded by GFW in Papua New Guinea", color = "Flag") +
