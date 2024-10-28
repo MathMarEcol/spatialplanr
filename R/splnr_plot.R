@@ -2,15 +2,13 @@
 #'
 #' (For now can replace splnr_plot_cost(), splnr_plot_binFeature(), splnr_plot_MPAs(), splnr_plot_featureNo())
 #'
-#' Written by Kilian Barreiro
+#' Written by Kilian Barreiro and Jason Everett
 #' Written: February 2024
 #'
-#' Plot Spatial Data, returns a gg object
-#'
 #' @param df The dataframe containing the data to be plotted. It must include a geometry column to be used with geom_sf.
-#' @param col_names A list of column names to include in the plot. If specified, only these columns will be used to color the plot.
-#' @param paletteName The name of the color palette to use for filling. Default is "YlGnBu".
-#' @param colourVals The color values to use if col_names is specified and the data is binary.
+#' @param col_names A list of column names to include in the plot. If specified, only these columns will be used to colour the plot.
+#' @param paletteName The name of the colour palette to use for filling. Default is "YlGnBu".
+#' @param colourVals The colour values to use if col_names is specified and the data is binary.
 #' @param plot_title The title of the plot.
 #' @param legend_title The title of the legend.
 #' @param legend_labels A vector of strings containing the labels to use for legend values.

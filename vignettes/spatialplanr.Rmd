@@ -236,7 +236,7 @@ planning unit of the study region.
    ))
 ```
 
-### Prepare Data for prioritisation
+## Prepare Data for prioritisation
 
 For the spatial prioritization we also need to extract the names of our
 features to pass into `prioritizr`.
@@ -327,7 +327,7 @@ splnr_plot(df = bathymetry, col_names = "bathymetry", plot_title = "") +
 
 
 
-#### Set Targets
+## Set Targets
 
 As shown previously, we assigned the conservation features a class
 reflecting their importance in the planning region. Conservation targets
@@ -344,7 +344,7 @@ target <- Dict %>%
 **Note:** The assigned classes and targets were not based on any
 ecological information and only chosen for visualization purposes.
 
-### Set up conservation problem
+## Set up conservation problem
 
 ```{r}
 datEx_problem <- prioritizr::problem(out_sf, feature_names, "Cost_None") %>%
@@ -354,21 +354,21 @@ datEx_problem <- prioritizr::problem(out_sf, feature_names, "Cost_None") %>%
   prioritizr::add_default_solver(verbose = FALSE)
 ```
 
-### Solve the conservation problem
+## Solve the conservation problem
 
 ```{r}
 datEx_soln <- datEx_problem %>%
   prioritizr::solve.ConservationProblem()
 ```
 
-### Visualize Output
+## Visualize Output
 
 There are different ways to visualize the output of the prioritization
 that can be loosely grouped into three categories: *+* Visualization of
 the solution *+* Visualization of targets *+* Visualization of
 importance scores
 
-#### Visualization of the solution
+### Visualization of the solution
 
 ```{r}
 (ggSoln <- splnr_plot(datEx_soln, 
@@ -402,7 +402,7 @@ overlay of the cost to show how the solution avoids highly costly areas:
 
 **Note:** In our example, cost is equal for all planning units.
 
-#### Visualization of targets
+### Visualization of targets
 
 To visualize how well the targets are met, we first need to extract how
 much suitable habitat of each feature are selected in the spatial plan.
@@ -430,20 +430,20 @@ For a circular bar plot, one additional step of data preparation needs
 to be done.
 
 ```{r, eval=FALSE}
-# dfTargetCirc <- dfTarget %>%
-# dplyr::select("feature", "value", "group") %>%
-# na.omit()
+dfTargetCirc <- dfTarget %>%
+dplyr::select("feature", "value", "group") %>%
+na.omit()
 
-# colors <- c(
-#   "important" = "darkgreen",
-#   "representative" = "darkred"
-# )
-# legends <- c("Important", "Representative")
+colors <- c(
+  "important" = "darkgreen",
+  "representative" = "darkred"
+)
+legends <- c("Important", "Representative")
 
-# (ggCircTarg <- splnr_plot_circBplot(df = dfTargetCirc, legend_list = legends, legend_color = colors, impTarget = 30, repTarget = 10))
+(ggCircTarg <- splnr_plot_circBplot(df = dfTargetCirc, legend_list = legends, legend_color = colors, impTarget = 30, repTarget = 10))
 ```
 
-#### Visualization of importance scores
+### Visualization of importance scores
 
 Importance scores can help to assess the relative importance of an
 individual selected planning unit in the spatial plan (for more
@@ -483,7 +483,7 @@ ggRWR <- splnr_plot_importanceScore(
 In our example, both scores label similar -coastal- planning units as
 most important for the spatial plan.
 
-### Comparing Spatial Plans
+## Comparing Spatial Plans
 
 Sometimes it can be useful to have a direct comparison of two spatial
 plans. To show how to achieve this with this package, we first need a
@@ -556,7 +556,7 @@ IUCN_IA_Targets <- IA_Targets %>%
 `Sys.setenv(IUCN_REDLIST_KEY = "[Your Token]")`. You can start by
 running `rredlist::rl_use_iucn()`.
 
-#### Set up second conservation problem
+### Set up second conservation problem
 
 ```{r}
 datEx_problem2 <- prioritizr::problem(out_sf, feature_names, "Cost_None") %>%
@@ -604,7 +604,7 @@ can set `typeLockIn = "Contours"`in `splnr_gg_add()`.
    ))
 ```
 
-#### Visualize comparison
+### Visualize comparison
 
 ```{r}
 (ggComp <- splnr_plot_comparison(datEx_soln, datEx_soln2) +
@@ -635,7 +635,7 @@ correlation between solution 1 and solution 2.
 
 ### Plotting selection frequency
 
-Sometimes when multiple spatial plans are generated, we are interesting
+Sometimes when multiple spatial plans are generated, we are interested
 in how many times a planning unit is selected across the array of
 solutions. To demonstrate how this can be done using this package, we
 first create an array (= portfolio) of solutions. One example of this is
