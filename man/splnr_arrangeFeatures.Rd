@@ -10,7 +10,7 @@ splnr_arrangeFeatures(df)
 \item{df}{An sf object to sort by Lon and Lat}
 }
 \value{
-A sorted sf object with the additionl cellID column
+A sorted sf object
 }
 \description{
 \code{splnr_arrangeFeatures()} sorts your data based on longitude and latitude values.

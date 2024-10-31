@@ -20,7 +20,7 @@ to a vector of names. Here we provide a function to quickly replace the
 numbers with names.
 }
 \examples{
-dat <- dat_region \%>\% dplyr::select(-cellID)
+dat <- dat_region
 nam <- c("Region1" = "SE Aust", "Region2" = "Tas", "Region3" = "NE Aust")
 df <- splnr_match_names(dat, nam)
 }

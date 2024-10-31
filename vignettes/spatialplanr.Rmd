@@ -98,7 +98,6 @@ We can check what the PUs look like
    ggplot2::theme_bw()) # Plot Planning Units
 ```
 
-
 If we want to add additional properties to our map, for example landmass
 or the boundary, we can use `splnr_gg_add()`.
 
@@ -226,8 +225,7 @@ planning unit of the study region.
 ```{r}
 (ggFeatNo <- splnr_plot(df = datEx_species_bin, 
                         col_names =  colnames(datEx_species_bin %>% 
-                                                sf::st_drop_geometry() %>% 
-                                                dplyr::select(-"cellID")),
+                                                sf::st_drop_geometry()),
                         plot_title = "", 
                         legend_title = "Number of features") +
    splnr_gg_add(

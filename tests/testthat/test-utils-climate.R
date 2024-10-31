@@ -1,8 +1,5 @@
 
-Features <- dat_species_bin %>%
-  dplyr::select(-"cellID")
-
-target <- Features %>%
+target <- dat_species_bin %>%
   sf::st_drop_geometry() %>%
   colnames() %>%
   data.frame() %>%

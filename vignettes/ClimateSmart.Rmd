@@ -111,7 +111,7 @@ These species were not chosen based on their importance for this region and only
 datEx_species_bin <- spDataFiltered %>%
   dplyr::as_tibble() %>%
   dplyr::mutate(dplyr::across(
-    -dplyr::any_of(c("cellID", "geometry")), # Don't apply to geometry/cellID
+    -dplyr::any_of(c("geometry")), # Don't apply to geometry
     ~ dplyr::case_when(
       . >= 0.5 ~ 1,
       . < 0.5 ~ 0,
@@ -122,7 +122,6 @@ datEx_species_bin <- spDataFiltered %>%
 
 col_name <- spDataFiltered %>%
   sf::st_drop_geometry() %>%
-  dplyr::select(-"cellID") %>%
   colnames()
 ```
 
@@ -174,7 +173,6 @@ Using this approach also requires an adaptation of the targets, since 5% of the 
 ```{r}
 target <- datEx_species_bin %>%
   sf::st_drop_geometry() %>%
-  dplyr::select(-"cellID") %>%
   colnames() %>%
   data.frame() %>%
   setNames(c("feature")) %>%
@@ -183,21 +181,19 @@ target <- datEx_species_bin %>%
 
 CPA_Approach <- splnr_climate_priorityAreaApproach(
   featuresDF = datEx_species_bin,
-  metricDF = metric_df, targetsDF = target, direction = -1, refugiaTarget = 1
+  metricDF = metric_df, 
+  targetsDF = target, 
+  direction = -1, refugiaTarget = 1
 )
 
 out_sf <- CPA_Approach$Features %>%
-  dplyr::left_join(
+  sf::st_join(
     datEx_species_bin %>%
-      sf::st_drop_geometry() %>%
       dplyr::select(
-        "cellID",
         tidyselect::starts_with("Cost_")
       ),
-    by = "cellID"
-  ) %>%
-  dplyr::left_join(metric_df %>%
-                     sf::st_drop_geometry(), by = "cellID")
+    join = sf::st_equals) %>%
+  sf::st_join(metric_df, join = sf::st_equals)
 
 targets <- CPA_Approach$Targets
 ```
@@ -212,7 +208,6 @@ usedFeatures <- out_sf %>%
   sf::st_drop_geometry() %>%
   dplyr::select(
     -tidyselect::starts_with("Cost_"),
-    -"cellID",
     -tidyselect::starts_with("metric")
   ) %>%
   names()
@@ -242,8 +237,7 @@ We can look at the resulting plan using `splnr_plot_solution()`.
    ))
 ```
 
-However, we are also interested how climate-smart the selected planning units in the solution actually are. For this, we can use a kernel density plot 
-
+However, we are also interested how climate-smart the selected planning units in the solution actually are. For this, we can use a kernel density plot.
 
 ```{r, fig.width = 9}
 (ggClimDens <- splnr_plot_climKernelDensity(
@@ -261,7 +255,6 @@ However, we are also interested how climate-smart the selected planning units in
 ```{r}
 target <- datEx_species_bin %>%
   sf::st_drop_geometry() %>%
-  dplyr::select(-"cellID") %>%
   colnames() %>%
   data.frame() %>%
   setNames(c("feature")) %>%
@@ -273,17 +266,14 @@ Percentile_Approach <- splnr_climate_percentileApproach(
 )
 
 out_sf <- Percentile_Approach$Features %>%
-  dplyr::left_join(
+  sf::st_join(
     datEx_species_bin %>%
-      sf::st_drop_geometry() %>%
       dplyr::select(
-        "cellID",
         tidyselect::starts_with("Cost_")
       ),
-    by = "cellID"
+    join = sf::st_equals
   ) %>%
-  dplyr::left_join(metric_df %>%
-                     sf::st_drop_geometry(), by = "cellID")
+  sf::st_join(metric_df, join = sf::st_equals)
 
 targets <- Percentile_Approach$Targets
 ```
@@ -298,7 +288,6 @@ usedFeatures <- out_sf %>%
   sf::st_drop_geometry() %>%
   dplyr::select(
     -tidyselect::starts_with("Cost_"),
-    -"cellID",
     -tidyselect::starts_with("metric")
   ) %>%
   names()
@@ -341,7 +330,6 @@ However, we are also interested how climate-smart the selected planning units in
 ```{r}
 target <- datEx_species_bin %>%
   sf::st_drop_geometry() %>%
-  dplyr::select(-"cellID") %>%
   colnames() %>%
   data.frame() %>%
   setNames(c("feature")) %>%
@@ -349,21 +337,19 @@ target <- datEx_species_bin %>%
 
 Feature_Approach <- splnr_climate_featureApproach(
   featuresDF = datEx_species_bin,
-  metricDF = metric_df, targetsDF = target, direction = 1
+  metricDF = metric_df, 
+  targetsDF = target, 
+  direction = 1
 )
 
 out_sf <- Feature_Approach$Features %>%
-  dplyr::left_join(
+  sf::st_join(
     datEx_species_bin %>%
-      sf::st_drop_geometry() %>%
       dplyr::select(
-        "cellID",
         tidyselect::starts_with("Cost_")
       ),
-    by = "cellID"
-  ) %>%
-  dplyr::left_join(metric_df %>%
-                     sf::st_drop_geometry(), by = "cellID")
+    join = sf::st_equals) %>%
+  sf::st_join(metric_df, join = sf::st_equals)
 
 targets <- Feature_Approach$Targets
 ```
@@ -378,7 +364,6 @@ usedFeatures <- out_sf %>%
   sf::st_drop_geometry() %>%
   dplyr::select(
     -tidyselect::starts_with("Cost_"),
-    -"cellID",
     -tidyselect::starts_with("metric")
   ) %>%
   names()

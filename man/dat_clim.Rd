@@ -8,7 +8,6 @@
 \code{dat_clim}
 A data frame with 780 rows and 3 columns:
 \describe{
-\item{cellID}{ID number for each row (or cell) of the dataset}
 \item{geometry}{sf geometry column}
 \item{metric}{climate metric information}
 ...

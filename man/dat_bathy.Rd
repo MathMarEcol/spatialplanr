@@ -8,7 +8,6 @@
 \code{dat_bathy}
 A data frame with bathymetry data
 \describe{
-\item{cellID}{ID number for each row (or cell) of the dataset}
 \item{bathymetry}{Bathymetry data}
 \item{geometry}{sf geometry column}
 ...

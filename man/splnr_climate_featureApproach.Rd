@@ -14,9 +14,9 @@ splnr_climate_featureApproach(
 )
 }
 \arguments{
-\item{featuresDF}{feature \code{sf}object which should have a column for cellID}
+\item{featuresDF}{feature \code{sf}object}
 
-\item{metricDF}{climate metric data.frame with 'metric' as the column name of the metric values per planning unit. This should also have a column for the cellID}
+\item{metricDF}{climate metric data.frame with 'metric' as the column name of the metric values per planning unit.}
 
 \item{targetsDF}{\code{data.frame}with list of features under "feature" column and their corresponding targets under "target" column}
 
@@ -33,8 +33,7 @@ A \code{list} with two components: 1. is the data frame passed to \code{prioriti
 Function to run the feature approach
 }
 \examples{
-Features <- dat_species_bin \%>\%
-  dplyr::select(-"cellID")
+Features <- dat_species_bin
 
 target <- Features \%>\%
   sf::st_drop_geometry() \%>\%

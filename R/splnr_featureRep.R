@@ -37,7 +37,7 @@ splnr_get_featureRep <- function(soln, pDat, targetsDF = NA,
   not_selected <- soln %>%
     dplyr::select(
       -tidyselect::starts_with(c("Cost", "solution_")),
-      -tidyselect::any_of(c("metric", "cellID")),
+      -tidyselect::any_of(c("metric")),
       -tidyselect::any_of(s_cols)
     ) %>%
     sf::st_drop_geometry()

@@ -1,6 +1,5 @@
 
 target <- dat_species_bin %>%
-  dplyr::select(-"cellID") %>%
   sf::st_drop_geometry() %>%
   colnames() %>%
   data.frame() %>%
@@ -12,17 +11,15 @@ CPA <- splnr_climate_priorityAreaApproach(
   metricDF = dat_clim,
   targetsDF = target,
   direction = -1,
-  refugiaTarget = 1
-)
+  refugiaTarget = 1)
 
 out_sf <- CPA$Features %>%
   dplyr::mutate(Cost_None = rep(1, 780)) %>%
-  dplyr::left_join(dat_clim %>%
-                     sf::st_drop_geometry(), by = "cellID")
+  sf::st_join(dat_clim, join = sf::st_equals)
 
 usedFeatures <- out_sf %>%
   sf::st_drop_geometry() %>%
-  dplyr::select(-tidyselect::starts_with("Cost_"), -"cellID", -"metric") %>%
+  dplyr::select(-tidyselect::starts_with("Cost_"), -"metric") %>%
   names()
 
 p1 <- prioritizr::problem(out_sf, usedFeatures, "Cost_None") %>%

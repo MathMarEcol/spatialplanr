@@ -19,8 +19,7 @@ splnr_targets_byInverseArea <- function(df, target_min, target_max) {
     inherits(df, c("sf", "data.frame")),
     is.numeric(target_min) && target_min >= 0 && target_min <= 1,
     is.numeric(target_max) && target_max >= 0 && target_max <= 1,
-    target_min <= target_max,
-    "cellID" %in% names(df)
+    target_min <= target_max
   )
 
   PU_area_km2 <- as.numeric(sf::st_area(df[1, 1]) / 1e+06) # Area of each planning unit
@@ -28,7 +27,6 @@ splnr_targets_byInverseArea <- function(df, target_min, target_max) {
   total_PU_area <- nrow(df) * PU_area_km2 # Total area of the study region
 
   dat <- df %>%
-    dplyr::select(-"cellID") %>%
     sf::st_drop_geometry() %>%
     dplyr::mutate(dplyr::across(dplyr::everything(), ~ tidyr::replace_na(.x, 0))) %>%
     dplyr::summarise(dplyr::across(dplyr::everything(), ~ sum(., is.na(.), 0))) %>%
