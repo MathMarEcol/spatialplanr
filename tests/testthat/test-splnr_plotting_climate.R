@@ -1,5 +1,5 @@
 
-target <- dat_species_bin %>%
+targets <- dat_species_bin %>%
   sf::st_drop_geometry() %>%
   colnames() %>%
   data.frame() %>%
@@ -7,9 +7,9 @@ target <- dat_species_bin %>%
   dplyr::mutate(target = 0.3)
 
 CPA <- splnr_climate_priorityAreaApproach(
-  featuresDF = dat_species_bin,
-  metricDF = dat_clim,
-  targetsDF = target,
+  features = dat_species_bin,
+  metric = dat_clim,
+  targets = targets,
   direction = -1,
   refugiaTarget = 1)
 
