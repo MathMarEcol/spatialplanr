@@ -30,7 +30,9 @@
 #'   pDat = pDat
 #' )
 splnr_get_featureRep <- function(soln, pDat, targets = NA,
-                                 climsmart = FALSE, climsmartApproach = 0, solnCol = "solution_1") {
+                                 climsmart = FALSE,
+                                 climsmartApproach = 0,
+                                 solnCol = "solution_1") {
   s_cols <- pDat$data$features[[1]]
 
   # Get data for features not chosen
@@ -179,11 +181,13 @@ splnr_get_featureRep <- function(soln, pDat, targets = NA,
 #'
 #' (splnr_plot_featureRep(df, category = dat_category))
 #'
-splnr_plot_featureRep <- function(df, category = NA,
+splnr_plot_featureRep <- function(df,
+                                  category = NA,
                                   categoryFeatureCol = NA,
                                   renameFeatures = FALSE,
                                   namesToReplace = NA,
-                                  nr = 1, showTarget = NA,
+                                  nr = 1,
+                                  showTarget = NA,
                                   plotTitle = "",
                                   ...) {
 

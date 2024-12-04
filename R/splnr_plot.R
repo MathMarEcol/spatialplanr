@@ -156,7 +156,7 @@ splnr_plot <- function(df,
 
     gg <- gg +
       ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data[[col_names]]), colour = "grey80", size = 0.1) +
-      ggplot2::scale_fill_viridis_c() +
+      ggplot2::scale_fill_viridis_c(name = legend_title) +
       ggplot2::guides(fill = ggplot2::guide_colourbar(order = 1))
 
   } else if (is.null(col_names)){ # No column to plot by
