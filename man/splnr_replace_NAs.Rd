@@ -15,8 +15,8 @@ splnr_replace_NAs(df, vari)
 An \code{sf} object with NAs replaced with the nearest neighbour
 }
 \description{
-\code{splnr_replace_NAs()} allows you to replace NA values in your data with the value of the nearest neighbor.
-The nearest neighbor is determined using \code{st_nearest_feature()} from the \code{sf} package.
+\code{splnr_replace_NAs()} allows you to replace NA values in your data with the value of the nearest neighbour.
+The nearest neighbour is determined using \code{st_nearest_feature()} from the \code{sf} package.
 }
 \examples{
 df <- dat_species_prob \%>\%

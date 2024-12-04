@@ -9,7 +9,6 @@
 A data frame with 397 rows and 17 columns:
 \describe{
 \item{wdpa}{binary vector denoting presence or absence of a current marine protected area}
-\item{cellID}{cell ID of planning units}
 ...
 }
 }

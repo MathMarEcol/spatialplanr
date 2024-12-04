@@ -110,7 +110,7 @@ planning units.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Bndry</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_get_boundary.html">splnr_get_boundary</a></span><span class="op">(</span>Limits <span class="op">=</span> <span class="va">Region</span>, Type <span class="op">=</span> <span class="va">Type</span>, cCRS <span class="op">=</span> <span class="va">cCRS</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Reading layer `ne_10m_geography_marine_polys' from data source </span></span>
-<span><span class="co">#&gt;   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/RtmpFXGTcW/ne_10m_geography_marine_polys.shp' </span></span>
+<span><span class="co">#&gt;   `/private/var/folders/_r/mcmw_qtn0m7cd23cbdqfszl40000gp/T/RtmpYDUd6r/ne_10m_geography_marine_polys.shp' </span></span>
 <span><span class="co">#&gt;   using driver `ESRI Shapefile'</span></span>
 <span><span class="co">#&gt; Simple feature collection with 306 features and 37 fields</span></span>
 <span><span class="co">#&gt; Geometry type: MULTIPOLYGON</span></span>
@@ -253,8 +253,7 @@ within a planning unit of the study region.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">ggFeatNo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">datEx_species_bin</span>, </span>
 <span>                        col_names <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">datEx_species_bin</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>                                                <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>                                                <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="st">"cellID"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                                                <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                        plot_title <span class="op">=</span> <span class="st">""</span>, </span>
 <span>                        legend_title <span class="op">=</span> <span class="st">"Number of features"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>   <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
@@ -263,9 +262,10 @@ within a planning unit of the study region.</p>
 <span>   <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-16-1.png" width="864"></p>
 </div>
-<div class="section level4">
-<h4 id="prepare-data-for-prioritisation">Prepare Data for prioritisation<a class="anchor" aria-label="anchor" href="#prepare-data-for-prioritisation"></a>
-</h4>
+</div>
+<div class="section level3">
+<h3 id="prepare-data-for-prioritisation">Prepare Data for prioritisation<a class="anchor" aria-label="anchor" href="#prepare-data-for-prioritisation"></a>
+</h3>
 <p>For the spatial prioritization we also need to extract the names of
 our features to pass into <code>prioritizr</code>.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
@@ -330,9 +330,10 @@ prioritization, we provide here different features from the
 </div>
 </div>
 </div>
-<div class="section level5">
-<h5 id="set-targets">Set Targets<a class="anchor" aria-label="anchor" href="#set-targets"></a>
-</h5>
+</div>
+<div class="section level3">
+<h3 id="set-targets">Set Targets<a class="anchor" aria-label="anchor" href="#set-targets"></a>
+</h3>
 <p>As shown previously, we assigned the conservation features a class
 reflecting their importance in the planning region. Conservation targets
 are then assigned a target based on their class, in our case 30% of
@@ -346,10 +347,9 @@ suitable habitat of important and 10% of representative features.</p>
 based on any ecological information and only chosen for visualization
 purposes.</p>
 </div>
-</div>
-<div class="section level4">
-<h4 id="set-up-conservation-problem">Set up conservation problem<a class="anchor" aria-label="anchor" href="#set-up-conservation-problem"></a>
-</h4>
+<div class="section level3">
+<h3 id="set-up-conservation-problem">Set up conservation problem<a class="anchor" aria-label="anchor" href="#set-up-conservation-problem"></a>
+</h3>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_problem</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">out_sf</span>, <span class="va">feature_names</span>, <span class="st">"Cost_None"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -357,23 +357,23 @@ purposes.</p>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_binary_decisions.html" class="external-link">add_binary_decisions</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_default_solver.html" class="external-link">add_default_solver</a></span><span class="op">(</span>verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="solve-the-conservation-problem">Solve the conservation problem<a class="anchor" aria-label="anchor" href="#solve-the-conservation-problem"></a>
-</h4>
+<div class="section level3">
+<h3 id="solve-the-conservation-problem">Solve the conservation problem<a class="anchor" aria-label="anchor" href="#solve-the-conservation-problem"></a>
+</h3>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_soln</span> <span class="op">&lt;-</span> <span class="va">datEx_problem</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/solve.html" class="external-link">solve.ConservationProblem</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="visualize-output">Visualize Output<a class="anchor" aria-label="anchor" href="#visualize-output"></a>
-</h4>
+<div class="section level3">
+<h3 id="visualize-output">Visualize Output<a class="anchor" aria-label="anchor" href="#visualize-output"></a>
+</h3>
 <p>There are different ways to visualize the output of the
 prioritization that can be loosely grouped into three categories:
 <em>+</em> Visualization of the solution <em>+</em> Visualization of
 targets <em>+</em> Visualization of importance scores</p>
-<div class="section level5">
-<h5 id="visualization-of-the-solution">Visualization of the solution<a class="anchor" aria-label="anchor" href="#visualization-of-the-solution"></a>
-</h5>
+<div class="section level4">
+<h4 id="visualization-of-the-solution">Visualization of the solution<a class="anchor" aria-label="anchor" href="#visualization-of-the-solution"></a>
+</h4>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">ggSoln</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot.html">splnr_plot</a></span><span class="op">(</span><span class="va">datEx_soln</span>, </span>
 <span>                      col_names <span class="op">=</span> <span class="st">"solution_1"</span>, </span>
@@ -405,9 +405,9 @@ areas:</p>
 <p><strong>Note:</strong> In our example, cost is equal for all planning
 units.</p>
 </div>
-<div class="section level5">
-<h5 id="visualization-of-targets">Visualization of targets<a class="anchor" aria-label="anchor" href="#visualization-of-targets"></a>
-</h5>
+<div class="section level4">
+<h4 id="visualization-of-targets">Visualization of targets<a class="anchor" aria-label="anchor" href="#visualization-of-targets"></a>
+</h4>
 <p>To visualize how well the targets are met, we first need to extract
 how much suitable habitat of each feature are selected in the spatial
 plan. This also includes potential incidental coverage of feature that
@@ -431,21 +431,21 @@ planning region.</p>
 <p>For a circular bar plot, one additional step of data preparation
 needs to be done.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># dfTargetCirc &lt;- dfTarget %&gt;%</span></span>
-<span><span class="co"># dplyr::select("feature", "value", "group") %&gt;%</span></span>
-<span><span class="co"># na.omit()</span></span>
+<code class="sourceCode R"><span><span class="va">dfTargetCirc</span> <span class="op">&lt;-</span> <span class="va">dfTarget</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="st">"feature"</span>, <span class="st">"value"</span>, <span class="st">"group"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># colors &lt;- c(</span></span>
-<span><span class="co">#   "important" = "darkgreen",</span></span>
-<span><span class="co">#   "representative" = "darkred"</span></span>
-<span><span class="co"># )</span></span>
-<span><span class="co"># legends &lt;- c("Important", "Representative")</span></span>
+<span><span class="va">colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"important"</span> <span class="op">=</span> <span class="st">"darkgreen"</span>,</span>
+<span>  <span class="st">"representative"</span> <span class="op">=</span> <span class="st">"darkred"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">legends</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Important"</span>, <span class="st">"Representative"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># (ggCircTarg &lt;- splnr_plot_circBplot(df = dfTargetCirc, legend_list = legends, legend_color = colors, impTarget = 30, repTarget = 10))</span></span></code></pre></div>
+<span><span class="op">(</span><span class="va">ggCircTarg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_circBplot.html">splnr_plot_circBplot</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">dfTargetCirc</span>, legend_list <span class="op">=</span> <span class="va">legends</span>, legend_color <span class="op">=</span> <span class="va">colors</span>, impTarget <span class="op">=</span> <span class="fl">30</span>, repTarget <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level5">
-<h5 id="visualization-of-importance-scores">Visualization of importance scores<a class="anchor" aria-label="anchor" href="#visualization-of-importance-scores"></a>
-</h5>
+<div class="section level4">
+<h4 id="visualization-of-importance-scores">Visualization of importance scores<a class="anchor" aria-label="anchor" href="#visualization-of-importance-scores"></a>
+</h4>
 <p>Importance scores can help to assess the relative importance of an
 individual selected planning unit in the spatial plan (for more
 information, see <a href="https://prioritizr.net/reference/importance.html" class="external-link uri">https://prioritizr.net/reference/importance.html</a>)</p>
@@ -484,9 +484,9 @@ Rarity Weighted Richness.</p>
 most important for the spatial plan.</p>
 </div>
 </div>
-<div class="section level4">
-<h4 id="comparing-spatial-plans">Comparing Spatial Plans<a class="anchor" aria-label="anchor" href="#comparing-spatial-plans"></a>
-</h4>
+<div class="section level3">
+<h3 id="comparing-spatial-plans">Comparing Spatial Plans<a class="anchor" aria-label="anchor" href="#comparing-spatial-plans"></a>
+</h3>
 <p>Sometimes it can be useful to have a direct comparison of two spatial
 plans. To show how to achieve this with this package, we first need a
 second conservation problem and resulting solution.</p>
@@ -546,9 +546,9 @@ token from <code>rl_use_iucn()</code> that needs to be added to the
 environment using
 <code>Sys.setenv(IUCN_REDLIST_KEY = "[Your Token]")</code>. You can
 start by running <code><a href="https://docs.ropensci.org/rredlist/reference/rl_use_iucn.html" class="external-link">rredlist::rl_use_iucn()</a></code>.</p>
-<div class="section level5">
-<h5 id="set-up-second-conservation-problem">Set up second conservation problem<a class="anchor" aria-label="anchor" href="#set-up-second-conservation-problem"></a>
-</h5>
+<div class="section level4">
+<h4 id="set-up-second-conservation-problem">Set up second conservation problem<a class="anchor" aria-label="anchor" href="#set-up-second-conservation-problem"></a>
+</h4>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">datEx_problem2</span> <span class="op">&lt;-</span> <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/problem.html" class="external-link">problem</a></span><span class="op">(</span><span class="va">out_sf</span>, <span class="va">feature_names</span>, <span class="st">"Cost_None"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">prioritizr</span><span class="fu">::</span><span class="fu"><a href="https://prioritizr.net/reference/add_min_set_objective.html" class="external-link">add_min_set_objective</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -593,9 +593,9 @@ can set <code>typeLockIn = "Contours"</code>in
 <span>   <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatialplanr_files/figure-html/unnamed-chunk-37-1.png" width="864"></p>
 </div>
-<div class="section level5">
-<h5 id="visualize-comparison">Visualize comparison<a class="anchor" aria-label="anchor" href="#visualize-comparison"></a>
-</h5>
+<div class="section level4">
+<h4 id="visualize-comparison">Visualize comparison<a class="anchor" aria-label="anchor" href="#visualize-comparison"></a>
+</h4>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">(</span><span class="va">ggComp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/splnr_plot_comparison.html">splnr_plot_comparison</a></span><span class="op">(</span><span class="va">datEx_soln</span>, <span class="va">datEx_soln2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>   <span class="fu"><a href="../reference/splnr_gg_add.html">splnr_gg_add</a></span><span class="op">(</span></span>
@@ -620,12 +620,11 @@ selected in both solutions (grey).</p>
 <p>The correlation matrix shows the similarity as the Cohen’s Kappa
 correlation between solution 1 and solution 2.</p>
 </div>
-</div>
 <div class="section level4">
 <h4 id="plotting-selection-frequency">Plotting selection frequency<a class="anchor" aria-label="anchor" href="#plotting-selection-frequency"></a>
 </h4>
 <p>Sometimes when multiple spatial plans are generated, we are
-interesting in how many times a planning unit is selected across the
+interested in how many times a planning unit is selected across the
 array of solutions. To demonstrate how this can be done using this
 package, we first create an array (= portfolio) of solutions. One
 example of this is by using the portfolio</p>
@@ -662,7 +661,7 @@ example of this is by using the portfolio</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

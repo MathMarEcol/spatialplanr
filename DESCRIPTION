@@ -1,6 +1,6 @@
 Package: spatialplanr
 Title: Help files for prioritzr Spatial Planning projects
-Version: 0.6.7
+Version: 0.6.8
 Authors@R: c(
     person(
       given = "Jason D.",
@@ -30,7 +30,7 @@ Suggests:
     ggridges,
     irr,
     knitr,
-    oceandatr (>= 0.1.0),
+    oceandatr (>= 0.2.0),
     patchwork,
     prioritizr,
     RColorBrewer,
@@ -61,7 +61,7 @@ Imports:
     rnaturalearth,
     scales,
     sf,
-    spatialgridr (>= 0.0.1),
+    spatialgridr (>= 0.0.2),
     stringr,
     terra,
     tibble,

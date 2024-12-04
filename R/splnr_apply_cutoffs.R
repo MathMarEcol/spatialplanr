@@ -23,7 +23,7 @@ splnr_apply_cutoffs <- function(features, Cutoffs, inverse = FALSE) {
     features <- features %>%
       dplyr::as_tibble() %>%
       dplyr::mutate(dplyr::across(
-        -dplyr::any_of(c("cellID", "geometry")), # Apply to all columns except geometry and cellID
+        -dplyr::any_of("geometry"), # Apply to all columns except geometry
         ~ dplyr::case_when(
           . >= Cutoffs ~ 1,
           . < Cutoffs ~ 0,
@@ -34,10 +34,9 @@ splnr_apply_cutoffs <- function(features, Cutoffs, inverse = FALSE) {
 
     if (inverse == TRUE) { # Need to flip the ones/zeros
       features <- features %>%
-        dplyr::mutate(dplyr::across(-dplyr::any_of(c("cellID", "geometry")), ~ 1 - .))
+        dplyr::mutate(dplyr::across(-dplyr::any_of("geometry"), ~ 1 - .))
     }
   } else if (length(Cutoffs) == length(names(Cutoffs))) { # Named vector with values for each column
-
 
     nm <- names(Cutoffs) # Testing - We should only be operating on the columns in the Cutoffs vector
 

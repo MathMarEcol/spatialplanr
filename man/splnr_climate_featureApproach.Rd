@@ -5,20 +5,20 @@
 \title{Function to run the feature approach}
 \usage{
 splnr_climate_featureApproach(
-  featuresDF,
-  metricDF,
-  targetsDF,
+  features,
+  metric,
+  targets,
   direction,
   percentile = 35,
   refugiaTarget = 0.3
 )
 }
 \arguments{
-\item{featuresDF}{feature \code{sf}object which should have a column for cellID}
+\item{features}{feature \code{sf}object}
 
-\item{metricDF}{climate metric data.frame with 'metric' as the column name of the metric values per planning unit. This should also have a column for the cellID}
+\item{metric}{climate metric \code{sf} object with 'metric' as the column name of the metric values per planning unit.}
 
-\item{targetsDF}{\code{data.frame}with list of features under "feature" column and their corresponding targets under "target" column}
+\item{targets}{\code{data.frame}with list of features under "feature" column and their corresponding targets under "target" column}
 
 \item{direction}{If direction = 1, metric values are from low (least climate-smart) to high (most climate-smart). If direction = -1, metric values are from high (least climate-smart) to low (most climate-smart).}
 
@@ -33,22 +33,20 @@ A \code{list} with two components: 1. is the data frame passed to \code{prioriti
 Function to run the feature approach
 }
 \examples{
-Features <- dat_species_bin \%>\%
-  dplyr::select(-"cellID")
+Features <- dat_species_bin
 
-target <- Features \%>\%
+targets <- Features \%>\%
   sf::st_drop_geometry() \%>\%
   colnames() \%>\%
   data.frame() \%>\%
   setNames(c("feature")) \%>\%
   dplyr::mutate(target = 0.3)
 
-metric_df <- dat_clim
-
-
 Feature_Approach <- splnr_climate_featureApproach(
-  featuresDF = dat_species_bin,
-  metricDF = metric_df, targetsDF = target, direction = 1
+  features = dat_species_bin,
+  metric = dat_clim,
+  targets = targets,
+  direction = 1
 )
 out_sf <- Feature_Approach$Features
 targets <- Feature_Approach$Targets

@@ -34,8 +34,8 @@ splnr_create_polygon <- function(x, cCRS = "EPSG:4326") {
 
 #' Remove NAs from spatial data using nearest neighbour
 #'
-#' `splnr_replace_NAs()` allows you to replace NA values in your data with the value of the nearest neighbor.
-#' The nearest neighbor is determined using `st_nearest_feature()` from the `sf` package.
+#' `splnr_replace_NAs()` allows you to replace NA values in your data with the value of the nearest neighbour.
+#' The nearest neighbour is determined using `st_nearest_feature()` from the `sf` package.
 #'
 #' @param df An `sf` dataframe
 #' @param vari Variable to remove NAs from
@@ -59,6 +59,7 @@ splnr_replace_NAs <- function(df, vari) {
   if (sum(is.na(dplyr::pull(df, !!rlang::sym(vari)))) > 0) { # Check if there are NAs
 
     gp <- df %>%
+      tibble::rowid_to_column("cellID") %>% # Add cellID to reorder df later
       dplyr::mutate(isna = is.na(!!rlang::sym(vari)))
 
     gp <- split(gp, f = as.factor(gp$isna))
@@ -70,7 +71,8 @@ splnr_replace_NAs <- function(df, vari) {
 
     df <- rbind(gp$`FALSE`, gp$`TRUE`) %>%
       dplyr::select(-"isna") %>%
-      dplyr::arrange(.data$cellID)
+      dplyr::arrange(.data$cellID) %>%
+      dplyr::select(-"cellID") # Remove added column
   }
   return(df)
 }
@@ -91,7 +93,7 @@ splnr_replace_NAs <- function(df, vari) {
 #'
 #' @importFrom rlang :=
 #' @examples
-#' dat <- dat_region %>% dplyr::select(-cellID)
+#' dat <- dat_region
 #' nam <- c("Region1" = "SE Aust", "Region2" = "Tas", "Region3" = "NE Aust")
 #' df <- splnr_match_names(dat, nam)
 splnr_match_names <- function(dat, nam) {
@@ -165,7 +167,7 @@ splnr_scale_01 <- function(dat, col_name) {
 #'
 #' @examples
 #' df <- dat_species_prob %>%
-#'   splnr_featureNames(exclude = c("cellID"))
+#'   splnr_featureNames()
 splnr_featureNames <- function(dat, exclude = NA) {
 
   assertthat::assert_that(
@@ -174,9 +176,9 @@ splnr_featureNames <- function(dat, exclude = NA) {
   )
 
   if (is.na(exclude)) {
-    exclude <- c("Cost_", "cellID")
+    exclude <- c("Cost_")
   } else {
-    exclude <- c("Cost_", "cellID", exclude)
+    exclude <- c("Cost_", exclude)
   }
 
   dat <- dat %>%
@@ -195,7 +197,7 @@ splnr_featureNames <- function(dat, exclude = NA) {
 #'
 #' @param df An sf object to sort by Lon and Lat
 #'
-#' @return A sorted sf object with the additionl cellID column
+#' @return A sorted sf object
 #' @export
 #'
 #' @examples
@@ -211,8 +213,6 @@ splnr_arrangeFeatures <- function(df) {
   )
   df <- df[order(xy[, "X"], xy[, "Y"]), ]
 
-  df <- df %>%
-    dplyr::mutate(cellID = dplyr::row_number())
 }
 
 

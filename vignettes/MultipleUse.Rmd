@@ -123,7 +123,6 @@ datEx_species_bin <- spDataFiltered %>%
 
 col_name <- spDataFiltered %>%
   sf::st_drop_geometry() %>%
-  dplyr::select(-"cellID") %>%
   colnames()
 ```
 
@@ -425,10 +424,8 @@ When using zones with constraints, we use the `prioritizr` function `add_manual_
 ```{r}
 mpas <- MPAsCoralSea %>%
   dplyr::mutate(zone = "zone 1") %>%
-  dplyr::rename(
-    pu = cellID,
-    status = wdpa
-  ) %>%
+  dplyr::rename(status = wdpa) %>%
+  tibble::rowid_to_column("pu") %>% 
   sf::st_drop_geometry() %>%
   tibble::tibble() %>%
   dplyr::filter(status == 1)
@@ -580,19 +577,17 @@ We then need to bring our data in a specific format that requires us to have an 
 
 ```{r}
 datSpecZone1 <- datEx_species_bin %>%
-  sf::st_drop_geometry() %>%
-  dplyr::rename_at(dplyr::vars(-cellID), ~ paste0(.x, "_zone1"))
+  dplyr::rename_at(dplyr::vars(-geometry), ~ paste0(.x, "_zone1"))
 
 featuresZone1 <- datSpecZone1 %>%
-  dplyr::select(-"cellID") %>%
+  sf::st_drop_geometry() %>%
   colnames()
 
 datSpecZone2 <- datEx_species_bin %>%
-  sf::st_drop_geometry() %>%
-  dplyr::rename_at(dplyr::vars(-cellID), ~ paste0(.x, "_zone2"))
+  dplyr::rename_at(dplyr::vars(-geometry), ~ paste0(.x, "_zone2"))
 
 featuresZone2 <- datSpecZone2 %>%
-  dplyr::select(-"cellID") %>%
+  sf::st_drop_geometry() %>%
   colnames()
 ```
 
@@ -607,9 +602,7 @@ z10 <- prioritizr::zones(
 )
 
 out_sf <- datSpecZone1 %>%
-  dplyr::left_join(datSpecZone2, by = "cellID") %>%
-  dplyr::mutate(geometry = datEx_species_bin$geometry) %>%
-  sf::st_as_sf() %>%
+  sf::st_join(datSpecZone2, join = sf::st_equals) %>%
   dplyr::mutate(
     Cost1 = runif(n = dim(.)[[1]]) * 100,
     Cost2 = runif(n = dim(.)[[1]]) * 300
@@ -751,27 +744,24 @@ We then create a zones object for three different zones:
 
 ```{r}
 datSpecZone1 <- datEx_species_bin %>%
-  sf::st_drop_geometry() %>%
-  dplyr::rename_at(dplyr::vars(-cellID), ~ paste0(.x, "_zone1"))
+  dplyr::rename_at(dplyr::vars(-geometry), ~ paste0(.x, "_zone1"))
 
 featuresZone1 <- datSpecZone1 %>%
-  dplyr::select(-"cellID") %>%
+  sf::st_drop_geometry() %>%
   colnames()
 
 datSpecZone2 <- datEx_species_bin %>%
-  sf::st_drop_geometry() %>%
-  dplyr::rename_at(dplyr::vars(-cellID), ~ paste0(.x, "_zone2"))
+  dplyr::rename_at(dplyr::vars(-geometry), ~ paste0(.x, "_zone2"))
 
 featuresZone2 <- datSpecZone2 %>%
-  dplyr::select(-"cellID") %>%
+  sf::st_drop_geometry() %>%
   colnames()
 
 datSpecZone3 <- datEx_species_bin %>%
-  sf::st_drop_geometry() %>%
-  dplyr::rename_at(dplyr::vars(-cellID), ~ paste0(.x, "_zone3"))
+  dplyr::rename_at(dplyr::vars(-geometry), ~ paste0(.x, "_zone3"))
 
 featuresZone3 <- datSpecZone3 %>%
-  dplyr::select(-"cellID") %>%
+  sf::st_drop_geometry() %>%
   colnames()
 
 z12 <- prioritizr::zones(
@@ -788,8 +778,8 @@ We then create a joint `sf` object of all zones and their respective costs.
 ```{r}
 # NOTE: When using sf input, we need as many cost columns as we have zones
 out_sf <- datSpecZone1 %>%
-  dplyr::left_join(datSpecZone2, by = "cellID") %>%
-  dplyr::left_join(datSpecZone3, by = "cellID") %>%
+  sf::st_join(datSpecZone2, join = sf::st_equals) %>%
+  sf::st_join(datSpecZone3, join = sf::st_equals) %>%
   dplyr::mutate(geometry = datEx_species_bin$geometry) %>%
   sf::st_as_sf() %>%
   dplyr::mutate(

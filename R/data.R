@@ -5,7 +5,6 @@
 #' @format `dat_PUs`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
-#'   \item{cellID}{ID number for each row (or cell) of the dataset}
 #'   \item{geometry}{sf geometry column}
 #'   ...
 #' }
@@ -22,7 +21,6 @@
 #' @format `dat_bndry`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
-#'   \item{cellID}{ID number for each row (or cell) of the dataset}
 #'   \item{geometry}{sf geometry column}
 #'   ...
 #' }
@@ -39,7 +37,6 @@
 #' @format `dat_region`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
-#'   \item{cellID}{ID number for each row (or cell) of the dataset}
 #'   \item{geometry}{sf geometry column}
 #'   ...
 #' }
@@ -55,7 +52,6 @@
 #' @format `dat_species_bin`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
-#'   \item{cellID}{ID number for each row (or cell) of the dataset}
 #'   \item{geometry}{sf geometry column}
 #'   ...
 #' }
@@ -72,7 +68,6 @@
 #' @format `dat_species_bin2`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
-#'   \item{cellID}{ID number for each row (or cell) of the dataset}
 #'   \item{geometry}{sf geometry column}
 #'   ...
 #' }
@@ -89,7 +84,6 @@
 #' @format `dat_species_prob`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
-#'   \item{cellID}{ID number for each row (or cell) of the dataset}
 #'   \item{geometry}{sf geometry column}
 #'   ...
 #' }
@@ -106,7 +100,6 @@
 #' @format `dat_mpas`
 #' A data frame with XXXX rows and XXX columns:
 #' \describe{
-#'   \item{cellID}{ID number for each row (or cell) of the dataset}
 #'   \item{geometry}{sf geometry column}
 #'   \item{wdpa}{binary MPA information (1: MPA)}
 #'   ...
@@ -160,7 +153,6 @@
 #' @format `dat_clim`
 #' A data frame with 780 rows and 3 columns:
 #' \describe{
-#'   \item{cellID}{ID number for each row (or cell) of the dataset}
 #'   \item{geometry}{sf geometry column}
 #'   \item{metric}{climate metric information}
 #'   ...
@@ -178,7 +170,6 @@
 # A data frame with 397 rows and 17 columns:
 # \describe{
 #   \item{Chelonia_mydas}{suitable habitat for Chelonia mydas}
-#   \item{cellID}{cell ID of planning units}
 #   ...
 # }
 # @source Aquamaps.org
@@ -196,7 +187,6 @@
 #' A data frame with 397 rows and 17 columns:
 #' \describe{
 #'   \item{wdpa}{binary vector denoting presence or absence of a current marine protected area}
-#'   \item{cellID}{cell ID of planning units}
 #'   ...
 #' }
 #' @source https://www.protectedplanet.net/en/thematic-areas/wdpa?tab=WDPA
@@ -233,7 +223,6 @@
 #' @format `CoralSeaVelocity`
 #' A data frame with 397 rows and 3 columns:
 #' \describe{
-#'   \item{cellID}{cell ID of the planning units}
 #'   \item{vocMagg_transformed}{Climate velocity column}
 #'   \item{geometry}{Geometry column of sf object}
 #'   ...
@@ -263,7 +252,6 @@
 #' A data frame with bathymetry data
 #' \describe{
 #
-#'   \item{cellID}{ID number for each row (or cell) of the dataset}
 #'   \item{bathymetry}{Bathymetry data}
 #'   \item{geometry}{sf geometry column}
 #'   ...

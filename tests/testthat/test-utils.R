@@ -25,7 +25,7 @@ testthat::test_that("Correct function output", {
 
 testthat::test_that("Correct function output", {
   expect_s3_class(
-    splnr_match_names(dat_region %>% dplyr::select(-cellID),
+    splnr_match_names(dat_region,
                       c("Region1" = "SE Aust", "Region2" = "Tas", "Region3" = "NE Aust")), "sf"
   )
 })
@@ -43,7 +43,7 @@ testthat::test_that("Correct function output", {
 testthat::test_that("Correct function output", {
   expect_vector(
     dat_species_prob %>%
-      splnr_featureNames(exclude = c("cellID"))
+      splnr_featureNames()
   )
 })
 
@@ -73,7 +73,7 @@ testthat::test_that("Correct function output", {
 
 testthat::test_that("Correct function output", {
   expect_vector(dat_species_prob %>%
-                  splnr_featureNames(exclude = c("cellID"))
+                  splnr_featureNames()
   )
 })
 

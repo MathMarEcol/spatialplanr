@@ -2,7 +2,7 @@
 #'
 #' @param soln The `prioritizr` solution
 #' @param pDat The `prioritizr` problem
-#' @param targetsDF `data.frame`with list of features under "feature" column and their corresponding targets under "target" column
+#' @param targets `data.frame`with list of features under "feature" column and their corresponding targets under "target" column
 #' @param climsmart logical denoting whether spatial planning was done climate-smart (and targets have to be calculated differently)
 #' @param climsmartApproach either 0,1,2 or 3 depending on the climate-smart approach used (0 = None; 1 = Climate Priority Area; 2 = Feature; 3 = Percentile).
 #' @param solnCol Name of the column with the solution
@@ -29,15 +29,17 @@
 #'   soln = soln,
 #'   pDat = pDat
 #' )
-splnr_get_featureRep <- function(soln, pDat, targetsDF = NA,
-                                 climsmart = FALSE, climsmartApproach = 0, solnCol = "solution_1") {
+splnr_get_featureRep <- function(soln, pDat, targets = NA,
+                                 climsmart = FALSE,
+                                 climsmartApproach = 0,
+                                 solnCol = "solution_1") {
   s_cols <- pDat$data$features[[1]]
 
   # Get data for features not chosen
   not_selected <- soln %>%
     dplyr::select(
       -tidyselect::starts_with(c("Cost", "solution_")),
-      -tidyselect::any_of(c("metric", "cellID")),
+      -tidyselect::any_of(c("metric")),
       -tidyselect::any_of(s_cols)
     ) %>%
     sf::st_drop_geometry()
@@ -102,13 +104,13 @@ splnr_get_featureRep <- function(soln, pDat, targetsDF = NA,
       dplyr::ungroup() %>%
       dplyr::mutate(relative_held = .data$absolute_held / .data$total_amount) %>% # Calculate proportion
       dplyr::select(-"total_amount", -"absolute_held") %>% # Remove extra columns
-      dplyr::left_join(targetsDF, by = "feature") #%>% # Add targets to df
+      dplyr::left_join(targets, by = "feature") #%>% # Add targets to df
     # dplyr::select(-"type")
 
   } else if (climsmart == TRUE & climsmartApproach == 3) {
 
     s1 <- s1 %>%
-      dplyr::left_join(targetsDF, by = "feature")
+      dplyr::left_join(targets, by = "feature")
 
   } else {
     # Add targets to df
@@ -179,11 +181,13 @@ splnr_get_featureRep <- function(soln, pDat, targetsDF = NA,
 #'
 #' (splnr_plot_featureRep(df, category = dat_category))
 #'
-splnr_plot_featureRep <- function(df, category = NA,
+splnr_plot_featureRep <- function(df,
+                                  category = NA,
                                   categoryFeatureCol = NA,
                                   renameFeatures = FALSE,
                                   namesToReplace = NA,
-                                  nr = 1, showTarget = NA,
+                                  nr = 1,
+                                  showTarget = NA,
                                   plotTitle = "",
                                   ...) {
 

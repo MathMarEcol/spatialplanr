@@ -63,8 +63,7 @@ Bndry <- dplyr::tibble(x = 60, y = seq(-60, 0, by = 1)) %>%
 
 # Use boundary to create grid
 PUs <- sf::st_make_grid(Bndry, cellsize = 0.125) %>%
-  sf::st_sf() %>%
-  dplyr::mutate(cellID = dplyr::row_number())
+  sf::st_sf()
 
 feature_num <- c(25, 50, 100, 500)#, 1000)#, 5000, 10000)#, 50000, 100000)
 PU_cellsize <- c(2,1,0.5,0.25,0.125)
@@ -75,8 +74,7 @@ counter = 1
 for (k in 1:length(PU_cellsize)) {
 
   PUs <- sf::st_make_grid(Bndry, cellsize = PU_cellsize[k]) %>%
-    sf::st_sf() %>%
-    dplyr::mutate(cellID = dplyr::row_number())
+    sf::st_sf()
 
   for (j in 1:length(feature_num)) {
 
@@ -129,8 +127,7 @@ counter = 1
 for (k in 1:length(PU_cellsize)) {
 
   PUs <- sf::st_make_grid(Bndry, cellsize = PU_cellsize[k]) %>%
-    sf::st_sf() %>%
-    dplyr::mutate(cellID = dplyr::row_number())
+    sf::st_sf()
 
   for (j in 1:length(feature_num)) {
 
@@ -192,8 +189,7 @@ counter = 1
 for (k in 1:length(PU_cellsize)) {
 
   PUs <- sf::st_make_grid(Bndry, cellsize = PU_cellsize[k]) %>%
-    sf::st_sf() %>%
-    dplyr::mutate(cellID = dplyr::row_number())
+    sf::st_sf()
 
   for (j in 1:length(feature_num)) {
 

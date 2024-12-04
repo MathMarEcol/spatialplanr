@@ -206,7 +206,7 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
         as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))
       ),
       # direction = 1,
-      # oob = scales::squish,
+      oob = scales::squish,
       # guide = ggplot2::guide_colourbar(
       #   title.position = "bottom",
       #   title.hjust = 0.5,

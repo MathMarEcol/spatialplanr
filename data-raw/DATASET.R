@@ -24,9 +24,7 @@ dat_bndry <- dplyr::tibble(x = 100, y = seq(-50, 0, by = 1)) %>%
 
 # Use boundary to create grid
 dat_PUs <- sf::st_make_grid(dat_bndry, cellsize = 2) %>%
-  sf::st_sf() %>%
-  dplyr::mutate(cellID = dplyr::row_number()) # Add a cell ID reference
-
+  sf::st_sf()
 
 # Create some regionalisations
 dat_region <- dat_PUs %>%
@@ -54,16 +52,14 @@ col_name <- dat_species_prob %>%
   colnames()
 
 dat_species_bin <- dat_species_prob %>%
-  dplyr::as_tibble() %>%
   dplyr::mutate(dplyr::across(
-    -dplyr::any_of(c("cellID", "geometry")), # Apply to all columns except geometry and cellID
+    -dplyr::any_of(c("geometry")), # Apply to all columns except geometry and cellID
     ~ dplyr::case_when(
       . >= 0.5 ~ 1,
       . < 0.5 ~ 0,
       is.na(.data) ~ 0
     )
-  )) %>%
-  sf::st_as_sf()
+  ))
 
 # create second species_bin data set with unused species
 dat_species_bin2 <- dat_species_bin %>%
@@ -73,9 +69,12 @@ dat_species_bin2 <- dat_species_bin %>%
 # Add a random MPA
 dat_mpas <- dat_PUs %>%
   sf::st_sf() %>%
+  tibble::rowid_to_column("cellID") %>% # Add a cell ID reference
   dplyr::mutate(wdpa = ifelse((cellID > 33 & cellID < 38) |
     (cellID > 63 & cellID < 68) |
-    (cellID > 93 & cellID < 98), 1, 0))
+    (cellID > 93 & cellID < 98), 1, 0)) %>%
+    dplyr::select(-"cellID")
+
 
 # Add a problem object
 dat_problem <- problem(dat_species_bin %>% dplyr::mutate(Cost = runif(n = dim(.)[[1]])),
@@ -127,6 +126,22 @@ dat_bathy <- oceandatr::get_bathymetry(spatial_grid = dat_PUs,
                                         classify_bathymetry = FALSE)
 
 
+
+#TODO Need to sort out the datasets that are not created here
+
+load("data/spDataFiltered.rda")
+spDataFiltered <- spDataFiltered %>%
+  dplyr::select(-"cellID")
+
+load("data/MPAsCoralSea.rda")
+MPAsCoralSea <- MPAsCoralSea %>%
+  dplyr::select(-"cellID")
+
+load("data/CoralSeaVelocity.rda")
+CoralSeaVelocity <- CoralSeaVelocity %>%
+  dplyr::select(-"cellID")
+
+
 # Save the data
 usethis::use_data(dat_bndry,
   dat_PUs,
@@ -142,5 +157,8 @@ usethis::use_data(dat_bndry,
   dat_category2,
   dat_clim,
   dat_bathy,
+  spDataFiltered,
+  MPAsCoralSea,
+  CoralSeaVelocity,
   overwrite = TRUE
 )

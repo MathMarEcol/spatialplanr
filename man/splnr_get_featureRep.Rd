@@ -7,7 +7,7 @@
 splnr_get_featureRep(
   soln,
   pDat,
-  targetsDF = NA,
+  targets = NA,
   climsmart = FALSE,
   climsmartApproach = 0,
   solnCol = "solution_1"
@@ -18,7 +18,7 @@ splnr_get_featureRep(
 
 \item{pDat}{The \code{prioritizr} problem}
 
-\item{targetsDF}{\code{data.frame}with list of features under "feature" column and their corresponding targets under "target" column}
+\item{targets}{\code{data.frame}with list of features under "feature" column and their corresponding targets under "target" column}
 
 \item{climsmart}{logical denoting whether spatial planning was done climate-smart (and targets have to be calculated differently)}
 
