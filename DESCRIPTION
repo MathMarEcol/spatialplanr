@@ -61,7 +61,7 @@ Imports:
     rnaturalearth,
     scales,
     sf,
-    spatialgridr (>= 0.0.2.0),
+    spatialgridr,
     stringr,
     terra,
     tibble,
