@@ -30,6 +30,7 @@ Suggests:
     ggridges,
     irr,
     knitr,
+    oceandatr,
     patchwork,
     prioritizr,
     RColorBrewer,
@@ -60,12 +61,15 @@ Imports:
     rnaturalearth,
     scales,
     sf,
+    spatialgridr,
     stringr,
     terra,
     tibble,
     tidyr,
     tidyselect
 Remotes: 
+    github::emlab-ucsb/oceandatr,
+    github::emlab-ucsb/spatialgridr,
     github::GlobalFishingWatch/gfwr,
     github::prioritizr/wdpar,
     github::ropensci/rnaturalearthhires
