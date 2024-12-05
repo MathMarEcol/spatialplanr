@@ -109,7 +109,7 @@ splnr_plot <- function(df,
 
   # Plot logic based on data type
 
-  if (showFeatureSum) {
+  if (showFeatureSum) { #TODO I don't think this is used anymore. Remove?
 
     # Calculate feature sum if multiple features
     df <- df %>%
@@ -155,7 +155,7 @@ splnr_plot <- function(df,
   } else if (is_continuous) {
 
     gg <- gg +
-      ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data[[col_names]]), colour = "grey80", size = 0.1) +
+      ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data[[col_names]]), colour = "grey80", linewidth = 0.01) +
       ggplot2::scale_fill_viridis_c(name = legend_title) +
       ggplot2::guides(fill = ggplot2::guide_colourbar(order = 1))
 

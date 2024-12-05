@@ -61,7 +61,7 @@ Imports:
     rnaturalearth,
     scales,
     sf,
-    spatialgridr (>= 0.0.2),
+    spatialgridr (>= 0.0.2.0),
     stringr,
     terra,
     tibble,
@@ -71,7 +71,6 @@ Remotes:
     github::emlab-ucsb/oceandatr,
     github::emlab-ucsb/spatialgridr,
     github::GlobalFishingWatch/gfwr,
-    github::prioritizr/prioritizr,
     github::prioritizr/wdpar,
     github::ropensci/rnaturalearthhires
 Config/testthat/edition: 3
