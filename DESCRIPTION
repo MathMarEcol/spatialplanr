@@ -66,8 +66,6 @@ Imports:
     tidyr,
     tidyselect
 Remotes: 
-    github::emlab-ucsb/oceandatr,
-    github::emlab-ucsb/spatialgridr,
     github::GlobalFishingWatch/gfwr,
     github::prioritizr/wdpar,
     github::ropensci/rnaturalearthhires
