@@ -203,7 +203,7 @@ splnr_plot_costOverlay <- function(soln, Cost = NA, Cost_name = "Cost",
       high = "#d94801", # "#f16913",
       limits = c(
         0,
-        as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99))
+        as.numeric(stats::quantile(dplyr::pull(Cost, Cost_name), 0.99, na.rm = TRUE))
       ),
       # direction = 1,
       oob = scales::squish,
