@@ -222,6 +222,7 @@ splnr_plot_featureRep <- function(df,
     rpl <- namesToReplace %>%
       dplyr::filter(.data$nameVariable %in% df$feature) %>%
       dplyr::select("nameVariable", "nameCommon") %>%
+      dplyr::mutate(nameVariable = stringr::str_c("^", nameVariable, "$")) %>%
       tibble::deframe()
 
     df <- df %>%
