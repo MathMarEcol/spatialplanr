@@ -67,16 +67,14 @@ splnr_get_featureRep <- function(soln, pDat, targets = NA,
 
     ns1 <- dplyr::left_join(area_feature, selected_feature, by = "feature") %>%
       dplyr::mutate(
-        relative_held = (.data$absolute_held / .data$total_amount),
-        incidental = TRUE
+        relative_held = (.data$absolute_held / .data$total_amount)
       )
   } else {
     ns1 <- tibble::tibble(
       feature = "DummyVar",
       total_amount = 0,
       absolute_held = 0,
-      relative_held = 0,
-      incidental = TRUE
+      relative_held = 0
     )
   }
 
@@ -121,8 +119,7 @@ splnr_get_featureRep <- function(soln, pDat, targets = NA,
 
   s1 <- s1 %>%
     dplyr::mutate(
-      relative_held = .data$relative_held,
-      incidental = FALSE
+      relative_held = .data$relative_held
     ) %>%
     stats::na.omit()
 
@@ -133,6 +130,10 @@ splnr_get_featureRep <- function(soln, pDat, targets = NA,
   } else {
     df <- s1
   }
+
+  # Now add in incidental for 0 and NA targets
+  df <- df %>%
+    dplyr::mutate(incidental = dplyr::if_else(target > 0 & absolute_held > 0, TRUE, FALSE, missing = TRUE))
 
   return(df)
 }
