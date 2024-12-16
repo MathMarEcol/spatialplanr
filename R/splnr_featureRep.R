@@ -133,8 +133,7 @@ splnr_get_featureRep <- function(soln, pDat, targets = NA,
 
   # Now add in incidental for 0 and NA targets
   df <- df %>%
-    dplyr::mutate(incidental = dplyr::if_else(target > 0 & absolute_held > 0, TRUE, FALSE, missing = TRUE))
-
+    dplyr::mutate(incidental = dplyr::if_else(target > 0 & absolute_held > 0, FALSE, TRUE, missing = FALSE))
   return(df)
 }
 
