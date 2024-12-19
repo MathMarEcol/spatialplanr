@@ -101,7 +101,7 @@ splnr_get_featureRep <- function(soln, pDat, targets = NA,
       ) %>%
       dplyr::ungroup() %>%
       dplyr::mutate(relative_held = .data$absolute_held / .data$total_amount) %>% # Calculate proportion
-      dplyr::select(-"total_amount", -"absolute_held") %>% # Remove extra columns
+      # dplyr::select(-"total_amount", -"absolute_held") %>% # Remove extra columns
       dplyr::left_join(targets, by = "feature") #%>% # Add targets to df
     # dplyr::select(-"type")
 
