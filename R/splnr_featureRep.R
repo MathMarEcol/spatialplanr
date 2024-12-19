@@ -180,7 +180,7 @@ splnr_get_featureRep <- function(soln, pDat, targets = NA,
 #'   pDat = pDat
 #' )
 #'
-#' (splnr_plot_featureRep(df, category = dat_category))
+#' (splnr_plot_featureRep(df, category = dat_category, showTarget = TRUE))
 #'
 splnr_plot_featureRep <- function(df,
                                   category = NA,
@@ -260,7 +260,10 @@ splnr_plot_featureRep <- function(df,
 
 
   gg_target <- ggplot2::ggplot() +
-    ggplot2::geom_bar(data = df %>% dplyr::mutate(relative_held = dplyr::if_else(incidental == TRUE, NA, relative_held)), stat = "identity", position = "identity", ggplot2::aes(x = .data$feature, y = .data$relative_held, fill = .data$category), na.rm = TRUE) +
+    ggplot2::geom_bar(data = df %>% dplyr::mutate(relative_held = dplyr::if_else(incidental == TRUE, NA, relative_held)),
+                      stat = "identity", position = "identity", ggplot2::aes(x = .data$feature, y = .data$relative_held,
+                                                                             fill = .data$category, colour = .data$category),
+                      na.rm = TRUE) +
     ggplot2::geom_bar(data = df %>% dplyr::mutate(relative_held = dplyr::if_else(incidental == FALSE, NA, relative_held)),
                       stat = "identity", position = "identity",
                       ggplot2::aes(x = .data$feature, y = .data$relative_held), na.rm = TRUE, fill = "NA", colour = "black") +
@@ -268,9 +271,11 @@ splnr_plot_featureRep <- function(df,
     ggplot2::theme_bw() +
     ggplot2::scale_y_continuous(limits = c(0, ymax <- max(df$relative_held, na.rm = TRUE) + 10), expand = c(0, 0)) + # only works for min shortfall without incidental yet
     ggplot2::scale_fill_manual(
+      aesthetics = c("fill", "colour"),
       values = colr,
       guide = ggplot2::guide_legend(nrow = nr)
     ) +
+    ggplot2::guides(colour = "none") +
     ggplot2::theme(
       axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5, size = 16, colour = "black"),
       axis.text.y = ggplot2::element_text(size = 16, colour = "black"),
@@ -278,10 +283,10 @@ splnr_plot_featureRep <- function(df,
       axis.title.y = ggplot2::element_text(size = 16),
       legend.title = ggplot2::element_blank(),
       legend.text = ggplot2::element_text(size = 16),
-      legend.position = "inside",
+      legend.position = "top",
       # legend.margin = ggplot2::margin(0, 0, 0, 0),
       # legend.justification.top = "centre",
-      legend.position.inside = c(0.5, 0.92),
+      # legend.position.inside = c(0.5, 0.92),
       legend.direction = "horizontal",
       legend.background = ggplot2::element_rect(fill = "NA"),
       title = ggplot2::element_text(size = 16),
@@ -290,7 +295,10 @@ splnr_plot_featureRep <- function(df,
 
   if (!(is.na(showTarget))) {
     gg_target <- gg_target +
-      ggplot2::geom_point(data = df, ggplot2::aes(x = .data$feature, y = .data$target), shape = 3, size = 10, na.rm = TRUE)
+
+      ggplot2::geom_bar(data = df %>% dplyr::mutate(relative_held = dplyr::if_else(incidental == TRUE, NA, relative_held)),
+                        stat = "identity", position = "identity", ggplot2::aes(x = .data$feature, y = .data$target), na.rm = TRUE,
+                        alpha = 0.3, colour = "grey50", fill = "white")
   }
 
   return(gg_target)
