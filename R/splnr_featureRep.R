@@ -258,9 +258,12 @@ splnr_plot_featureRep <- function(df,
   ) %>%
     tibble::deframe()
 
+
   gg_target <- ggplot2::ggplot() +
-    ggplot2::geom_bar(data = df, stat = "identity", ggplot2::aes(x = .data$feature, y = .data$relative_held, fill = .data$category), na.rm = TRUE) +
-    ggplot2::geom_bar(data = df %>% dplyr::filter(.data$incidental == TRUE), stat = "identity", ggplot2::aes(x = .data$feature, y = .data$relative_held), na.rm = TRUE, fill = "NA", colour = "black") +
+    ggplot2::geom_bar(data = df %>% dplyr::mutate(relative_held = dplyr::if_else(incidental == TRUE, NA, relative_held)), stat = "identity", position = "identity", ggplot2::aes(x = .data$feature, y = .data$relative_held, fill = .data$category), na.rm = TRUE) +
+    ggplot2::geom_bar(data = df %>% dplyr::mutate(relative_held = dplyr::if_else(incidental == FALSE, NA, relative_held)),
+                      stat = "identity", position = "identity",
+                      ggplot2::aes(x = .data$feature, y = .data$relative_held), na.rm = TRUE, fill = "NA", colour = "black") +
     ggplot2::labs(title = plotTitle, x = "Feature", y = "Representation of features \nin total selected area (%)") +
     ggplot2::theme_bw() +
     ggplot2::scale_y_continuous(limits = c(0, ymax <- max(df$relative_held, na.rm = TRUE) + 10), expand = c(0, 0)) + # only works for min shortfall without incidental yet
@@ -276,7 +279,9 @@ splnr_plot_featureRep <- function(df,
       legend.title = ggplot2::element_blank(),
       legend.text = ggplot2::element_text(size = 16),
       legend.position = "inside",
-      legend.position.inside = c(0.5, 0.95),
+      # legend.margin = ggplot2::margin(0, 0, 0, 0),
+      # legend.justification.top = "centre",
+      legend.position.inside = c(0.5, 0.92),
       legend.direction = "horizontal",
       legend.background = ggplot2::element_rect(fill = "NA"),
       title = ggplot2::element_text(size = 16),
