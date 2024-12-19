@@ -155,9 +155,10 @@ splnr_plot <- function(df,
   } else if (is_continuous) {
 
     gg <- gg +
-      ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data[[col_names]]), colour = "grey80", linewidth = 0.01) +
-      ggplot2::scale_fill_viridis_c(name = legend_title) +
-      ggplot2::guides(fill = ggplot2::guide_colourbar(order = 1))
+      ggplot2::geom_sf(data = df, ggplot2::aes(fill = .data[[col_names]], colour = .data[[col_names]])) +
+      ggplot2::scale_fill_viridis_c(name = legend_title, aesthetics = c("colour", "fill")) +
+      ggplot2::guides(fill = ggplot2::guide_colourbar(order = 1),
+                      colour = "none")
 
   } else if (is.null(col_names)){ # No column to plot by
 

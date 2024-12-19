@@ -67,16 +67,14 @@ splnr_get_featureRep <- function(soln, pDat, targets = NA,
 
     ns1 <- dplyr::left_join(area_feature, selected_feature, by = "feature") %>%
       dplyr::mutate(
-        relative_held = (.data$absolute_held / .data$total_amount),
-        incidental = TRUE
+        relative_held = (.data$absolute_held / .data$total_amount)
       )
   } else {
     ns1 <- tibble::tibble(
       feature = "DummyVar",
       total_amount = 0,
       absolute_held = 0,
-      relative_held = 0,
-      incidental = TRUE
+      relative_held = 0
     )
   }
 
@@ -121,8 +119,7 @@ splnr_get_featureRep <- function(soln, pDat, targets = NA,
 
   s1 <- s1 %>%
     dplyr::mutate(
-      relative_held = .data$relative_held,
-      incidental = FALSE
+      relative_held = .data$relative_held
     ) %>%
     stats::na.omit()
 
@@ -133,6 +130,10 @@ splnr_get_featureRep <- function(soln, pDat, targets = NA,
   } else {
     df <- s1
   }
+
+  # Now add in incidental for 0 and NA targets
+  df <- df %>%
+    dplyr::mutate(incidental = dplyr::if_else(target > 0 & absolute_held > 0, FALSE, TRUE, missing = TRUE))
 
   return(df)
 }
@@ -257,9 +258,12 @@ splnr_plot_featureRep <- function(df,
   ) %>%
     tibble::deframe()
 
+
   gg_target <- ggplot2::ggplot() +
-    ggplot2::geom_bar(data = df, stat = "identity", ggplot2::aes(x = .data$feature, y = .data$relative_held, fill = .data$category), na.rm = TRUE) +
-    ggplot2::geom_bar(data = df %>% dplyr::filter(.data$incidental == TRUE), stat = "identity", ggplot2::aes(x = .data$feature, y = .data$relative_held), na.rm = TRUE, fill = "NA", colour = "black") +
+    ggplot2::geom_bar(data = df %>% dplyr::mutate(relative_held = dplyr::if_else(incidental == TRUE, NA, relative_held)), stat = "identity", position = "identity", ggplot2::aes(x = .data$feature, y = .data$relative_held, fill = .data$category), na.rm = TRUE) +
+    ggplot2::geom_bar(data = df %>% dplyr::mutate(relative_held = dplyr::if_else(incidental == FALSE, NA, relative_held)),
+                      stat = "identity", position = "identity",
+                      ggplot2::aes(x = .data$feature, y = .data$relative_held), na.rm = TRUE, fill = "NA", colour = "black") +
     ggplot2::labs(title = plotTitle, x = "Feature", y = "Representation of features \nin total selected area (%)") +
     ggplot2::theme_bw() +
     ggplot2::scale_y_continuous(limits = c(0, ymax <- max(df$relative_held, na.rm = TRUE) + 10), expand = c(0, 0)) + # only works for min shortfall without incidental yet
@@ -275,7 +279,9 @@ splnr_plot_featureRep <- function(df,
       legend.title = ggplot2::element_blank(),
       legend.text = ggplot2::element_text(size = 16),
       legend.position = "inside",
-      legend.position.inside = c(0.5, 0.95),
+      # legend.margin = ggplot2::margin(0, 0, 0, 0),
+      # legend.justification.top = "centre",
+      legend.position.inside = c(0.5, 0.92),
       legend.direction = "horizontal",
       legend.background = ggplot2::element_rect(fill = "NA"),
       title = ggplot2::element_text(size = 16),
