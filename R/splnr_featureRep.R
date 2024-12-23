@@ -190,7 +190,15 @@ splnr_plot_featureRep <- function(df,
                                   nr = 1,
                                   showTarget = NA,
                                   plotTitle = "",
+                                  sort_by = "category",
                                   ...) {
+
+  # TODO Add to documentation
+  # sort_by = "category",
+  # "difference",
+  # "target",
+  # "feature" "feature"
+  # "representation" "relative_held"
 
   assertthat::assert_that(
     inherits(df, c("data.frame", "tbl_df")),
@@ -259,10 +267,18 @@ splnr_plot_featureRep <- function(df,
     tibble::deframe()
 
 
+if (!sort_by %in% c("category", "feature", "target")){
+  df <- df %>%
+    dplyr::mutate(difference = relative_held - target,
+                  representation = relative_held)
+}
+
+
   gg_target <- ggplot2::ggplot() +
     ggplot2::geom_bar(data = df %>% dplyr::mutate(relative_held = dplyr::if_else(incidental == TRUE, NA, relative_held)),
-                      stat = "identity", position = "identity", ggplot2::aes(x = .data$feature, y = .data$relative_held,
-                                                                             fill = .data$category, colour = .data$category),
+                      stat = "identity", position = "identity",
+                      ggplot2::aes(x =  stats::reorder(.data$feature, .data[[sort_by]]), y = .data$relative_held,
+                                   fill = .data$category, colour = .data$category),
                       na.rm = TRUE) +
     ggplot2::geom_bar(data = df %>% dplyr::mutate(relative_held = dplyr::if_else(incidental == FALSE, NA, relative_held)),
                       stat = "identity", position = "identity",
@@ -385,11 +401,11 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
                                  repTarget = NA, colTarget = "red") {
 
   assertthat::assert_that(
-  length(unique(names(legend_color))) == length(legend_list),
-  is.logical(indicateTargets),
-  is.numeric(impTarget),
-  is.numeric(repTarget),
-  is.character(colTarget)
+    length(unique(names(legend_color))) == length(legend_list),
+    is.logical(indicateTargets),
+    is.numeric(impTarget),
+    is.numeric(repTarget),
+    is.character(colTarget)
   )
 
   # Adding rows to each group, creating space between the groups
@@ -441,8 +457,8 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
 
     # plotting the bars
     ggplot2::geom_bar(ggplot2::aes(x = as.factor(.data$id), y = .data$value, fill = .data$group),
-      stat = "identity",
-      position = "dodge"
+                      stat = "identity",
+                      position = "dodge"
     ) +
 
     # defining colors of the bars
@@ -486,14 +502,14 @@ splnr_plot_circBplot <- function(df, legend_color, legend_list,
       inherit.aes = FALSE
     ) +
     ggplot2::annotate("text",
-      x = rep(max(data$id - 1), 4),
-      y = c(25, 50, 75, 100),
-      label = c(25, 50, 75, 100),
-      color = "grey50",
-      size = 4,
-      angle = 0, #-5
-      fontface = "bold",
-      hjust = 0.5
+                      x = rep(max(data$id - 1), 4),
+                      y = c(25, 50, 75, 100),
+                      label = c(25, 50, 75, 100),
+                      color = "grey50",
+                      size = 4,
+                      angle = 0, #-5
+                      fontface = "bold",
+                      hjust = 0.5
     ) +
 
     # setting limitations of actual plot
